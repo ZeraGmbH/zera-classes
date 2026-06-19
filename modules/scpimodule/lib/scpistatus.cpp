@@ -25,7 +25,7 @@ void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QStri
 
     cmd = input;
     if (cmd.isQuery())
-        client->receiveAnswer(QString("%1").arg(status), scpiTransactionId);
+        client->handleCmdFinish(QString("%1").arg(status), scpiTransactionId);
     else {
         if (cmd.isCommand(1))
         {
@@ -38,7 +38,7 @@ void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QStri
         }
         else
             emit sigEventError(CommandError);
-        emit client->commandAnswered(client);
+        client->handleCmdFinish("", scpiTransactionId);
     }
 }
 
@@ -50,10 +50,10 @@ void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString in
 
     cmd = input;
     if (cmd.isQuery())
-        client->receiveAnswer(QString("%1").arg(status), scpiTransactionId);
+        client->handleCmdFinish(QString("%1").arg(status), scpiTransactionId);
     else {
         emit sigEventError(CommandError);
-        emit client->commandAnswered(client);
+        client->handleCmdFinish("", scpiTransactionId);
     }
 }
 

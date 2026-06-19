@@ -38,10 +38,10 @@ cIEEE4882::cIEEE4882(cSCPIClient *client, QString deviceFamilyFromConfig, quint1
 }
 
 
-void cIEEE4882::AddEventErrorWithResponse(int error)
+void cIEEE4882::AddEventErrorWithResponse(int error, const ScpiTransactionId &scpiTransactionId)
 {
     addEventError(error);
-    emit m_pClient->commandAnswered(m_pClient);
+    m_pClient->handleCmdFinish("", scpiTransactionId, false);
 }
 
 void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
@@ -54,12 +54,12 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             // for the moment we only reset opcstate, means we only support sequential commands
             m_nOPCState = OCAS;
             SetnoOperFlag(true); // wir setzen ocas, setzen das nooperpending flag => setzen opc im sesr
-            emit m_pClient->commandAnswered(m_pClient);
+            client->handleCmdFinish("", scpiTransactionId);
         }
         else if (cmd.isQuery())
-            client->receiveAnswer(stringifyRegisterForOutput(client->operationComplete()), scpiTransactionId);
+            client->handleCmdFinish(stringifyRegisterForOutput(client->operationComplete()), scpiTransactionId);
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
 
     case eventstatusenable:
@@ -68,15 +68,15 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             quint8 par = cmd.getParam(0).toInt(&ok);
             if (ok) {
                 SetESE(par);
-                emit m_pClient->commandAnswered(m_pClient);
+                client->handleCmdFinish("", scpiTransactionId);
             }
             else
-                AddEventErrorWithResponse(NumericDataError);
+                AddEventErrorWithResponse(NumericDataError, scpiTransactionId);
         }
         else if (cmd.isQuery())
-            client->receiveAnswer(stringifyRegisterForOutput(m_nESE), scpiTransactionId);
+            client->handleCmdFinish(stringifyRegisterForOutput(m_nESE), scpiTransactionId);
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
 
     case servicerequestenable:
@@ -85,95 +85,95 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             quint8 par = cmd.getParam(0).toInt(&ok);
             if (ok) {
                 SetSRE(par);
-                emit m_pClient->commandAnswered(m_pClient);
+                client->handleCmdFinish("", scpiTransactionId);
             }
             else
-                AddEventErrorWithResponse(NumericDataError);
+                AddEventErrorWithResponse(NumericDataError, scpiTransactionId);
         }
         else if (cmd.isQuery())
-            client->receiveAnswer(stringifyRegisterForOutput(m_nSRE), scpiTransactionId);
+            client->handleCmdFinish(stringifyRegisterForOutput(m_nSRE), scpiTransactionId);
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
 
     case clearstatus:
         if (cmd.isCommand(0)) {
             ClearStatus();
-            emit m_pClient->commandAnswered(m_pClient);
+            client->handleCmdFinish("", scpiTransactionId);
         }
         else if (cmd.isQuery())
-            AddEventErrorWithResponse(QueryError);
+            AddEventErrorWithResponse(QueryError, scpiTransactionId);
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
 
     case reset:
         if (cmd.isCommand(0)) {
             ResetDevice();
-            emit m_pClient->commandAnswered(m_pClient);
+            client->handleCmdFinish("", scpiTransactionId);
         }
         else if (cmd.isQuery())
-            AddEventErrorWithResponse(QueryError);
+            AddEventErrorWithResponse(QueryError, scpiTransactionId);
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
 
     case identification:
         if (cmd.isQuery())
-            client->receiveAnswer(getIdentification(), scpiTransactionId);
+            client->handleCmdFinish(getIdentification(), scpiTransactionId);
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
 
     case eventstatusregister:
         if (cmd.isQuery())
-            client->receiveAnswer(stringifyRegisterForOutput(m_nESR), scpiTransactionId);
+            client->handleCmdFinish(stringifyRegisterForOutput(m_nESR), scpiTransactionId);
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
 
     case statusbyte:
         if (cmd.isQuery())
-            client->receiveAnswer(stringifyRegisterForOutput(m_nSTB), scpiTransactionId);
+            client->handleCmdFinish(stringifyRegisterForOutput(m_nSTB), scpiTransactionId);
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
 
     case selftest:
         if (cmd.isQuery())
-            client->receiveAnswer(QString("1"), scpiTransactionId); // for the moment test is passed
+            client->handleCmdFinish(QString("1"), scpiTransactionId); // for the moment test is passed
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
 
     case read1error:
         if (cmd.isQuery())
-            client->receiveAnswer(popScpiErrorAndMakeString(), scpiTransactionId);
+            client->handleCmdFinish(popScpiErrorAndMakeString(), scpiTransactionId);
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
 
     case readerrorcount:
         if (cmd.isQuery())
-            client->receiveAnswer(QString("%1").arg(m_ErrEventQueue.count()), scpiTransactionId);
+            client->handleCmdFinish(QString("%1").arg(m_ErrEventQueue.count()), scpiTransactionId);
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
 
     case readallerrors:
         if (cmd.isQuery()) {
             int errCount = m_ErrEventQueue.count();
             if (errCount == 0)
-                client->receiveAnswer(popScpiErrorAndMakeString(), scpiTransactionId);
+                client->handleCmdFinish(popScpiErrorAndMakeString(), scpiTransactionId);
             else {
                 QString errStr = popScpiErrorAndMakeString();
                 for (int i = 1; i < errCount; i++)
                     errStr = errStr + ";" + popScpiErrorAndMakeString();
-                client->receiveAnswer(errStr, scpiTransactionId);
+                client->handleCmdFinish(errStr, scpiTransactionId);
             }
         }
         else
-            AddEventErrorWithResponse(CommandError);
+            AddEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
     }
 }
@@ -270,7 +270,7 @@ void cIEEE4882::SetSTB(quint8 b)
         m_nSTB |= (1 << STBrqs); // we set the request service bit in stb
         if (((m_nSTB & m_nSRE) & (1 << STBrqs)) != 0)
             // This look like an additional 'async' response => return with invalid id
-            m_pClient->receiveAnswer("SRQ", ScpiTransactionId(), false);
+            m_pClient->handleCmdFinish("SRQ", ScpiTransactionId(), false);
     }
 }
 

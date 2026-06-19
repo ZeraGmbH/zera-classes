@@ -25,8 +25,11 @@ cSCPISerialClient::~cSCPISerialClient()
 }
 
 
-void cSCPISerialClient::receiveAnswer(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok, bool skipLog)
+void cSCPISerialClient::handleCmdFinish(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok, bool skipLog)
 {
+    // for now
+    if (answ.isEmpty())
+        return;
     QString answer;
     QByteArray ba;
     answer = answ + m_endChar;
@@ -35,8 +38,6 @@ void cSCPISerialClient::receiveAnswer(QString answ, const ScpiTransactionId &scp
     ba = answer.toLatin1();
     m_pSerialPort->write(ba.data(), ba.size());
     qInfo("Serial SCPI command response : %s", skipLog ? "<skipped>" : qPrintable(answ));
-    if(ok)
-        emit commandAnswered(this);
 }
 
 

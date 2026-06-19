@@ -69,7 +69,7 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
        emit m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
     }
     else
-        client->receiveStatus(ZSCPI::nak);
+        client->receiveStatus(ZSCPI::nak, scpiTransactionId);
 }
 
 bool cSCPIParameterDelegate::handleFutureComponent(cSCPIClient *client, bool bQuery, const ScpiTransactionId &scpiTransactionId)
@@ -79,9 +79,9 @@ bool cSCPIParameterDelegate::handleFutureComponent(cSCPIClient *client, bool bQu
                                                                                               m_pSCPICmdInfo->componentOrRpcName);
     if (futureComponent) {
         if (bQuery)
-            client->receiveAnswer(futureComponent->getValue().toString(), scpiTransactionId);
+            client->handleCmdFinish(futureComponent->getValue().toString(), scpiTransactionId);
         else
-            client->receiveStatus(ZSCPI::nak);
+            client->receiveStatus(ZSCPI::nak, scpiTransactionId);
         return true;
     }
     return false;

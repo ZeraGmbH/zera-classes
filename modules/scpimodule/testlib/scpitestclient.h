@@ -17,7 +17,7 @@ signals:
 
 private slots:
     void cmdInput() override;
-    void receiveAnswer(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok = true, bool skipLog = false) override;
+    void handleCmdFinish(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok = true, bool skipLog = false) override;
 };
 
 }

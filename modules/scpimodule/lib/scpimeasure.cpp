@@ -77,8 +77,10 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
         break;
 
     case SCPIModelType::configure:
-        if (!m_ConfigureStateMachine.isRunning())
+        if (!m_ConfigureStateMachine.isRunning()) {
+            m_configureScpiTransactionId = scpiTransactionId;
             m_ConfigureStateMachine.start();
+        }
         break;
 
     case SCPIModelType::read:
@@ -89,8 +91,10 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
         break;
 
     case SCPIModelType::init:
-        if (!m_InitStateMachine.isRunning())
+        if (!m_InitStateMachine.isRunning()) {
+            m_initScpiTransactionId = scpiTransactionId;
             m_InitStateMachine.start();
+        }
         break;
 
     case SCPIModelType::fetch:
@@ -193,7 +197,7 @@ void cSCPIMeasure::configure()
 
 void cSCPIMeasure::configureDone()
 {
-    emit sigConfDone();
+    emit sigConfDone(m_configureScpiTransactionId);
 }
 
 
@@ -246,7 +250,7 @@ void cSCPIMeasure::init()
 void cSCPIMeasure::initDone()
 {
     m_bInitPending = false;
-    emit sigInitDone();
+    emit sigInitDone(m_initScpiTransactionId);
 }
 
 

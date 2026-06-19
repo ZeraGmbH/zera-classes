@@ -25,7 +25,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, const QStrin
         (bCmdwP && ((scpiCmdType & SCPI::isCmdwP) >  0)))
         executeScpiRpc(client, scpi, bQuery, scpiTransactionId);
     else
-        client->receiveStatus(ZSCPI::nak);
+        client->receiveStatus(ZSCPI::nak, scpiTransactionId);
 }
 
 void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QString &scpi, bool inputIsQuery, const ScpiTransactionId &scpiTransactionId)
@@ -55,13 +55,13 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QSt
                 returnData = resultData[VeinComponent::RemoteProcedureData::s_returnString];
             else
                 returnData = resultData[VeinComponent::RemoteProcedureData::s_errorMessageString];
-            client->receiveAnswer(returnData.toString(), scpiTransactionId, true);
+            client->handleCmdFinish(returnData.toString(), scpiTransactionId, true);
         }
         else {//in case of command
             if(rpcSuccessful)
-                client->receiveStatus(ZSCPI::ack);
+                client->receiveStatus(ZSCPI::ack, scpiTransactionId);
             else
-                client->receiveStatus(ZSCPI::errval);
+                client->receiveStatus(ZSCPI::errval, scpiTransactionId);
         }
     });
     m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);

@@ -76,83 +76,98 @@ void test_range_scpi::rangeChangeWithDelay()
     QVERIFY(scpiModule != nullptr);
     SCPIMODULE::ScpiTestClient scpiClient(scpiModule, *scpiModule->getConfData(), scpiModule->getSCPIServer()->getScpiInterface());
     scpiClient.sendScpiCmds("CONFIGURATION:RNG1:GROUPING 0;");
+    TimeMachineObject::feedEventLoop();
+
     QSignalSpy spyScpiAnswer(&scpiClient, &SCPIMODULE::ScpiTestClient::sigScpiAnswer);
-    QSignalSpy spyCmdProcessed(&scpiClient, &SCPIMODULE::ScpiTestClient::commandAnswered);
 
-
-    //set existing range again
+    // check initial range
+    spyScpiAnswer.clear();
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spyScpiAnswer[0][0], "250V");
 
-    spyCmdProcessed.clear();
+
+    // set existing range again
+    spyScpiAnswer.clear();
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE 250V;");
     TimeMachineObject::feedEventLoop(); //No delay needed, this request doesn't reach services, range-module handles it
-    QCOMPARE(spyCmdProcessed.count(), 1);
+    QCOMPARE(spyScpiAnswer.count(), 1);
+    QCOMPARE(spyScpiAnswer[0][0], "");
 
+    // check range
+    spyScpiAnswer.clear();
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(spyScpiAnswer[1][0], "250V");
+    QCOMPARE(spyScpiAnswer.count(), 1);
+    QCOMPARE(spyScpiAnswer[0][0], "250V");
 
 
-    //set a range different than existing
+    // set a range different than existing
     spyScpiAnswer.clear();
-    spyCmdProcessed.clear();
-
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE 8V;");
     TimeMachineForTest::getInstance()->processTimers(rangeChangeDelay);
-    QCOMPARE(spyCmdProcessed.count(), 1);
+    QCOMPARE(spyScpiAnswer.count(), 1);
+    QCOMPARE(spyScpiAnswer[0][0], "");
 
+    // check range
+    spyScpiAnswer.clear();
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
     TimeMachineObject::feedEventLoop();
+    QCOMPARE(spyScpiAnswer.count(), 1);
     QCOMPARE(spyScpiAnswer[0][0], "8V");
 
 
-    //set range different than existing twice, back to back same request
+    // set range different than existing twice, back to back same request
     spyScpiAnswer.clear();
-    spyCmdProcessed.clear();
-
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE 250V;");
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE 250V;");
     TimeMachineObject::feedEventLoop(); //The 2nd request doesn't reach services, range-module handles it with dummy notification
-    QCOMPARE(spyCmdProcessed.count(), 1);
+    QCOMPARE(spyScpiAnswer.count(), 1);
+    QCOMPARE(spyScpiAnswer[0][0], "");
     TimeMachineForTest::getInstance()->processTimers(rangeChangeDelay);
-    QCOMPARE(spyCmdProcessed.count(), 2);
+    QCOMPARE(spyScpiAnswer.count(), 2);
+    QCOMPARE(spyScpiAnswer[1][0], "");
 
+    // check range
+    spyScpiAnswer.clear();
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spyScpiAnswer[0][0], "250V");
 
 
-    //1st request: Change to a different range
-    //2nd request: Change to a different range (while request 1 is not yet processed)
+    // 1st request: Change to a different range
+    // 2nd request: Change to a different range (while request 1 is not yet processed)
     spyScpiAnswer.clear();
-    spyCmdProcessed.clear();
-
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE 8V;");
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE 100mV;");
     TimeMachineForTest::getInstance()->processTimers(rangeChangeDelay);
-    QCOMPARE(spyCmdProcessed.count(), 1);
+    QCOMPARE(spyScpiAnswer.count(), 1);
+    QCOMPARE(spyScpiAnswer[0][0], "");
     TimeMachineForTest::getInstance()->processTimers(rangeChangeDelay);
-    QCOMPARE(spyCmdProcessed.count(), 2);
+    QCOMPARE(spyScpiAnswer.count(), 2);
+    QCOMPARE(spyScpiAnswer[1][0], "");
 
+    // check range
+    spyScpiAnswer.clear();
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spyScpiAnswer[0][0], "100mV");
 
 
-    //1st request: Change to a different range
-    //2nd request: Change to an existing range (while request 1 is not yet processed)
+    // 1st request: Change to a different range
+    // 2nd request: Change to an existing range (while request 1 is not yet processed)
     spyScpiAnswer.clear();
-    spyCmdProcessed.clear();
-
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE 250V;");
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE 100mV;");
     TimeMachineObject::feedEventLoop();
-    QCOMPARE(spyCmdProcessed.count(), 1); //2nd request handled by range-module, no delay
+    QCOMPARE(spyScpiAnswer.count(), 1); //2nd request handled by range-module, no delay
+    QCOMPARE(spyScpiAnswer[0][0], "");
     TimeMachineForTest::getInstance()->processTimers(rangeChangeDelay);
-    QCOMPARE(spyCmdProcessed.count(), 2); //1st request sent to services, response with delay
+    QCOMPARE(spyScpiAnswer.count(), 2); // 1st request sent to services, response with delay
+    QCOMPARE(spyScpiAnswer[1][0], "");
 
+    // check range
+    spyScpiAnswer.clear();
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spyScpiAnswer[0][0], "250V");

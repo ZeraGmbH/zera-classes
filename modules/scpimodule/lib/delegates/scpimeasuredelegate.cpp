@@ -47,7 +47,7 @@ void cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, const QString &scpi,
         client->m_SCPIMeasureDelegateHash[this]->executeClient(client, scpiTransactionId);
     }
     else
-        client->receiveStatus(ZSCPI::nak);
+        client->receiveStatus(ZSCPI::nak, scpiTransactionId);
 }
 
 void cSCPIMeasureDelegate::executeClient(cSCPIClient *client, const ScpiTransactionId &scpiTransactionId)
@@ -71,26 +71,26 @@ void cSCPIMeasureDelegate::executeClient(cSCPIClient *client, const ScpiTransact
             switch (m_nMeasCode)
             {
             case SCPIModelType::measure:
-                connect(measure, &cSCPIMeasure::sigMeasDone, this, &cSCPIMeasureDelegate::receiveAnswer);
+                connect(measure, &cSCPIMeasure::sigMeasDone, this, &cSCPIMeasureDelegate::handleCmdFinish);
                 break;
             case SCPIModelType::configure:
                 connect(measure, &cSCPIMeasure::sigConfDone, this, &cSCPIMeasureDelegate::receiveDone);
                 break;
             case SCPIModelType::read:
-                connect(measure, &cSCPIMeasure::sigReadDone, this, &cSCPIMeasureDelegate::receiveAnswer);
+                connect(measure, &cSCPIMeasure::sigReadDone, this, &cSCPIMeasureDelegate::handleCmdFinish);
                 break;
             case SCPIModelType::init:
                 connect(measure, &cSCPIMeasure::sigInitDone, this, &cSCPIMeasureDelegate::receiveDone);
                 break;
             case SCPIModelType::fetch:
-                connect(measure, &cSCPIMeasure::sigFetchDone, this, &cSCPIMeasureDelegate::receiveAnswer);
+                connect(measure, &cSCPIMeasure::sigFetchDone, this, &cSCPIMeasureDelegate::handleCmdFinish);
                 break;
             }
             measure->execute(m_nMeasCode, scpiTransactionId);
         }
     }
     else
-        client->receiveStatus(ZSCPI::nak);
+        client->receiveStatus(ZSCPI::nak, scpiTransactionId);
 }
 
 void cSCPIMeasureDelegate::addscpimeasureObject(cSCPIMeasure *measureobject)
@@ -98,23 +98,23 @@ void cSCPIMeasureDelegate::addscpimeasureObject(cSCPIMeasure *measureobject)
     m_scpimeasureObjectList.append(measureobject);
 }
 
-void cSCPIMeasureDelegate::receiveDone()
+void cSCPIMeasureDelegate::receiveDone(const ScpiTransactionId &scpiTransactionId)
 {
     const cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
     disconnect(measure,0,this,0);
     m_nPending--;
     if (m_nPending == 0)
-        m_pClient->receiveStatus(ZSCPI::ack);
+        m_pClient->receiveStatus(ZSCPI::ack, scpiTransactionId);
 }
 
-void cSCPIMeasureDelegate::receiveAnswer(QString s, const ScpiTransactionId &scpiTransactionId)
+void cSCPIMeasureDelegate::handleCmdFinish(QString s, const ScpiTransactionId &scpiTransactionId)
 {
     const cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
     disconnect(measure,0,this,0);
     m_sAnswer += QString("%1;").arg(s);
     m_nPending--;
     if (m_nPending == 0)
-        m_pClient->receiveAnswer(m_sAnswer, scpiTransactionId);
+        m_pClient->handleCmdFinish(m_sAnswer, scpiTransactionId);
 }
 
 }

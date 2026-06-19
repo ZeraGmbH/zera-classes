@@ -19,8 +19,8 @@ public:
     void addscpimeasureObject(cSCPIMeasure* measureobject);
 
 private slots:
-    void receiveDone();
-    void receiveAnswer(QString s, const ScpiTransactionId &scpiTransactionId);
+    void receiveDone(const ScpiTransactionId &scpiTransactionId);
+    void handleCmdFinish(QString s, const ScpiTransactionId &scpiTransactionId);
 
 private:
     quint8 m_nMeasCode;

@@ -55,11 +55,11 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
                         disconnect(myConn);
                         if(clientinfo->parCmdType() == parcmd) {
                             cSCPIClient* client = clientinfo->getClient();
-                            client->receiveStatus(ZSCPI::ack);
+                            client->receiveStatus(ZSCPI::ack, clientinfo->getScpiTransactionId());
                         }
                         else {
                             QString answer = static_cast<VeinComponent::ComponentData*>(commandEvent->eventData())->newValue().toString();
-                            clientinfo->getClient()->receiveAnswer(answer, clientinfo->getScpiTransactionId());
+                            clientinfo->getClient()->handleCmdFinish(answer, clientinfo->getScpiTransactionId());
                         }
                         break;
                     }
@@ -104,7 +104,7 @@ void SCPIEventSystem::handleErrorData(VeinEvent::CommandEvent *commandEvent)
                     emit sigClientInfoSignal(errorComponentName);
                     disconnect(myConn);
                     cSCPIClient* client = clientinfo->getClient();
-                    client->receiveStatus(ZSCPI::errval);
+                    client->receiveStatus(ZSCPI::errval, clientinfo->getScpiTransactionId());
                     break;
                 }
             }

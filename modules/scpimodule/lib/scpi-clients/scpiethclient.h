@@ -15,7 +15,7 @@ public:
     QString getPeerAddress();
 
 private slots:
-    void receiveAnswer(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok = true, bool skipLog = false) override;
+    void handleCmdFinish(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok = true, bool skipLog = false) override;
     void cmdInput() override;
 private:
     QTcpSocket* m_pSocket = nullptr;

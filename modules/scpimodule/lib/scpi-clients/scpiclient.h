@@ -32,11 +32,9 @@ public:
     void addSCPIClientInfo(QString key, SCPIMODULE::SCPIClientInfoPtr info);
 
     QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegatePtr> m_SCPIMeasureDelegateHash;
-signals:
-    void commandAnswered(SCPIMODULE::cSCPIClient* client);
 public slots:
-    void receiveStatus(quint8 stat);
-    virtual void receiveAnswer(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok = true, bool skipLog = false) = 0;
+    void receiveStatus(quint8 stat, const ScpiTransactionId &scpiTransactionId);
+    virtual void handleCmdFinish(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok = true, bool skipLog = false) = 0;
     void removeSCPIClientInfo(const QString &key);
 
 protected:

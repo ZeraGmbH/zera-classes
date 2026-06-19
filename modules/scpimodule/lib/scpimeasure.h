@@ -38,9 +38,9 @@ signals:
     void fetchContinue();
 
     void sigMeasDone(const QString& answer, const ScpiTransactionId &scpiTransactionId);
-    void sigConfDone();
+    void sigConfDone(const ScpiTransactionId &scpiTransactionId);
     void sigReadDone(const QString& answer, const ScpiTransactionId &scpiTransactionId);
-    void sigInitDone();
+    void sigInitDone(const ScpiTransactionId &scpiTransactionId);
     void sigFetchDone(const QString& answer, const ScpiTransactionId &scpiTransactionId);
 
 private:
@@ -59,7 +59,9 @@ private:
     // State machines cannot perform more than one transaction at a time
     // => keep scpi transaction id per state machine / transaction type for those with answers (measure/read/fetch)
     ScpiTransactionId m_measureScpiTransactionId;
+    ScpiTransactionId m_configureScpiTransactionId;
     ScpiTransactionId m_readScpiTransactionId;
+    ScpiTransactionId m_initScpiTransactionId;
     ScpiTransactionId m_fetchScpiTransactionId;
 
 

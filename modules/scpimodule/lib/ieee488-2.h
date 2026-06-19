@@ -132,7 +132,7 @@ private:
     void SetSRE(quint8 b); // set SRE service request enable register
     void SetESR(quint8 b); // set ESR standard event status register
     void SetESE(quint8 b); // set ESE event status enable register
-    void AddEventErrorWithResponse(int error);
+    void AddEventErrorWithResponse(int error, const ScpiTransactionId &scpiTransactionId);
 
     quint8 m_nSTB; // status byte !!!!!! setting/resetting these 4 registers must be done using dedicated functions
     quint8 m_nSRE; // service reguest enable

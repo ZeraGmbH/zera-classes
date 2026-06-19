@@ -187,7 +187,7 @@ QUuid cSCPIClient::getClientId()
     return m_clientId;
 }
 
-void cSCPIClient::receiveStatus(quint8 stat)
+void cSCPIClient::receiveStatus(quint8 stat, const ScpiTransactionId &scpiTransactionId)
 {
     switch (stat)
     {
@@ -206,7 +206,7 @@ void cSCPIClient::receiveStatus(quint8 stat)
         m_pIEEE4882->addEventError(CommandError);
         break;
     }
-    emit commandAnswered(this);
+    handleCmdFinish("", scpiTransactionId);
 }
 
 cSCPIClient::EntityHash cSCPIClient::getEntitiesWithScpi() const
