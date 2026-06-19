@@ -17,7 +17,7 @@ class cIEEE4882Interface: public cBaseInterface
     Q_OBJECT
 public:
     cIEEE4882Interface(cSCPIModule* module, cSCPIInterface* iface);
-    virtual bool setupInterface();
+    bool setupInterface() override;
 
 private slots:
     void executeCmd(cSCPIClient* client, int cmdCode, const QString& sInput, const ScpiTransactionId &scpiTransactionId);

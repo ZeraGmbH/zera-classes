@@ -14,7 +14,7 @@ class cInterfaceInterface : public cBaseInterface
     Q_OBJECT
 public:
     cInterfaceInterface(cSCPIModule* module, cSCPIInterface* iface);
-    virtual bool setupInterface() override;
+    bool setupInterface() override;
 
 private slots:
     void executeCmd(SCPIMODULE::cSCPIClient* client, int cmdCode, const QString& sInput, const ScpiTransactionId &scpiTransactionId);

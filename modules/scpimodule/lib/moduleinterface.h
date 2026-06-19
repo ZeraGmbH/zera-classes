@@ -29,9 +29,9 @@ class cModuleInterface: public cBaseInterface
     Q_OBJECT
 public:
     cModuleInterface(cSCPIModule* module, cSCPIInterface* iface);
-    virtual ~cModuleInterface();
+    ~cModuleInterface() override;
 
-    virtual bool setupInterface() override;
+    bool setupInterface() override;
     virtual void actualizeInterface(QVariant modInterface);
 
     QHash<QString, cSCPIMeasureDelegatePtr>* getSCPIMeasDelegateHash();
