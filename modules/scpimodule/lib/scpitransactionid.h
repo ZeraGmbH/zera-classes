@@ -9,13 +9,11 @@ public:
     ScpiTransactionId();
     static ScpiTransactionId createUniqueId();
     quint64 getChrono() const;
+    bool isValid() const;
+
 private:
     ScpiTransactionId(quint64 id);
-
-    static constexpr quint64 INVALID = 0;
-    quint64 m_id = INVALID;
-
-    static quint64 m_currentId;
+    quint64 m_id;
 };
 
 #endif // SCPITRANSACTIONID_H
