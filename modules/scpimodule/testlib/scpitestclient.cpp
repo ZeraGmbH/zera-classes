@@ -24,11 +24,11 @@ cSCPIInterface* ScpiTestClient::getScpiInterface()
     return m_pSCPIInterface;
 }
 
-void ScpiTestClient::handleCmdFinish(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok, bool skipLog)
+void ScpiTestClient::handleCmdFinish(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
 {
     Q_UNUSED(scpiTransactionId)
-    Q_UNUSED(skipLog)
-    emit sigScpiAnswer(answ);
+    Q_UNUSED(logType)
+    emit sigScpiAnswer(scpiResponse);
 }
 
 void ScpiTestClient::cmdInput()

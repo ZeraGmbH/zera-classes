@@ -36,9 +36,9 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
     {
     case deviceinterfacecmd: {
         if (cmd.isQuery())
-            client->handleCmdFinish(getDevIface(), scpiTransactionId, true, true);
+            client->handleCmdFinish(getDevIface(), scpiTransactionId, cSCPIClient::LOG_SKIP /* dev:iface is huge */);
         else
-            client->receiveStatus(ZSCPI::nak, scpiTransactionId);
+            client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
         break;
     }
 

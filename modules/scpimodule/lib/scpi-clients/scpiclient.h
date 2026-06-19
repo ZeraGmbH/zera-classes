@@ -32,9 +32,13 @@ public:
     void addSCPIClientInfo(QString key, SCPIMODULE::SCPIClientInfoPtr info);
 
     QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegatePtr> m_SCPIMeasureDelegateHash;
+    enum FinishLogTypes {
+        LOG_FULL,
+        LOG_SKIP
+    };
+    virtual void handleCmdFinish(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) = 0;
+    void handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId &scpiTransactionId);
 public slots:
-    void receiveStatus(quint8 stat, const ScpiTransactionId &scpiTransactionId);
-    virtual void handleCmdFinish(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok = true, bool skipLog = false) = 0;
     void removeSCPIClientInfo(const QString &key);
 
 protected:

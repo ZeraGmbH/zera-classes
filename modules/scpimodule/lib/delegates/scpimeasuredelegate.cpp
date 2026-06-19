@@ -47,7 +47,7 @@ void cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, const QString &scpi,
         client->m_SCPIMeasureDelegateHash[this]->executeClient(client, scpiTransactionId);
     }
     else
-        client->receiveStatus(ZSCPI::nak, scpiTransactionId);
+        client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
 void cSCPIMeasureDelegate::executeClient(cSCPIClient *client, const ScpiTransactionId &scpiTransactionId)
@@ -90,7 +90,7 @@ void cSCPIMeasureDelegate::executeClient(cSCPIClient *client, const ScpiTransact
         }
     }
     else
-        client->receiveStatus(ZSCPI::nak, scpiTransactionId);
+        client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
 void cSCPIMeasureDelegate::addscpimeasureObject(cSCPIMeasure *measureobject)
@@ -104,7 +104,7 @@ void cSCPIMeasureDelegate::receiveDone(const ScpiTransactionId &scpiTransactionI
     disconnect(measure,0,this,0);
     m_nPending--;
     if (m_nPending == 0)
-        m_pClient->receiveStatus(ZSCPI::ack, scpiTransactionId);
+        m_pClient->handleCmdFinishStatusOnly(ZSCPI::ack, scpiTransactionId);
 }
 
 void cSCPIMeasureDelegate::onCmdFinish(QString s, const ScpiTransactionId &scpiTransactionId)

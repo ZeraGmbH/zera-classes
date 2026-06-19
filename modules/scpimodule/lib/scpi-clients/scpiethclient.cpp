@@ -16,14 +16,15 @@ cSCPIEthClient::~cSCPIEthClient()
     m_pSocket->deleteLater();
 }
 
-void cSCPIEthClient::handleCmdFinish(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok, bool skipLog)
+void cSCPIEthClient::handleCmdFinish(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
 {
     // for now
-    if (answ.isEmpty())
+    if (scpiResponse.isEmpty())
         return;
-    QByteArray ba = answ.toUtf8() + "\n";
+
+    QByteArray ba = scpiResponse.toUtf8() + "\n";
     m_pSocket->write(ba);
-    qInfo("Network SCPI command response : %s", skipLog ? "<skipped>" : qPrintable(answ));
+    qInfo("Network SCPI command response : %s", logType == LOG_SKIP ? "<skipped>" : qPrintable(scpiResponse));
 }
 
 QString cSCPIEthClient::getPeerAddress()

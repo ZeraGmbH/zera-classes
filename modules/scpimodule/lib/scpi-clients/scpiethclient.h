@@ -12,10 +12,11 @@ class cSCPIEthClient: public cSCPIClient
 public:
     cSCPIEthClient(QTcpSocket* socket,  cSCPIModule *module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
     ~cSCPIEthClient() override;
+
+    void handleCmdFinish(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) override;
     QString getPeerAddress();
 
 private slots:
-    void handleCmdFinish(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok = true, bool skipLog = false) override;
     void cmdInput() override;
 private:
     QTcpSocket* m_pSocket = nullptr;

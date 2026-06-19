@@ -187,7 +187,7 @@ QUuid cSCPIClient::getClientId()
     return m_clientId;
 }
 
-void cSCPIClient::receiveStatus(quint8 stat, const ScpiTransactionId &scpiTransactionId)
+void cSCPIClient::handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId &scpiTransactionId)
 {
     switch (stat)
     {

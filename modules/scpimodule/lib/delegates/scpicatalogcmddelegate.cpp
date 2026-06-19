@@ -26,7 +26,7 @@ void cSCPICatalogCmdDelegate::executeSCPI(cSCPIClient *client, const QString &sc
     if (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0))// test if we got an allowed query
         client->handleCmdFinish(m_sAnswer, scpiTransactionId);
     else
-        client->receiveStatus(ZSCPI::nak, scpiTransactionId);
+        client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
 void cSCPICatalogCmdDelegate::setOutput(const QVariant &modInterface)

@@ -14,9 +14,10 @@ public:
     cSCPISerialClient(QSerialPort* serial, cSCPIModule *module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
     ~cSCPISerialClient() override;
 
+    void handleCmdFinish(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) override;
+
 private slots:
     void cmdInput() override;
-    void handleCmdFinish(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok = true, bool skipLog = false) override;
 private:
     QSerialPort* m_pSerialPort = nullptr;
 };

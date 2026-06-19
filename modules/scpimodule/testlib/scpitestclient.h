@@ -10,14 +10,15 @@ class ScpiTestClient : public cSCPIClient
     Q_OBJECT
 public:
     ScpiTestClient(cSCPIModule* module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface);
+
     void sendScpiCmds(QString cmds);
     cSCPIInterface* getScpiInterface();
+    void handleCmdFinish(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) override;
 signals:
-    void sigScpiAnswer(QString answ);
+    void sigScpiAnswer(const QString &scpiResponse);
 
 private slots:
     void cmdInput() override;
-    void handleCmdFinish(QString answ, const ScpiTransactionId &scpiTransactionId, bool ok = true, bool skipLog = false) override;
 };
 
 }

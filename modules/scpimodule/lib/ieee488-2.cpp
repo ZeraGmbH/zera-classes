@@ -41,7 +41,7 @@ cIEEE4882::cIEEE4882(cSCPIClient *client, QString deviceFamilyFromConfig, quint1
 void cIEEE4882::AddEventErrorWithResponse(int error, const ScpiTransactionId &scpiTransactionId)
 {
     addEventError(error);
-    m_pClient->handleCmdFinish("", scpiTransactionId, false);
+    m_pClient->handleCmdFinish("", scpiTransactionId);
 }
 
 void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
@@ -270,7 +270,7 @@ void cIEEE4882::SetSTB(quint8 b)
         m_nSTB |= (1 << STBrqs); // we set the request service bit in stb
         if (((m_nSTB & m_nSRE) & (1 << STBrqs)) != 0)
             // This look like an additional 'async' response => return with invalid id
-            m_pClient->handleCmdFinish("SRQ", ScpiTransactionId(), false);
+            m_pClient->handleCmdFinish("SRQ", ScpiTransactionId());
     }
 }
 
