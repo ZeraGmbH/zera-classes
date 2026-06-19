@@ -44,7 +44,7 @@ private slots:
     void testSerial();
 
     // vein change handlers
-    void newSerialOn(QVariant serialOn);
+    void newSerialOn(const QVariant &serialOn);
 private:
     void createSerialScpi();
     void destroySerialScpi();

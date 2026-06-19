@@ -29,7 +29,7 @@ public:
     quint8 operationComplete();
     cIEEE4882* getIEEE4882();
     QUuid getClientId();
-    void addSCPIClientInfo(QString key, SCPIMODULE::SCPIClientInfoPtr info);
+    void addSCPIClientInfo(const QString &key, const SCPIMODULE::SCPIClientInfoPtr &info);
 
     QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegatePtr> m_SCPIMeasureDelegateHash;
     enum FinishLogTypes {

@@ -28,7 +28,7 @@ scpiErrorType SCPIError[scpiLastError] = {  {0,(char*)"No error"},
                                             {-500,(char*)"Power on"} };
 
 
-cIEEE4882::cIEEE4882(cSCPIClient *client, QString deviceFamilyFromConfig, quint16 errorqueuelen, VeinStorage::AbstractDatabase *storageDb) :
+cIEEE4882::cIEEE4882(cSCPIClient *client, const QString &deviceFamilyFromConfig, quint16 errorqueuelen, VeinStorage::AbstractDatabase *storageDb) :
     m_pClient(client),
     m_deviceFamilyFromConfig(deviceFamilyFromConfig),
     m_nQueueLen(errorqueuelen),

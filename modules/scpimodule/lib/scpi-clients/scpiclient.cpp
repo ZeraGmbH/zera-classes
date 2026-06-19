@@ -97,7 +97,7 @@ cIEEE4882 *cSCPIClient::getIEEE4882()
     return m_pIEEE4882;
 }
 
-void cSCPIClient::addSCPIClientInfo(QString key, SCPIClientInfoPtr info)
+void cSCPIClient::addSCPIClientInfo(const QString &key, const SCPIClientInfoPtr &info)
 {
     m_scpiClientInfoHash.insert(key, info);
 }

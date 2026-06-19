@@ -115,7 +115,7 @@ QHash<QString, cSCPIMeasureDelegatePtr> *cModuleInterface::getSCPIMeasDelegateHa
     return &m_scpiMeasureDelegateHash;
 }
 
-void cModuleInterface::addSCPICommand(cSCPICmdInfoPtr scpiCmdInfo)
+void cModuleInterface::addSCPICommand(const cSCPICmdInfoPtr &scpiCmdInfo)
 {
     if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
@@ -159,7 +159,7 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfoPtr scpiCmdInfo)
     }
 }
 
-void cModuleInterface::addRPCCommand(cSCPICmdInfoPtr scpiCmdInfo)
+void cModuleInterface::addRPCCommand(const cSCPICmdInfoPtr &scpiCmdInfo)
 {
     QString cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
     QStringList nodeNames = cmdComplete.split(':');
@@ -170,8 +170,8 @@ void cModuleInterface::addRPCCommand(cSCPICmdInfoPtr scpiCmdInfo)
     m_pSCPIInterface->addSCPICommand(delegate);
 }
 
-void cModuleInterface::addSCPIMeasureCommand(QString cmdparent,
-                                             QString cmd,
+void cModuleInterface::addSCPIMeasureCommand(const QString &cmdparent,
+                                             const QString &cmd,
                                              quint8 cmdType,
                                              quint8 measCode,
                                              cSCPIMeasure *measureObject,

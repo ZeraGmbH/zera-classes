@@ -246,7 +246,7 @@ void cSCPIServer::testSerial()
     }
 }
 
-void cSCPIServer::newSerialOn(QVariant serialOn)
+void cSCPIServer::newSerialOn(const QVariant &serialOn)
 {
     bool on = serialOn.toBool();
     if(on) {

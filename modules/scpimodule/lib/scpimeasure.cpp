@@ -12,7 +12,7 @@ namespace SCPIMODULE
 
 int cSCPIMeasure::m_instanceCount = 0;
 
-cSCPIMeasure::cSCPIMeasure(std::shared_ptr<QMultiHash<QString, cSCPIMeasure *> > scpiMeasureHash, cSCPICmdInfoPtr scpicmdinfo) :
+cSCPIMeasure::cSCPIMeasure(const std::shared_ptr<QMultiHash<QString, cSCPIMeasure *>> &scpiMeasureHash, const cSCPICmdInfoPtr &scpicmdinfo) :
     m_scpiMeasureHash(scpiMeasureHash),
     m_pSCPICmdInfo(scpicmdinfo)
 {
@@ -34,10 +34,10 @@ cSCPIMeasure::~cSCPIMeasure()
     m_scpiMeasureHash->remove(m_pSCPICmdInfo->componentOrRpcName, this);
 }
 
-void cSCPIMeasure::receiveMeasureValue(QVariant qvar)
+void cSCPIMeasure::receiveMeasureValue(const QVariant &value)
 {
     m_scpiMeasureHash->remove(m_pSCPICmdInfo->componentOrRpcName, this);
-    m_sAnswer = setAnswer(qvar);
+    m_sAnswer = setAnswer(value);
 
     // we emit all expected signals
     for (int i = 0; i < signalList.count(); i++)

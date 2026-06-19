@@ -40,10 +40,10 @@ private:
     QHash<QString, cSCPIMeasureDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
     QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
-    void addSCPICommand(cSCPICmdInfoPtr scpiCmdInfo);
-    void addRPCCommand(cSCPICmdInfoPtr scpiCmdInfo);
-    void addSCPIMeasureCommand(QString cmdparent,
-                               QString cmd,
+    void addSCPICommand(const cSCPICmdInfoPtr &scpiCmdInfo);
+    void addRPCCommand(const cSCPICmdInfoPtr &scpiCmdInfo);
+    void addSCPIMeasureCommand(const QString &cmdparent,
+                               const QString &cmd,
                                quint8 cmdType,
                                quint8 measCode,
                                cSCPIMeasure* measureObject,

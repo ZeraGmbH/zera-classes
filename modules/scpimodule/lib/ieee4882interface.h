@@ -20,7 +20,7 @@ public:
     bool setupInterface() override;
 
 private slots:
-    void executeCmd(cSCPIClient* client, int cmdCode, const QString& sInput, const ScpiTransactionId &scpiTransactionId);
+    void executeCmd(SCPIMODULE::cSCPIClient* client, int cmdCode, const QString& sInput, const ScpiTransactionId &scpiTransactionId);
 };
 
 }

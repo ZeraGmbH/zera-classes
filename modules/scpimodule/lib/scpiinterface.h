@@ -15,7 +15,7 @@ class cSCPIInterface: public QObject
 
 public:
     cSCPIInterface(){}
-    cSCPIInterface(QString name);
+    cSCPIInterface(const QString &name);
     virtual ~cSCPIInterface();
 
     void exportSCPIModelXML(QString &xml, QMap<QString, QString> modelListBaseEntry);

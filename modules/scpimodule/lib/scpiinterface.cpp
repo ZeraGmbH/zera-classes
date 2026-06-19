@@ -11,7 +11,7 @@
 namespace SCPIMODULE
 {
 
-cSCPIInterface::cSCPIInterface(QString name)
+cSCPIInterface::cSCPIInterface(const QString &name)
     :m_sName(name)
 {
     m_pSCPICmdInterface = new cSCPI();

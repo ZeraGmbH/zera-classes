@@ -19,12 +19,12 @@ class cSCPIMeasure : public QObject
 {
     Q_OBJECT
 public:
-    cSCPIMeasure(std::shared_ptr<QMultiHash<QString, cSCPIMeasure*>> scpiMeasureHash,
-                 cSCPICmdInfoPtr scpicmdinfo);
+    cSCPIMeasure(const std::shared_ptr<QMultiHash<QString, cSCPIMeasure*>> &scpiMeasureHash,
+                 const cSCPICmdInfoPtr &scpicmdinfo);
     cSCPIMeasure(const cSCPIMeasure &obj);
     virtual ~cSCPIMeasure();
 
-    void receiveMeasureValue(QVariant qvar);
+    void receiveMeasureValue(const QVariant &value);
     void execute(quint8 cmd, const ScpiTransactionId &scpiTransactionId);
     int entityID();
 
