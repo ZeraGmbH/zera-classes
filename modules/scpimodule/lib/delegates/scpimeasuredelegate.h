@@ -20,7 +20,7 @@ public:
 
 private slots:
     void receiveDone(const ScpiTransactionId &scpiTransactionId);
-    void handleCmdFinish(QString s, const ScpiTransactionId &scpiTransactionId);
+    void onCmdFinish(QString s, const ScpiTransactionId &scpiTransactionId);
 
 private:
     quint8 m_nMeasCode;
