@@ -119,8 +119,8 @@ private:
     QVector<int> m_ErrEventQueue;
 
     QString getIdentification();
-    QString RegOutput(quint8 reg);
-    QString mGetScpiError();
+    QString stringifyRegisterForOutput(quint8 reg);
+    QString popScpiErrorAndMakeString();
 
     void ResetDevice();
     void ClearStatus();
