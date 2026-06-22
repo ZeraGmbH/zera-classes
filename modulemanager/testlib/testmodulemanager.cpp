@@ -169,19 +169,20 @@ bool TestModuleManager::modulesReady()
 
 QStringList TestModuleManager::getModuleFileNames()
 {
-    QString strBuildPath = TestPluginPaths::getPaths();
-    QStringList buildPaths = strBuildPath.split(" ", Qt::SkipEmptyParts);
-    QStringList plugins;
-    for(auto &buildPath : buildPaths) {
-        QStringList libFiles = QDir(buildPath, "*.so").entryList();
-        QString libFullPath = QDir::cleanPath(buildPath + "/" + libFiles[0]);
-        if (QFile::exists(libFullPath))
-            plugins.append(libFullPath);
-    }
-    qInfo("Number of plugins found: %i", plugins.size());
-    if (plugins.isEmpty())
-        qCritical("Build path: %s", qPrintable(strBuildPath));
-    return plugins;
+    QString modulePath = MODMAN_MODULE_PATH;
+    QString oeRootPath = OE_INSTALL_ROOT;
+    if (!oeRootPath.isEmpty())
+        modulePath = oeRootPath + "/" + modulePath;
+
+    QDir moduleDir(modulePath);
+    QStringList fullNames;
+    for(auto &name : moduleDir.entryList(QDir::Files))
+        fullNames.append(moduleDir.absoluteFilePath(name));
+
+    qInfo("Number of plugins found: %i", fullNames.size());
+    if (fullNames.isEmpty())
+        qCritical("Build path: %s", qPrintable(modulePath));
+    return fullNames;
 }
 
 void TestModuleManager::saveModuleConfig(ZeraModules::ModuleData *moduleData)

@@ -1,4 +1,3 @@
-add_definitions(-DMODMAN_MODULE_PATH="${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/zera-modules/")
 
 file(GLOB SOURCES
     *.cpp

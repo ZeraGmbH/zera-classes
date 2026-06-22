@@ -68,7 +68,6 @@ set(SET_SESSION_FILES_SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modulemanager/ses
 add_definitions(-DMODMAN_CONFIG_PATH="${SET_MODMAN_CONFIG_PATH}")
 add_definitions(-DSOURCE_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/sourcestates")
 
-
 enable_testing()
 # Inspired by
 # https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
