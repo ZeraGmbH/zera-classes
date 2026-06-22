@@ -170,6 +170,7 @@ bool TestModuleManager::modulesReady()
 QStringList TestModuleManager::getModuleFileNames()
 {
     QString strBuildPath = TestPluginPaths::getPaths();
+    qInfo("Build path: %s", qPrintable(strBuildPath));
     QStringList buildPaths = strBuildPath.split(" ", Qt::SkipEmptyParts);
     QStringList plugins;
     for(auto &buildPath : buildPaths) {
@@ -177,6 +178,7 @@ QStringList TestModuleManager::getModuleFileNames()
         QString libFullPath = QDir::cleanPath(buildPath + "/" + libFiles[0]);
         plugins.append(libFullPath);
     }
+    qInfo("Number of plugins found: %i", plugins.size());
     return plugins;
 }
 
