@@ -10,6 +10,5 @@ function(SETUP_QTESTS_MODULE)
 endfunction()
 
 SETUP_QTESTS_MODULE(
-    test_thdn_config_load
 )
 

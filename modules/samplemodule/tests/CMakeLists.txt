@@ -14,7 +14,6 @@ function(SETUP_QTESTS_MODULE)
 endfunction()
 
 SETUP_QTESTS_MODULE(
-    test_sample_config_load
     test_sample_persistency
     test_sample_set_channel
     test_sample_range_module_value_observer

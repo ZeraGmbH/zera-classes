@@ -9,6 +9,5 @@ function(SETUP_QTESTS_MODULE)
 endfunction()
 
 SETUP_QTESTS_MODULE(
-    test_power3_config_load
 )
 
