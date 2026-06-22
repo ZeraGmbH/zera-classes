@@ -175,7 +175,8 @@ QStringList TestModuleManager::getModuleFileNames()
     for(auto &buildPath : buildPaths) {
         QStringList libFiles = QDir(buildPath, "*.so").entryList();
         QString libFullPath = QDir::cleanPath(buildPath + "/" + libFiles[0]);
-        plugins.append(libFullPath);
+        if (QFile::exists(libFullPath))
+            plugins.append(libFullPath);
     }
     qInfo("Number of plugins found: %i", plugins.size());
     if (plugins.isEmpty())
