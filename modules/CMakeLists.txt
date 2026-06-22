@@ -1,7 +1,6 @@
 macro(SET_MODULE_ENV MODULE_NAME)
     string(TOUPPER ${MODULE_NAME} MODULE_NAME_UPPER)
     set(MODULE_CONFIG_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${MODULE_NAME}/configs")
-    set(MODULE_PLUGIN_BUILD_PATH "${MODULE_PLUGIN_BUILD_PATH} ${CMAKE_CURRENT_BINARY_DIR}/${MODULE_NAME}/module")
 
     # Pass source paths to configs for tests. This is module-global to allow e.g
     # scpimodule running tests with other modules
@@ -42,9 +41,6 @@ SET_MODULE_ENV(statusmodule)
 SET_MODULE_ENV(thdnmodule)
 SET_MODULE_ENV(transformer1module)
 SET_MODULE_ENV(recordermodule)
-
-# This makes MODULE_PLUGIN_BUILD_PATH available
-add_subdirectory(lib_test_plugin_paths)
 
 add_subdirectory(apimodule)
 add_subdirectory(adjustmentmodule)

@@ -1,7 +1,6 @@
 #include "testmodulemanager.h"
 #include "testallservicescom5003.h"
 #include "testallservicesmt310s2.h"
-#include "test_plugin_paths.h"
 #include "modulemanagerconfigtest.h"
 #include "jsonsessionloadertest.h"
 #include "moduleactivist.h"
