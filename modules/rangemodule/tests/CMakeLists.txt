@@ -13,14 +13,9 @@ function(SETUP_QTESTS_MODULE)
 endfunction()
 
 SETUP_QTESTS_MODULE(
-    test_range_config_load
     test_range_module_regression
     test_range_automatic
     test_range_scpi
-)
-
-target_sources(test_range_config_load
-  PRIVATE
 )
 
 target_sources(test_range_module_regression

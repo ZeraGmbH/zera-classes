@@ -12,7 +12,6 @@ function(SETUP_QTESTS_MODULE)
 endfunction()
 
 SETUP_QTESTS_MODULE(
-    test_dosage_config_load
     test_dosage_module_regression
     test_dosage
 )

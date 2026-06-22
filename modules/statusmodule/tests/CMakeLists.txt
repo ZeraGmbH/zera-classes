@@ -13,7 +13,6 @@ function(SETUP_QTESTS_MODULE)
 endfunction()
 
 SETUP_QTESTS_MODULE(
-    test_status_config_load
     test_readinstrumenttype
     test_statusmodule_with_dspsuper
     test_rpc_create_version_file

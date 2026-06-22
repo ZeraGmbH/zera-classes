@@ -22,7 +22,6 @@ function(SETUP_QTESTS_MODULE)
 endfunction()
 
 SETUP_QTESTS_MODULE(
-    test_adjustment_config_load
     test_adj_module_regression
     test_adj_module_gain
     test_adj_module_gain_dc

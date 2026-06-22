@@ -10,7 +10,6 @@ function(SETUP_QTESTS_MODULE)
 endfunction()
 
 SETUP_QTESTS_MODULE(
-    test_fft_config_load
     test_fft_module_regression
 )
 

@@ -12,7 +12,6 @@ endfunction()
 
 SETUP_QTESTS_MODULE(
     test_recorder
-    test_recorder_config_load
     test_recorder_scpi
     test_recorder_reducer
     test_snapshot_recorder

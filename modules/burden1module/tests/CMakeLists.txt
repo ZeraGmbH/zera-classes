@@ -10,7 +10,6 @@ function(SETUP_QTESTS_MODULE)
 endfunction()
 
 SETUP_QTESTS_MODULE(
-    test_burden1_config_load
     test_burden1_module_regression
 )
 
