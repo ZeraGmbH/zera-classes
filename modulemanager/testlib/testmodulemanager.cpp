@@ -169,18 +169,16 @@ bool TestModuleManager::modulesReady()
 
 QStringList TestModuleManager::getModuleFileNames()
 {
-    QString strBuildPath = TestPluginPaths::getPaths();
-    QStringList buildPaths = strBuildPath.split(" ", Qt::SkipEmptyParts);
+    QString moduleInstallPath = INSTALL_LIBDIR "/zera-modules/";
+    QDir moduleInstallDir(moduleInstallPath, "*.so");
     QStringList plugins;
-    for(auto &buildPath : buildPaths) {
-        QStringList libFiles = QDir(buildPath, "*.so").entryList();
-        QString libFullPath = QDir::cleanPath(buildPath + "/" + libFiles[0]);
-        if (QFile::exists(libFullPath))
-            plugins.append(libFullPath);
-    }
+    const QStringList dirFiles = moduleInstallDir.entryList();
+    for (const QString &moduleName : dirFiles)
+        plugins.append(moduleInstallPath + moduleName);
+
     qInfo("Number of plugins found: %i", plugins.size());
     if (plugins.isEmpty())
-        qCritical("Build path: %s", qPrintable(strBuildPath));
+        qCritical("Build path: %s", qPrintable(moduleInstallPath));
     return plugins;
 }
 

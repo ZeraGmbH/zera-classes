@@ -67,6 +67,7 @@ set(SET_SESSION_FILES_SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/modulemanager/ses
 
 add_definitions(-DMODMAN_CONFIG_PATH="${SET_MODMAN_CONFIG_PATH}")
 add_definitions(-DSOURCE_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/sourcestates")
+add_definitions(-DINSTALL_LIBDIR="${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
 
 
 enable_testing()
