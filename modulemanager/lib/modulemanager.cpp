@@ -98,7 +98,9 @@ bool ModuleManager::loadAllAvailableModulePlugins()
             m_factoryTable.insert(module->getFactoryName(), module);
         }
         else
-            qWarning() << "Error string:\n" << loader.errorString();
+            qWarning("Module %s was not loaded! Error string: %s",
+                     qPrintable(fileName),
+                     qPrintable(loader.errorString()));
     }
     qInfo("Modules analyse took %llims", duration.elapsed());
     return retVal;
