@@ -10,6 +10,7 @@ class ScpiCmdResponseSorter
 public:
     ScpiTransactionId createTransaction();
     QByteArray genOrDelaySortedOutput(const QByteArray& scpiSingleResponse, const ScpiTransactionId &scpiTransactionId);
+
 private:
     QByteArray createAccumulatedResponse(const ScpiTransactionId &scpiCurrentTransactionId);
 
