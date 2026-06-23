@@ -4,7 +4,7 @@
 #include "scpibasedelegate.h"
 #include "scpimodule.h"
 #include "scpicmdinfo.h"
-#include "scpiclientinfo.h"
+#include "scpiveintransactioninfo.h"
 
 namespace SCPIMODULE {
 
@@ -15,7 +15,7 @@ public:
     cSCPIParameterDelegate(const QString &cmdParent, const QString &cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfoPtr scpicmdinfo);
     void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
 signals:
-    void clientinfoSignal(QString, SCPIMODULE::SCPIClientInfoPtr);
+    void clientinfoSignal(QString, SCPIMODULE::SCPIVeinTransactionInfoPtr);
 private:
     bool handleFutureComponent(cSCPIClient *client, bool bQuery, const ScpiTransactionId &scpiTransactionId);
 

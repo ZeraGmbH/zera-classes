@@ -4,7 +4,7 @@
 #include "scpiinterface.h"
 #include "scpistatus.h"
 #include "scpimeasuredelegate.h"
-#include "scpiclientinfo.h"
+#include "scpiveintransactioninfo.h"
 #include "ieee488-2.h"
 #include "scpimoduleconfigdata.h"
 #include "signalconnectiondelegate.h"
@@ -29,7 +29,7 @@ public:
     quint8 operationComplete();
     cIEEE4882* getIEEE4882();
     QUuid getClientId();
-    void addSCPIClientInfo(const QString &key, const SCPIMODULE::SCPIClientInfoPtr &info);
+    void addSCPIClientInfo(const QString &key, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
 
     QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegatePtr> m_SCPIMeasureDelegateHash;
     enum FinishLogTypes {
@@ -65,7 +65,7 @@ private:
 
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
-    QHash<QString, SCPIClientInfoPtr> m_scpiClientInfoHash;
+    QHash<QString, SCPIVeinTransactionInfoPtr> m_scpiClientInfoHash;
     cIEEE4882* m_pIEEE4882 = nullptr;
 
     QList<cSCPIStatus*> m_SCPIStatusList;

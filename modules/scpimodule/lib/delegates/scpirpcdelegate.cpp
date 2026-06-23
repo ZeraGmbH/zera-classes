@@ -30,22 +30,22 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, const QStrin
 
 void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QString &scpi, bool inputIsQuery, const ScpiTransactionId &scpiTransactionId)
 {
-    SCPIClientInfoPtr clientinfo;
+    SCPIVeinTransactionInfoPtr transactionInfo;
     if (inputIsQuery)
-        clientinfo = std::make_shared<cSCPIClientInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parQuery, scpiTransactionId);
+        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parQuery, scpiTransactionId);
     else
-        clientinfo = std::make_shared<cSCPIClientInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parcmd, scpiTransactionId);
+        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parcmd, scpiTransactionId);
 
     VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfClientRPCInvoker>());
     connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, const QVariantMap &resultData) {
         Q_UNUSED(ok)
 
         QMetaObject::Connection myConn = connect(this, &cSCPIRpcDelegate::sigClientInfoSignal,
-                                                 clientinfo->getClient(), &cSCPIClient::removeSCPIClientInfo, Qt::QueuedConnection);
+                                                 transactionInfo->getClient(), &cSCPIClient::removeSCPIClientInfo, Qt::QueuedConnection);
         emit sigClientInfoSignal(m_scpicmdinfo->componentOrRpcName);
         disconnect(myConn);
 
-        m_pModule->scpiParameterCmdInfoHash.remove(m_scpicmdinfo->componentOrRpcName, clientinfo);
+        m_pModule->scpiParameterCmdInfoHash.remove(m_scpicmdinfo->componentOrRpcName, transactionInfo);
 
         QVariant returnData;
         bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);
@@ -85,8 +85,8 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QSt
             params[paramNamesList[i]] = variantValue;
         }
 
-        m_pModule->scpiParameterCmdInfoHash.insert(m_scpicmdinfo->componentOrRpcName, clientinfo);
-        client->addSCPIClientInfo(m_scpicmdinfo->componentOrRpcName, clientinfo);
+        m_pModule->scpiParameterCmdInfoHash.insert(m_scpicmdinfo->componentOrRpcName, transactionInfo);
+        client->addSCPIClientInfo(m_scpicmdinfo->componentOrRpcName, transactionInfo);
         rpcInvoker->invokeRPC(rpcName, params);
     }
 }

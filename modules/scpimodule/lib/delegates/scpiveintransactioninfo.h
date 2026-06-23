@@ -1,5 +1,5 @@
-#ifndef SCPICLIENTINFO
-#define SCPICLIENTINFO
+#ifndef SCPIVEINTRANSACTIONINFO_H
+#define SCPIVEINTRANSACTIONINFO_H
 
 #include "scpitransactionid.h"
 #include <QString>
@@ -12,10 +12,10 @@ class cSCPIClient;
 
 enum parCmdType {parcmd, parQuery};
 
-class cSCPIClientInfo
+class ScpiVeinTransactionInfo
 {
 public:
-    cSCPIClientInfo(cSCPIClient* client, int entityid, int parcmdtype, const ScpiTransactionId &scpiTransactionId);
+    ScpiVeinTransactionInfo(cSCPIClient* client, int entityid, int parcmdtype, const ScpiTransactionId &scpiTransactionId);
 
     int entityId();
     int parCmdType();
@@ -29,10 +29,10 @@ private:
     ScpiTransactionId m_scpiTransactionId;
 };
 
-typedef std::shared_ptr<cSCPIClientInfo> SCPIClientInfoPtr;
+typedef std::shared_ptr<ScpiVeinTransactionInfo> SCPIVeinTransactionInfoPtr;
 
 
 }
 
-#endif // SCPICLIENTINFO
+#endif // SCPIVEINTRANSACTIONINFO_H
 

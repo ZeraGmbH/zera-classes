@@ -56,15 +56,14 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
         event = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, cData);
         event->setPeerId(client->getClientId());
 
-        // we memorize : for component (componentname) the client to set something
-        SCPIClientInfoPtr clientinfo;
+        SCPIVeinTransactionInfoPtr transactionInfo;
         if (bQuery)
-            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery, scpiTransactionId);
+            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery, scpiTransactionId);
         else
-            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd, scpiTransactionId);
+            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd, scpiTransactionId);
 
-        m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentOrRpcName, clientinfo);
-        client->addSCPIClientInfo(m_pSCPICmdInfo->componentOrRpcName, clientinfo);
+        m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentOrRpcName, transactionInfo);
+        client->addSCPIClientInfo(m_pSCPICmdInfo->componentOrRpcName, transactionInfo);
 
        emit m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
     }

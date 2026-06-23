@@ -1,7 +1,7 @@
 #ifndef SCPIMODULE_H
 #define SCPIMODULE_H
 
-#include "scpiclientinfo.h"
+#include "scpiveintransactioninfo.h"
 #include "scpiserver.h"
 #include "signalconnectiondelegate.h"
 #include "scpimeasure.h"
@@ -26,7 +26,7 @@ public:
     cSCPIServer* getSCPIServer();
     cSCPIModuleConfigData *getConfData() const;
 
-    QMultiHash<QString, SCPIClientInfoPtr> scpiParameterCmdInfoHash; // a hash to memorize what was in progress for which client
+    QMultiHash<QString, SCPIVeinTransactionInfoPtr> scpiParameterCmdInfoHash; // a hash to memorize what was in progress for which client
     QList<cSignalConnectionDelegate*> sConnectDelegateList;
     std::shared_ptr<QMultiHash<QString, cSCPIMeasure*>> m_scpiMeasureHash;
 
