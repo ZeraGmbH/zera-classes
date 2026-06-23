@@ -180,7 +180,7 @@ QStringList TestModuleManager::getModuleFileNames()
 
     qInfo("Number of plugins found: %i", fullNames.size());
     if (fullNames.isEmpty())
-        qCritical("Build path: %s", qPrintable(modulePath));
+        qCritical("No modules found in path: %s", qPrintable(modulePath));
     return fullNames;
 }
 
