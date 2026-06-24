@@ -16,7 +16,7 @@ void ScpiModuleClientBlocked::setLogFile(const QString &logFileName)
     TestLogHelpers::writeFile(m_logFileName, ""); // more a write with parent dirs
 }
 
-QByteArray ScpiModuleClientBlocked::sendReceive(const QByteArray &send, bool removeLineFeedOnReceive, bool skipLog)
+QByteArray ScpiModuleClientBlocked::sendReceive(const QByteArray &send, bool removeLineFeedOnReceive)
 {
     QElapsedTimer timer;
     timer.start();
