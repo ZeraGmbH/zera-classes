@@ -45,7 +45,7 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
             for(int i = 0; i < transactionInfoList.count(); i++) {
                 SCPIVeinTransactionInfoPtr transactionInfo = transactionInfoList.at(i);
                 QUuid clientId = commandEvent->peerId();
-                // test if this client sent command for this parameter
+                // test if server notification or client in transaction matches
                 if(clientId.isNull() || clientId == transactionInfo->getClient()->getClientId()) {
                     if(transactionInfo->entityId() == entityId) {
                         m_pModule->scpiParameterCmdInfoHash.remove(componentName, transactionInfo);
