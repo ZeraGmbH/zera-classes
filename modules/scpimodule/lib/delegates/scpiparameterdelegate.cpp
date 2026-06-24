@@ -63,7 +63,7 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
             transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd, scpiTransactionId);
 
         m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentOrRpcName, transactionInfo);
-        client->addSCPIClientInfo(m_pSCPICmdInfo->componentOrRpcName, transactionInfo);
+        client->addSCPITransactionInfo(m_pSCPICmdInfo->componentOrRpcName, transactionInfo);
 
        emit m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
     }

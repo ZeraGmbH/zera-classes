@@ -86,7 +86,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QSt
         }
 
         m_pModule->scpiParameterCmdInfoHash.insert(m_scpicmdinfo->componentOrRpcName, transactionInfo);
-        client->addSCPIClientInfo(m_scpicmdinfo->componentOrRpcName, transactionInfo);
+        client->addSCPITransactionInfo(m_scpicmdinfo->componentOrRpcName, transactionInfo);
         rpcInvoker->invokeRPC(rpcName, params);
     }
 }
