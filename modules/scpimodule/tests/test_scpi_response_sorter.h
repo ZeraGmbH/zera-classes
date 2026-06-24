@@ -13,6 +13,7 @@ private slots:
     void start_1_2_Response_1_2();
     void start_1_2_Response_2_1();
     void start_1_2_3_Response_2_1_3();
+    void start_1_2_3_Response_3_1_2();
     void twoResponsesOnInvalidTransaction();
     void start_2_Response_1_2_3();
     void start_1_2_Response_3_2_1();

@@ -2,20 +2,20 @@
 #define SCPICMDRESPONSESORTER_H
 
 #include "scpitransactionid.h"
-#include <QByteArray>
+#include <QString>
 #include <QMap>
 
 class ScpiCmdResponseSorter
 {
 public:
     ScpiTransactionId createTransaction();
-    QByteArray genOrDelaySortedOutput(const QByteArray& scpiSingleResponse, const ScpiTransactionId &scpiTransactionId);
+    QStringList genOrDelaySortedOutput(const QString& scpiSingleResponse, const ScpiTransactionId &scpiTransactionId);
 
 private:
-    QByteArray createAccumulatedResponse(const ScpiTransactionId &scpiCurrentTransactionId);
+    QStringList createAccumulatedResponse();
 
     QMap<quint64, ScpiTransactionId> m_transactionsPending;
-    QMap<quint64, QByteArray> m_transactionsFinished;
+    QMap<quint64, QString> m_transactionsFinished;
 };
 
 #endif // SCPICMDRESPONSESORTER_H

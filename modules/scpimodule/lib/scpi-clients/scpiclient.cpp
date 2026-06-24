@@ -108,13 +108,16 @@ void cSCPIClient::removeSCPIClientInfo(const QString &key)
     execCmd();
 }
 
-void cSCPIClient::execPendingCmds()
+int cSCPIClient::execPendingCmds()
 {
+    int cmdsStarted = 0;
     while (cmdAvail()) {
         // if we have complete commands
         takeCmd(); // we fetch 1 of them
         execCmd(); // and execute it
+        cmdsStarted++;
     }
+    return cmdsStarted;
 }
 
 bool cSCPIClient::cmdAvail()
@@ -164,7 +167,7 @@ void cSCPIClient::execCmd()
         // This message is checked as is in autobuilder-dut-testsuite!
         qInfo("Executing SCPI command : %s", qPrintable(cmd));
 
-        ScpiTransactionId scpiId = ScpiTransactionId::createUniqueId();
+        ScpiTransactionId scpiId = m_responseSorter.createTransaction();
         if (!m_pSCPIInterface->executeCmd(this, cmd, scpiId))
             m_pIEEE4882->addEventError(CommandError);
         // we leave here if there is any parameter settings pending

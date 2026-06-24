@@ -23,4 +23,5 @@ SETUP_QTESTS_MODULE(
     test_scpi_cmds_in_session
     test_scpi_xsession_change
     test_scpi_response_sorter
+    test_scpi_module_sorted_responses
 )

@@ -7,32 +7,32 @@ ScpiTransactionId ScpiCmdResponseSorter::createTransaction()
     return id;
 }
 
-QByteArray ScpiCmdResponseSorter::genOrDelaySortedOutput(const QByteArray &scpiSingleResponse, const ScpiTransactionId &scpiTransactionId)
+QStringList ScpiCmdResponseSorter::genOrDelaySortedOutput(const QString &scpiSingleResponse, const ScpiTransactionId &scpiTransactionId)
 {
     const quint64 chrono = scpiTransactionId.getChrono();
     ScpiTransactionId pendingTransaction = m_transactionsPending.take(chrono);
     if (pendingTransaction.isValid()) {
         m_transactionsFinished.insert(chrono, scpiSingleResponse);
-        return createAccumulatedResponse(scpiTransactionId);
+        return createAccumulatedResponse();
     }
-    return scpiSingleResponse;
+    return QStringList() << scpiSingleResponse;
 }
 
-QByteArray ScpiCmdResponseSorter::createAccumulatedResponse(const ScpiTransactionId &scpiCurrentTransactionId)
+QStringList ScpiCmdResponseSorter::createAccumulatedResponse()
 {
-    QByteArray totalResponse;
+    QStringList responseList;
     QList<quint64> toDeleteList;
     for (auto iter = m_transactionsFinished.cbegin(); iter != m_transactionsFinished.cend(); ++iter) {
-        quint64 currentChrono = scpiCurrentTransactionId.getChrono();
+        quint64 currentChrono = iter.key();
         if (!m_transactionsPending.isEmpty()) {
             quint64 minimalPendingChrono = m_transactionsPending.firstKey();
             if (currentChrono > minimalPendingChrono)
                 break;
         }
-        totalResponse += iter.value();
+        responseList.append(iter.value());
         toDeleteList.append(iter.key());
     }
     for (const quint64 &toDelete : toDeleteList)
         m_transactionsFinished.remove(toDelete);
-    return totalResponse;
+    return responseList;
 }

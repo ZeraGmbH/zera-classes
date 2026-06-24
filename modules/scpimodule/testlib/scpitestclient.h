@@ -13,12 +13,17 @@ public:
 
     void sendScpiCmds(QString cmds);
     cSCPIInterface* getScpiInterface();
+    int getUnhandledResponses() const;
+
     void handleCmdFinish(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) override;
 signals:
     void sigScpiAnswer(const QString &scpiResponse);
 
 private slots:
     void cmdInput() override;
+
+private:
+    int m_unhandledResponses = 0;
 };
 
 }
