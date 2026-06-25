@@ -1,18 +1,6 @@
 #include "adjmoduletesthelper.h"
 #include "testdspvalues.h"
 
-void AdjModuleTestHelper::setActualTestValues(ModuleManagerTestRunner &testRunner,
-                                              float testvoltage, float testcurrent, float testangle, float testfrequency)
-{
-    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList(), 1);
-    dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
-    dspValues.fireAllActualValues(
-        testRunner.getDspInterface(INJECT_DFT),
-        testRunner.getDspInterface(INJECT_FFT),
-        testRunner.getDspInterface(INJECT_RANGE_PROGRAM), // Range is for frequency only
-        testRunner.getDspInterface(INJECT_RMS));
-}
-
 void AdjModuleTestHelper::setAllValuesSymmetricAc(ModuleManagerTestRunner &testRunner, float testvoltage, float testcurrent, float testangle, float testfrequency)
 {
     TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList(), 1);
