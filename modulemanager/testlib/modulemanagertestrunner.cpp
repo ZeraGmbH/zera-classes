@@ -9,19 +9,22 @@
 #include <timemachineobject.h>
 #include <QDir>
 
-ModuleManagerTestRunner::ModuleManagerTestRunner(QString sessionFileName, bool initialAdjPermission, QString deviceName, LxdmSessionChangeParam lxdmParam, bool addVfLogger, bool cleanupLxdmFiles) :
+ModuleManagerTestRunner::ModuleManagerTestRunner(const QString &sessionFileName,
+                                                 bool initialAdjPermission,
+                                                 const QString &deviceName,
+                                                 const LxdmSessionChangeParam &lxdmParam,
+                                                 bool addVfLogger,
+                                                 bool cleanupLxdmFiles) :
+    m_licenseSystem(std::make_unique<TestLicenseSystem>()),
+    m_modmanFacade(std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get(), false, lxdmParam)),
+    m_serviceInterfaceFactory(std::make_shared<TestFactoryServiceInterfaces>()),
+    m_modMan(std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory)),
+    m_vfCmdEventHandlerSystem(std::make_shared<VfCmdEventHandlerSystem>()),
     m_cleanupLxdmFiles(cleanupLxdmFiles)
 {
-    m_licenseSystem = std::make_unique<TestLicenseSystem>();
-    m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get(),
-                                                                false,
-                                                                lxdmParam);
-    m_serviceInterfaceFactory = std::make_shared<TestFactoryServiceInterfaces>();
-    m_modMan = std::make_unique<TestModuleManager>(m_modmanFacade.get(), m_serviceInterfaceFactory);
     m_modMan->loadAllAvailableModulePlugins();
     m_modMan->setupConnections();
     m_modMan->startAllTestServices(deviceName, initialAdjPermission);
-    m_vfCmdEventHandlerSystem = std::make_shared<VfCmdEventHandlerSystem>();
     m_modmanFacade->addSubsystem(m_vfCmdEventHandlerSystem.get());
     if(addVfLogger)
         setupVfLogger();
@@ -79,7 +82,7 @@ void ModuleManagerTestRunner::setupVfLogger()
     TimeMachineObject::feedEventLoop();
 }
 
-void ModuleManagerTestRunner::start(QString sessionFileName)
+void ModuleManagerTestRunner::start(const QString &sessionFileName)
 {
     m_modMan->changeSessionFile(sessionFileName);
     m_modMan->waitUntilModulesAreReady();
@@ -213,12 +216,12 @@ ModuleManagerSetupFacade *ModuleManagerTestRunner::getModManFacade()
     return m_modmanFacade.get();
 }
 
-ZeraModules::VirtualModule *ModuleManagerTestRunner::getModule(QString uniqueName, int entityId)
+ZeraModules::VirtualModule *ModuleManagerTestRunner::getModule(const QString &uniqueName, int entityId)
 {
     return m_modMan->getModule(uniqueName, entityId);
 }
 
-void ModuleManagerTestRunner::setVfComponent(int entityId, QString componentName, QVariant newValue)
+void ModuleManagerTestRunner::setVfComponent(int entityId, const QString &componentName, const QVariant &newValue)
 {
     QVariant oldValue = getVeinStorageSystem()->getDb()->getStoredValue(entityId, componentName);
     QEvent* event = VfClientComponentSetter::generateEvent(entityId, componentName, oldValue, newValue);
@@ -226,7 +229,7 @@ void ModuleManagerTestRunner::setVfComponent(int entityId, QString componentName
     TimeMachineObject::feedEventLoop();
 }
 
-QVariant ModuleManagerTestRunner::getVfComponent(int entityId, QString componentName)
+QVariant ModuleManagerTestRunner::getVfComponent(int entityId, const QString &componentName)
 {
     return getVeinStorageSystem()->getDb()->getStoredValue(entityId, componentName);
 }
