@@ -24,6 +24,11 @@ cSCPIInterface* ScpiTestClient::getScpiInterface()
     return m_pSCPIInterface;
 }
 
+const QString &ScpiTestClient::getLastResponse() const
+{
+    return m_lastResponse;
+}
+
 int ScpiTestClient::getUnhandledResponses() const
 {
     return m_unhandledResponses;
@@ -33,6 +38,7 @@ void ScpiTestClient::handleCmdFinish(const QString &scpiResponse, const ScpiTran
 {
     Q_UNUSED(logType)
 
+    m_lastResponse = scpiResponse;
     m_unhandledResponses--;
 
     const QStringList sortedResponses = m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId);
