@@ -84,8 +84,14 @@ void ModuleManagerTestRunner::setupVfLogger()
 
 void ModuleManagerTestRunner::start(const QString &sessionFileName)
 {
+    m_currentSessionFileName = sessionFileName;
     m_modMan->changeSessionFile(sessionFileName);
     m_modMan->waitUntilModulesAreReady();
+}
+
+QString ModuleManagerTestRunner::getSessionFileName() const
+{
+    return m_currentSessionFileName;
 }
 
 QList<TestModuleManager::TModuleInstances> ModuleManagerTestRunner::getInstanceCountsOnModulesDestroyed()
@@ -170,39 +176,40 @@ QMap<int, QList<TestDspInterfacePtr> > ModuleManagerTestRunner::getAllDspInterfa
     return m_serviceInterfaceFactory->getAllInterfaces();
 }
 
-void ModuleManagerTestRunner::fireActualValues(ModuleManagerTestRunner *modmanTestRunner, const QString &session)
+void ModuleManagerTestRunner::fireActualValues()
 {
     constexpr double testvoltage = 120;
     constexpr double testcurrent = 10;
     constexpr double testangle = 0;
     constexpr double testfrequency = 50;
 
-    bool hasDcDft = session.contains("ref-session");  // ATOW it is just com5003-ref-session
+    const QString session = getSessionFileName();
+    bool hasDcDft = session.contains("ref-session");  // ATTOW it is just com5003-ref-session
     int dftOrder = hasDcDft ? 0 : 1;
-    TestDspValues dspValues(modmanTestRunner->getDspInterface(INJECT_DFT)->getValueList(), dftOrder);
+    TestDspValues dspValues(getDspInterface(INJECT_DFT)->getValueList(), dftOrder);
     if(session.contains("meas") || session.contains("perphase") || session.contains("ced")) {
         dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
         dspValues.fireAllActualValues(
-            modmanTestRunner->getDspInterface(INJECT_DFT),
-            modmanTestRunner->getDspInterface(INJECT_FFT),
-            modmanTestRunner->getDspInterface(INJECT_RANGE_PROGRAM), // Range is for frequency only
-            modmanTestRunner->getDspInterface(INJECT_RMS));
+            getDspInterface(INJECT_DFT),
+            getDspInterface(INJECT_FFT),
+            getDspInterface(INJECT_RANGE_PROGRAM), // Range is for frequency only
+            getDspInterface(INJECT_RMS));
     }
     else if(session.contains("ac")) {
         dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
         dspValues.fireAllActualValues(
-            modmanTestRunner->getDspInterface(INJECT_DFT),
-            modmanTestRunner->getDspInterface(INJECT_FFT),
-            modmanTestRunner->getDspInterface(INJECT_RANGE_PROGRAM),
-            modmanTestRunner->getDspInterface(INJECT_RMS));
+            getDspInterface(INJECT_DFT),
+            getDspInterface(INJECT_FFT),
+            getDspInterface(INJECT_RANGE_PROGRAM),
+            getDspInterface(INJECT_RMS));
     }
     else if(session.contains("dc")) {
         dspValues.setAllValuesSymmetricDc(testvoltage, testcurrent);
         dspValues.fireAllActualValues(
-            modmanTestRunner->getDspInterface(INJECT_DFT),
-            modmanTestRunner->getDspInterface(INJECT_FFT),
-            modmanTestRunner->getDspInterface(INJECT_RANGE_PROGRAM),
-            modmanTestRunner->getDspInterface(INJECT_RMS));
+            getDspInterface(INJECT_DFT),
+            getDspInterface(INJECT_FFT),
+            getDspInterface(INJECT_RANGE_PROGRAM),
+            getDspInterface(INJECT_RMS));
     }
 }
 

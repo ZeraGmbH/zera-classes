@@ -26,6 +26,8 @@ public:
     ~ModuleManagerTestRunner();
 
     void start(const QString &sessionFileName);
+    QString getSessionFileName() const;
+
     QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
     int getModuleConfigWriteCounts() const;
 
@@ -44,7 +46,7 @@ public:
     TestDspInterfacePtr getDspInterface(int entityId, DspInterfaceCreatedBy createdBy = MODULEPROG);
     TestDspInterfacePtr getDspInterface(DspInterfaceInjectableTypes injectType);
     QMap<int, QList<TestDspInterfacePtr>> getAllDspInterfaces();
-    static void fireActualValues(ModuleManagerTestRunner* modmanTestRunner, const QString &session);
+    void fireActualValues();
 
     // hotplug full functional methods
     void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &deviceMap);
@@ -67,6 +69,7 @@ private:
     VfCmdEventHandlerSystemPtr m_vfCmdEventHandlerSystem;
     std::unique_ptr<TestDbAddSignaller> m_testSignaller;
     std::unique_ptr<VeinLogger::DatabaseLogger> m_dataLoggerSystem;
+    QString m_currentSessionFileName;
     bool m_dataLoggerSystemInitialized = false;
     bool m_cleanupLxdmFiles = false;
 };

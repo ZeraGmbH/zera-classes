@@ -57,7 +57,7 @@ QStringList SessionExportGenerator::getAvailableSessions() const
 void SessionExportGenerator::changeSession(const QString &session)
 {
     m_modmanTestRunner->start(session);
-    ModuleManagerTestRunner::fireActualValues(m_modmanTestRunner.get(), session);
+    m_modmanTestRunner->fireActualValues();
 }
 
 void SessionExportGenerator::generateDevIfaceXml(const QString &xmlDir)
