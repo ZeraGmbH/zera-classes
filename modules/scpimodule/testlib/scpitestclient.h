@@ -5,6 +5,7 @@
 
 namespace SCPIMODULE {
 
+// Enhanced SCPI I/O designed to anlayse insights. If tests require just I/O, see ScpiModuleClientBlocked
 class ScpiTestClient : public cSCPIClient
 {
     Q_OBJECT

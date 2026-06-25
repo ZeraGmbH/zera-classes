@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QByteArrayList>
 
+// Simple SCPI I/O - if tests require more insights, use ScpiTestClient
 class ScpiModuleClientBlocked : public QObject
 {
     Q_OBJECT
