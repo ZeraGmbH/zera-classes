@@ -40,3 +40,8 @@ QVector<float> DemoValuesDspFft::getDspValues()
 {
     return m_dspValues;
 }
+
+int DemoValuesDspFft::getFFtLen() const
+{
+    return m_fftLen;
+}

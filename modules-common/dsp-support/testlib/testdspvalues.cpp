@@ -13,24 +13,13 @@ TestDspValues::TestDspValues(const QStringList &valueChannelList, int dftOrder)
     m_rmsValues = std::make_unique<DemoValuesDspRms>(valueChannelList);
 }
 
-void TestDspValues::setAllValuesSymmetric(float voltage, float current, float angleUi, float frequency, bool invertedSequence)
-{
-    m_dftValues->setAllValuesSymmetric(voltage, current, angleUi, invertedSequence);
-    for(int channel=0; channel<m_channelList.count(); channel++) {
-        float value = ServiceChannelNameHelper::isCurrent(m_channelList[channel]) ? current : voltage;
-        m_fftValues->setValue(channel, 0, value, 0);
-        m_rangeValues->setRmsPeakDCValue(channel, value);
-        m_rangeValues->setFrequency(frequency);
-        m_rmsValues->setAllValuesSymmetric(voltage, current);
-    }
-}
-
 void TestDspValues::setAllValuesSymmetricAc(float voltage, float current, float angleUi, float frequency, bool invertedSequence)
 {
     m_dftValues->setAllValuesSymmetric(voltage, current, angleUi, invertedSequence);
     for(int channel=0; channel<m_channelList.count(); channel++) {
         float value = ServiceChannelNameHelper::isCurrent(m_channelList[channel]) ? current : voltage;
-        m_fftValues->setValue(channel, 0, 0, 0); // DC
+        for (int harmonic = 1; harmonic < m_fftValues->getFFtLen(); ++harmonic)
+            m_fftValues->setValue(channel, harmonic, value/harmonic, 0);
         m_rangeValues->setRmsPeakDCValue(channel, value);
         m_rangeValues->setFrequency(frequency);
         m_rmsValues->setAllValuesSymmetric(voltage, current);

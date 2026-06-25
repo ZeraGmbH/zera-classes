@@ -188,7 +188,7 @@ void ModuleManagerTestRunner::fireActualValues()
     int dftOrder = hasDcDft ? 0 : 1;
     TestDspValues dspValues(getDspInterface(INJECT_DFT)->getValueList(), dftOrder);
     if(session.contains("meas") || session.contains("perphase") || session.contains("ced")) {
-        dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
+        dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
         dspValues.fireAllActualValues(
             getDspInterface(INJECT_DFT),
             getDspInterface(INJECT_FFT),
