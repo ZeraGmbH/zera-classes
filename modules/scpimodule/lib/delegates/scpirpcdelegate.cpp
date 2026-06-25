@@ -1,4 +1,5 @@
 #include "scpirpcdelegate.h"
+#include "scpimodulecommonstaticfunctions.h"
 #include <zscpi_response_definitions.h>
 #include <vf_client_rpc_invoker.h>
 #include <vf_rpc_invoker.h>
@@ -16,7 +17,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, const QStrin
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = scpi;
 
-    bool bQuery = cmd.isQuery() || cmd.isQuery(1);
+    bool bQuery = ScpiModuleCommonStaticFunctions::isQuery(scpi);
     bool bCmd = cmd.isCommand();
     bool bCmdwP = cmd.isCommand(1) || m_scpicmdinfo->veinComponentInfo.contains("Optional parameter");
 

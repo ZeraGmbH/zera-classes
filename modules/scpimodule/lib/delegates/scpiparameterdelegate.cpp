@@ -1,6 +1,7 @@
 #include "scpiparameterdelegate.h"
 #include "scpieventsystem.h"
 #include "scpiclient.h"
+#include "scpimodulecommonstaticfunctions.h"
 #include <scpicommand.h>
 #include <vf_server_rpc_invoker.h>
 #include <vf_rpc_invoker.h>
@@ -26,7 +27,7 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = scpi;
-    bool bQuery = cmd.isQuery() || cmd.isQuery(1); // we allow queries without or with 1 parameter
+    bool bQuery = ScpiModuleCommonStaticFunctions::isQuery(scpi);
     if ( (bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||  // test if we got an allowed query
          (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
          ((scpiCmdType & SCPI::isXMLCmd) > 0) ) // test if we expext an xml command
