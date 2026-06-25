@@ -1,13 +1,23 @@
-#include "scpicmdresponsesorter.h"
+#include "scpiresponsesorter.h"
+#include "scpimodulecommonstaticfunctions.h"
 
-ScpiTransactionId ScpiCmdResponseSorter::createTransaction()
+ScpiTransactionId ScpiResponseSorter::createTransaction(const QString &scpi)
 {
+    // * This is about sorting order of SCPI responses (not the order scpi commands/queries
+    //   are executed)
+    // * Since commands have no response from user perspective: just sort queries
+    // * Archieve queries only by returning invalid transaction id for commands - see
+    //   genOrDelaySortedOutput below
+    bool bQuery = ScpiModuleCommonStaticFunctions::isQuery(scpi);
+    if (!bQuery)
+        return ScpiTransactionId();
+
     ScpiTransactionId id = ScpiTransactionId::createUniqueId();
     m_transactionsPending.insert(id.getChrono(), id);
     return id;
 }
 
-QStringList ScpiCmdResponseSorter::genOrDelaySortedOutput(const QString &scpiSingleResponse, const ScpiTransactionId &scpiTransactionId)
+QStringList ScpiResponseSorter::genOrDelaySortedOutput(const QString &scpiSingleResponse, const ScpiTransactionId &scpiTransactionId)
 {
     const quint64 chrono = scpiTransactionId.getChrono();
     ScpiTransactionId pendingTransaction = m_transactionsPending.take(chrono);
@@ -18,7 +28,7 @@ QStringList ScpiCmdResponseSorter::genOrDelaySortedOutput(const QString &scpiSin
     return QStringList() << scpiSingleResponse;
 }
 
-QStringList ScpiCmdResponseSorter::createAccumulatedResponse()
+QStringList ScpiResponseSorter::createAccumulatedResponse()
 {
     QStringList responseList;
     QList<quint64> toDeleteList;

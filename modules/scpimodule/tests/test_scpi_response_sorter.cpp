@@ -1,24 +1,33 @@
 #include "test_scpi_response_sorter.h"
-#include "scpicmdresponsesorter.h"
+#include "scpiresponsesorter.h"
 #include <QTest>
 
 QTEST_MAIN(test_scpi_response_sorter)
 
-void test_scpi_response_sorter::transactionsAreValid()
-{
-    ScpiCmdResponseSorter sorter;
+static constexpr const char* dummyScpiQuery = "foo?";
 
-    QVERIFY(sorter.createTransaction().isValid());
-    QVERIFY(sorter.createTransaction().isValid());
-    QVERIFY(sorter.createTransaction().isValid());
+void test_scpi_response_sorter::queriesReturnValidId()
+{
+    ScpiResponseSorter sorter;
+
+    QCOMPARE(sorter.createTransaction(dummyScpiQuery).isValid(), true);
+    QCOMPARE(sorter.createTransaction(dummyScpiQuery).isValid(), true);
+    QCOMPARE(sorter.createTransaction(dummyScpiQuery).isValid(), true);
 }
 
-void test_scpi_response_sorter::transactionsChrono()
+void test_scpi_response_sorter::commandsReturnInvalidId()
 {
-    ScpiCmdResponseSorter sorter;
-    ScpiTransactionId id1 = sorter.createTransaction();
-    ScpiTransactionId id2 = sorter.createTransaction();
-    ScpiTransactionId id3 = sorter.createTransaction();
+    ScpiResponseSorter sorter;
+
+    QCOMPARE(sorter.createTransaction("SENS:RNG1:UL1:RANG 250V;").isValid(), false);
+}
+
+void test_scpi_response_sorter::queryTransactionsChrono()
+{
+    ScpiResponseSorter sorter;
+    ScpiTransactionId id1 = sorter.createTransaction(dummyScpiQuery);
+    ScpiTransactionId id2 = sorter.createTransaction(dummyScpiQuery);
+    ScpiTransactionId id3 = sorter.createTransaction(dummyScpiQuery);
 
     QVERIFY(id1.getChrono() < id2.getChrono());
     QVERIFY(id2.getChrono() < id3.getChrono());
@@ -26,8 +35,8 @@ void test_scpi_response_sorter::transactionsChrono()
 
 void test_scpi_response_sorter::start_1_Response_1()
 {
-    ScpiCmdResponseSorter sorter;
-    ScpiTransactionId transaction = sorter.createTransaction();
+    ScpiResponseSorter sorter;
+    ScpiTransactionId transaction = sorter.createTransaction(dummyScpiQuery);
 
     QString response = "1";
     QStringList sortedResponses = sorter.genOrDelaySortedOutput(response, transaction);
@@ -38,9 +47,9 @@ void test_scpi_response_sorter::start_1_Response_1()
 
 void test_scpi_response_sorter::start_1_2_Response_1_2()
 {
-    ScpiCmdResponseSorter sorter;
-    ScpiTransactionId transaction1 = sorter.createTransaction();
-    ScpiTransactionId transaction2 = sorter.createTransaction();
+    ScpiResponseSorter sorter;
+    ScpiTransactionId transaction1 = sorter.createTransaction(dummyScpiQuery);
+    ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
 
     QString response1 = "1";
     QString response2 = "2";
@@ -55,9 +64,9 @@ void test_scpi_response_sorter::start_1_2_Response_1_2()
 
 void test_scpi_response_sorter::start_1_2_Response_2_1()
 {
-    ScpiCmdResponseSorter sorter;
-    ScpiTransactionId transaction1 = sorter.createTransaction();
-    ScpiTransactionId transaction2 = sorter.createTransaction();
+    ScpiResponseSorter sorter;
+    ScpiTransactionId transaction1 = sorter.createTransaction(dummyScpiQuery);
+    ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
 
     QString response1 = "1";
     QString response2 = "2";
@@ -72,10 +81,10 @@ void test_scpi_response_sorter::start_1_2_Response_2_1()
 
 void test_scpi_response_sorter::start_1_2_3_Response_2_1_3()
 {
-    ScpiCmdResponseSorter sorter;
-    ScpiTransactionId transaction1 = sorter.createTransaction();
-    ScpiTransactionId transaction2 = sorter.createTransaction();
-    ScpiTransactionId transaction3 = sorter.createTransaction();
+    ScpiResponseSorter sorter;
+    ScpiTransactionId transaction1 = sorter.createTransaction(dummyScpiQuery);
+    ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
+    ScpiTransactionId transaction3 = sorter.createTransaction(dummyScpiQuery);
 
     QString response1 = "1";
     QString response2 = "2";
@@ -94,10 +103,10 @@ void test_scpi_response_sorter::start_1_2_3_Response_2_1_3()
 
 void test_scpi_response_sorter::start_1_2_3_Response_3_1_2()
 {
-    ScpiCmdResponseSorter sorter;
-    ScpiTransactionId transaction1 = sorter.createTransaction();
-    ScpiTransactionId transaction2 = sorter.createTransaction();
-    ScpiTransactionId transaction3 = sorter.createTransaction();
+    ScpiResponseSorter sorter;
+    ScpiTransactionId transaction1 = sorter.createTransaction(dummyScpiQuery);
+    ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
+    ScpiTransactionId transaction3 = sorter.createTransaction(dummyScpiQuery);
 
     QString response1 = "1";
     QString response2 = "2";
@@ -116,7 +125,7 @@ void test_scpi_response_sorter::start_1_2_3_Response_3_1_2()
 
 void test_scpi_response_sorter::twoResponsesOnInvalidTransaction()
 {
-    ScpiCmdResponseSorter sorter;
+    ScpiResponseSorter sorter;
 
     QString response1 = "1";
     QString response2 = "2";
@@ -131,8 +140,8 @@ void test_scpi_response_sorter::twoResponsesOnInvalidTransaction()
 
 void test_scpi_response_sorter::start_2_Response_1_2_3()
 {
-    ScpiCmdResponseSorter sorter;
-    ScpiTransactionId transaction2 = sorter.createTransaction();
+    ScpiResponseSorter sorter;
+    ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
 
     QString response1 = "1";
     QString response2 = "2";
@@ -151,9 +160,9 @@ void test_scpi_response_sorter::start_2_Response_1_2_3()
 
 void test_scpi_response_sorter::start_1_2_Response_3_2_1()
 {
-    ScpiCmdResponseSorter sorter;
-    ScpiTransactionId transaction1 = sorter.createTransaction();
-    ScpiTransactionId transaction2 = sorter.createTransaction();
+    ScpiResponseSorter sorter;
+    ScpiTransactionId transaction1 = sorter.createTransaction(dummyScpiQuery);
+    ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
 
     QString response1 = "1";
     QString response2 = "2";
@@ -172,9 +181,9 @@ void test_scpi_response_sorter::start_1_2_Response_3_2_1()
 
 void test_scpi_response_sorter::start_1_2_Response_2_1_2_1()
 {
-    ScpiCmdResponseSorter sorter;
-    ScpiTransactionId transaction1 = sorter.createTransaction();
-    ScpiTransactionId transaction2 = sorter.createTransaction();
+    ScpiResponseSorter sorter;
+    ScpiTransactionId transaction1 = sorter.createTransaction(dummyScpiQuery);
+    ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
 
     QString response1a = "1a";
     QString response2a = "2a";

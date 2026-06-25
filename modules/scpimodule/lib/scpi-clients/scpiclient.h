@@ -1,7 +1,7 @@
 #ifndef SCPICLIENT_H
 #define SCPICLIENT_H
 
-#include "scpicmdresponsesorter.h"
+#include "scpiresponsesorter.h"
 #include "scpiinterface.h"
 #include "scpistatus.h"
 #include "scpimeasuredelegate.h"
@@ -44,7 +44,7 @@ public slots:
 
 protected:
     cSCPIInterface* m_pSCPIInterface;
-    ScpiCmdResponseSorter m_responseSorter;
+    ScpiResponseSorter m_responseSorter;
 
     QString m_sInputFifo;
     QChar m_endChar;

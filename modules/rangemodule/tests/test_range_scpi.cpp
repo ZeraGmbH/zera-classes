@@ -124,13 +124,11 @@ void test_range_scpi::rangeChangeWithDelay()
     QCOMPARE(scpiClient.getUnhandledResponses(), 2);
     TimeMachineObject::feedEventLoop();
     // The 2nd request doesn't reach services, range-module handles it with dummy notification
-    // Due to sorting of answers we do not see first response but can get around by asking
-    // client for unhandled
     QCOMPARE(scpiClient.getUnhandledResponses(), 1);
-    QCOMPARE(spyScpiAnswer.count(), 0);
+    QCOMPARE(spyScpiAnswer.count(), 1);
+    QCOMPARE(spyScpiAnswer[0][0], "");
     TimeMachineForTest::getInstance()->processTimers(rangeChangeDelay);
     QCOMPARE(spyScpiAnswer.count(), 2);
-    QCOMPARE(spyScpiAnswer[0][0], "");
     QCOMPARE(spyScpiAnswer[1][0], "");
 
     // check range
@@ -146,12 +144,12 @@ void test_range_scpi::rangeChangeWithDelay()
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE 8V;");
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE 100mV;");
     TimeMachineForTest::getInstance()->processTimers(rangeChangeDelay);
-    // We receive response of second range set first => response-sort delays that...
+    // We receive response of second range set first
     QCOMPARE(scpiClient.getUnhandledResponses(), 1);
-    QCOMPARE(spyScpiAnswer.count(), 0);
+    QCOMPARE(spyScpiAnswer.count(), 1);
+    QCOMPARE(spyScpiAnswer[0][0], "");
     TimeMachineForTest::getInstance()->processTimers(rangeChangeDelay);
     QCOMPARE(spyScpiAnswer.count(), 2);
-    QCOMPARE(spyScpiAnswer[0][0], "");
     QCOMPARE(spyScpiAnswer[1][0], "");
 
     // check range
@@ -168,10 +166,10 @@ void test_range_scpi::rangeChangeWithDelay()
     scpiClient.sendScpiCmds("SENSE:RNG1:UL1:RANGE 100mV;");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(scpiClient.getUnhandledResponses(), 1); //2nd request handled by range-module, no delay
-    QCOMPARE(spyScpiAnswer.count(), 0);
+    QCOMPARE(spyScpiAnswer.count(), 1);
+    QCOMPARE(spyScpiAnswer[0][0], "");
     TimeMachineForTest::getInstance()->processTimers(rangeChangeDelay);
     QCOMPARE(spyScpiAnswer.count(), 2); // 1st request sent to services, response with delay
-    QCOMPARE(spyScpiAnswer[0][0], "");
     QCOMPARE(spyScpiAnswer[1][0], "");
 
     // check range

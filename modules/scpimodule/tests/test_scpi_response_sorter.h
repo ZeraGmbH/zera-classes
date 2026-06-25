@@ -7,8 +7,9 @@ class test_scpi_response_sorter : public QObject
 {
     Q_OBJECT
 private slots:
-    void transactionsAreValid();
-    void transactionsChrono();
+    void queriesReturnValidId();
+    void commandsReturnInvalidId();
+    void queryTransactionsChrono();
     void start_1_Response_1();
     void start_1_2_Response_1_2();
     void start_1_2_Response_2_1();

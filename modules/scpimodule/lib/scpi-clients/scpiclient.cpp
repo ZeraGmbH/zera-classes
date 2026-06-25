@@ -167,7 +167,7 @@ void cSCPIClient::execCmd()
         // This message is checked as is in autobuilder-dut-testsuite!
         qInfo("Executing SCPI command : %s", qPrintable(cmd));
 
-        ScpiTransactionId scpiId = m_responseSorter.createTransaction();
+        ScpiTransactionId scpiId = m_responseSorter.createTransaction(cmd);
         if (!m_pSCPIInterface->executeCmd(this, cmd, scpiId))
             m_pIEEE4882->addEventError(CommandError);
         // we leave here if there is any parameter settings pending
