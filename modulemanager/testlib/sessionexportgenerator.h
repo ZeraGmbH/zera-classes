@@ -35,7 +35,6 @@ private:
     void createSnapshot(QStringList contentSets, QString snapshotName);
     QString getLoggedValues(QString snapshotName);
     void clearSnapshotName();
-    void fireActualValues(QString session);
 
     std::unique_ptr<ModuleManagerTestRunner> m_modmanTestRunner;
     ModulemanagerConfig *m_modmanConfig;

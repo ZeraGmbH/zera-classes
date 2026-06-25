@@ -57,7 +57,7 @@ QStringList SessionExportGenerator::getAvailableSessions() const
 void SessionExportGenerator::changeSession(const QString &session)
 {
     m_modmanTestRunner->start(session);
-    fireActualValues(session);
+    ModuleManagerTestRunner::fireActualValues(m_modmanTestRunner.get(), session);
 }
 
 void SessionExportGenerator::generateDevIfaceXml(const QString &xmlDir)
@@ -188,40 +188,4 @@ QString SessionExportGenerator::getLoggedValues(QString snapshotName)
 void SessionExportGenerator::clearSnapshotName()
 {
     m_modmanTestRunner->setVfComponent(vf_logger_entity, "transactionName", "");
-}
-
-void SessionExportGenerator::fireActualValues(QString session)
-{
-    constexpr double testvoltage = 120;
-    constexpr double testcurrent = 10;
-    constexpr double testangle = 0;
-    constexpr double testfrequency = 50;
-
-    bool hasDcDft = session.contains("ref-session");  // ATOW it is just com5003-ref-session
-    int dftOrder = hasDcDft ? 0 : 1;
-    TestDspValues dspValues(m_modmanTestRunner->getDspInterface(INJECT_DFT)->getValueList(), dftOrder);
-    if(session.contains("meas") || session.contains("perphase") || session.contains("ced")) {
-        dspValues.setAllValuesSymmetric(testvoltage, testcurrent, testangle, testfrequency);
-        dspValues.fireAllActualValues(
-            m_modmanTestRunner->getDspInterface(INJECT_DFT),
-            m_modmanTestRunner->getDspInterface(INJECT_FFT),
-            m_modmanTestRunner->getDspInterface(INJECT_RANGE_PROGRAM), // Range is for frequency only
-            m_modmanTestRunner->getDspInterface(INJECT_RMS));
-    }
-    else if(session.contains("ac")) {
-        dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
-        dspValues.fireAllActualValues(
-            m_modmanTestRunner->getDspInterface(INJECT_DFT),
-            m_modmanTestRunner->getDspInterface(INJECT_FFT),
-            m_modmanTestRunner->getDspInterface(INJECT_RANGE_PROGRAM),
-            m_modmanTestRunner->getDspInterface(INJECT_RMS));
-    }
-    else if(session.contains("dc")) {
-        dspValues.setAllValuesSymmetricDc(testvoltage, testcurrent);
-        dspValues.fireAllActualValues(
-            m_modmanTestRunner->getDspInterface(INJECT_DFT),
-            m_modmanTestRunner->getDspInterface(INJECT_FFT),
-            m_modmanTestRunner->getDspInterface(INJECT_RANGE_PROGRAM),
-            m_modmanTestRunner->getDspInterface(INJECT_RMS));
-    }
 }
