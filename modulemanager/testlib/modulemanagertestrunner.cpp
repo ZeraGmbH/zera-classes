@@ -203,7 +203,7 @@ void ModuleManagerTestRunner::fireActualValues()
             findDspInterfaceByType(INJECT_RANGE_PROGRAM),
             findDspInterfaceByType(INJECT_RMS));
     }
-    else if(session.contains("dc")) {
+    else if(session.contains("dc") || hasDcDft) {
         dspValues.setAllValuesSymmetricDc(testvoltage, testcurrent);
         dspValues.fireAllActualValues(
             findDspInterfaceByType(INJECT_DFT),

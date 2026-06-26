@@ -142,19 +142,19 @@
         }
     },
     "1020": {
-        "ACT_Channel1Peak": null,
-        "ACT_Channel1Rms": null,
-        "ACT_Channel2Peak": null,
-        "ACT_Channel2Rms": null,
-        "ACT_Channel3Peak": null,
-        "ACT_Channel3Rms": null,
-        "ACT_Channel4Peak": null,
-        "ACT_Channel4Rms": null,
-        "ACT_Channel5Peak": null,
-        "ACT_Channel5Rms": null,
-        "ACT_Channel6Peak": null,
-        "ACT_Channel6Rms": null,
-        "ACT_Frequency": null,
+        "ACT_Channel1Peak": 169.70562744140625,
+        "ACT_Channel1Rms": 120,
+        "ACT_Channel2Peak": 169.70562744140625,
+        "ACT_Channel2Rms": 120,
+        "ACT_Channel3Peak": 169.70562744140625,
+        "ACT_Channel3Rms": 120,
+        "ACT_Channel4Peak": 14.142135620117188,
+        "ACT_Channel4Rms": 10,
+        "ACT_Channel5Peak": 14.142135620117188,
+        "ACT_Channel5Rms": 10,
+        "ACT_Channel6Peak": 14.142135620117188,
+        "ACT_Channel6Rms": 10,
+        "ACT_Frequency": 0,
         "EntityName": "RangeModule1",
         "INF_Channel1ActOVLREJ": 12.499988280242833,
         "INF_Channel1ActREJ": 10,
@@ -853,18 +853,36 @@
         "SIG_Ranging": 0
     },
     "1050": {
-        "ACT_DC1": null,
-        "ACT_DC2": null,
-        "ACT_DC3": null,
-        "ACT_DC4": null,
-        "ACT_DC5": null,
-        "ACT_DC6": null,
-        "ACT_DFTPN1": null,
-        "ACT_DFTPN2": null,
-        "ACT_DFTPN3": null,
-        "ACT_DFTPN4": null,
-        "ACT_DFTPN5": null,
-        "ACT_DFTPN6": null,
+        "ACT_DC1": 120,
+        "ACT_DC2": 120,
+        "ACT_DC3": 120,
+        "ACT_DC4": 10,
+        "ACT_DC5": 10,
+        "ACT_DC6": 10,
+        "ACT_DFTPN1": [
+            120,
+            0
+        ],
+        "ACT_DFTPN2": [
+            120,
+            0
+        ],
+        "ACT_DFTPN3": [
+            120,
+            0
+        ],
+        "ACT_DFTPN4": [
+            10,
+            0
+        ],
+        "ACT_DFTPN5": [
+            10,
+            0
+        ],
+        "ACT_DFTPN6": [
+            10,
+            0
+        ],
         "EntityName": "DFTModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
