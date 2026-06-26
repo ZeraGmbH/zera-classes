@@ -20,7 +20,7 @@ target_include_directories(dspsupermodule-testlib
 target_link_libraries(dspsupermodule-testlib
     PUBLIC
     dspsupermodule-static
-    Zera::service-interfaces-testlib
+    module-service-interfaces-testlib
 )
 
 set_target_properties(dspsupermodule-testlib PROPERTIES VERSION ${PROJECT_VERSION})

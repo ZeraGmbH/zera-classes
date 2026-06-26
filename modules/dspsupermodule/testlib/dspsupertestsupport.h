@@ -2,7 +2,7 @@
 #define DSPSUPERTESTSUPPORT_H
 
 #include "dspcommonsupervisor.h"
-#include <testdspinterface.h>
+#include "testdspinterface.h"
 
 class DspSuperTestSupport
 {
