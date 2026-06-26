@@ -15,15 +15,15 @@ public:
     void setAllValuesSymmetricAc(float voltage, float current, float angleUi, float frequency, bool invertedSequence = false);
     void setAllValuesSymmetricDc(float voltage, float current);
 
-    void fireDftActualValues(MockDspInterfacePtr dspDft);
-    void fireFftActualValues(MockDspInterfacePtr dspFft);
-    void fireRangeActualValues(MockDspInterfacePtr dspRange);
-    void fireRmsActualValues(MockDspInterfacePtr dspRms);
+    void fireDftActualValues(const MockDspInterfacePtr &dspDft);
+    void fireFftActualValues(const MockDspInterfacePtr &dspFft);
+    void fireRangeActualValues(const MockDspInterfacePtr &dspRange);
+    void fireRmsActualValues(const MockDspInterfacePtr &dspRms);
 
-    void fireAllActualValues(MockDspInterfacePtr dspDft,
-                             MockDspInterfacePtr dspFft,
-                             MockDspInterfacePtr dspRange,
-                             MockDspInterfacePtr dspRms);
+    void fireAllActualValues(const MockDspInterfacePtr &dspDft,
+                             const MockDspInterfacePtr &dspFft,
+                             const MockDspInterfacePtr &dspRange,
+                             const MockDspInterfacePtr &dspRms);
 private:
     QVector<float> getDspValuesDft();
     QVector<float> getDspValuesFft();

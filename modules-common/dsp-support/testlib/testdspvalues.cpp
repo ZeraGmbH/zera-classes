@@ -38,34 +38,34 @@ void TestDspValues::setAllValuesSymmetricDc(float voltage, float current)
     }
 }
 
-void TestDspValues::fireDftActualValues(MockDspInterfacePtr dspDft)
+void TestDspValues::fireDftActualValues(const MockDspInterfacePtr &dspDft)
 {
     if (dspDft)
         dspDft->fireActValInterrupt(m_dftValues->getDspValues(), 0 /* dummy */);
 }
 
-void TestDspValues::fireFftActualValues(MockDspInterfacePtr dspFft)
+void TestDspValues::fireFftActualValues(const MockDspInterfacePtr &dspFft)
 {
     if (dspFft)
         dspFft->fireActValInterrupt(m_fftValues->getDspValues(), 0 /* dummy */);
 }
 
-void TestDspValues::fireRangeActualValues(MockDspInterfacePtr dspRange)
+void TestDspValues::fireRangeActualValues(const MockDspInterfacePtr &dspRange)
 {
     if (dspRange)
         dspRange->fireActValInterrupt(m_rangeValues->getDspValues(), 0 /* dummy */);
 }
 
-void TestDspValues::fireRmsActualValues(MockDspInterfacePtr dspRms)
+void TestDspValues::fireRmsActualValues(const MockDspInterfacePtr &dspRms)
 {
     if (dspRms)
         dspRms->fireActValInterrupt(m_rmsValues->getDspValues(), 0 /* dummy */);
 }
 
-void TestDspValues::fireAllActualValues(MockDspInterfacePtr dspDft,
-                                        MockDspInterfacePtr dspFft,
-                                        MockDspInterfacePtr dspRange,
-                                        MockDspInterfacePtr dspRms)
+void TestDspValues::fireAllActualValues(const MockDspInterfacePtr &dspDft,
+                                        const MockDspInterfacePtr &dspFft,
+                                        const MockDspInterfacePtr &dspRange,
+                                        const MockDspInterfacePtr &dspRms)
 {
     fireDftActualValues(dspDft);
     fireFftActualValues(dspFft);
