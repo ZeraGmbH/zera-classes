@@ -5,22 +5,18 @@
 #include "testdspinterface.h"
 #include <QMap>
 
-enum DspInterfaceCreatedBy {
-    MODULEPROG,
-    OBSERVER,
-    ADJUST
-};
-
 enum DspInterfaceInjectableTypes {
     INJECT_NOT_SUPPORTED,
 
+    INJECT_RANGE_PROGRAM,
     INJECT_RANGE_OBSERV,
     INJECT_RANGE_ADJUST,
-    INJECT_RANGE_PROGRAM,
     INJECT_RMS,
     INJECT_DFT,
     INJECT_FFT,
-    INJECT_SUPER
+    INJECT_SUPER,
+    INJECT_REFERENCE_PROGRAM,
+    INJECT_REFERENCE_ADJUST,
 };
 
 class TestFactoryServiceInterfaces : public AbstractFactoryServiceInterfaces
@@ -44,18 +40,17 @@ public:
     Zera::DspInterfacePtr createDspInterfaceStatus(int entityId) override;
     Zera::DspInterfacePtr createDspInterfaceDspSuper(int entityId) override;
 
-    TestDspInterfacePtr getInterface(int entityId, DspInterfaceCreatedBy createdBy);
-    TestDspInterfacePtr getInjectableInterface(DspInterfaceInjectableTypes injectType);
-    QMap<int, QList<TestDspInterfacePtr>> getAllInterfaces();
+    // search criteria ambiguous: return first
+    TestDspInterfacePtr findDspInterfaceByType(DspInterfaceInjectableTypes injectType); // TODO return list?
+    TestDspInterfacePtr findDspInterfaceByEntityId(int entityId);
+    QMap<int, QList<TestDspInterfacePtr>> getAllDspInterfaces();
 
 private:
     Zera::DspInterfacePtr createDspInterfaceCommon(int entityId,
                                                    DspInterfaceInjectableTypes injectType,
-                                                   DspInterfaceCreatedBy createdBy,
                                                    int interruptNoHandled,
                                                    const QStringList &valueChannelList);
-    QMap<int, QMap<DspInterfaceCreatedBy, TestDspInterfacePtr>> m_dspInterfacesByCreatedBy;
-    QMap<DspInterfaceInjectableTypes, TestDspInterfacePtr> m_dspInterfacesByInjectType;
+    QMap<int, QMap<DspInterfaceInjectableTypes, TestDspInterfacePtr>> m_dspInterfaces;
 };
 
 typedef std::shared_ptr<TestFactoryServiceInterfaces> TestFactoryServiceInterfacesPtr;

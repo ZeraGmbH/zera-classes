@@ -6,8 +6,8 @@
 #include <timerfactoryqtfortest.h>
 #include <QTest>
 
-
 QTEST_MAIN(test_dosage)
+
 static int constexpr rmsEntityId = 1040;
 static int constexpr fftModule1EntityId = 1060;
 static int constexpr power1module1EntityId = 1070;
@@ -18,8 +18,6 @@ static constexpr int voltagePhaseNeutralCount = 4;
 static constexpr int currentPhaseCount = 4;
 static constexpr int voltagePhasePhaseCount = 3;
 static constexpr int rmsResultCount = voltagePhaseNeutralCount + currentPhaseCount + voltagePhasePhaseCount;
-static constexpr int fftResultCount = 8;
-
 
 void test_dosage::initTestCase()
 {
@@ -29,8 +27,8 @@ void test_dosage::initTestCase()
 void test_dosage::testDosageMaxAllBelowLimits()
 {
     ModuleManagerTestRunner testRunner(":/def-session-maximal.json");
-    TestDspInterfacePtr dspRmsInterface = testRunner.getDspInterface(rmsEntityId);
-    TestDspInterfacePtr dspPowInterface = testRunner.getDspInterface(power1module1EntityId);
+    TestDspInterfacePtr dspRmsInterface = testRunner.findDspInterfaceByEntityId(rmsEntityId);
+    TestDspInterfacePtr dspPowInterface = testRunner.findDspInterfaceByEntityId(power1module1EntityId);
 
     QVector<float> rmsActValues;
     for(int i = 0; i < rmsResultCount; i++)
@@ -50,8 +48,8 @@ void test_dosage::testDosageMaxAllBelowLimits()
 void test_dosage::testDosageMaxRmsUpperLimits()
 {
     ModuleManagerTestRunner testRunner(":/def-session-maximal.json");
-    TestDspInterfacePtr dspRmsInterface = testRunner.getDspInterface(rmsEntityId);
-    TestDspInterfacePtr dspPowInterface = testRunner.getDspInterface(power1module1EntityId);
+    TestDspInterfacePtr dspRmsInterface = testRunner.findDspInterfaceByEntityId(rmsEntityId);
+    TestDspInterfacePtr dspPowInterface = testRunner.findDspInterfaceByEntityId(power1module1EntityId);
 
     QVector<float> rmsActValues;
     for(int i = 0; i < rmsResultCount; i++)
@@ -71,8 +69,8 @@ void test_dosage::testDosageMaxRmsUpperLimits()
 void test_dosage::testDosageMaxPowUpperLimits()
 {
     ModuleManagerTestRunner testRunner(":/def-session-maximal.json");
-    TestDspInterfacePtr dspRmsInterface = testRunner.getDspInterface(rmsEntityId);
-    TestDspInterfacePtr dspPowInterface = testRunner.getDspInterface(power1module1EntityId);
+    TestDspInterfacePtr dspRmsInterface = testRunner.findDspInterfaceByEntityId(rmsEntityId);
+    TestDspInterfacePtr dspPowInterface = testRunner.findDspInterfaceByEntityId(power1module1EntityId);
 
     QVector<float> rmsActValues;
     for(int i = 0; i < rmsResultCount; i++)
@@ -92,7 +90,7 @@ void test_dosage::testDosageMaxPowUpperLimits()
 void test_dosage::testDosageMinPowBelowLimits()
 {
     ModuleManagerTestRunner testRunner(":/def-session-minimal.json");
-    TestDspInterfacePtr dspPowInterface = testRunner.getDspInterface(power1module1EntityId);
+    TestDspInterfacePtr dspPowInterface = testRunner.findDspInterfaceByEntityId(power1module1EntityId);
 
     QVector<float> powActValues;
     for(int i = 0; i < MeasPhaseCount; i++)
@@ -107,7 +105,7 @@ void test_dosage::testDosageMinPowBelowLimits()
 void test_dosage::testDosageMinPowUpperLimits()
 {
     ModuleManagerTestRunner testRunner(":/def-session-minimal.json");
-    TestDspInterfacePtr dspPowInterface = testRunner.getDspInterface(power1module1EntityId);
+    TestDspInterfacePtr dspPowInterface = testRunner.findDspInterfaceByEntityId(power1module1EntityId);
 
     QVector<float> powActValues;
     for(int i = 0; i < MeasPhaseCount; i++)
@@ -122,8 +120,8 @@ void test_dosage::testDosageMinPowUpperLimits()
 void test_dosage::testDosageDcAllBelowLimits()
 {
     ModuleManagerTestRunner testRunner(":/dc-session.json");
-    TestDspInterfacePtr dspFftInterface = testRunner.getDspInterface(fftModule1EntityId);
-    TestDspInterfacePtr dspPowInterface = testRunner.getDspInterface(power1module4EntityId);
+    TestDspInterfacePtr dspFftInterface = testRunner.findDspInterfaceByEntityId(fftModule1EntityId);
+    TestDspInterfacePtr dspPowInterface = testRunner.findDspInterfaceByEntityId(power1module4EntityId);
 
     DemoValuesDspFft dspValues(dspFftInterface->getValueList().count());
     dspValues.setValue(0, 0, 2, 0);     // int channelNo, int harmonicNo, float re, float im

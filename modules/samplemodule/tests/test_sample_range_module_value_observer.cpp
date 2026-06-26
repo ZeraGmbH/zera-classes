@@ -100,7 +100,7 @@ void test_sample_range_module_value_observer::createModule(int entityId, QMap<QS
 
 void test_sample_range_module_value_observer::fireRangeValues(float rmsValue, int phaseCount)
 {
-    TestDspInterfacePtr dspInterface = m_testRunner->getDspInterface(RangeModuleEntityId, MODULEPROG);
+    TestDspInterfacePtr dspInterface = m_testRunner->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     DemoValuesDspRange rangeValues(phaseCount);
     for(int i = 0; i < phaseCount; i++)
         rangeValues.setRmsPeakDCValue(i, rmsValue);

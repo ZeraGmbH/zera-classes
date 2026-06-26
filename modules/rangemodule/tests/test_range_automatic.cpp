@@ -742,8 +742,7 @@ static constexpr int rangeChannelCount = 8;
 
 void test_range_automatic::fireNewActualValues(float rmsValue, bool includeIAux)
 {
-    TestDspInterfacePtr dspInterface =
-        m_serviceInterfaceFactory->getInterface(rangeEntityId, MODULEPROG);
+    TestDspInterfacePtr dspInterface = m_serviceInterfaceFactory->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     for(int i = 0; i < rangeChannelCount; i++) {
@@ -758,8 +757,7 @@ void test_range_automatic::fireNewActualValues(float rmsValue, bool includeIAux)
 
 void test_range_automatic::fireDifferentVoltageValues(QList<float> rmsValues, bool includeIAux)
 {
-    TestDspInterfacePtr dspInterface =
-        m_serviceInterfaceFactory->getInterface(rangeEntityId, MODULEPROG);
+    TestDspInterfacePtr dspInterface = m_serviceInterfaceFactory->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     for(int i = 0; i < rangeChannelCount; i++) {
@@ -779,7 +777,7 @@ void test_range_automatic::fireDifferentVoltageValues(QList<float> rmsValues, bo
 void test_range_automatic::fireNewActualValues(float rmsValue, float peakValue, bool includeIAux)
 {
     TestDspInterfacePtr dspInterface =
-        m_serviceInterfaceFactory->getInterface(rangeEntityId, MODULEPROG);
+        m_serviceInterfaceFactory->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
 
     DemoValuesDspRange rangeValues(rangeChannelCount);
     for(int i = 0; i < rangeChannelCount; i++) {

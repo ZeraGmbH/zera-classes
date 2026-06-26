@@ -161,19 +161,19 @@ VeinStorage::AbstractDatabase *ModuleManagerTestRunner::getVeinStorageDb()
     return m_modmanFacade->getStorageSystem()->getDb();
 }
 
-TestDspInterfacePtr ModuleManagerTestRunner::getDspInterface(int entityId, DspInterfaceCreatedBy createdBy)
+TestDspInterfacePtr ModuleManagerTestRunner::findDspInterfaceByType(DspInterfaceInjectableTypes injectType)
 {
-    return m_serviceInterfaceFactory->getInterface(entityId, createdBy);
+    return m_serviceInterfaceFactory->findDspInterfaceByType(injectType);
 }
 
-TestDspInterfacePtr ModuleManagerTestRunner::getDspInterface(DspInterfaceInjectableTypes injectType)
+TestDspInterfacePtr ModuleManagerTestRunner::findDspInterfaceByEntityId(int entityId)
 {
-    return m_serviceInterfaceFactory->getInjectableInterface(injectType);
+    return m_serviceInterfaceFactory->findDspInterfaceByEntityId(entityId);
 }
 
 QMap<int, QList<TestDspInterfacePtr> > ModuleManagerTestRunner::getAllDspInterfaces()
 {
-    return m_serviceInterfaceFactory->getAllInterfaces();
+    return m_serviceInterfaceFactory->getAllDspInterfaces();
 }
 
 void ModuleManagerTestRunner::fireActualValues()
@@ -186,30 +186,30 @@ void ModuleManagerTestRunner::fireActualValues()
     const QString session = getSessionFileName();
     bool hasDcDft = session.contains("ref-session");  // ATTOW it is just com5003-ref-session
     int dftOrder = hasDcDft ? 0 : 1;
-    TestDspValues dspValues(getDspInterface(INJECT_DFT)->getValueList(), dftOrder);
+    TestDspValues dspValues(findDspInterfaceByType(INJECT_DFT)->getValueList(), dftOrder);
     if(session.contains("meas") || session.contains("perphase") || session.contains("ced")) {
         dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
         dspValues.fireAllActualValues(
-            getDspInterface(INJECT_DFT),
-            getDspInterface(INJECT_FFT),
-            getDspInterface(INJECT_RANGE_PROGRAM), // Range is for frequency only
-            getDspInterface(INJECT_RMS));
+            findDspInterfaceByType(INJECT_DFT),
+            findDspInterfaceByType(INJECT_FFT),
+            findDspInterfaceByType(INJECT_RANGE_PROGRAM), // Range is for frequency only
+            findDspInterfaceByType(INJECT_RMS));
     }
     else if(session.contains("ac")) {
         dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
         dspValues.fireAllActualValues(
-            getDspInterface(INJECT_DFT),
-            getDspInterface(INJECT_FFT),
-            getDspInterface(INJECT_RANGE_PROGRAM),
-            getDspInterface(INJECT_RMS));
+            findDspInterfaceByType(INJECT_DFT),
+            findDspInterfaceByType(INJECT_FFT),
+            findDspInterfaceByType(INJECT_RANGE_PROGRAM),
+            findDspInterfaceByType(INJECT_RMS));
     }
     else if(session.contains("dc")) {
         dspValues.setAllValuesSymmetricDc(testvoltage, testcurrent);
         dspValues.fireAllActualValues(
-            getDspInterface(INJECT_DFT),
-            getDspInterface(INJECT_FFT),
-            getDspInterface(INJECT_RANGE_PROGRAM),
-            getDspInterface(INJECT_RMS));
+            findDspInterfaceByType(INJECT_DFT),
+            findDspInterfaceByType(INJECT_FFT),
+            findDspInterfaceByType(INJECT_RANGE_PROGRAM),
+            findDspInterfaceByType(INJECT_RMS));
     }
 }
 

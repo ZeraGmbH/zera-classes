@@ -40,7 +40,7 @@ static constexpr int rmsResultCount = voltagePhaseNeutralCount + voltagePhasePha
 void test_rms_module_regression::checkActualValueCount()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-    TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
+    TestDspInterfacePtr rmsDspInterface = testRunner.findDspInterfaceByEntityId(rmsEntityId);
 
     QStringList valueList = rmsDspInterface->getValueList();
     QCOMPARE(valueList.count(), rmsResultCount);
@@ -49,7 +49,7 @@ void test_rms_module_regression::checkActualValueCount()
 void test_rms_module_regression::injectActualValues()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-    TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
+    TestDspInterfacePtr rmsDspInterface = testRunner.findDspInterfaceByEntityId(rmsEntityId);
 
     QVector<float> actValues(rmsResultCount);
     for(int i = 0; i<rmsResultCount; i++)
@@ -67,7 +67,7 @@ void test_rms_module_regression::injectActualValues()
 void test_rms_module_regression::injectActualTwice()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-    TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
+    TestDspInterfacePtr rmsDspInterface = testRunner.findDspInterfaceByEntityId(rmsEntityId);
 
     VeinStorage::AbstractDatabase* storageDb = testRunner.getVeinStorageDb();
     QVector<float> actValues(rmsResultCount);
@@ -86,7 +86,7 @@ void test_rms_module_regression::injectActualTwice()
 void test_rms_module_regression::injectSymmetricValues()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-    TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
+    TestDspInterfacePtr rmsDspInterface = testRunner.findDspInterfaceByEntityId(rmsEntityId);
 
     RMSMODULE::cRmsModule *rmsModule = static_cast<RMSMODULE::cRmsModule*>(testRunner.getModule(rmsEntityId));
     RMSMODULE::cRmsModuleConfiguration config;
@@ -106,7 +106,7 @@ void test_rms_module_regression::injectSymmetricValues()
 void test_rms_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
-    TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
+    TestDspInterfacePtr rmsDspInterface = testRunner.findDspInterfaceByEntityId(rmsEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(rmsDspInterface->dumpAll());
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped));

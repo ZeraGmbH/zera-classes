@@ -12,7 +12,7 @@ static int constexpr dspSuperEntityId = 9000;
 void test_statusmodule_with_dspsuper::dspStatus()
 {
     ModuleManagerTestRunner testRunner(":/status-dsp-session.json");
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(dspSuperEntityId);
 
     DspSuperTestSupport::fireInterrupt({12.5, 1, 20}, dspInterface);
     TimeMachineForTest::getInstance()->processTimers(20);

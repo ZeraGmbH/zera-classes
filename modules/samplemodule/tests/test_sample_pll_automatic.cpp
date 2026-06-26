@@ -219,7 +219,7 @@ void test_sample_pll_automatic::emitNothingOnEmptyChannelList()
 
 void test_sample_pll_automatic::fireRangeValues(float rmsValue, QList<int> activePhaseIdxs)
 {
-    TestDspInterfacePtr dspInterface = m_testRunner->getDspInterface(RangeModuleEntityId, MODULEPROG);
+    TestDspInterfacePtr dspInterface = m_testRunner->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     DemoValuesDspRange dspRangeValues(phaseCountMt);
     for(int i = 0; i < phaseCountMt; i++)
         if (activePhaseIdxs.contains(i))
@@ -230,7 +230,7 @@ void test_sample_pll_automatic::fireRangeValues(float rmsValue, QList<int> activ
 
 void test_sample_pll_automatic::fireRangeValues(float rmsValue, QList<int> activePhaseIdxs, DemoValuesDspRange &dspRangeValues)
 {
-    TestDspInterfacePtr dspInterface = m_testRunner->getDspInterface(RangeModuleEntityId, MODULEPROG);
+    TestDspInterfacePtr dspInterface = m_testRunner->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     for(int i = 0; i < phaseCountMt; i++)
         if (activePhaseIdxs.contains(i))
             dspRangeValues.setRmsPeakDCValue(i, rmsValue);

@@ -69,7 +69,7 @@ void test_sample_set_pll_automatic::fireRangeValues(ModuleManagerTestRunner &tes
                                                     QList<int> activePhaseIdxs,
                                                     DemoValuesDspRange &dspRangeValues)
 {
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(RangeModuleEntityId, MODULEPROG);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     for(int i = 0; i < phaseCountMt; i++)
         if (activePhaseIdxs.contains(i))
             dspRangeValues.setRmsPeakDCValue(i, rmsValue);

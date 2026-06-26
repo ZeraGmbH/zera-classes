@@ -13,7 +13,7 @@ static int constexpr osciEntityId = 1120;
 void test_osci_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    TestDspInterfacePtr osciDspInterface = testRunner.getDspInterface(osciEntityId);
+    TestDspInterfacePtr osciDspInterface = testRunner.findDspInterfaceByEntityId(osciEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(osciDspInterface->dumpAll());
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped));
@@ -29,7 +29,7 @@ void test_osci_module_regression::dumpDspSetReference()
     setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m4", "m5");
     setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m5", "m0");
 
-    TestDspInterfacePtr osciDspInterface = testRunner.getDspInterface(osciEntityId);
+    TestDspInterfacePtr osciDspInterface = testRunner.findDspInterfaceByEntityId(osciEntityId);
     QString measProgramDumped = TestLogHelpers::dump(osciDspInterface->dumpAll(true));
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-ref-UL1-to-other.json", measProgramDumped));
 }

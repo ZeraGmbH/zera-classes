@@ -2,8 +2,7 @@
 
 void TestFactoryServiceInterfaces::resetInterfaces()
 {
-    m_dspInterfacesByCreatedBy.clear();
-    m_dspInterfacesByInjectType.clear();
+    m_dspInterfaces.clear();
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeProg(int entityId,
@@ -13,7 +12,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeProg(
     Q_UNUSED(isReference)
     return createDspInterfaceCommon(entityId,
                                     INJECT_RANGE_PROGRAM,
-                                    MODULEPROG,
                                     0 /* dummy */, valueChannelList);
 }
 
@@ -24,7 +22,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeObser
     Q_UNUSED(isReference)
     return createDspInterfaceCommon(entityId,
                                     INJECT_RANGE_OBSERV,
-                                    OBSERVER,
                                     0 /* dummy */, valueChannelList);
 }
 
@@ -35,7 +32,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRangeAdj(i
     Q_UNUSED(isReference)
     return createDspInterfaceCommon(entityId,
                                     INJECT_RANGE_ADJUST,
-                                    ADJUST,
                                     0 /* dummy */, valueChannelList);
 }
 
@@ -46,7 +42,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDft(int en
     Q_UNUSED(dftOrder)
     return createDspInterfaceCommon(entityId,
                                     INJECT_DFT,
-                                    MODULEPROG,
                                     0 /* dummy */, valueChannelList);
 }
 
@@ -57,7 +52,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceFft(int en
     Q_UNUSED(fftOrder)
     return createDspInterfaceCommon(entityId,
                                     INJECT_FFT,
-                                    MODULEPROG,
                                     0 /* dummy */, valueChannelList);
 }
 
@@ -66,7 +60,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRms(int en
 {
     return createDspInterfaceCommon(entityId,
                                     INJECT_RMS,
-                                    MODULEPROG,
                                     0 /* dummy */, valueChannelList);
 }
 
@@ -76,7 +69,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower1(int
     Q_UNUSED(measMode)
     return createDspInterfaceCommon(entityId,
                                     INJECT_NOT_SUPPORTED,
-                                    MODULEPROG,
                                     0 /* dummy */, {});
 }
 
@@ -86,7 +78,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower2(int
     Q_UNUSED(measMode)
     return createDspInterfaceCommon(entityId,
                                     INJECT_NOT_SUPPORTED,
-                                    MODULEPROG,
                                     7 /* that is what module expects currently */, {});
 }
 
@@ -95,7 +86,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceThdn(int e
 {
     return createDspInterfaceCommon(entityId,
                                     INJECT_NOT_SUPPORTED,
-                                    MODULEPROG,
                                     0 /* dummy */,
                                     valueChannelList);
 }
@@ -107,7 +97,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOsci(int e
     Q_UNUSED(interpolation)
     return createDspInterfaceCommon(entityId,
                                     INJECT_NOT_SUPPORTED,
-                                    MODULEPROG,
                                     0 /* dummy */,
                                     valueChannelList);
 }
@@ -120,7 +109,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePeriodAver
     Q_UNUSED(initialPeriodCount)
     return createDspInterfaceCommon(entityId,
                                     INJECT_NOT_SUPPORTED,
-                                    MODULEPROG,
                                     0 /* dummy */,
                                     valueChannelList);
 }
@@ -129,7 +117,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceMode(int e
 {
     return createDspInterfaceCommon(entityId,
                                     INJECT_NOT_SUPPORTED,
-                                    MODULEPROG,
                                     0 /* dummy */, {});
 }
 
@@ -137,16 +124,14 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRefProg(in
                                                                               const QStringList &valueChannelList)
 {
     return createDspInterfaceCommon(entityId,
-                                    INJECT_NOT_SUPPORTED,
-                                    MODULEPROG,
+                                    INJECT_REFERENCE_PROGRAM,
                                     4 /* that is what module expects currently */, valueChannelList);
 }
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceRefAdj(int entityId)
 {
     return createDspInterfaceCommon(entityId,
-                                    INJECT_NOT_SUPPORTED,
-                                    ADJUST,
+                                    INJECT_REFERENCE_ADJUST,
                                     0 /* dummy */, {});
 }
 
@@ -154,7 +139,6 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceStatus(int
 {
     return createDspInterfaceCommon(entityId,
                                     INJECT_NOT_SUPPORTED,
-                                    MODULEPROG,
                                     0 /* dummy */, {});
 }
 
@@ -162,32 +146,37 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceDspSuper(i
 {
     return createDspInterfaceCommon(entityId,
                                     INJECT_SUPER,
-                                    MODULEPROG,
                                     0 /* dummy */, {});
 }
 
-TestDspInterfacePtr TestFactoryServiceInterfaces::getInterface(int entityId, DspInterfaceCreatedBy createdBy)
+TestDspInterfacePtr TestFactoryServiceInterfaces::findDspInterfaceByType(DspInterfaceInjectableTypes injectType)
 {
-    if (m_dspInterfacesByCreatedBy.contains(entityId) &&
-        m_dspInterfacesByCreatedBy[entityId].contains(createdBy))
-        return m_dspInterfacesByCreatedBy[entityId][createdBy];
+    for(auto entityIter = m_dspInterfaces.cbegin(); entityIter != m_dspInterfaces.cend(); entityIter++) {
+        const QMap<DspInterfaceInjectableTypes, TestDspInterfacePtr> &entityIdInterfaces = entityIter.value();
+        if (entityIdInterfaces.contains(injectType))
+            return entityIdInterfaces[injectType];
+    }
     return nullptr;
 }
 
-TestDspInterfacePtr TestFactoryServiceInterfaces::getInjectableInterface(DspInterfaceInjectableTypes injectType)
+TestDspInterfacePtr TestFactoryServiceInterfaces::findDspInterfaceByEntityId(int entityId)
 {
-    if (m_dspInterfacesByInjectType.contains(injectType))
-        return m_dspInterfacesByInjectType[injectType];
+    auto entityIter = m_dspInterfaces.constFind(entityId);
+    if (entityIter != m_dspInterfaces.constEnd()) {
+        const QMap<DspInterfaceInjectableTypes, TestDspInterfacePtr> &entityIdInterfaces = entityIter.value();
+        if (!entityIdInterfaces.isEmpty())
+            return entityIdInterfaces.first();
+    }
     return nullptr;
 }
 
-QMap<int, QList<TestDspInterfacePtr>> TestFactoryServiceInterfaces::getAllInterfaces()
+QMap<int, QList<TestDspInterfacePtr>> TestFactoryServiceInterfaces::getAllDspInterfaces()
 {
     QMap<int, QList<TestDspInterfacePtr>> interfaces;
-    for(auto entityIter=m_dspInterfacesByCreatedBy.cbegin(); entityIter!=m_dspInterfacesByCreatedBy.cend(); entityIter++) {
+    for(auto entityIter = m_dspInterfaces.cbegin(); entityIter != m_dspInterfaces.cend(); entityIter++) {
         int entityId = entityIter.key();
-        QMap<DspInterfaceCreatedBy, TestDspInterfacePtr> entityInterfaces = entityIter.value();
-        for(auto createdByIter=entityInterfaces.cbegin(); createdByIter!=entityInterfaces.cend(); createdByIter++)
+        QMap<DspInterfaceInjectableTypes, TestDspInterfacePtr> entityInterfaces = entityIter.value();
+        for(auto createdByIter = entityInterfaces.cbegin(); createdByIter != entityInterfaces.cend(); createdByIter++)
             interfaces[entityId].append(createdByIter.value());
     }
     return interfaces;
@@ -195,18 +184,11 @@ QMap<int, QList<TestDspInterfacePtr>> TestFactoryServiceInterfaces::getAllInterf
 
 Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceCommon(int entityId,
                                                                              DspInterfaceInjectableTypes injectType,
-                                                                             DspInterfaceCreatedBy createdBy,
                                                                              int interruptNoHandled,
                                                                              const QStringList &valueChannelList)
 {
     Q_UNUSED(interruptNoHandled)
     TestDspInterfacePtr dspInterface = std::make_shared<TestDspInterface>(valueChannelList, entityId);
-    Q_ASSERT(!(m_dspInterfacesByCreatedBy.contains(entityId) && m_dspInterfacesByCreatedBy[entityId].contains(createdBy)));
-    m_dspInterfacesByCreatedBy[entityId][createdBy] = dspInterface;
-
-    if (injectType != INJECT_NOT_SUPPORTED) {
-        Q_ASSERT(!m_dspInterfacesByInjectType.contains(injectType));
-        m_dspInterfacesByInjectType[injectType] = dspInterface;
-    }
+    m_dspInterfaces[entityId][injectType] = dspInterface;
     return dspInterface;
 }

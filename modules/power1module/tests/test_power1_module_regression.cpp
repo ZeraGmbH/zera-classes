@@ -50,7 +50,7 @@ void test_power1_module_regression::veinDumpInitial()
 void test_power1_module_regression::injectActualValues()
 {
     ModuleManagerTestRunner testRunner(":/sessions/session-power1-test.json");
-    TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityId);
+    TestDspInterfacePtr power1DspInterface = testRunner.findDspInterfaceByEntityId(powerEntityId);
 
     QVector<float> powerValues;
     for(int i = 0; i < MeasPhaseCount; i++)
@@ -86,7 +86,7 @@ void test_power1_module_regression::testScpiCommandsDisabled()
 void test_power1_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/sessions/session-minimal.json");
-    TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityId);
+    TestDspInterfacePtr power1DspInterface = testRunner.findDspInterfaceByEntityId(powerEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll());
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped));
@@ -102,22 +102,22 @@ void test_power1_module_regression::dumpDspSetupMt310s2Pow1To4()
     ModuleManagerTestRunner testRunner(":/sessions/session-mt310s2-p1-p4.json", "mt310s2");
     bool allOk = true;
 
-    TestDspInterfacePtr power1DspInterfaceP1 = testRunner.getDspInterface(powerEntityIdP1);
+    TestDspInterfacePtr power1DspInterfaceP1 = testRunner.findDspInterfaceByEntityId(powerEntityIdP1);
     QString measProgramDumpedP1 = TestLogHelpers::dump(power1DspInterfaceP1->dumpAll());
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramMt310s2P1.json", measProgramDumpedP1))
         allOk = false;
 
-    TestDspInterfacePtr power1DspInterfaceP2 = testRunner.getDspInterface(powerEntityIdP2);
+    TestDspInterfacePtr power1DspInterfaceP2 = testRunner.findDspInterfaceByEntityId(powerEntityIdP2);
     QString measProgramDumpedP2 = TestLogHelpers::dump(power1DspInterfaceP2->dumpAll());
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramMt310s2P2.json", measProgramDumpedP2))
         allOk = false;
 
-    TestDspInterfacePtr power1DspInterfaceP3 = testRunner.getDspInterface(powerEntityIdP3);
+    TestDspInterfacePtr power1DspInterfaceP3 = testRunner.findDspInterfaceByEntityId(powerEntityIdP3);
     QString measProgramDumpedP3 = TestLogHelpers::dump(power1DspInterfaceP3->dumpAll());
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramMt310s2P3.json", measProgramDumpedP3))
         allOk = false;
 
-    TestDspInterfacePtr power1DspInterfaceP4 = testRunner.getDspInterface(powerEntityIdP4);
+    TestDspInterfacePtr power1DspInterfaceP4 = testRunner.findDspInterfaceByEntityId(powerEntityIdP4);
     QString measProgramDumpedP4 = TestLogHelpers::dump(power1DspInterfaceP4->dumpAll());
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramMt310s2P4.json", measProgramDumpedP4))
         allOk = false;
@@ -130,22 +130,22 @@ void test_power1_module_regression::dumpDspSetupCom5003Pow1To4()
     ModuleManagerTestRunner testRunner(":/sessions/session-com5003-p1-p4.json", "com5003");
     bool allOk = true;
 
-    TestDspInterfacePtr power1DspInterfaceP1 = testRunner.getDspInterface(powerEntityIdP1);
+    TestDspInterfacePtr power1DspInterfaceP1 = testRunner.findDspInterfaceByEntityId(powerEntityIdP1);
     QString measProgramDumpedP1 = TestLogHelpers::dump(power1DspInterfaceP1->dumpAll());
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramCom5003P1.json", measProgramDumpedP1))
         allOk = false;
 
-    TestDspInterfacePtr power1DspInterfaceP2 = testRunner.getDspInterface(powerEntityIdP2);
+    TestDspInterfacePtr power1DspInterfaceP2 = testRunner.findDspInterfaceByEntityId(powerEntityIdP2);
     QString measProgramDumpedP2 = TestLogHelpers::dump(power1DspInterfaceP2->dumpAll());
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramCom5003P2.json", measProgramDumpedP2))
         allOk = false;
 
-    TestDspInterfacePtr power1DspInterfaceP3 = testRunner.getDspInterface(powerEntityIdP3);
+    TestDspInterfacePtr power1DspInterfaceP3 = testRunner.findDspInterfaceByEntityId(powerEntityIdP3);
     QString measProgramDumpedP3 = TestLogHelpers::dump(power1DspInterfaceP3->dumpAll());
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramCom5003P3.json", measProgramDumpedP3))
         allOk = false;
 
-    TestDspInterfacePtr power1DspInterfaceP4 = testRunner.getDspInterface(powerEntityIdP4);
+    TestDspInterfacePtr power1DspInterfaceP4 = testRunner.findDspInterfaceByEntityId(powerEntityIdP4);
     QString measProgramDumpedP4 = TestLogHelpers::dump(power1DspInterfaceP4->dumpAll());
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramCom5003P4.json", measProgramDumpedP4))
         allOk = false;
@@ -156,7 +156,7 @@ void test_power1_module_regression::dumpDspSetupCom5003Pow1To4()
 void test_power1_module_regression::dumpDspOnMeasModeChange()
 {
     ModuleManagerTestRunner testRunner(":/sessions/session-minimal.json");
-    TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityId);
+    TestDspInterfacePtr power1DspInterface = testRunner.findDspInterfaceByEntityId(powerEntityId);
 
     setMeasMode(powerEntityId, testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "3LW");
     setMeasMode(powerEntityId, testRunner.getVfCmdEventHandlerSystemPtr(), "3LW", "2LW");
@@ -169,7 +169,7 @@ void test_power1_module_regression::dumpDspOnMeasModeChange()
 void test_power1_module_regression::dumpDspOnMeasModeChangeApparentGeom()
 {
     ModuleManagerTestRunner testRunner(":/sessions/session-com5003-p1-p4.json", "com5003");
-    TestDspInterfacePtr power1DspInterface = testRunner.getDspInterface(powerEntityIdP4);
+    TestDspInterfacePtr power1DspInterface = testRunner.findDspInterfaceByEntityId(powerEntityIdP4);
 
     setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "4LS");
     setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LS", "4LSg");

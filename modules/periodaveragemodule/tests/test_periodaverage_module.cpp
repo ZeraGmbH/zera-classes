@@ -64,7 +64,7 @@ void test_periodaverage_module::dumpDspSetupAllChannels5PeriodsMax()
 {
     ModuleManagerTestRunner testRunner(":/sessions/all-channels-maxperiod-5.json");
 
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(periodAverageEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(periodAverageEntityId);
     QString measProgramDumped = TestLogHelpers::dump(dspInterface->dumpAll());
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-all-channels-maxperiod-5.json", measProgramDumped));
@@ -74,7 +74,7 @@ void test_periodaverage_module::dumpDspSetupAuxChannels13PeriodsMax()
 {
     ModuleManagerTestRunner testRunner(":/sessions/aux-channels-maxperiod-13.json");
 
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(periodAverageEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(periodAverageEntityId);
     QString measProgramDumped = TestLogHelpers::dump(dspInterface->dumpAll());
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-aux-channels-maxperiod-13.json", measProgramDumped));
@@ -101,7 +101,7 @@ void test_periodaverage_module::injectValuesAllChannels5PeriodsMax()
     values.setValue("m1", 4, 37.4);
     QVector<float> dspValues = values.getDspValues();
 
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(periodAverageEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(periodAverageEntityId);
     dspInterface->fireActValInterrupt(dspValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
@@ -148,7 +148,7 @@ void test_periodaverage_module::injectValuesAuxChannels13PeriodsMax()
     values.setValue("m7", 12, 48.2);
     QVector<float> dspValues = values.getDspValues();
 
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(periodAverageEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(periodAverageEntityId);
     dspInterface->fireActValInterrupt(dspValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
@@ -195,7 +195,7 @@ void test_periodaverage_module::injectValuesAuxChannels13PeriodsMax5PeriodsCurre
     values.setValue("m7", 12, 48.2);
     QVector<float> dspValues = values.getDspValues();
 
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(periodAverageEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(periodAverageEntityId);
     dspInterface->fireActValInterrupt(dspValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 

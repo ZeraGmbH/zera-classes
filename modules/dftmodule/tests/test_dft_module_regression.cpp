@@ -40,7 +40,7 @@ static constexpr int dftResultCount = voltagePhaseNeutralCount + voltagePhasePha
 void test_dft_module_regression::checkActualValueCount()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-no-ref.json");
-    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
     QVERIFY(dftDspInterface);
 
     QStringList valueList = dftDspInterface->getValueList();
@@ -55,7 +55,7 @@ void test_dft_module_regression::injectActualValuesNoReferenceChannel()
     for(int i = 0; i<dftResultCount * 2; i++)
         actValues[i] = i;
 
-    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
     dftDspInterface->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
@@ -73,7 +73,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL1()
     for(int i = 0; i<dftResultCount * 2; i++)
         actValues[i] = i+1;
 
-    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
     dftDspInterface->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
@@ -93,7 +93,7 @@ void test_dft_module_regression::injectActualValuesReferenceChannelUL2()
     for(int i = 0; i<dftResultCount * 2; i++)
         actValues[i] = i+1;
 
-    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
     dftDspInterface->fireActValInterrupt(actValues, /*dummy*/ 0);
     TimeMachineObject::feedEventLoop();
 
@@ -113,7 +113,7 @@ void test_dft_module_regression::injectActualValuesOrder0()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-noref-order-0.json");
 
-    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
     QStringList valueList = dftDspInterface->getValueList();
     QCOMPARE(valueList.count(), comDcRefChannelCount);
 
@@ -134,7 +134,7 @@ void test_dft_module_regression::injectSymmetricalOrder0()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-noref-order-0.json");
 
-    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
     DemoValuesDspDft dspValues(dftDspInterface->getValueList(), 0);
     dspValues.setAllValuesSymmetric(20, 10, 30);
 
@@ -151,7 +151,7 @@ void test_dft_module_regression::injectSymmetricalOrder1()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-ref.json");
 
-    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
     DemoValuesDspDft dspValues(dftDspInterface->getValueList(), 1);
     dspValues.setAllValuesSymmetric(230, 10, 30);
 
@@ -168,7 +168,7 @@ void test_dft_module_regression::dumpDspSetup()
 {
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-ref.json");
 
-    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
     QString measProgramDumped = TestLogHelpers::dump(dftDspInterface->dumpAll());
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped));
 }

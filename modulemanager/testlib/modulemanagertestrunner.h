@@ -28,9 +28,6 @@ public:
     void start(const QString &sessionFileName);
     QString getSessionFileName() const;
 
-    QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
-    int getModuleConfigWriteCounts() const;
-
     VeinStorage::AbstractEventSystem *getVeinStorageSystem();
     VeinStorage::AbstractDatabase* getVeinStorageDb();
     VfCmdEventHandlerSystemPtr getVfCmdEventHandlerSystemPtr();
@@ -39,14 +36,17 @@ public:
 
     ModuleManagerSetupFacade* getModManFacade();
     ZeraModules::VirtualModule *getModule(int entityId);
+
     void setRangeGetSetDelay(int rangeGetSetDelay);
 
     ZDspServer *getDspServer();
-    cSEC1000dServer *getSecServer();
-    TestDspInterfacePtr getDspInterface(int entityId, DspInterfaceCreatedBy createdBy = MODULEPROG);
-    TestDspInterfacePtr getDspInterface(DspInterfaceInjectableTypes injectType);
+    // search criteria ambiguous: return first
+    TestDspInterfacePtr findDspInterfaceByType(DspInterfaceInjectableTypes injectType);
+    TestDspInterfacePtr findDspInterfaceByEntityId(int entityId);
     QMap<int, QList<TestDspInterfacePtr>> getAllDspInterfaces();
     void fireActualValues();
+
+    cSEC1000dServer *getSecServer();
 
     // hotplug full functional methods
     void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &deviceMap);
@@ -58,6 +58,9 @@ public:
     void removeAllHotplugDevices();
     void addClamps(const QList<AbstractMockAllServices::clampParam> &clampParams);
 
+    // statistics
+    QList<TestModuleManager::TModuleInstances> getInstanceCountsOnModulesDestroyed();
+    int getModuleConfigWriteCounts() const;
 private:
     void setupVfLogger();
 

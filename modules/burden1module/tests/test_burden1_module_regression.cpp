@@ -51,7 +51,7 @@ void test_burden1_module_regression::resistanceCalculation()
 void test_burden1_module_regression::voltageBurden230V1ADefaultSettings()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
 
     QStringList valueList = dftDspInterface->getValueList();
     DemoValuesDspDft dspValues(valueList, 1);
@@ -93,7 +93,7 @@ void test_burden1_module_regression::voltageBurden230V1ADefaultSettings()
 void test_burden1_module_regression::voltageBurden100V1A60DefaultSettings()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    TestDspInterfacePtr dftDspInterface = testRunner.getDspInterface(dftEntityId);
+    TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
 
     QStringList valueList = dftDspInterface->getValueList();
     DemoValuesDspDft dspValues(valueList, 1);

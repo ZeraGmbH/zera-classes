@@ -17,6 +17,7 @@ public:
     void startAllTestServices(QString deviceName, bool initialAdjPermission);
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
+
     ZeraModules::VirtualModule *getModule(int entityId);
 
     int getModuleConfigWriteCounts() const;

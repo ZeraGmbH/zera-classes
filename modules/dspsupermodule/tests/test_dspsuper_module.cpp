@@ -44,7 +44,7 @@ void test_dspsuper_module::minimalSession()
 void test_dspsuper_module::dspDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(dspSuperEntityId);
     QString measProgramDumped = TestLogHelpers::dump(dspInterface->dumpAll());
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpInitial.json", measProgramDumped));
 }
@@ -76,7 +76,7 @@ void test_dspsuper_module::supervisorMapInitial()
 void test_dspsuper_module::supervisorMapOneInterrupt()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(dspSuperEntityId);
     DSPSUPERMODULE::DspSuperModule *dspSuperModule = qobject_cast<DSPSUPERMODULE::DspSuperModule*>(testRunner.getModule(9000));
 
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentPeriod(), 0);
@@ -96,7 +96,7 @@ void test_dspsuper_module::supervisorMapOneInterrupt()
 void test_dspsuper_module::supervisorMapOneInterruptTwoEntries()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(dspSuperEntityId);
     DSPSUPERMODULE::DspSuperModule *dspSuperModule = qobject_cast<DSPSUPERMODULE::DspSuperModule*>(testRunner.getModule(9000));
 
     QCOMPARE(dspSuperModule->getDspCommonSupervisor()->getCurrentPeriod(), 0);
@@ -126,7 +126,7 @@ void test_dspsuper_module::supervisorMapOneInterruptTwoEntries()
 void test_dspsuper_module::supervisorMapTwoInterrupts()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(dspSuperEntityId);
     DSPSUPERMODULE::DspSuperModule *dspSuperModule = qobject_cast<DSPSUPERMODULE::DspSuperModule*>(testRunner.getModule(9000));
     QDateTime now = TimerFactoryQt::getCurrentTime();
 
@@ -160,7 +160,7 @@ void test_dspsuper_module::supervisorMapTwoInterrupts()
 void test_dspsuper_module::supervisorMapThreeInterruptsTimerb32BitTurnaround()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(dspSuperEntityId);
 
     quint32 timer = std::numeric_limits<quint32>::max();
     quint32 period = 1;
@@ -198,7 +198,7 @@ void test_dspsuper_module::supervisorMapThreeInterruptsTimerb32BitTurnaround()
 void test_dspsuper_module::supervisorMap10EntriesTotal()
 {
     ModuleManagerTestRunner testRunner(":/sessions/minimal-10-total.json");
-    TestDspInterfacePtr dspInterface = testRunner.getDspInterface(dspSuperEntityId);
+    TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(dspSuperEntityId);
 
     constexpr quint32 periodMaxInjected = 20;
     for (quint32 period=1; period<=periodMaxInjected; period++)

@@ -3,24 +3,24 @@
 
 void AdjModuleTestHelper::setAllValuesSymmetricAc(ModuleManagerTestRunner &testRunner, float testvoltage, float testcurrent, float testangle, float testfrequency)
 {
-    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList(), 1);
+    TestDspValues dspValues(testRunner.findDspInterfaceByType(INJECT_DFT)->getValueList(), 1);
     dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
     dspValues.fireAllActualValues(
-        testRunner.getDspInterface(INJECT_DFT),
-        testRunner.getDspInterface(INJECT_FFT),
-        testRunner.getDspInterface(INJECT_RANGE_PROGRAM),
-        testRunner.getDspInterface(INJECT_RMS));
+        testRunner.findDspInterfaceByType(INJECT_DFT),
+        testRunner.findDspInterfaceByType(INJECT_FFT),
+        testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM),
+        testRunner.findDspInterfaceByType(INJECT_RMS));
 }
 
 void AdjModuleTestHelper::setAllValuesSymmetricDc(ModuleManagerTestRunner &testRunner, float voltage, float current)
 {
-    TestDspValues dspValues(testRunner.getDspInterface(INJECT_DFT)->getValueList(), 0);
+    TestDspValues dspValues(testRunner.findDspInterfaceByType(INJECT_DFT)->getValueList(), 0);
     dspValues.setAllValuesSymmetricDc(voltage, current);
     dspValues.fireAllActualValues(
-        testRunner.getDspInterface(INJECT_DFT),
-        testRunner.getDspInterface(INJECT_FFT),
-        testRunner.getDspInterface(INJECT_RANGE_PROGRAM),
-        testRunner.getDspInterface(INJECT_RMS));
+        testRunner.findDspInterfaceByType(INJECT_DFT),
+        testRunner.findDspInterfaceByType(INJECT_FFT),
+        testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM),
+        testRunner.findDspInterfaceByType(INJECT_RMS));
 }
 
 AdjModuleTestHelper::TAdjNodeValues AdjModuleTestHelper::parseNode(const QString &scpiResponse)
