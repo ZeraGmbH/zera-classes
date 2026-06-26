@@ -88,7 +88,7 @@ void test_rms_module_regression::injectSymmetricValues()
     ModuleManagerTestRunner testRunner(":/session-rms-moduleconfig-from-resource.json");
     TestDspInterfacePtr rmsDspInterface = testRunner.getDspInterface(rmsEntityId);
 
-    RMSMODULE::cRmsModule *rmsModule = static_cast<RMSMODULE::cRmsModule*>(testRunner.getModule("rmsmodule", rmsEntityId));
+    RMSMODULE::cRmsModule *rmsModule = static_cast<RMSMODULE::cRmsModule*>(testRunner.getModule(rmsEntityId));
     RMSMODULE::cRmsModuleConfiguration config;
     config.setConfiguration(rmsModule->getConfiguration());
 

@@ -223,9 +223,9 @@ ModuleManagerSetupFacade *ModuleManagerTestRunner::getModManFacade()
     return m_modmanFacade.get();
 }
 
-ZeraModules::VirtualModule *ModuleManagerTestRunner::getModule(const QString &uniqueName, int entityId)
+ZeraModules::VirtualModule *ModuleManagerTestRunner::getModule(int entityId)
 {
-    return m_modMan->getModule(uniqueName, entityId);
+    return m_modMan->getModule(entityId);
 }
 
 void ModuleManagerTestRunner::setVfComponent(int entityId, const QString &componentName, const QVariant &newValue)

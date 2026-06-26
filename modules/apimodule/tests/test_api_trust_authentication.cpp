@@ -47,7 +47,7 @@ void test_api_trust_authentication::init()
     m_modMan->loadSession(":/session-minimal.json");
     m_modMan->waitUntilModulesAreReady();
 
-    m_pApiModule = static_cast<APIMODULE::cApiModule*>(m_modMan->getModule("apimodule", API_ENTITY_ID));
+    m_pApiModule = static_cast<APIMODULE::cApiModule*>(m_modMan->getModule(API_ENTITY_ID));
 
     m_pApiModule->setTrustListPath(trustPath);
 

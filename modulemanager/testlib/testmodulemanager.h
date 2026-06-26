@@ -17,7 +17,8 @@ public:
     void startAllTestServices(QString deviceName, bool initialAdjPermission);
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
-    ZeraModules::VirtualModule *getModule(QString uniqueName, int entityId);
+    ZeraModules::VirtualModule *getModule(int entityId);
+
     int getModuleConfigWriteCounts() const;
 
     struct TModuleInstances {

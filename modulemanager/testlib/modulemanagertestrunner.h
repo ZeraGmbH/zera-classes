@@ -38,7 +38,7 @@ public:
     QVariant getVfComponent(int entityId, const QString &componentName);
 
     ModuleManagerSetupFacade* getModManFacade();
-    ZeraModules::VirtualModule *getModule(const QString &uniqueName, int entityId);
+    ZeraModules::VirtualModule *getModule(int entityId);
     void setRangeGetSetDelay(int rangeGetSetDelay);
 
     ZDspServer *getDspServer();

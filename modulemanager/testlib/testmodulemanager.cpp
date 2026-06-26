@@ -81,10 +81,10 @@ void TestModuleManager::waitUntilModulesAreReady()
     while(!modulesReady());
 }
 
-ZeraModules::VirtualModule *TestModuleManager::getModule(QString uniqueName, int entityId)
+ZeraModules::VirtualModule *TestModuleManager::getModule(int entityId)
 {
     for(const auto &moduleInfo : qAsConst(*m_moduleDataList)) {
-        if(moduleInfo->m_uniqueName == uniqueName && moduleInfo->m_moduleId == entityId)
+        if(moduleInfo->m_moduleId == entityId)
             return moduleInfo->m_module;
     }
     return nullptr;
