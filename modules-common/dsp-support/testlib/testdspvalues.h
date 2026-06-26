@@ -29,6 +29,7 @@ private:
     QVector<float> getDspValuesFft();
     QVector<float> getDspValuesRange();
     QVector<float> getDspValuesRms();
+    // Why unique pointers: we need to inject params in ctors which have to be calculated first
     std::unique_ptr<DemoValuesDspDft> m_dftValues;
     std::unique_ptr<DemoValuesDspFft> m_fftValues;
     std::unique_ptr<DemoValuesDspRange> m_rangeValues;
