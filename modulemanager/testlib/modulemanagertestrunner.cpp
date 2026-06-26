@@ -186,31 +186,17 @@ void ModuleManagerTestRunner::fireActualValues()
     const QString session = getSessionFileName();
     bool hasDcDft = session.contains("ref-session");  // ATTOW it is just com5003-ref-session
     int dftOrder = hasDcDft ? 0 : 1;
+
     TestDspValues dspValues(findDspInterfaceByType(INJECT_DFT)->getValueList(), dftOrder);
-    if(session.contains("meas") || session.contains("perphase") || session.contains("ced")) {
-        dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
-        dspValues.fireAllActualValues(
-            findDspInterfaceByType(INJECT_DFT),
-            findDspInterfaceByType(INJECT_FFT),
-            findDspInterfaceByType(INJECT_RANGE_PROGRAM), // Range is for frequency only
-            findDspInterfaceByType(INJECT_RMS));
-    }
-    else if(session.contains("ac")) {
-        dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
-        dspValues.fireAllActualValues(
-            findDspInterfaceByType(INJECT_DFT),
-            findDspInterfaceByType(INJECT_FFT),
-            findDspInterfaceByType(INJECT_RANGE_PROGRAM),
-            findDspInterfaceByType(INJECT_RMS));
-    }
-    else if(session.contains("dc") || hasDcDft) {
+    if(session.contains("dc") || hasDcDft)
         dspValues.setAllValuesSymmetricDc(testvoltage, testcurrent);
-        dspValues.fireAllActualValues(
-            findDspInterfaceByType(INJECT_DFT),
-            findDspInterfaceByType(INJECT_FFT),
-            findDspInterfaceByType(INJECT_RANGE_PROGRAM),
-            findDspInterfaceByType(INJECT_RMS));
-    }
+    else
+        dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
+    dspValues.fireAllActualValues(
+        findDspInterfaceByType(INJECT_DFT),
+        findDspInterfaceByType(INJECT_FFT),
+        findDspInterfaceByType(INJECT_RANGE_PROGRAM),
+        findDspInterfaceByType(INJECT_RMS));
 }
 
 VfCmdEventHandlerSystemPtr ModuleManagerTestRunner::getVfCmdEventHandlerSystemPtr()
