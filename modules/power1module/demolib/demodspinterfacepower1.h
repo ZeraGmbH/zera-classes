@@ -16,7 +16,7 @@ private slots:
     void onTimer();
 private:
     int m_entityId;
-    MeasModeSelector *m_measMode;
+    MeasModeSelector *m_measMode = nullptr;
     TimerTemplateQtPtr m_periodicTimer;
     std::function<double(int)> m_valueGenerator;
 };

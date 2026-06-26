@@ -17,6 +17,7 @@ enum DspInterfaceInjectableTypes {
     INJECT_SUPER,
     INJECT_REFERENCE_PROGRAM,
     INJECT_REFERENCE_ADJUST,
+    INJECT_POWER1
 };
 
 class TestFactoryServiceInterfaces : public AbstractFactoryServiceInterfaces

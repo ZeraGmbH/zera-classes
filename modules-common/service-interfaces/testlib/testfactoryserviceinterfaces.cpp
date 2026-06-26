@@ -68,7 +68,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfacePower1(int
 {
     Q_UNUSED(measMode)
     return createDspInterfaceCommon(entityId,
-                                    INJECT_NOT_SUPPORTED,
+                                    INJECT_POWER1,
                                     0 /* dummy */, {});
 }
 
