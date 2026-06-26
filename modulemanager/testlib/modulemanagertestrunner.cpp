@@ -171,6 +171,11 @@ TestDspInterfacePtr ModuleManagerTestRunner::findDspInterfaceByEntityId(int enti
     return m_serviceInterfaceFactory->findDspInterfaceByEntityId(entityId);
 }
 
+QList<TestDspInterfacePtr> ModuleManagerTestRunner::findAllDspInterfaceByType(DspInterfaceInjectableTypes injectType)
+{
+    return m_serviceInterfaceFactory->findAllDspInterfaceByType(injectType);
+}
+
 QMap<int, QList<TestDspInterfacePtr> > ModuleManagerTestRunner::getAllDspInterfaces()
 {
     return m_serviceInterfaceFactory->getAllDspInterfaces();

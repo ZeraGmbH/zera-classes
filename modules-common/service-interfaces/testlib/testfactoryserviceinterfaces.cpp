@@ -170,6 +170,17 @@ TestDspInterfacePtr TestFactoryServiceInterfaces::findDspInterfaceByEntityId(int
     return nullptr;
 }
 
+QList<TestDspInterfacePtr> TestFactoryServiceInterfaces::findAllDspInterfaceByType(DspInterfaceInjectableTypes injectType)
+{
+    QList<TestDspInterfacePtr> dspInterfaces;
+    for(auto entityIter = m_dspInterfaces.cbegin(); entityIter != m_dspInterfaces.cend(); entityIter++) {
+        const QMap<DspInterfaceInjectableTypes, TestDspInterfacePtr> &entityIdInterfaces = entityIter.value();
+        if (entityIdInterfaces.contains(injectType))
+            dspInterfaces.append(entityIdInterfaces[injectType]);
+    }
+    return dspInterfaces;
+}
+
 QMap<int, QList<TestDspInterfacePtr>> TestFactoryServiceInterfaces::getAllDspInterfaces()
 {
     QMap<int, QList<TestDspInterfacePtr>> interfaces;

@@ -41,8 +41,9 @@ public:
     Zera::DspInterfacePtr createDspInterfaceDspSuper(int entityId) override;
 
     // search criteria ambiguous: return first
-    TestDspInterfacePtr findDspInterfaceByType(DspInterfaceInjectableTypes injectType); // TODO return list?
+    TestDspInterfacePtr findDspInterfaceByType(DspInterfaceInjectableTypes injectType);
     TestDspInterfacePtr findDspInterfaceByEntityId(int entityId);
+    QList<TestDspInterfacePtr> findAllDspInterfaceByType(DspInterfaceInjectableTypes injectType);
     QMap<int, QList<TestDspInterfacePtr>> getAllDspInterfaces();
 
 private:
