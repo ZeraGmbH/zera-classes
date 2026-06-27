@@ -2825,10 +2825,10 @@
     "1070": {
         "ACT_CanChangePhaseMask": false,
         "ACT_MaxMeasSysCount": 1,
-        "ACT_PQS1": null,
-        "ACT_PQS2": null,
-        "ACT_PQS3": null,
-        "ACT_PQS4": null,
+        "ACT_PQS1": 1200,
+        "ACT_PQS2": 1200,
+        "ACT_PQS3": 1200,
+        "ACT_PQS4": 3600,
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module1",
         "INF_ModeTypes": [
@@ -3028,10 +3028,10 @@
     "1071": {
         "ACT_CanChangePhaseMask": false,
         "ACT_MaxMeasSysCount": 1,
-        "ACT_PQS1": null,
-        "ACT_PQS2": null,
-        "ACT_PQS3": null,
-        "ACT_PQS4": null,
+        "ACT_PQS1": 1200,
+        "ACT_PQS2": 1200,
+        "ACT_PQS3": 1200,
+        "ACT_PQS4": 3600,
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module2",
         "INF_ModeTypes": [
@@ -3231,10 +3231,10 @@
     "1072": {
         "ACT_CanChangePhaseMask": false,
         "ACT_MaxMeasSysCount": 1,
-        "ACT_PQS1": null,
-        "ACT_PQS2": null,
-        "ACT_PQS3": null,
-        "ACT_PQS4": null,
+        "ACT_PQS1": 1200,
+        "ACT_PQS2": 1200,
+        "ACT_PQS3": 1200,
+        "ACT_PQS4": 3600,
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module3",
         "INF_ModeTypes": [
@@ -3434,10 +3434,10 @@
     "1073": {
         "ACT_CanChangePhaseMask": false,
         "ACT_MaxMeasSysCount": 1,
-        "ACT_PQS1": null,
-        "ACT_PQS2": null,
-        "ACT_PQS3": null,
-        "ACT_PQS4": null,
+        "ACT_PQS1": 1200,
+        "ACT_PQS2": 1200,
+        "ACT_PQS3": 1200,
+        "ACT_PQS4": 3600,
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module4",
         "INF_ModeTypes": [

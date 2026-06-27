@@ -1,5 +1,10 @@
 #include "demovaluesdsppower1.h"
 
+DemoValuesDspPower1::DemoValuesDspPower1() :
+    m_valueGenerator([](int) { return 0.5; })
+{
+}
+
 DemoValuesDspPower1::DemoValuesDspPower1(int entityId, std::function<double (int)> valueGenerator, MeasModeSelector *measMode) :
     m_entityId(entityId),
     m_valueGenerator(valueGenerator),
@@ -10,10 +15,14 @@ DemoValuesDspPower1::DemoValuesDspPower1(int entityId, std::function<double (int
 void DemoValuesDspPower1::setAllValuesSymmetric(float voltage, float current)
 {
     QVector<float> valuesDemo;
-    std::shared_ptr<MeasMode> mode = m_measMode->getCurrMode();
-    QString modeName = mode->getName();
-    bool is3Wire = modeName.startsWith('3');
-    QString phaseMask = mode->getCurrentMask();
+    QString phaseMask = "111";
+    bool is3Wire = false;
+    if (m_measMode != nullptr) {
+        std::shared_ptr<MeasMode> mode = m_measMode->getCurrMode();
+        QString modeName = mode->getName();
+        is3Wire = modeName.startsWith('3');
+        phaseMask = mode->getCurrentMask();
+    }
     for(int phase=0; phase<MeasPhaseCount; phase++) {
         double val = 0.0;
         if(phaseMask.count() > phase && phaseMask[phase] == '1') {

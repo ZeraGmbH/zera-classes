@@ -9,7 +9,8 @@ void AdjModuleTestHelper::setAllValuesSymmetricAc(ModuleManagerTestRunner &testR
         testRunner.findDspInterfaceByType(INJECT_DFT),
         testRunner.findDspInterfaceByType(INJECT_FFT),
         testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM),
-        testRunner.findDspInterfaceByType(INJECT_RMS));
+        testRunner.findDspInterfaceByType(INJECT_RMS),
+        testRunner.findAllDspInterfaceByType(INJECT_POWER1));
 }
 
 void AdjModuleTestHelper::setAllValuesSymmetricDc(ModuleManagerTestRunner &testRunner, float voltage, float current)
@@ -20,7 +21,8 @@ void AdjModuleTestHelper::setAllValuesSymmetricDc(ModuleManagerTestRunner &testR
         testRunner.findDspInterfaceByType(INJECT_DFT),
         testRunner.findDspInterfaceByType(INJECT_FFT),
         testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM),
-        testRunner.findDspInterfaceByType(INJECT_RMS));
+        testRunner.findDspInterfaceByType(INJECT_RMS),
+        testRunner.findAllDspInterfaceByType(INJECT_POWER1));
 }
 
 AdjModuleTestHelper::TAdjNodeValues AdjModuleTestHelper::parseNode(const QString &scpiResponse)

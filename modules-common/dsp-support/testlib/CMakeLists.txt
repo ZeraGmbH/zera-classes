@@ -23,6 +23,7 @@ target_link_libraries(dsp-support-testlib
     fftmodule-demolib
     rangemodule-demolib
     rmsmodule-demolib
+    module-service-interfaces-testlib
 )
 
 set_target_properties(dsp-support-testlib PROPERTIES VERSION ${PROJECT_VERSION})

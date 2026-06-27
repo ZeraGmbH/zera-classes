@@ -2656,10 +2656,10 @@
     "1070": {
         "ACT_CanChangePhaseMask": true,
         "ACT_MaxMeasSysCount": 3,
-        "ACT_PQS1": null,
-        "ACT_PQS2": null,
-        "ACT_PQS3": null,
-        "ACT_PQS4": null,
+        "ACT_PQS1": 1200,
+        "ACT_PQS2": 1200,
+        "ACT_PQS3": 1200,
+        "ACT_PQS4": 3600,
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module1",
         "INF_ModeTypes": [
@@ -2867,10 +2867,10 @@
     "1071": {
         "ACT_CanChangePhaseMask": true,
         "ACT_MaxMeasSysCount": 3,
-        "ACT_PQS1": null,
-        "ACT_PQS2": null,
-        "ACT_PQS3": null,
-        "ACT_PQS4": null,
+        "ACT_PQS1": 1200,
+        "ACT_PQS2": 1200,
+        "ACT_PQS3": 1200,
+        "ACT_PQS4": 3600,
         "ACT_PowerDisplayName": "Q",
         "EntityName": "POWER1Module2",
         "INF_ModeTypes": [
@@ -3058,10 +3058,10 @@
     "1072": {
         "ACT_CanChangePhaseMask": true,
         "ACT_MaxMeasSysCount": 3,
-        "ACT_PQS1": null,
-        "ACT_PQS2": null,
-        "ACT_PQS3": null,
-        "ACT_PQS4": null,
+        "ACT_PQS1": 1200,
+        "ACT_PQS2": 1200,
+        "ACT_PQS3": 1200,
+        "ACT_PQS4": 3600,
         "ACT_PowerDisplayName": "S",
         "EntityName": "POWER1Module3",
         "INF_ModeTypes": [
@@ -3249,10 +3249,10 @@
     "1078": {
         "ACT_CanChangePhaseMask": false,
         "ACT_MaxMeasSysCount": 3,
-        "ACT_PQS1": null,
-        "ACT_PQS2": null,
-        "ACT_PQS3": null,
-        "ACT_PQS4": null,
+        "ACT_PQS1": 1200,
+        "ACT_PQS2": 1200,
+        "ACT_PQS3": 1200,
+        "ACT_PQS4": 3600,
         "ACT_PowerDisplayName": "Q",
         "EntityName": "POWER1Module98",
         "INF_ModeTypes": [
@@ -3353,10 +3353,10 @@
     "1079": {
         "ACT_CanChangePhaseMask": false,
         "ACT_MaxMeasSysCount": 3,
-        "ACT_PQS1": null,
-        "ACT_PQS2": null,
-        "ACT_PQS3": null,
-        "ACT_PQS4": null,
+        "ACT_PQS1": 1200,
+        "ACT_PQS2": 1200,
+        "ACT_PQS3": 1200,
+        "ACT_PQS4": 3600,
         "ACT_PowerDisplayName": "S",
         "EntityName": "POWER1Module99",
         "INF_ModeTypes": [
@@ -4529,10 +4529,10 @@
         "PAR_Uplimit": 10
     },
     "1140": {
-        "ACT_Lambda1": null,
-        "ACT_Lambda2": null,
-        "ACT_Lambda3": null,
-        "ACT_Lambda4": 0,
+        "ACT_Lambda1": 1,
+        "ACT_Lambda2": 1,
+        "ACT_Lambda3": 1,
+        "ACT_Lambda4": 1,
         "ACT_Load1": "",
         "ACT_Load2": "",
         "ACT_Load3": "",
@@ -4617,7 +4617,7 @@
                 "Name": "LAM1"
             }
         },
-        "SIG_Measuring": 0
+        "SIG_Measuring": 1
     },
     "1150": {
         "EntityName": "StatusModule1",
