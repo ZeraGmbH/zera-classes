@@ -25,10 +25,6 @@ public:
                              const MockDspInterfacePtr &dspRange,
                              const MockDspInterfacePtr &dspRms);
 private:
-    QVector<float> getDspValuesDft();
-    QVector<float> getDspValuesFft();
-    QVector<float> getDspValuesRange();
-    QVector<float> getDspValuesRms();
     // Why unique pointers: we need to inject params in ctors which have to be calculated first
     std::unique_ptr<DemoValuesDspDft> m_dftValues;
     std::unique_ptr<DemoValuesDspFft> m_fftValues;

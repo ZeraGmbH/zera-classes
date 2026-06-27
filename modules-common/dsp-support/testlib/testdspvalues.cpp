@@ -72,23 +72,3 @@ void TestDspValues::fireAllActualValues(const MockDspInterfacePtr &dspDft,
     fireRangeActualValues(dspRange);
     fireRmsActualValues(dspRms);
 }
-
-QVector<float> TestDspValues::getDspValuesDft()
-{
-    return m_dftValues->getDspValues();
-}
-
-QVector<float> TestDspValues::getDspValuesFft()
-{
-    return m_dftValues->getDspValues();
-}
-
-QVector<float> TestDspValues::getDspValuesRange()
-{
-    return m_rangeValues->getDspValues();
-}
-
-QVector<float> TestDspValues::getDspValuesRms()
-{
-    return m_rmsValues->getDspValues();
-}
