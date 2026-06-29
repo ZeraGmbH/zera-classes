@@ -1,6 +1,5 @@
 #include "thdnmodulemeasprogram.h"
 #include "thdnmodule.h"
-#include "thdnmoduleconfiguration.h"
 #include "servicechannelnamehelper.h"
 #include "errormessages.h"
 #include "taskdspdataacquisition.h"
@@ -19,9 +18,8 @@
 namespace THDNMODULE
 {
 
-cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module,
-                                               const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
+cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module) :
+    cBaseDspMeasProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceThdn(
@@ -57,8 +55,8 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module,
 
     connect(this, &cThdnModuleMeasProgram::actualValues,
             &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
-    if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasInterval.m_fValue);
+    if (m_pModule->getConfigData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasInterval.m_fValue);
         connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
                 &m_movingwindowFilter, &MovingwindowFilter::receiveActualValues);
         connect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues,
@@ -112,7 +110,7 @@ void cThdnModuleMeasProgram::generateVeinInterface()
     m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
-                                                           QVariant(getConfData()->m_fMeasInterval.m_fValue));
+                                                           QVariant(m_pModule->getConfigData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("s");
     m_pIntegrationTimeParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP);
     m_pIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
@@ -159,10 +157,10 @@ void cThdnModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(thdnCountDsp)));
 
-        if (getConfData()->m_bmovingWindow)
-            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
+        if (m_pModule->getConfigData()->m_bmovingWindow)
+            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(m_pModule->getConfigData()->m_fmovingwindowInterval*1000.0)); // initial ti time
         else
-            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval.m_fValue*1000.0)); // initial ti time
+            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(m_pModule->getConfigData()->m_fMeasInterval.m_fValue*1000.0)); // initial ti time
 
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -237,11 +235,6 @@ void cThdnModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             }
         }
     }
-}
-
-cThdnModuleConfigData *cThdnModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cThdnModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
 void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
@@ -330,11 +323,11 @@ void cThdnModuleMeasProgram::dataReadDSP()
 
 void cThdnModuleMeasProgram::newIntegrationtime(const QVariant &ti)
 {
-    getConfData()->m_fMeasInterval.m_fValue = ti.toDouble();
-    if (getConfData()->m_bmovingWindow)
-        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasInterval.m_fValue);
+    m_pModule->getConfigData()->m_fMeasInterval.m_fValue = ti.toDouble();
+    if (m_pModule->getConfigData()->m_bmovingWindow)
+        m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasInterval.m_fValue);
     else {
-        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(getConfData()->m_fMeasInterval.m_fValue*1000));
+        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(m_pModule->getConfigData()->m_fMeasInterval.m_fValue*1000));
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
     emit m_pModule->parameterChanged();

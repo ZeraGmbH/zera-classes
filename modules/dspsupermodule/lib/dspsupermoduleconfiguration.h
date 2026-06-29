@@ -1,9 +1,8 @@
 #ifndef DSPSUPERMODULECONFIGURATION_H
 #define DSPSUPERMODULECONFIGURATION_H
 
-#include "dspsupermoduleconfigdata.h"
 #include "basemoduleconfiguration.h"
-#include <QByteArray>
+#include "dspsupermoduleconfigdata.h"
 
 namespace DSPSUPERMODULE
 {
@@ -12,17 +11,17 @@ class DspSuperModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    DspSuperModuleConfiguration();
-    ~DspSuperModuleConfiguration();
-    void setConfiguration(const QByteArray &xmlString) override;
-    virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
-    DspSuperModuleConfigData* getConfigurationData();
+    explicit DspSuperModuleConfiguration(const QByteArray &xmlString);
+
+    QByteArray exportConfiguration() const override;
+    DspSuperModuleConfigData* getConfigData();
 
 private slots:
     void configXMLInfo(const QString &key) override;
     void completeConfiguration(bool ok);
 private:
-    DspSuperModuleConfigData *m_dspSuperModulConfigData = nullptr;
+    void setConfiguration(const QByteArray &xmlString);
+    DspSuperModuleConfigData m_configData;
 };
 
 }

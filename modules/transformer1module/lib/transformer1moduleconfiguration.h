@@ -1,54 +1,26 @@
 #ifndef TRANSFORMER1MODULECONFIGURATION_H
 #define TRANSFORMER1MODULECONFIGURATION_H
 
-
-#include <QStringList>
-#include <QByteArray>
-#include <QHash>
-
 #include "basemoduleconfiguration.h"
+#include "transformer1moduleconfigdata.h"
 
 namespace TRANSFORMER1MODULE
 {
-
-enum moduleconfigstate
-{
-    setInputModule,
-    setSystemCount,
-    setSystemUnit,
-
-    setPrimClampPrim,
-    setPrimClampSec,
-    setSecClampPrim,
-    setSecClampSec,
-    setPrimDut,
-    setSecDut,
-
-    setMeasSystem1 = 16, // we leave some place for additional cmds
-
-    setnext = setMeasSystem1 + 16
-};
-
-
-
-class cTransformer1ModuleConfigData;
-
 class cTransformer1ModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cTransformer1ModuleConfiguration();
-    ~cTransformer1ModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    cTransformer1ModuleConfigData* getConfigurationData();
+    explicit cTransformer1ModuleConfiguration(const QByteArray& xmlString);
 
-protected slots:
-    virtual void configXMLInfo(const QString &key);
+    QByteArray exportConfiguration() const override;
+    cTransformer1ModuleConfigData* getConfigData();
+
+private slots:
+    virtual void configXMLInfo(const QString &key) override;
     virtual void completeConfiguration(bool ok);
-
 private:
-    cTransformer1ModuleConfigData *m_pTransformer1ModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cTransformer1ModuleConfigData m_configData;
 };
 
 }

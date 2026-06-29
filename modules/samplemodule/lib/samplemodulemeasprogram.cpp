@@ -1,6 +1,5 @@
 #include "samplemodulemeasprogram.h"
 #include "samplemodule.h"
-#include "samplemoduleconfiguration.h"
 #include <taskpllchannelset.h>
 #include <boolvalidator.h>
 #include <stringvalidator.h>
@@ -9,12 +8,10 @@
 namespace SAMPLEMODULE
 {
 
-cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module,
-                                                   const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module) :
     cModuleActivist(module->getVeinModuleName()),
     m_module(module),
-    m_pConfiguration(configuration),
-    m_obsermaticConfig(getConfData()->m_ObsermaticConfPar),
+    m_obsermaticConfig(m_module->getConfigData()->m_ObsermaticConfPar),
     m_pcbConnection(m_module->getNetworkConfig()),
     m_pllAutomatic(m_module->getStorageDb(), m_obsermaticConfig.m_pllChannelList)
 {
@@ -109,11 +106,6 @@ void cSampleModuleMeasProgram::onPllChannelChanged(const QString &channelMName)
     trySendPllChannel(channelMName);
 }
 
-cSampleModuleConfigData *cSampleModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cSampleModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
 QString cSampleModuleMeasProgram::getAlias(const QString &channelMName)
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_module->getSharedChannelRangeObserver();
@@ -151,7 +143,7 @@ void cSampleModuleMeasProgram::startSetPllChannel(const QString &channelMName)
                                                      TRANSACTION_TIMEOUT,
                                                      [=]() { qWarning("An error occurred setting PLL channel %s", qPrintable(channelMName));}
                                                      );
-    connect(task.get(), &TaskTemplate::sigFinish, [=] () {
+    connect(task.get(), &TaskTemplate::sigFinish, this, [=] () {
         setVeinPllChannelPesistent(channelMName);
     });
     m_pendingTasks.addSub(std::move(task));

@@ -1,24 +1,24 @@
 #ifndef RECORDERMODULECONFIGURATION_H
 #define RECORDERMODULECONFIGURATION_H
 
+#include "recordermoduleconfigdata.h"
 #include <basemoduleconfiguration.h>
-
-class RecorderModuleConfigData;
 
 class RecorderModuleConfiguration : public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    RecorderModuleConfiguration();
-    ~RecorderModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    RecorderModuleConfigData* getConfigurationData();
-protected slots:
-    virtual void configXMLInfo(const QString &key);
+    explicit RecorderModuleConfiguration(const QByteArray& xmlString);
+
+    virtual QByteArray exportConfiguration() const override;
+    RecorderModuleConfigData* getConfigData();
+
+private slots:
+    void configXMLInfo(const QString &key) override;
     virtual void completeConfiguration(bool ok);
 private:
-    RecorderModuleConfigData *m_pRecorderModuleConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    RecorderModuleConfigData m_configData;
 };
 
 #endif // RECORDERMODULECONFIGURATION_H

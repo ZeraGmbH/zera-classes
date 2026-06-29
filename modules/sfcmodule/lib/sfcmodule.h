@@ -1,6 +1,7 @@
 #ifndef SFCMODULE_H
 #define SFCMODULE_H
 
+#include "sfcmoduleconfiguration.h"
 #include "sfcmodulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -14,12 +15,16 @@ public:
     static constexpr const char *BaseSCPIModuleName = "SFC";
 
     explicit cSfcModule(const ModuleFactoryParam &moduleParam);
+    cSfcModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
-protected:
-    cSfcModuleMeasProgram *m_pMeasProgram = nullptr;
+private:
     virtual void setupModule() override;
     virtual void startMeas() override;
     virtual void stopMeas() override;
+
+    cSfcModuleMeasProgram *m_pMeasProgram = nullptr;
+    cSfcModuleConfiguration m_configuration;
 };
 
 }

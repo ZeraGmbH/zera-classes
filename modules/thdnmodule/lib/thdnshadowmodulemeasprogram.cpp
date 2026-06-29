@@ -1,6 +1,5 @@
 #include "thdnshadowmodulemeasprogram.h"
 #include "servicechannelnamehelper.h"
-#include "thdnmoduleconfiguration.h"
 #include <doublevalidator.h>
 #include <vf_client_component_setter.h>
 #include <scpi.h>
@@ -8,9 +7,8 @@
 namespace THDNMODULE
 {
 
-cThdnShadowModuleMeasProgram::cThdnShadowModuleMeasProgram(cThdnModule *module,
-                                                           const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseMeasProgram(configuration, module->getVeinModuleName()),
+cThdnShadowModuleMeasProgram::cThdnShadowModuleMeasProgram(cThdnModule *module) :
+    cBaseMeasProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_activationMachine.addState(&m_activationDoneState);
@@ -35,7 +33,7 @@ void cThdnShadowModuleMeasProgram::generateVeinInterface()
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
     const QStringList channelMNames = observer->getChannelMNames();
-    int sourceEntityId = getConfData()->m_thdrSourceEntity;
+    int sourceEntityId = m_pModule->getConfigData()->m_thdrSourceEntity;
     for (int i = 0; i < channelMNames.size(); i++) {
         const QString channelMName = channelMNames[i];
         ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
@@ -57,7 +55,7 @@ void cThdnShadowModuleMeasProgram::generateVeinInterface()
     m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                         key = QString("PAR_Interval"),
                                                         QString("Integration time"),
-                                                        QVariant(getConfData()->m_fMeasInterval.m_fValue));
+                                                        QVariant(m_pModule->getConfigData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("s");
     m_pIntegrationTimeParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP);
     m_pIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
@@ -104,14 +102,9 @@ void cThdnShadowModuleMeasProgram::stop()
 
 void cThdnShadowModuleMeasProgram::newIntegrationtime(const QVariant &ti)
 {
-    int sourceEntityId = getConfData()->m_thdrSourceEntity;
+    int sourceEntityId = m_pModule->getConfigData()->m_thdrSourceEntity;
     emit m_pModule->getValidatorEventSystem()->sigSendEvent(
         VfClientComponentSetter::generateEvent(sourceEntityId, "PAR_Interval", m_sourceIntegrationTimeParameter->getValue(), ti));
-}
-
-cThdnModuleConfigData *cThdnShadowModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cThdnModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
 }

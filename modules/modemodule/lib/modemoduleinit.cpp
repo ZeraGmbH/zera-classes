@@ -1,6 +1,5 @@
 #include "modemodule.h"
 #include "modemoduleinit.h"
-#include "modemoduleconfigdata.h"
 #include <proxy.h>
 #include <proxyclient.h>
 #include <reply.h>
@@ -11,14 +10,12 @@
 namespace MODEMODULE
 {
 
-cModeModuleInit::cModeModuleInit(cModeModule* module, cModeModuleConfigData& configData) :
+cModeModuleInit::cModeModuleInit(cModeModule* module) :
     cModuleActivist(module->getVeinModuleName()),
     m_pModule(module),
-    m_ConfigData(configData)
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
+    m_dspInterface(m_pModule->getServiceInterfaceFactory()->createDspInterfaceMode(m_pModule->getEntityId()))
 {
-    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceMode(m_pModule->getEntityId());
-
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
     m_setModeState.addTransition(this, &cModeModuleInit::activationContinue, &m_dspserverConnectionState);
     // m_dspserverConnectionState.addTransition is done in dspserverConnection
@@ -151,7 +148,7 @@ void cModeModuleInit::pcbserverConnect()
 
 void cModeModuleInit::setMode()
 {
-    m_MsgNrCmdList[m_pcbInterface->setMMode(m_ConfigData.m_sMode)] = MODEMODINIT::setmode;
+    m_MsgNrCmdList[m_pcbInterface->setMMode(m_pModule->getConfigData()->m_sMode)] = MODEMODINIT::setmode;
 }
 
 
@@ -241,7 +238,10 @@ void cModeModuleInit::setSubDC()
 
 void cModeModuleInit::setSamplingsytem()
 {
-    m_MsgNrCmdList[m_dspInterface->setSamplingSystem(m_ConfigData.m_nChannelnr, m_ConfigData.m_nSignalPeriod, m_ConfigData.m_nMeasurePeriod)] = MODEMODINIT::setsamplingsystem;
+    const cModeModuleConfigData *configData = m_pModule->getConfigData();
+    m_MsgNrCmdList[m_dspInterface->setSamplingSystem(configData->m_nChannelnr,
+                                                     configData->m_nSignalPeriod,
+                                                     configData->m_nMeasurePeriod)] = MODEMODINIT::setsamplingsystem;
 }
 
 void cModeModuleInit::activationDone()

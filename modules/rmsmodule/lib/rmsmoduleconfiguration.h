@@ -1,48 +1,26 @@
 #ifndef RMSMODULECONFIGURATION_H
 #define RMSMODULECONFIGURATION_H
 
-
-#include <QStringList>
-#include <QByteArray>
-#include <QHash>
-
 #include "basemoduleconfiguration.h"
+#include "rmsmoduleconfigdata.h"
 
 namespace RMSMODULE
 {
-
-enum moduleconfigstate
-{
-    setValueCount,
-    setIntegrationMode,
-    setMovingwindowBool,
-    setMovingwindowTime,
-    setMeasureIntervalTime,
-    setMeasureIntervalPeriod,
-
-    setValue1 = 20
-};
-
-
-
-class cRmsModuleConfigData;
 
 class cRmsModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cRmsModuleConfiguration();
-    ~cRmsModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    cRmsModuleConfigData* getConfigurationData();
+    explicit cRmsModuleConfiguration(const QByteArray& xmlString);
+    QByteArray exportConfiguration() const override;
+    cRmsModuleConfigData* getConfigData();
 
-protected slots:
-    virtual void configXMLInfo(const QString &key);
-    virtual void completeConfiguration(bool ok);
-
+private slots:
+    void configXMLInfo(const QString &key) override;
+    void completeConfiguration(bool ok);
 private:
-    cRmsModuleConfigData *m_pRmsModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cRmsModuleConfigData m_configData;
 };
 
 }

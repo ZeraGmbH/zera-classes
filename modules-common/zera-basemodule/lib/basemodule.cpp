@@ -8,18 +8,10 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 
-BaseModule::BaseModule(const ModuleFactoryParam &moduleParam,
-                       const std::shared_ptr<BaseModuleConfiguration> &modcfg) :
+BaseModule::BaseModule(const ModuleFactoryParam &moduleParam) :
     ZeraModules::VirtualModule(moduleParam.m_moduleNum, moduleParam.m_entityId),
-    m_pConfiguration(modcfg),
     m_moduleParam(moduleParam)
 {
-    m_pConfiguration->setConfiguration(moduleParam.m_configXmlData);
-    if(!m_pConfiguration->isConfigured()) {
-        qCritical("Module config incomplete on module entity ID %i / Num %i", moduleParam.m_entityId, moduleParam.m_moduleNum);
-        return;
-    }
-
     // now we set up our machines for activating, deactivating a module
     m_ActivationStartState.addTransition(this, &BaseModule::activationContinue, &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, &BaseModule::activationContinue, &m_ActivationDoneState);
@@ -152,11 +144,6 @@ void BaseModule::unsetModule()
     for (auto ModuleActivist : qAsConst(m_ModuleActivistList))
         delete ModuleActivist;
     m_ModuleActivistList.clear();
-}
-
-QByteArray BaseModule::getConfiguration() const
-{
-    return m_pConfiguration->exportConfiguration();
 }
 
 void BaseModule::activationStart()

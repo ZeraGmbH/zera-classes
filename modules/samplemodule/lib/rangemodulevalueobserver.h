@@ -10,7 +10,7 @@ class RangeModuleValueObserver : public QObject
 {
     Q_OBJECT
 public:
-    RangeModuleValueObserver(VeinStorage::AbstractDatabase* veinStorageDb);
+    explicit RangeModuleValueObserver(VeinStorage::AbstractDatabase* veinStorageDb);
     float getRelativeRangeValue(const QString &channelMName) const;
 signals:
     void sigNewValues();

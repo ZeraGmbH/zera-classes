@@ -49,11 +49,11 @@ class cPower1ModuleConfigData
 {
 public:
     cPower1ModuleConfigData(){}
-    bool supportsVariableQrefFrequency() {
+    bool supportsVariableQrefFrequency() const {
         return m_sMeasmodeList.contains("QREF") &&
                hasQrefFrequency();
     }
-    bool hasQrefFrequency() { return !m_qrefFrequency.m_sKey.isEmpty(); }
+    bool hasQrefFrequency() const { return !m_qrefFrequency.m_sKey.isEmpty(); }
 
     quint8 m_nMeasModeCount; // how many measurement modes do we support
     QStringList m_sMeasmodeList; // a list of our measurement modes

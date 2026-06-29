@@ -9,11 +9,11 @@ class VfRpcEventSystem : public VfEventSystemCommandFilter
 {
     Q_OBJECT
 public:
-    VfRpcEventSystem(int entityId);
+    explicit VfRpcEventSystem(int entityId);
     virtual void processCommandEvent(VeinEvent::CommandEvent *commandEvent);
     void addRpc(VfCpp::cVeinModuleRpc::Ptr rpc);
 private:
-    int m_entityId;
+    int m_entityId = 0;
     QHash<QString, VfCpp::cVeinModuleRpc::Ptr> m_rpcHash;
 };
 

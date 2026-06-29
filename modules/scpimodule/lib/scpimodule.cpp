@@ -1,6 +1,4 @@
 #include "scpimodule.h"
-#include "scpimoduleconfiguration.h"
-#include "scpimoduleconfiguration.h"
 #include "scpimoduleconfigdata.h"
 #include "scpieventsystem.h"
 
@@ -8,9 +6,10 @@ namespace SCPIMODULE
 {
 
 cSCPIModule::cSCPIModule(const ModuleFactoryParam &moduleParam) :
-    BaseModule(moduleParam, std::make_shared<cSCPIModuleConfiguration>()),
+    BaseModule(moduleParam),
     m_scpiMeasureHash(std::make_shared<QMultiHash<QString, cSCPIMeasure*>>()),
     m_pSCPIEventSystem(new SCPIEventSystem(this)),
+    m_configuration(moduleParam.m_configXmlData),
     m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
@@ -30,9 +29,14 @@ cSCPIServer *cSCPIModule::getSCPIServer()
     return m_pSCPIServer;
 }
 
-cSCPIModuleConfigData *cSCPIModule::getConfData() const
+cSCPIModuleConfigData *cSCPIModule::getConfigData()
 {
-    return qobject_cast<cSCPIModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+    return m_configuration.getConfigData();
+}
+
+QByteArray cSCPIModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()
@@ -55,7 +59,7 @@ void cSCPIModule::setupModule()
     m_pModuleEventSystem = m_pSCPIEventSystem;
     BaseModule::setupModule();
 
-    cSCPIModuleConfigData *pConfData = qobject_cast<cSCPIModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+    cSCPIModuleConfigData *pConfData = m_configuration.getConfigData();
 
     // we only have this activist
     m_pSCPIServer = new cSCPIServer(this, *pConfData);

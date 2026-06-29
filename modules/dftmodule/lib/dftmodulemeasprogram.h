@@ -2,7 +2,6 @@
 #define DFTMODULEMEASPROGRAM_H
 
 #include "dftmodule.h"
-#include "dftmoduleconfiguration.h"
 #include "actualvaluestartstophandler.h"
 #include <basedspmeasprogram.h>
 #include <movingwindowfilter.h>
@@ -18,8 +17,7 @@ class cDftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cDftModuleMeasProgram(cDftModule* module,
-                          const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cDftModuleMeasProgram(cDftModule* module);
     void generateVeinInterface() override;
 public slots:
     virtual void start() override; // difference between start and stop is that actual values
@@ -40,7 +38,6 @@ private slots:
     void newIntegrationtime(QVariant ti);
     void newRefChannel(QVariant refchn);
 private:
-    cDftModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
     void turnVectorsToRefChannel();

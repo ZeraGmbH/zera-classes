@@ -1,72 +1,82 @@
 #include "apimodule.h"
 #include "apimoduleauthorize.h"
-#include "apimoduleconfiguration.h"
 #include <errormessages.h>
 
 namespace APIMODULE
 {
 
-    VfEventSytemModuleParam *cApiModule::getValidatorEventSystem()
-    {
-        return m_spModuleValidator.get();
-    }
+cApiModule::cApiModule(const ModuleFactoryParam &moduleParam) :
+    BaseModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData),
+    m_spRpcEventSystem(std::make_shared<VfRpcEventSystem>(moduleParam.m_entityId)),
+    m_spModuleValidator(std::make_shared<VfEventSytemModuleParam>(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem)),
+    m_persistencyBasePath(moduleParam.m_moduleSharedData->m_persistencyBasePath)
+{
+    m_sModuleName = QString(BaseModuleName);
+    m_sModuleDescription = QString("This module supports API access");
+    m_sSCPIModuleName = QString(BaseSCPIModuleName);
+    m_pModuleEventSystem = new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem);
+}
 
-    VfRpcEventSystem *cApiModule::getRpcEventSystem() const
-    {
-        return m_spRpcEventSystem.get();
-    }
+cApiModuleConfigData *cApiModule::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
 
-    cApiModule::cApiModule(const ModuleFactoryParam &moduleParam)
-        : BaseModule(moduleParam, std::make_shared<cApiModuleConfiguration>()),
-        m_spRpcEventSystem(std::make_shared<VfRpcEventSystem>(moduleParam.m_entityId)),
-        m_spModuleValidator(std::make_shared<VfEventSytemModuleParam>(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem)),
-        m_persistencyBasePath(moduleParam.m_moduleSharedData->m_persistencyBasePath)
-    {
-        m_sModuleName = QString(BaseModuleName);
-        m_sModuleDescription = QString("This module supports API access");
-        m_sSCPIModuleName = QString(BaseSCPIModuleName);
-        m_pModuleEventSystem = new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem);
-    }
+QByteArray cApiModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
+}
 
-    void cApiModule::activationFinished()
-    {
-        getValidatorEventSystem()->setParameterMap(m_veinModuleParameterMap);
+VfEventSytemModuleParam *cApiModule::getValidatorEventSystem()
+{
+    return m_spModuleValidator.get();
+}
 
-        // we post meta information once again because it's complete now
-        exportMetaData();
-        emit activationReady();
-    }
+VfRpcEventSystem *cApiModule::getRpcEventSystem() const
+{
+    return m_spRpcEventSystem.get();
+}
 
-    void cApiModule::setupModule()
-    {
-        emit addEventSystem(getValidatorEventSystem());
-        emit addEventSystem(m_spRpcEventSystem.get());
-        emit addEventSystem(m_pModuleEventSystem);
+void cApiModule::activationFinished()
+{
+    getValidatorEventSystem()->setParameterMap(m_veinModuleParameterMap);
 
-        cApiModuleAuthorize* moduleActivist = new cApiModuleAuthorize(this, m_persistencyBasePath);
-        m_ModuleActivistList.append(moduleActivist);
+    // we post meta information once again because it's complete now
+    exportMetaData();
+    emit activationReady();
+}
 
-        BaseModule::setupModule();
+void cApiModule::setupModule()
+{
+    emit addEventSystem(getValidatorEventSystem());
+    emit addEventSystem(m_spRpcEventSystem.get());
+    emit addEventSystem(m_pModuleEventSystem);
 
-        moduleActivist->generateVeinInterface();
+    cApiModuleAuthorize* moduleActivist = new cApiModuleAuthorize(this, m_persistencyBasePath);
+    m_ModuleActivistList.append(moduleActivist);
 
-        emit activationContinue();
+    BaseModule::setupModule();
 
-    }
+    moduleActivist->generateVeinInterface();
 
-    void cApiModule::startMeas()
-    {
-    }
+    emit activationContinue();
 
-    void cApiModule::stopMeas()
-    {
-    }
+}
 
-    void cApiModule::setTrustListPath(const QString &path)
-    {
-        cApiModuleAuthorize* authorize = static_cast<cApiModuleAuthorize*>(m_ModuleActivistList[0]);
+void cApiModule::startMeas()
+{
+}
 
-        authorize->setTrustListPath(path);
-    }
+void cApiModule::stopMeas()
+{
+}
+
+void cApiModule::setTrustListPath(const QString &path)
+{
+    cApiModuleAuthorize* authorize = static_cast<cApiModuleAuthorize*>(m_ModuleActivistList[0]);
+
+    authorize->setTrustListPath(path);
+}
 
 }

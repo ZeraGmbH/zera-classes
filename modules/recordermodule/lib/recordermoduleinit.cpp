@@ -1,6 +1,5 @@
 #include "recordermoduleinit.h"
 #include "recordercsvexportveingethandler.h"
-#include "recordermoduleconfiguration.h"
 #include "rpcreadrecordedvalues.h"
 #include "recorderjsonexportveingethandler.h"
 #include <boolvalidator.h>
@@ -9,18 +8,16 @@
 
 using namespace VeinStorage;
 
-RecorderModuleInit::RecorderModuleInit(RecorderModule *module,
-                                       const std::shared_ptr<BaseModuleConfiguration> &configuration) :
+RecorderModuleInit::RecorderModuleInit(RecorderModule *module) :
     cModuleActivist(module->getVeinModuleName()),
     m_module(module),
-    m_confData(qobject_cast<RecorderModuleConfiguration*>(configuration.get())->getConfigurationData()),
-    m_stopLoggingTimer(TimerFactoryQt::createSingleShot(m_confData->m_maxRecordingSeconds*1000))
+    m_stopLoggingTimer(TimerFactoryQt::createSingleShot(m_module->getConfigData()->m_maxRecordingSeconds*1000))
 {
     createRecorder();
     connect(m_recorder.get(), &StorageRecorder::sigRecordCountChanged, this, [=](int count) {
         m_numberOfPointsInCurve->setValue(count);
     });
-    for(int i=0; i<m_confData->m_stackCount; i++) {
+    for(int i=0; i<m_module->getConfigData()->m_stackCount; i++) {
         connect(m_recorderInterpolationList.at(i).get(), &StorageRecorder::sigRecordCountChanged, this, [=](int count) {
             m_pointsList.at(i)->setValue(count);
         });
@@ -59,7 +56,8 @@ void RecorderModuleInit::generateVeinInterface()
     m_numberOfPointsInCurve->setScpiInfo("RECORDER", "COUNT", SCPI::isQuery);
     m_module->m_veinModuleParameterMap[m_numberOfPointsInCurve->getComponentName()] = m_numberOfPointsInCurve;
 
-    for(int i=0; i<m_confData->m_stackCount; i++) {
+    const quint8 stackCount = m_module->getConfigData()->m_stackCount;
+    for(int i=0; i<stackCount; i++) {
         VfModuleParameter* parameter = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                              QString("ACT_Points%1").arg(i+1),
                                                              "Number of points in a curve",
@@ -75,7 +73,7 @@ void RecorderModuleInit::generateVeinInterface()
     m_pReadRecordedValuesRpc = std::make_shared<VfModuleRpc>(rpcReadRecordedValues, "Read Recorded Values");
     m_module->m_veinModuleRPCMap[rpcReadRecordedValues->getSignature()] = m_pReadRecordedValuesRpc;
 
-    for(int i=0; i<m_confData->m_stackCount; i++) {
+    for(int i=0; i<stackCount; i++) {
         std::shared_ptr<RPCReadRecordedValues> rpcRecordedSample = std::make_shared<RPCReadRecordedValues>(m_module->getRpcEventSystem(),
                                                                                                                    m_recorderInterpolationList.at(i)->getRecordedData(),
                                                                                                                    QString("RPC_GetRecordedValuesReduced%1").arg(i+1),
@@ -114,13 +112,14 @@ void RecorderModuleInit::startStopLogging(QVariant startStopRecording)
 void RecorderModuleInit::createRecorder()
 {
     RecordEntityComponents entityComponents;
-    for (int entityNo=0; entityNo<m_confData->m_entityCount; ++entityNo) {
+    const RecorderModuleConfigData *configData = m_module->getConfigData();
+    for (int entityNo = 0; entityNo < configData->m_entityCount; ++entityNo) {
         QList<RecordComponent> components;
-        for (int componentNo=0; componentNo<m_confData->m_entityConfigList[entityNo].m_components.count(); ++componentNo) {
-            const ComponentConfiguration componentConf = m_confData->m_entityConfigList[entityNo].m_components[componentNo];
+        for (int componentNo = 0; componentNo < configData->m_entityConfigList[entityNo].m_components.count(); ++componentNo) {
+            const ComponentConfiguration componentConf = configData->m_entityConfigList[entityNo].m_components[componentNo];
             components.append({componentConf.m_componentName, componentConf.m_label});
         }
-        int entityId = m_confData->m_entityConfigList[entityNo].m_entityId;
+        int entityId = configData->m_entityConfigList[entityNo].m_entityId;
         entityComponents[entityId] = components;
     }
     static constexpr int entityIdDftModule = 1050;
@@ -128,8 +127,8 @@ void RecorderModuleInit::createRecorder()
                                                    m_module->getStorageDb(),
                                                    entityIdDftModule, "SIG_Measuring");
 
-    for(int i=0; i<m_confData->m_stackCount; i++) {
-        int factor = m_confData->m_valueLengthVector[i];
+    for(int i=0; i<configData->m_stackCount; i++) {
+        int factor = configData->m_valueLengthVector[i];
         std::shared_ptr<StorageRecorderInterpolation> recorderInterpolation;
         if(m_recorderInterpolationList.isEmpty())
             recorderInterpolation = std::make_shared<StorageRecorderInterpolation>(entityComponents, m_recorder, factor);

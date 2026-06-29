@@ -1,7 +1,6 @@
 #ifndef BLEMODULEMEASPROGRAM_H
 #define BLEMODULEMEASPROGRAM_H
 
-#include "blemoduleconfigdata.h"
 #include "basemeasworkprogram.h"
 #include "vfmoduleparameter.h"
 #include <bluetoothconveniencefacade.h>
@@ -15,12 +14,12 @@ namespace BLEMODULE
 {
 
 class cBleModule;
+
 class cBleModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
 public:
-    cBleModuleMeasProgram(cBleModule* module,
-                          const std::shared_ptr<BaseModuleConfiguration> configuration);
+    explicit cBleModuleMeasProgram(cBleModule* module);
     virtual ~cBleModuleMeasProgram();
     void generateVeinInterface() override;
 public slots:
@@ -35,12 +34,11 @@ private slots:
     void onVeinBluetoothOnChanged(QVariant on);
     void onVeinMacAddressChanged(QVariant macAddress);
 private:
-    cBleModuleConfigData* getConfData();
     void makeValuesInvalid();
     void switchBluetooth(bool on);
     void handleDemoActualValues();
 
-    cBleModule* m_pModule;
+    cBleModule* m_pModule = nullptr;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
 
     // statemachine for activating gets the following states
@@ -48,7 +46,7 @@ private:
     // statemachine for deactivating
     QFinalState m_deactivateDoneState;
 
-    BluetoothConvenienceFacade *m_bluetooth;
+    BluetoothConvenienceFacade *m_bluetooth = nullptr;
     BleDispatcherId m_bleDispatcherId;
 
     VfModuleParameter* m_deviceSerialNo = nullptr;

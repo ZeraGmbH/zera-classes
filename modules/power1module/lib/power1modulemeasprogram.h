@@ -2,9 +2,11 @@
 #define POWERMODULEMEASPROGRAM_H
 
 #include "basedspmeasprogram.h"
-#include "power1moduleconfigdata.h"
 #include "power1dspvargenerator.h"
 #include "dspchainidgen.h"
+#include "vfmodulecomponent.h"
+#include "vfmodulemetadata.h"
+#include "vfmoduleparameter.h"
 #include <stringvalidator.h>
 #include <measchannelinfo.h>
 #include <measmodeselector.h>
@@ -15,6 +17,7 @@
 #include <dspinterface.h>
 #include <pcbinterface.h>
 #include <QFinalState>
+#include <vs_abstractcomponent.h>
 
 namespace POWER1MODULE
 {
@@ -49,8 +52,7 @@ class cPower1ModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cPower1ModuleMeasProgram(cPower1Module* module,
-                             const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cPower1ModuleMeasProgram(cPower1Module* module);
     void generateVeinInterface() override;
 public slots:
     void start() override; // difference between start and stop is that actual values
@@ -59,7 +61,6 @@ signals:
     void activationSkip();
     void deactivationSkip();
 private:
-    cPower1ModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
 
@@ -94,7 +95,7 @@ private:
     void generateVeinInterfaceForQrefFreq();
     void generateVeinInterfaceNominalFreq();
 
-    cPower1Module* m_pModule;
+    cPower1Module* m_pModule = nullptr;
     Zera::cRMInterface m_rmInterface;
     Zera::ProxyClientPtr m_rmClient;
     MeasModeSelector m_measModeSelector;
@@ -104,21 +105,21 @@ private:
 
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     QList<VfModuleParameter*> m_FoutConstParameterList; // a list of foutconstant parameter
-    VfModuleMetaData* m_pPQSCountInfo; // the number of values we produce
-    VfModuleMetaData* m_pFoutCount; // number of our frequence outputs
-    VfModuleMetaData* m_pNomFrequencyInfo; // the modules nominal frequency
-    VfModuleParameter* m_pIntegrationParameter;
-    VfModuleParameter* m_pMeasuringmodeParameter;
-    VfModuleParameter* m_pMModePhaseSelectParameter;
+    VfModuleMetaData* m_pPQSCountInfo = nullptr; // the number of values we produce
+    VfModuleMetaData* m_pFoutCount = nullptr; // number of our frequence outputs
+    VfModuleMetaData* m_pNomFrequencyInfo = nullptr; // the modules nominal frequency
+    VfModuleParameter* m_pIntegrationParameter = nullptr;
+    VfModuleParameter* m_pMeasuringmodeParameter = nullptr;
+    VfModuleParameter* m_pMModePhaseSelectParameter = nullptr;
     VfModuleParameter* m_QREFFrequencyParameter = nullptr;
     VfModuleParameter* m_pNominalFrequency = nullptr;
-    cStringValidator * m_MModePhaseSelectValidator;
-    VfModuleComponent *m_MModeCanChangePhaseMask;
-    VfModuleComponent *m_MModePowerDisplayName;
-    VfModuleComponent *m_MModeMaxMeasSysCount;
-    VfModuleParameter* m_pConstantParameter;
-    VfModuleComponent* m_pMeasureSignal;
-    VfModuleComponent *m_MModesTypes;
+    cStringValidator * m_MModePhaseSelectValidator = nullptr;
+    VfModuleComponent *m_MModeCanChangePhaseMask = nullptr;
+    VfModuleComponent *m_MModePowerDisplayName = nullptr;
+    VfModuleComponent *m_MModeMaxMeasSysCount = nullptr;
+    VfModuleParameter* m_pConstantParameter = nullptr;
+    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleComponent *m_MModesTypes = nullptr;
 
     QList<QPair<VeinStorage::AbstractComponentPtr, VeinStorage::AbstractComponentPtr>> m_scalingInputs;
 
@@ -127,7 +128,7 @@ private:
     QList<QString> readUrvalueList; // a list with system channel names we need urvalue from
     QString readUrvalueInfo;
 
-    quint8 m_notifierNr;
+    quint8 m_notifierNr = 0;
 
     Power1DspVarGenerator m_dspVars;
 

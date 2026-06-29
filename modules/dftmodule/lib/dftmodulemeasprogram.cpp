@@ -19,15 +19,14 @@
 namespace DFTMODULE
 {
 
-cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module,
-                                             const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
+cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module) :
+    cBaseDspMeasProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDft(
         m_pModule->getEntityId(),
-        getConfData()->m_valueChannelList,
-        getConfData()->m_nDftOrder);
+        m_pModule->getConfigData()->m_valueChannelList,
+        m_pModule->getConfigData()->m_nDftOrder);
 
     m_var2DSPState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_activateDSPState);
@@ -58,8 +57,8 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module,
 
     connect(this, &cDftModuleMeasProgram::actualValues,
             &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
-    if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasInterval.m_fValue);
+    if (m_pModule->getConfigData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasInterval.m_fValue);
         connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
                 &m_movingwindowFilter, &MovingwindowFilter::receiveActualValues);
         connect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues,
@@ -86,8 +85,8 @@ void cDftModuleMeasProgram::generateVeinInterface()
     int phasePhaseValueCount = 0;
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     VfModuleComponentCreator componentCreator(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem());
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
+    for (int i = 0; i < m_pModule->getConfigData()->m_valueChannelList.count(); i++) {
+        const QString &channelMNamesEntry = m_pModule->getConfigData()->m_valueChannelList.at(i);
         const QStringList measChannels = channelMNamesEntry.split('-');
         ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
             ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
@@ -168,14 +167,14 @@ void cDftModuleMeasProgram::generateVeinInterface()
     m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
-                                                           QVariant(getConfData()->m_fMeasInterval.m_fValue));
+                                                           QVariant(m_pModule->getConfigData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("s");
     m_pIntegrationTimeParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP);
     m_pIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
 
-    QString refChannelAliasConfigured = getConfData()->m_sRefChannel.m_sPar;
+    QString refChannelAliasConfigured = m_pModule->getConfigData()->m_sRefChannel.m_sPar;
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_RefChannel"),
                                                    QString("Reference channel"),
@@ -219,19 +218,19 @@ void cDftModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2*m_veinActValueList.count())));
 
-        if (getConfData()->m_bmovingWindow)
-            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
+        if (m_pModule->getConfigData()->m_bmovingWindow)
+            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(m_pModule->getConfigData()->m_fmovingwindowInterval*1000.0)); // initial ti time
         else
-            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval.m_fValue*1000.0)); // initial ti time
+            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(m_pModule->getConfigData()->m_fMeasInterval.m_fValue*1000.0)); // initial ti time
 
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // we compute or copy our wanted actual values
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
+    for (int i = 0; i < m_pModule->getConfigData()->m_valueChannelList.count(); i++)
     {
-        QStringList channelMNameList = getConfData()->m_valueChannelList.at(i).split('-');
+        QStringList channelMNameList = m_pModule->getConfigData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
         if (channelMNameList.count() == 1) {
             int dspChannel = observer->getChannel(channelMNameList[0])->getDspChannel();
@@ -242,7 +241,7 @@ void cDftModuleMeasProgram::setDspCmdList()
             int dspChannel1 = observer->getChannel(channelMNameList[1])->getDspChannel();
             m_dspInterface->addCycListItem(QString("COPYDIFF(CH%1,CH%2,TMP_SAMPLES_SINGLE_1)").arg(dspChannel0).arg(dspChannel1));
         }
-        m_dspInterface->addCycListItem(QString("DFT(%1,TMP_SAMPLES_SINGLE_1,VALXDFT+%2)").arg(getConfData()->m_nDftOrder).arg(2*i));
+        m_dspInterface->addCycListItem(QString("DFT(%1,TMP_SAMPLES_SINGLE_1,VALXDFT+%2)").arg(m_pModule->getConfigData()->m_nDftOrder).arg(2*i));
     }
 
     // and filter them
@@ -308,18 +307,13 @@ void cDftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     }
 }
 
-cDftModuleConfigData *cDftModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cDftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
 void cDftModuleMeasProgram::setRefChannelValidator()
 {
     ChannelRangeObserver::SystemObserverPtr observer =  m_pModule->getSharedChannelRangeObserver();
     const QStringList channelMNames = observer->getChannelMNames();
     QStringList channelAliases;
     for(const QString &channelMName : channelMNames) {
-        if(getConfData()->m_valueChannelList.contains(channelMName)) {
+        if(m_pModule->getConfigData()->m_valueChannelList.contains(channelMName)) {
             ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
             const QString alias = channel->getAlias();
             channelAliases.append(alias);
@@ -331,17 +325,17 @@ void cDftModuleMeasProgram::setRefChannelValidator()
 
 bool cDftModuleMeasProgram::isConfiguredForDc()
 {
-    return getConfData()->m_nDftOrder == 0;
+    return m_pModule->getConfigData()->m_nDftOrder == 0;
 }
 
 void cDftModuleMeasProgram::calcPhaseSequence(const QVector<float> *actualValues)
 {
     if (!isConfiguredForDc()) {
-        int rfieldChannelCount = getConfData()->m_rfieldChannelList.length();
+        int rfieldChannelCount = m_pModule->getConfigData()->m_rfieldChannelList.length();
         if (rfieldChannelCount == 3) {
             QList<double> angles;
             for (int rfieldChannel = 0; rfieldChannel < rfieldChannelCount; rfieldChannel++) {
-                int rfieldChannelIdx = getConfData()->m_valueChannelList.indexOf(getConfData()->m_rfieldChannelList.at(rfieldChannel));
+                int rfieldChannelIdx = m_pModule->getConfigData()->m_valueChannelList.indexOf(m_pModule->getConfigData()->m_rfieldChannelList.at(rfieldChannel));
                 double angle = userAtan(actualValues->at(2*rfieldChannelIdx+1), actualValues->at(2*rfieldChannelIdx));
                 angles.append(angle);
             }
@@ -440,7 +434,7 @@ void cDftModuleMeasProgram::dataAcquisitionDSP()
     if (m_bActive && m_taskDataAcquisition == nullptr) {
         m_pMeasureSignal->setValue(QVariant(0));
         m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
-        connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
+        connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
             m_taskDataAcquisition.reset();
             if (ok)
                 dataReadDSP();
@@ -470,7 +464,7 @@ void cDftModuleMeasProgram::dataReadDSP()
                 double im = m_ModuleActualValues[i*2+1] * -1.0;
                 m_ModuleActualValues.replace(i*2+1, im);
             }
-            if (getConfData()->m_bRefChannelOn)
+            if (m_pModule->getConfigData()->m_bRefChannelOn)
                 turnVectorsToRefChannel();
         }
         emit actualValues(&m_ModuleActualValues); // and send them
@@ -481,10 +475,11 @@ void cDftModuleMeasProgram::dataReadDSP()
 void cDftModuleMeasProgram::turnVectorsToRefChannel()
 {
     QHash<QString, std::complex<double>> dftActComplexValuesChannelHash;
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-        dftActComplexValuesChannelHash[getConfData()->m_valueChannelList.at(i)] = std::complex<double>(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
+    const cDftModuleConfigData *configData = m_pModule->getConfigData();
+    for (int i = 0; i < configData->m_valueChannelList.count(); i++)
+        dftActComplexValuesChannelHash[configData->m_valueChannelList.at(i)] = std::complex<double>(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
 
-    QString referenceChannelName = m_ChannelSystemNameHash.value(getConfData()->m_sRefChannel.m_sPar);
+    QString referenceChannelName = m_ChannelSystemNameHash.value(configData->m_sRefChannel.m_sPar);
     std::complex<double> complexReferenceVector = dftActComplexValuesChannelHash.value(referenceChannelName);
 
     double tanRef = complexReferenceVector.imag() / complexReferenceVector.real();
@@ -502,9 +497,9 @@ void cDftModuleMeasProgram::turnVectorsToRefChannel()
     //double phiRef = userAtan(complexReferenceVector.im(), complexReferenceVector.re());
     //complex turnVector = complex(cos(-phiRef*0.017453292), sin(-phiRef*0.017453292));
 
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+    for (int i = 0; i < configData->m_valueChannelList.count(); i++) {
         QString key;
-        key = getConfData()->m_valueChannelList.at(i);
+        key = configData->m_valueChannelList.at(i);
         std::complex<double> newDft = dftActComplexValuesChannelHash.take(key);
         newDft *= turnVector;
         if (fabs(newDft.imag()) < 1e-8)
@@ -513,8 +508,8 @@ void cDftModuleMeasProgram::turnVectorsToRefChannel()
     }
 
     // now we have to compute the difference vectors and store all new values
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        QString key = getConfData()->m_valueChannelList.at(i);
+    for (int i = 0; i < configData->m_valueChannelList.count(); i++) {
+        QString key = configData->m_valueChannelList.at(i);
         QStringList sl = key.split('-');
         // we have 2 entries
         if (sl.count() == 2)
@@ -526,11 +521,11 @@ void cDftModuleMeasProgram::turnVectorsToRefChannel()
 
 void cDftModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
-    getConfData()->m_fMeasInterval.m_fValue = ti.toDouble();
-    if (getConfData()->m_bmovingWindow)
-        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasInterval.m_fValue);
+    m_pModule->getConfigData()->m_fMeasInterval.m_fValue = ti.toDouble();
+    if (m_pModule->getConfigData()->m_bmovingWindow)
+        m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasInterval.m_fValue);
     else {
-        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(getConfData()->m_fMeasInterval.m_fValue*1000));
+        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(m_pModule->getConfigData()->m_fMeasInterval.m_fValue*1000));
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
     emit m_pModule->parameterChanged();
@@ -538,7 +533,7 @@ void cDftModuleMeasProgram::newIntegrationtime(QVariant ti)
 
 void cDftModuleMeasProgram::newRefChannel(QVariant refchn)
 {
-    getConfData()->m_sRefChannel.m_sPar = refchn.toString();
+    m_pModule->getConfigData()->m_sRefChannel.m_sPar = refchn.toString();
     emit m_pModule->parameterChanged();
 }
 

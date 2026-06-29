@@ -1,6 +1,5 @@
 #include "rmsmodulemeasprogram.h"
 #include "rmsmodule.h"
-#include "rmsmoduleconfiguration.h"
 #include "servicechannelnamehelper.h"
 #include "taskdspdataacquisition.h"
 #include "vfmodulecomponentcreator.h"
@@ -14,14 +13,13 @@
 namespace RMSMODULE
 {
 
-cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
-                                             const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
+cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module) :
+    cBaseDspMeasProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRms(
         m_pModule->getEntityId(),
-        getConfData()->m_valueChannelList);
+        m_pModule->getConfigData()->m_valueChannelList);
 
     m_var2DSPState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &cRmsModuleMeasProgram::activationContinue, &m_activateDSPState);
@@ -52,8 +50,8 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module,
 
     connect(this, &cRmsModuleMeasProgram::actualValues,
             &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
-    if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
+    if (m_pModule->getConfigData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue);
         connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
                 &m_movingwindowFilter, &MovingwindowFilter::receiveActualValues);
         connect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues,
@@ -81,8 +79,8 @@ void cRmsModuleMeasProgram::generateVeinInterface()
     int phasePhaseValueCount = 0;
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     VfModuleComponentCreator componentCreator(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem());
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
+    for (int i = 0; i < m_pModule->getConfigData()->m_valueChannelList.count(); i++) {
+        const QString &channelMNamesEntry = m_pModule->getConfigData()->m_valueChannelList.at(i);
         const QStringList measChannels = channelMNamesEntry.split('-');
         ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
             ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
@@ -121,14 +119,14 @@ void cRmsModuleMeasProgram::generateVeinInterface()
 
     QVariant val;
     QString intervalDescription, unit;
-    bool timeIntegration = (getConfData()->m_sIntegrationMode == "time");
+    bool timeIntegration = (m_pModule->getConfigData()->m_sIntegrationMode == "time");
     if (timeIntegration) {
-        val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
+        val = QVariant(m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue);
         intervalDescription = QString("Integration time");
         unit = QString("s");
     }
     else {
-        val = QVariant(getConfData()->m_nMeasIntervalPeriod.m_nValue);
+        val = QVariant(m_pModule->getConfigData()->m_nMeasIntervalPeriod.m_nValue);
         intervalDescription = QString("Integration period");
         unit = QString("period");
     }
@@ -182,22 +180,22 @@ void cRmsModuleMeasProgram::setDspCmdList()
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(m_veinActValueList.count())));
-        if (getConfData()->m_sIntegrationMode == "time") {
-            if (getConfData()->m_bmovingWindow)
-                m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
+        if (m_pModule->getConfigData()->m_sIntegrationMode == "time") {
+            if (m_pModule->getConfigData()->m_bmovingWindow)
+                m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(m_pModule->getConfigData()->m_fmovingwindowInterval*1000.0)); // initial ti time
             else
-                m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
+                m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
 
             m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
         }
         else
-            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)); // initial ti time
+            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(m_pModule->getConfigData()->m_nMeasIntervalPeriod.m_nValue)); // initial ti time
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // we compute or copy our wanted actual values
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        QStringList channelMNameList = getConfData()->m_valueChannelList.at(i).split('-');
+    for (int i = 0; i < m_pModule->getConfigData()->m_valueChannelList.count(); i++) {
+        QStringList channelMNameList = m_pModule->getConfigData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
         if (channelMNameList.count() == 1) {
             int dspChannel = observer->getChannel(channelMNameList[0])->getDspChannel();
@@ -215,7 +213,7 @@ void cRmsModuleMeasProgram::setDspCmdList()
     // and filter them
     m_dspInterface->addCycListItem(QString("AVERAGE1(%1,VALXRMS,FILTER)").arg(m_veinActValueList.count())); // we add results to filter
 
-    if (getConfData()->m_sIntegrationMode == "time") {
+    if (m_pModule->getConfigData()->m_sIntegrationMode == "time") {
         // in case intergration mode is time
         m_dspInterface->addCycListItem("TESTTIMESKIPNEX(TISTART,TIPAR)");
         m_dspInterface->addCycListItem("ACTIVATECHAIN(1,0x0102)");
@@ -298,11 +296,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     }
 }
 
-cRmsModuleConfigData *cRmsModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cRmsModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
 void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) { // maybe we are deactivating !!!!
@@ -342,7 +335,7 @@ void cRmsModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
     m_pMeasureSignal->setValue(QVariant(1));
-    if (getConfData()->m_sIntegrationMode == "time")
+    if (m_pModule->getConfigData()->m_sIntegrationMode == "time")
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cRmsModuleMeasProgram::newIntegrationtime);
     else
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cRmsModuleMeasProgram::newIntegrationPeriod);
@@ -362,7 +355,7 @@ void cRmsModuleMeasProgram::dataAcquisitionDSP()
     if (m_bActive && m_taskDataAcquisition == nullptr) {
         m_pMeasureSignal->setValue(QVariant(0));
         m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
-        connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
+        connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
             m_taskDataAcquisition.reset();
             if (ok)
                 dataReadDSP();
@@ -384,12 +377,12 @@ void cRmsModuleMeasProgram::dataReadDSP()
 
 void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
-    getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble();
-    if (getConfData()->m_sIntegrationMode == "time") {
-        if (getConfData()->m_bmovingWindow)
-            m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
+    m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue = ti.toDouble();
+    if (m_pModule->getConfigData()->m_sIntegrationMode == "time") {
+        if (m_pModule->getConfigData()->m_bmovingWindow)
+            m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue);
         else {
-            m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000));
+            m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue*1000));
             m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
         }
         emit m_pModule->parameterChanged();
@@ -398,9 +391,9 @@ void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
 
 void cRmsModuleMeasProgram::newIntegrationPeriod(QVariant period)
 {
-    getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
-    if (getConfData()->m_sIntegrationMode == "period") {
-        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue));
+    m_pModule->getConfigData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
+    if (m_pModule->getConfigData()->m_sIntegrationMode == "period") {
+        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(m_pModule->getConfigData()->m_nMeasIntervalPeriod.m_nValue));
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
     emit m_pModule->parameterChanged();

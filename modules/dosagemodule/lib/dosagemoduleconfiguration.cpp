@@ -1,10 +1,4 @@
-#include <QPoint>
-#include <QString>
-#include <xmlconfigreader.h>
-
 #include "dosagemoduleconfiguration.h"
-#include "dosagemoduleconfigdata.h"
-
 
 static void initResource()
 {
@@ -13,57 +7,44 @@ static void initResource()
 
 namespace DOSAGEMODULE
 {
-static const char *defaultXSDFile = "://dosagemodule.xsd";
+enum moduleconfigstate
+{
+    setSystemCount,
 
-cDosageModuleConfiguration::cDosageModuleConfiguration()
+    setMeasSystem1 = 10 // we leave some place for additional cmds
+};
+
+
+cDosageModuleConfiguration::cDosageModuleConfiguration(const QByteArray &xmlString)
 {
     initResource();
-    m_pDosageModulConfigData = nullptr;
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cDosageModuleConfiguration::configXMLInfo);
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cDosageModuleConfiguration::completeConfiguration);
-}
-
-cDosageModuleConfiguration::~cDosageModuleConfiguration()
-{
-    if (m_pDosageModulConfigData)
-        delete m_pDosageModulConfigData;
+    setConfiguration(xmlString);
 }
 
 void cDosageModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
-    m_bConfigured = m_bConfigError = false;
-    if (m_pDosageModulConfigData)
-        delete m_pDosageModulConfigData;
-    m_pDosageModulConfigData = new cDosageModuleConfigData();
-
-    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
-
-    // so now we can set up
-    // initializing hash table for xml configuration
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cDosageModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cDosageModuleConfiguration::completeConfiguration);
 
     m_ConfigXMLMap["dosagemodconfpar:configuration:measure:system:n"] = setSystemCount;
 
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
-QByteArray cDosageModuleConfiguration::exportConfiguration()
+QByteArray cDosageModuleConfiguration::exportConfiguration() const
 {
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-cDosageModuleConfigData *cDosageModuleConfiguration::getConfigurationData()
+cDosageModuleConfigData *cDosageModuleConfiguration::getConfigData()
 {
-    return m_pDosageModulConfigData;
+    return &m_configData;
 }
-
 
 void cDosageModuleConfiguration::configXMLInfo(const QString &key)
 {
-    bool ok;
-
-    if (m_ConfigXMLMap.contains(key))
-    {
-        ok = true;
+    if (m_ConfigXMLMap.contains(key)) {
+        bool ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
@@ -72,11 +53,11 @@ void cDosageModuleConfiguration::configXMLInfo(const QString &key)
                 dosagesystemconfiguration dsc;
                 dsc.m_ComponentName = "ACT_PQS0";  // is dummy
 
-                m_pDosageModulConfigData->m_nDosageSystemCount = m_pXMLReader->getValue(key).toInt(&ok);
-                for (int i = 0; i < m_pDosageModulConfigData->m_nDosageSystemCount; i++)    // generate dynamic hash entries for value channel configuration
+                m_configData.m_nDosageSystemCount = m_pXMLReader->getValue(key).toInt(&ok);
+                for (int i = 0; i < m_configData.m_nDosageSystemCount; i++)    // generate dynamic hash entries for value channel configuration
                 {
                     m_ConfigXMLMap[QString("dosagemodconfpar:configuration:measure:system:dos%1").arg(i+1)] = setMeasSystem1+i;
-                    m_pDosageModulConfigData->m_DosageSystemConfigList.append(dsc);
+                    m_configData.m_DosageSystemConfigList.append(dsc);
                 }
                 break;
             }
@@ -89,11 +70,11 @@ void cDosageModuleConfiguration::configXMLInfo(const QString &key)
                     // it is command for setting measuring mode
                     QString dosageSystem = m_pXMLReader->getValue(key);
                     QStringList dosChannels = dosageSystem.split(",");  // currently: entity, component and limit
-                    dosagesystemconfiguration dsc = m_pDosageModulConfigData->m_DosageSystemConfigList.at(cmd);
+                    dosagesystemconfiguration dsc = m_configData.m_DosageSystemConfigList.at(cmd);
                     dsc.m_nEntity = dosChannels.at(0).toInt();
                     dsc.m_ComponentName = dosChannels.at(1);
                     dsc.m_fUpperLimit = dosChannels.at(2).toDouble();
-                    m_pDosageModulConfigData->m_DosageSystemConfigList.replace(cmd, dsc);
+                    m_configData.m_DosageSystemConfigList.replace(cmd, dsc);
                 }
                 else
                     qWarning("Error dosagemodule: cmd (%i) is out of range", cmd);

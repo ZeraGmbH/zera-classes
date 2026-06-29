@@ -1,6 +1,7 @@
 #ifndef ADJUSTMENTMODULE_H
 #define ADJUSTMENTMODULE_H
 
+#include "adjustmentmoduleconfiguration.h"
 #include "adjustmentmodulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -10,7 +11,11 @@ class cAdjustmentModule : public cBaseMeasModule
 public:
     static constexpr const char* BaseModuleName = "AdjustmentModule";
     static constexpr const char* BaseSCPIModuleName = "ADJ";
-    cAdjustmentModule(const ModuleFactoryParam &moduleParam);
+
+    explicit cAdjustmentModule(const ModuleFactoryParam &moduleParam);
+
+    cAdjustmentModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
@@ -18,6 +23,7 @@ private:
     void stopMeas() override;
 
     cAdjustmentModuleMeasProgram *m_pMeasProgram = nullptr;
+    cAdjustmentModuleConfiguration m_configuration;
 };
 
 #endif // ADJUSTMENTMODULE_H

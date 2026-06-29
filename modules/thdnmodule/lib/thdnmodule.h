@@ -3,6 +3,7 @@
 
 #include "basemeasmodule.h"
 #include "basemeasprogram.h"
+#include "thdnmoduleconfiguration.h"
 
 namespace THDNMODULE {
 
@@ -14,6 +15,8 @@ public:
     static constexpr const char* BaseSCPIModuleName = "THD";
 
     explicit cThdnModule(const ModuleFactoryParam &moduleParam);
+    cThdnModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
@@ -21,6 +24,7 @@ private:
     void stopMeas() override;
 
     cBaseMeasProgram *m_pMeasProgram = nullptr;
+    cThdnModuleConfiguration m_configuration;
 };
 
 }

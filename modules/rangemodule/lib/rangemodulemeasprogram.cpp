@@ -1,8 +1,6 @@
 #include "rangemodulemeasprogram.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
-#include "rangemoduleconfiguration.h"
-#include "rangemoduleconfigdata.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -13,9 +11,8 @@
 namespace RANGEMODULE
 {
 
-cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module,
-                                                 const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
+cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module) :
+    cBaseDspMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
     m_dspWatchdogTimer(TimerFactoryQt::createSingleShot(3000)),
     m_frequencyLogStatistics(10000)
@@ -24,7 +21,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module,
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeProg(
         m_pModule->getEntityId(),
         channelMNames,
-        getConfData()->m_session.m_sPar == "ref");
+        m_pModule->getConfigData()->m_session.m_sPar == "ref");
     m_bRanging = false;
     m_bIgnore = false;
 
@@ -150,7 +147,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
     const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2*channelMNames.count()+1)));
-        m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
+        m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(m_pModule->getConfigData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
         m_dspInterface->addCycListItem("CLKMODE(1)"); // clk mode auf 48bit einstellen
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -249,11 +246,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             }
         }
     }
-}
-
-cRangeModuleConfigData *cRangeModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
 void cRangeModuleMeasProgram::setActualValuesNames()

@@ -3,7 +3,6 @@
 
 #include "oscimodule.h"
 #include "actualvaluestartstophandler.h"
-#include "oscimoduleconfigdata.h"
 #include <basedspmeasprogram.h>
 #include <QFinalState>
 
@@ -14,8 +13,7 @@ class cOsciModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cOsciModuleMeasProgram(cOsciModule* module,
-                           const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cOsciModuleMeasProgram(cOsciModule* module);
     void generateVeinInterface() override;
 public slots:
     void start() override;
@@ -35,22 +33,21 @@ private slots:
 
     void newRefChannel(const QVariant &chn);
 private:
-    cOsciModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
     void setActualValuesNames();
     void dataAcquisitionDSP();
     void dataReadDSP();
 
-    cOsciModule* m_pModule;
+    cOsciModule* m_pModule = nullptr;
     ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
-    VfModuleMetaData* m_pOsciCountInfo;
-    VfModuleComponent* m_pMeasureSignal;
-    VfModuleParameter* m_pRefChannelParameter;
+    VfModuleMetaData* m_pOsciCountInfo = nullptr;
+    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleParameter* m_pRefChannelParameter = nullptr;
 
-    DspVarGroupClientInterface* m_pParameterDSP;
-    DspVarGroupClientInterface* m_pActualValuesDSP;
+    DspVarGroupClientInterface* m_pParameterDSP = nullptr;
+    DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
 
     // statemachine for activating gets the following states
     QState m_dspserverConnectState;

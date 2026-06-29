@@ -1,16 +1,26 @@
 #include "burden1module.h"
-#include "burden1moduleconfiguration.h"
 #include "burden1modulemeasprogram.h"
 
 namespace BURDEN1MODULE
 {
 
 cBurden1Module::cBurden1Module(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<cBurden1ModuleConfiguration>())
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number burden and powerfactor from configured input dft values");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
+}
+
+cBurden1ModuleConfigData *cBurden1Module::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray cBurden1Module::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 void cBurden1Module::setupModule()
@@ -20,7 +30,7 @@ void cBurden1Module::setupModule()
     cBaseMeasModule::setupModule();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cBurden1ModuleMeasProgram(this, m_pConfiguration);
+    m_pMeasProgram = new cBurden1ModuleMeasProgram(this);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cBurden1ModuleMeasProgram::activated, this, &cBurden1Module::activationContinue);
     connect(m_pMeasProgram, &cBurden1ModuleMeasProgram::deactivated, this, &cBurden1Module::deactivationContinue);

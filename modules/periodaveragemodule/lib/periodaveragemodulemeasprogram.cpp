@@ -1,6 +1,5 @@
 #include "periodaveragemodulemeasprogram.h"
 #include "periodaveragemodule.h"
-#include "periodaveragemoduleconfiguration.h"
 #include "servicechannelnamehelper.h"
 #include "vfmodulecomponent.h"
 #include "taskdspdataacquisition.h"
@@ -14,16 +13,16 @@
 namespace PERIODAVERAGEMODULE
 {
 
-PeriodAverageModuleMeasProgram::PeriodAverageModuleMeasProgram(PeriodAverageModule* module,
-                                                               const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
+PeriodAverageModuleMeasProgram::PeriodAverageModuleMeasProgram(PeriodAverageModule* module) :
+    cBaseDspMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
     m_observer(m_pModule->getSharedChannelRangeObserver())
 {
+    const PeriodAverageModuleConfigData *configData = m_pModule->getConfigData();
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfacePeriodAverage(
         m_pModule->getEntityId(),
-        getConfData()->m_valueChannelList,
-        getConfData()->m_maxPeriods, getConfData()->m_periodCount.m_nValue);
+        configData->m_valueChannelList,
+        configData->m_maxPeriods, configData->m_periodCount.m_nValue);
 
     m_var2DSPState.addTransition(this, &PeriodAverageModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &PeriodAverageModuleMeasProgram::activationContinue, &m_activateDSPState);
@@ -71,8 +70,9 @@ void PeriodAverageModuleMeasProgram::stop()
 void PeriodAverageModuleMeasProgram::generateVeinInterface()
 {
     VfModuleComponentCreator componentCreator(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem());
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        const QString channeMName = getConfData()->m_valueChannelList.at(i);
+    const PeriodAverageModuleConfigData *configData = m_pModule->getConfigData();
+    for (int i = 0; i < configData->m_valueChannelList.count(); i++) {
+        const QString channeMName = configData->m_valueChannelList.at(i);
         ServiceChannelNameHelper::TChannelAliasUnit aliasUnit = ServiceChannelNameHelper::getChannelAndUnit(channeMName, m_observer);
 
         QString scpiBaseName = aliasUnit.m_channelAlias;
@@ -98,9 +98,9 @@ void PeriodAverageModuleMeasProgram::generateVeinInterface()
     m_periodCountParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_PeriodCount"),
                                                    QString("Measurement periods collected per measurement"),
-                                                   QVariant(getConfData()->m_periodCount.m_nValue));
+                                                   QVariant(configData->m_periodCount.m_nValue));
     m_periodCountParameter->setScpiInfo("CONFIGURATION","PCOUNT", SCPI::isQuery|SCPI::isCmdwP);
-    m_periodCountParameter->setValidator(new cIntValidator(5 /* sync xsd!!!*/, getConfData()->m_maxPeriods));
+    m_periodCountParameter->setValidator(new cIntValidator(5 /* sync xsd!!!*/, configData->m_maxPeriods));
     m_pModule->m_veinModuleParameterMap[key] = m_periodCountParameter; // for modules use
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -115,7 +115,8 @@ void PeriodAverageModuleMeasProgram::generateVeinInterface()
 void PeriodAverageModuleMeasProgram::setDspVarList()
 {
     const int samplesPerPeriod = m_observer->getSamplesPerPeriod();
-    const int channelCount = getConfData()->m_channelCount;
+    const PeriodAverageModuleConfigData *configData = m_pModule->getConfigData();
+    const int channelCount = configData->m_channelCount;
 
     // work variables without I/O
     DspVarGroupClientInterface* tmpDspVarGroup = m_dspInterface->createVariableGroup("TmpData");
@@ -124,7 +125,7 @@ void PeriodAverageModuleMeasProgram::setDspVarList()
     tmpDspVarGroup->addDspVar("PERIODCURR", 1, dspDataTypeInt);
     tmpDspVarGroup->addDspVar("RESULT_BUFF_IDX", 1, dspDataTypeInt);
     tmpDspVarGroup->addDspVar("FILTER", DspBuffLen::avgFilterLen(channelCount));
-    tmpDspVarGroup->addDspVar("VALS_PERIOD_WORK", getConfData()->m_maxPeriods*channelCount);
+    tmpDspVarGroup->addDspVar("VALS_PERIOD_WORK", configData->m_maxPeriods*channelCount);
 
     // parameter
     m_pParameterDSP =  m_dspInterface->createVariableGroup("Parameter");
@@ -132,7 +133,7 @@ void PeriodAverageModuleMeasProgram::setDspVarList()
 
     // results
     m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
-    m_pActualValuesDSP->addDspVar("VALS_PERIOD", getConfData()->m_maxPeriods*channelCount);
+    m_pActualValuesDSP->addDspVar("VALS_PERIOD", configData->m_maxPeriods*channelCount);
     m_pActualValuesDSP->addDspVar("VALUES_AVG", channelCount);
     m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values
 }
@@ -140,14 +141,15 @@ void PeriodAverageModuleMeasProgram::setDspVarList()
 void PeriodAverageModuleMeasProgram::setDspCmdList()
 {
     int samplesPerPeriod = m_observer->getSamplesPerPeriod();
-    const QStringList channelMNameListConfigured = getConfData()->m_valueChannelList;
+    const PeriodAverageModuleConfigData *configData = m_pModule->getConfigData();
+    const QStringList channelMNameListConfigured = configData->m_valueChannelList;
     int channelCount = channelMNameListConfigured.count();
 
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(channelCount)));
         m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,1)"));
         m_dspInterface->addCycListItem(QString("SETVAL(RESULT_BUFF_IDX,VALS_PERIOD_WORK)"));
-        m_dspInterface->addCycListItem(QString("SETVAL(PERIODCOUNT,%1)").arg(getConfData()->m_periodCount.m_nValue));
+        m_dspInterface->addCycListItem(QString("SETVAL(PERIODCOUNT,%1)").arg(configData->m_periodCount.m_nValue));
 
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -172,7 +174,7 @@ void PeriodAverageModuleMeasProgram::setDspCmdList()
         m_dspInterface->addCycListItem(QString("SETVAL(RESULT_BUFF_IDX,VALS_PERIOD_WORK)"));
         m_dspInterface->addCycListItem(QString("CMPAVERAGE1(%1,FILTER,VALUES_AVG)").arg(channelCount));
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(channelCount)));
-        m_dspInterface->addCycListItem(QString("COPYMEM(%1,VALS_PERIOD_WORK,VALS_PERIOD)").arg(getConfData()->m_maxPeriods*channelCount));
+        m_dspInterface->addCycListItem(QString("COPYMEM(%1,VALS_PERIOD_WORK,VALS_PERIOD)").arg(configData->m_maxPeriods*channelCount));
         m_dspInterface->addCycListItem(QString("DSPINTTRIGGER(0x0,0x%1)").arg(0));
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
@@ -226,26 +228,22 @@ void PeriodAverageModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 
     }
 }
 
-PeriodAverageModuleConfigData *PeriodAverageModuleMeasProgram::getConfData()
-{
-    return qobject_cast<PeriodAverageModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
 void PeriodAverageModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (!m_bActive) // maybe we are deactivating !!!!
         return;
 
-    const int channelCount = getConfData()->m_channelCount;
+    const PeriodAverageModuleConfigData *configData = m_pModule->getConfigData();
+    const int channelCount = configData->m_channelCount;
     const int perChannelValuesFullMax = actualValues->count() / channelCount;
     constexpr int perChannelAverageCount = 1;
     const int periodMaxCount = perChannelValuesFullMax - perChannelAverageCount;
-    if (getConfData()->m_maxPeriods != periodMaxCount) {
+    if (configData->m_maxPeriods != periodMaxCount) {
         qCritical("PeriodAverageModule: Count DSP values %i is unexpected expected: %i!",
-                  int(actualValues->count()), channelCount * (getConfData()->m_maxPeriods + perChannelAverageCount));
+                  int(actualValues->count()), channelCount * (configData->m_maxPeriods + perChannelAverageCount));
         return;
     }
-    const int periodsConfigured = getConfData()->m_periodCount.m_nValue;
+    const int periodsConfigured = configData->m_periodCount.m_nValue;
     QVector<QList<double>> periodValues(channelCount);
     for (int periodNo=0; periodNo<periodsConfigured; ++periodNo) {
         for (int channelNo=0; channelNo<channelCount; channelNo++) {
@@ -334,7 +332,7 @@ void PeriodAverageModuleMeasProgram::dataReadDSP()
 void PeriodAverageModuleMeasProgram::newPeriodCount(const QVariant &periodCount)
 {
     int newPeriodCount = periodCount.toInt();
-    getConfData()->m_periodCount.m_nValue = newPeriodCount;
+    m_pModule->getConfigData()->m_periodCount.m_nValue = newPeriodCount;
     QString strVarData = QString("PERIODCOUNT:%1;PERIODCURR:0;").arg(newPeriodCount);
     m_pParameterDSP->setVarData(strVarData);
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;

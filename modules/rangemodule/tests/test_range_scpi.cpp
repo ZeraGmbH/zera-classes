@@ -74,7 +74,7 @@ void test_range_scpi::rangeChangeWithDelay()
 
     SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(testRunner.getModule(9999));
     QVERIFY(scpiModule != nullptr);
-    SCPIMODULE::ScpiTestClient scpiClient(scpiModule, *scpiModule->getConfData(), scpiModule->getSCPIServer()->getScpiInterface());
+    SCPIMODULE::ScpiTestClient scpiClient(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
     scpiClient.sendScpiCmds("CONFIGURATION:RNG1:GROUPING 0;");
     TimeMachineObject::feedEventLoop();
 

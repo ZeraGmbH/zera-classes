@@ -1,9 +1,12 @@
 #include "periodaveragemoduleconfiguration.h"
-#include "periodaveragemoduleconfigdata.h"
-#include <xmlconfigreader.h>
 
 namespace PERIODAVERAGEMODULE
 {
+
+PeriodAverageModuleConfiguration::PeriodAverageModuleConfiguration(const QByteArray &xmlString)
+{
+    setConfiguration(xmlString);
+}
 
 enum moduleconfigstate
 {
@@ -14,26 +17,10 @@ enum moduleconfigstate
     setValue1 = 20
 };
 
-PeriodAverageModuleConfiguration::PeriodAverageModuleConfiguration()
+void PeriodAverageModuleConfiguration::setConfiguration(const QByteArray &xmlString)
 {
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &PeriodAverageModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &PeriodAverageModuleConfiguration::completeConfiguration);
-}
-
-PeriodAverageModuleConfiguration::~PeriodAverageModuleConfiguration()
-{
-    delete m_periodAverageModulConfigData;
-}
-
-void PeriodAverageModuleConfiguration::setConfiguration(const QByteArray &xmlString)
-{
-    m_bConfigured = m_bConfigError = false;
-
-    if (m_periodAverageModulConfigData)
-        delete m_periodAverageModulConfigData;
-    m_periodAverageModulConfigData = new PeriodAverageModuleConfigData();
-
-    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
 
     m_ConfigXMLMap["periodicaveragemodconfpar:configuration:maxperiods"] = setMaxPeriods;
     m_ConfigXMLMap["periodicaveragemodconfpar:configuration:measure:channels:n"] = setChannelCount;
@@ -42,17 +29,17 @@ void PeriodAverageModuleConfiguration::setConfiguration(const QByteArray &xmlStr
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
-QByteArray PeriodAverageModuleConfiguration::exportConfiguration()
+QByteArray PeriodAverageModuleConfiguration::exportConfiguration() const
 {
-    intParameter *iPar = &m_periodAverageModulConfigData->m_periodCount;
+    const intParameter *iPar = &m_configData.m_periodCount;
     m_pXMLReader->setValue(iPar->m_sKey, QString("%1").arg(iPar->m_nValue));
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-PeriodAverageModuleConfigData *PeriodAverageModuleConfiguration::getConfigurationData()
+PeriodAverageModuleConfigData *PeriodAverageModuleConfiguration::getConfigData()
 {
-    return m_periodAverageModulConfigData;
+    return &m_configData;
 }
 
 void PeriodAverageModuleConfiguration::configXMLInfo(const QString &key)
@@ -62,18 +49,18 @@ void PeriodAverageModuleConfiguration::configXMLInfo(const QString &key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd) {
         case setMaxPeriods:
-            m_periodAverageModulConfigData->m_maxPeriods = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_maxPeriods = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setChannelCount:
-            m_periodAverageModulConfigData->m_channelCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_periodAverageModulConfigData->m_channelCount; i++)
+            m_configData.m_channelCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_configData.m_channelCount; i++)
                 m_ConfigXMLMap[QString("periodicaveragemodconfpar:configuration:measure:channels:ch%1").arg(i+1)] = setValue1+i;
             break;
         case setPeriodCount: {
-            m_periodAverageModulConfigData->m_periodCount.m_sKey = key;
+            m_configData.m_periodCount.m_sKey = key;
             int periodCount = m_pXMLReader->getValue(key).toInt(&ok);
-            m_periodAverageModulConfigData->m_periodCount.m_nValue = periodCount;
-            int maxPeriodCount = m_periodAverageModulConfigData->m_maxPeriods;
+            m_configData.m_periodCount.m_nValue = periodCount;
+            int maxPeriodCount = m_configData.m_maxPeriods;
             if (periodCount > maxPeriodCount) {
                 qWarning("Period count %i is larger than max period count %i!",
                          periodCount, maxPeriodCount);
@@ -85,7 +72,7 @@ void PeriodAverageModuleConfiguration::configXMLInfo(const QString &key)
             if ((cmd >= setValue1) && (cmd < setValue1 + 20)) {
                 //cmd -= setValue1;
                 QString channelMName = m_pXMLReader->getValue(key);
-                m_periodAverageModulConfigData->m_valueChannelList.append(channelMName);
+                m_configData.m_valueChannelList.append(channelMName);
             }
         }
         m_bConfigError |= !ok;

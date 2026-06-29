@@ -2,9 +2,11 @@
 #define REFERENCEMODULE_H
 
 #include "referencemeaschannel.h"
+#include "referencemoduleconfiguration.h"
 #include "referencemodulemeasprogram.h"
 #include "referenceadjustment.h"
 #include <basemeasmodule.h>
+#include <QList>
 
 namespace REFERENCEMODULE
 {
@@ -16,7 +18,9 @@ public:
     static constexpr const char* BaseSCPIModuleName = "REF";
 
     explicit cReferenceModule(const ModuleFactoryParam &moduleParam);
-    ~cReferenceModule();
+    cReferenceModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
+
     cReferenceMeasChannel* getMeasChannel(const QString &name); // also used for callback
 
 private slots:
@@ -28,7 +32,9 @@ private:
     void stopMeas() override;
 
     cReferenceModuleMeasProgram *m_pMeasProgram = nullptr;
-    cReferenceAdjustment *m_pReferenceAdjustment; // our justifying and normation program
+    cReferenceModuleConfiguration m_configuration;
+
+    std::unique_ptr<cReferenceAdjustment> m_referenceAdjustment; // our justifying and normation program (must be created after setupModule)
     QList<cReferenceMeasChannel*> m_ReferenceMeasChannelList; // our meas channels
 
     // our states for base modules activation statemacine

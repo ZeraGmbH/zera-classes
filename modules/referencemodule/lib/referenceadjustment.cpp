@@ -11,16 +11,16 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceModuleConfigData* confData) :
+cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module) :
     cModuleActivist(module->getVeinModuleName()),
-    m_pModule(module),
-    m_pConfigData(confData)
+    m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRefAdj(m_pModule->getEntityId());
     m_pPCBInterface = std::make_shared<Zera::cPCBInterface>();
 
-    for (int i = 0; i < m_pConfigData->m_referenceChannelList.count(); i++) // we fetch all our real channels first
-        m_ChannelList.append(m_pModule->getMeasChannel(m_pConfigData->m_referenceChannelList.at(i)));
+    const cReferenceModuleConfigData *configData = m_pModule->getConfigData();
+    for (int i = 0; i < configData->m_referenceChannelList.count(); i++) // we fetch all our real channels first
+        m_ChannelList.append(m_pModule->getMeasChannel(configData->m_referenceChannelList.at(i)));
 
     // and then set up our state machines
     m_set0VRangeState.addTransition(this, &cReferenceAdjustment::activationContinue, &m_dspserverConnectState);
@@ -101,16 +101,12 @@ void cReferenceAdjustment::pcbserverConnect()
     Zera::Proxy::getInstance()->startConnectionSmart(m_pPCBClient);
 }
 
-
 void cReferenceAdjustment::set0VRange()
 {
     m_nRangeSetPending = m_ChannelList.count();
     for (int i = 0; i <  m_nRangeSetPending; i++)
-    {
         m_MsgNrCmdList[m_ChannelList.at(i)->setRange("R0V")] = setrange0V;
-    }
 }
-
 
 void cReferenceAdjustment::dspserverConnect()
 {
@@ -121,7 +117,6 @@ void cReferenceAdjustment::dspserverConnect()
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
 }
-
 
 void cReferenceAdjustment::activationDone()
 {
@@ -135,7 +130,7 @@ void cReferenceAdjustment::activationDone()
     m_pOffset2CorrectionDSP->addDspVar("OFFSETCORRECTION2", 32, dspDataTypeFloat, dspInternalSegment);
     m_fOffset2Corr = m_pOffset2CorrectionDSP->data("OFFSETCORRECTION2");
 
-    m_nIgnoreCount = m_pConfigData->m_nIgnore;
+    m_nIgnoreCount = m_pModule->getConfigData()->m_nIgnore;
     m_bAdjustmentDone = false;
 
     m_bActive = true;
@@ -144,20 +139,17 @@ void cReferenceAdjustment::activationDone()
     // we will emit activated after reference measurement adjustment is done
 }
 
-
 void cReferenceAdjustment::readGainCorr()
 {
     if (m_bActive)
         m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
 }
 
-
 void cReferenceAdjustment::readOffset2Corr()
 {
     if (m_bActive)
         m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pOffset2CorrectionDSP)] = readoffset2corr;
 }
-
 
 void cReferenceAdjustment::writeOffsetAdjustment()
 {
@@ -177,16 +169,12 @@ void cReferenceAdjustment::writeOffsetAdjustment()
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pOffset2CorrectionDSP)] = writeoffsetadjustment;
 }
 
-
 void cReferenceAdjustment::set10VRange()
 {
-    if (m_bActive)
-    {
+    if (m_bActive) {
         m_nRangeSetPending = m_ChannelList.count();
         for (int i = 0; i <  m_nRangeSetPending; i++)
-        {
             m_MsgNrCmdList[m_ChannelList.at(i)->setRange("R10V")] = setrange10V;
-        }
     }
 }
 

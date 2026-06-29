@@ -2,6 +2,7 @@
 #define DSPSUPERMODULE_H
 
 #include "basemeasmodule.h"
+#include "dspsupermoduleconfiguration.h"
 
 namespace DSPSUPERMODULE {
 
@@ -14,13 +15,17 @@ public:
     static constexpr const char* BaseModuleName = "DspSuperModule";
     static constexpr const char* BaseSCPIModuleName = "DSP";
 
-    DspSuperModule(const ModuleFactoryParam &moduleParam);
+    explicit DspSuperModule(const ModuleFactoryParam &moduleParam);
+    DspSuperModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
+
     DspSuperModuleMeasProgram *m_pMeasProgram = nullptr;
+    DspSuperModuleConfiguration m_configuration;
 };
 
 }

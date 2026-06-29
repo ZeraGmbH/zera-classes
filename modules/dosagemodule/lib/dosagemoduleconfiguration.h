@@ -1,35 +1,29 @@
 #ifndef DOSAGEMODULECONFIGURATION_H
 #define DOSAGEMODULECONFIGURATION_H
 
-#include "dosagemoduleconfigdata.h"
 #include "basemoduleconfiguration.h"
+#include "dosagemoduleconfigdata.h"
 
 namespace DOSAGEMODULE
 {
-
-enum moduleconfigstate
-{
-    setSystemCount,
-
-    setMeasSystem1 = 10 // we leave some place for additional cmds
-};
 
 class cDosageModuleConfiguration : public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cDosageModuleConfiguration();
-    ~cDosageModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    cDosageModuleConfigData *getConfigurationData();
+    explicit cDosageModuleConfiguration(const QByteArray& xmlString);
+
+    QByteArray exportConfiguration() const override;
+    cDosageModuleConfigData *getConfigData();
 
 protected slots:
-    virtual void configXMLInfo(const QString &key);
-    virtual void completeConfiguration(bool ok);
+    void configXMLInfo(const QString &key) override;
+    void completeConfiguration(bool ok);
 
 private:
-    cDosageModuleConfigData *m_pDosageModulConfigData; // configuration
+    void setConfiguration(const QByteArray& xmlString);
+
+    cDosageModuleConfigData m_configData;
 };
 
 }

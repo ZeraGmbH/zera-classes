@@ -8,39 +8,20 @@
 namespace BURDEN1MODULE
 {
 
-enum moduleconfigstate
-{
-    setInputModule,
-    setSystemCount,
-    setSystemUnit,
-
-    setNominalRange,
-    setNominalRangeFactor,
-    setNominalBurden,
-    setWireLength,
-    setWireCrosssection,
-
-    setMeasSystem1 = 16, // we leave some place for additional cmds
-
-    setnext = setMeasSystem1 + 16
-};
-
 class cBurden1ModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cBurden1ModuleConfiguration();
-    ~cBurden1ModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString) override;
-    virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
-    cBurden1ModuleConfigData* getConfigurationData();
+    explicit cBurden1ModuleConfiguration(const QByteArray& xmlString);
+    QByteArray exportConfiguration() const override;
+    cBurden1ModuleConfigData* getConfigData();
 
-protected slots:
-    virtual void configXMLInfo(const QString &key) override;
 private slots:
+    void configXMLInfo(const QString &key) override;
     void completeConfiguration(bool ok);
 private:
-    cBurden1ModuleConfigData *m_pBurden1ModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cBurden1ModuleConfigData m_configData;
 };
 
 }

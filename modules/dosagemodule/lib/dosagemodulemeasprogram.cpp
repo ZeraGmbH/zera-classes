@@ -2,7 +2,6 @@
 #include "dosagemodule.h"
 #include <intvalidator.h>
 #include <boolvalidator.h>
-#include "dosagemoduleconfiguration.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <scpi.h>
@@ -11,26 +10,19 @@
 namespace DOSAGEMODULE
 {
 
-cDosageModuleMeasProgram::cDosageModuleMeasProgram(cDosageModule *module,
-                                                   const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseMeasWorkProgram(configuration, module->getVeinModuleName()),
+cDosageModuleMeasProgram::cDosageModuleMeasProgram(cDosageModule *module) :
+    cBaseMeasWorkProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_activationDoneState);
-
     connect(&m_activationDoneState, &QState::entered, this, &cDosageModuleMeasProgram::activateDone);
 
     m_deactivationMachine.addState(&m_deactivateDoneState);
     m_deactivationMachine.setInitialState(&m_deactivateDoneState);
-
     connect(&m_deactivateDoneState, &QState::entered, this, &cDosageModuleMeasProgram::deactivateMeasDone);
 
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeTimer);
-}
-
-cDosageModuleMeasProgram::~cDosageModuleMeasProgram()
-{
 }
 
 void cDosageModuleMeasProgram::start()
@@ -39,11 +31,6 @@ void cDosageModuleMeasProgram::start()
 
 void cDosageModuleMeasProgram::stop()
 {
-}
-
-cDosageModuleConfigData *cDosageModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cDosageModuleConfiguration *>(m_pConfiguration.get())->getConfigurationData();
 }
 
 void cDosageModuleMeasProgram::generateVeinInterface()
@@ -62,7 +49,7 @@ void cDosageModuleMeasProgram::generateVeinInterface()
 
 void cDosageModuleMeasProgram::setupMeasureProgram()
 {
-    for(auto &item : getConfData()->m_DosageSystemConfigList) {
+    for(auto &item : m_pModule->getConfigData()->m_DosageSystemConfigList) {
         if (m_pModule->getStorageDb()->findComponent(item.m_nEntity, item.m_ComponentName) != nullptr) {
             dosagepoweranalyser dpaTemp;
             dpaTemp.m_fUpperLimit = item.m_fUpperLimit;

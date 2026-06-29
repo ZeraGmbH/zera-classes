@@ -1,16 +1,26 @@
 #include "dspsupermodule.h"
-#include "dspsupermoduleconfiguration.h"
 #include "dspsupermodulemeasprogram.h"
 
 namespace DSPSUPERMODULE
 {
 
 DspSuperModule::DspSuperModule(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<DspSuperModuleConfiguration>())
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("DSP support on timestamps for other modules");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
+}
+
+DspSuperModuleConfigData *DspSuperModule::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray DspSuperModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 void DspSuperModule::setupModule()
@@ -19,7 +29,7 @@ void DspSuperModule::setupModule()
     cBaseMeasModule::setupModule();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new DspSuperModuleMeasProgram(this, m_pConfiguration);
+    m_pMeasProgram = new DspSuperModuleMeasProgram(this);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &DspSuperModuleMeasProgram::activated, this, &DspSuperModule::activationContinue);
     connect(m_pMeasProgram, &DspSuperModuleMeasProgram::deactivated, this, &DspSuperModule::deactivationContinue);

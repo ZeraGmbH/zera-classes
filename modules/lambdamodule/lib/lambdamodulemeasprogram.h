@@ -20,23 +20,20 @@ class cLambdaModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
 public:
-    cLambdaModuleMeasProgram(cLambdaModule* module,
-                             const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cLambdaModuleMeasProgram(cLambdaModule* module);
     void generateVeinInterface() override;
 public slots:
     void start() override {}
     void stop() override {}
 
 private:
-    cLambdaModuleConfigData* getConfData();
-
-    cLambdaModule* m_pModule;
+    cLambdaModule* m_pModule = nullptr;
     QList<VfModuleComponent*> m_veinLambdaActValues;
     QList<VfModuleComponent*> m_veinLoadTypeList;
-    VfModuleMetaData* m_pLAMBDACountInfo; // the number of values we produce
-    VfModuleComponent* m_pMeasureSignal;
+    VfModuleMetaData* m_pLAMBDACountInfo = nullptr; // the number of values we produce
+    VfModuleComponent* m_pMeasureSignal = nullptr;
 
-    LambdaCalcDelegate *m_lambdaCalcDelegate;
+    LambdaCalcDelegate *m_lambdaCalcDelegate = nullptr;
     // statemachine for activating gets the following states
     QState m_searchActualValuesState;
     QFinalState m_activationDoneState;

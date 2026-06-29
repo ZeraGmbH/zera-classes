@@ -1,7 +1,6 @@
 #ifndef SAMPLEMODULEMEASPROGRAM_H
 #define SAMPLEMODULEMEASPROGRAM_H
 
-#include "basemoduleconfiguration.h"
 #include "pcbserviceconnection.h"
 #include "pllautomatic.h"
 #include "samplemoduleconfigdata.h"
@@ -18,8 +17,7 @@ class cSampleModuleMeasProgram : public cModuleActivist
 {
     Q_OBJECT
 public:
-    cSampleModuleMeasProgram(cSampleModule* module,
-                             const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cSampleModuleMeasProgram(cSampleModule* module);
 
     void generateVeinInterface() override;
     void activate() override;
@@ -30,15 +28,13 @@ private slots:
     void onVeinPllAutoChanged(const QVariant &pllauto);
     void onPllChannelChanged(const QString &channelMName);
 private:
-    cSampleModuleConfigData* getConfData();
     QString getAlias(const QString &channelMName);
     void setPllChannelValidator();
     void trySendPllChannel(const QString &channelMName);
     void startSetPllChannel(const QString &channelMName);
     void setVeinPllChannelPesistent(const QString &channelMName);
 
-    cSampleModule* m_module;
-    std::shared_ptr<BaseModuleConfiguration> m_pConfiguration;
+    cSampleModule* m_module = nullptr;
     cObsermaticConfPar &m_obsermaticConfig;
     PcbServiceConnection m_pcbConnection;
 

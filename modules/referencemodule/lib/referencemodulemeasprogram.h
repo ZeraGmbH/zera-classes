@@ -1,9 +1,9 @@
 #ifndef REFERENCEMODULEMEASPROGRAM_H
 #define REFERENCEMODULEMEASPROGRAM_H
 
-#include "referencemoduleconfigdata.h"
 #include <basedspmeasprogram.h>
 #include <timerperiodicqt.h>
+#include <QFinalState>
 
 namespace REFERENCEMODULE
 {
@@ -24,22 +24,20 @@ class cReferenceModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cReferenceModuleMeasProgram(cReferenceModule* module,
-                                const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cReferenceModuleMeasProgram(cReferenceModule* module);
     void generateVeinInterface() override {};
 public slots:
     void start() override {};
     void stop() override {};
 private:
-    cReferenceModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
 
-    cReferenceModule* m_pModule; // the module we live in
+    cReferenceModule* m_pModule = nullptr; // the module we live in
     QStringList m_ChannelList; // the list of actual values we work on
 
-    DspVarGroupClientInterface* m_pParameterDSP;
-    DspVarGroupClientInterface* m_pActualValuesDSP;
+    DspVarGroupClientInterface* m_pParameterDSP = nullptr;
+    DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
 
     // statemachine for activating gets the following states
     QState m_dspserverConnectState;

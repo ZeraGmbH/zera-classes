@@ -1,6 +1,7 @@
 #ifndef LAMBDAMODULE_H
 #define LAMBDAMODULE_H
 
+#include "lambdamoduleconfiguration.h"
 #include "lambdamodulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -13,13 +14,17 @@ public:
     static constexpr const char* BaseModuleName = "LambdaModule";
     static constexpr const char* BaseSCPIModuleName = "LAM";
 
-    cLambdaModule(const ModuleFactoryParam &moduleParam);
+    explicit cLambdaModule(const ModuleFactoryParam &moduleParam);
+    cLambdaModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private:
-    cLambdaModuleMeasProgram *m_pMeasProgram = nullptr;
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
+
+    cLambdaModuleMeasProgram *m_pMeasProgram = nullptr;
+    cLambdaModuleConfiguration m_configuration;
 };
 
 }

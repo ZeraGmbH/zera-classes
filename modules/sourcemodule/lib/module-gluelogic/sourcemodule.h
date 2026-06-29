@@ -13,19 +13,18 @@ public:
     static constexpr const char* BaseSCPIModuleName = "SRC";
 
     explicit SourceModule(const ModuleFactoryParam &moduleParam);
-    ~SourceModule();
-    VfRpcEventSystem *getRpcEventSystem() const;
 
-protected:
-    SourceModuleProgram *m_pProgram = nullptr;
+    QByteArray getConfigXml() const override;
+    VfRpcEventSystem *getRpcEventSystem();
 
+private:
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
-private:
+    SourceModuleProgram *m_pProgram = nullptr;
     QState m_stateSwitchAllOff;
-    VfRpcEventSystem *m_rpcEventSystem = nullptr;
+    VfRpcEventSystem m_rpcEventSystem;
 };
 
 #endif // SOURCEMODULE_H

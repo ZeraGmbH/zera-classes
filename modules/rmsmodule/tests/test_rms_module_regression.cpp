@@ -1,8 +1,6 @@
 #include "test_rms_module_regression.h"
 #include "demovaluesdsprms.h"
 #include "rmsmodule.h"
-#include "rmsmoduleconfiguration.h"
-#include "rmsmoduleconfigdata.h"
 #include "modulemanagertestrunner.h"
 #include <vs_dumpjson.h>
 #include <timemachineobject.h>
@@ -89,10 +87,9 @@ void test_rms_module_regression::injectSymmetricValues()
     TestDspInterfacePtr rmsDspInterface = testRunner.findDspInterfaceByEntityId(rmsEntityId);
 
     RMSMODULE::cRmsModule *rmsModule = static_cast<RMSMODULE::cRmsModule*>(testRunner.getModule(rmsEntityId));
-    RMSMODULE::cRmsModuleConfiguration config;
-    config.setConfiguration(rmsModule->getConfiguration());
+    RMSMODULE::cRmsModuleConfigData* configData = rmsModule->getConfigData();
 
-    DemoValuesDspRms demoDspValue(config.getConfigurationData()->m_valueChannelList);
+    DemoValuesDspRms demoDspValue(configData->m_valueChannelList);
     demoDspValue.setAllValuesSymmetric(230, 5);
     rmsDspInterface->fireActValInterrupt(demoDspValue.getDspValues(), 0 /* dummy */);
     TimeMachineObject::feedEventLoop();

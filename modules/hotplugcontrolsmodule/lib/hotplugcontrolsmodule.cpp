@@ -1,12 +1,12 @@
 #include "hotplugcontrolsmodule.h"
-#include "hotplugcontrolsmoduleconfiguration.h"
 #include "hotplugcontrolsmodulecontroller.h"
 
 namespace HOTPLUGCONTROLSMODULE
 {
 
 cHotplugControlsModule::cHotplugControlsModule(const ModuleFactoryParam &moduleParam) :
-    BaseModule(moduleParam, std::make_shared<cHotplugControlsModuleConfiguration>()),
+    BaseModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData),
     m_spModuleValidator(std::make_shared<VfEventSytemModuleParam>(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem)),
     m_spRpcEventSystem(std::make_shared<VfRpcEventSystemSimplified>(moduleParam.m_entityId))
 {
@@ -14,6 +14,16 @@ cHotplugControlsModule::cHotplugControlsModule(const ModuleFactoryParam &moduleP
     m_sModuleDescription = QString("EMOB module");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
     m_pModuleEventSystem = new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem);
+}
+
+cHotplugControlsModuleConfigData *cHotplugControlsModule::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray cHotplugControlsModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 VfRpcEventSystemSimplified *cHotplugControlsModule::getRpcEventSystem()

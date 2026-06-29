@@ -1,5 +1,4 @@
 #include "rangemodule.h"
-#include "rangemoduleconfiguration.h"
 #include "rangemoduleconfigdata.h"
 #include "adjustment.h"
 
@@ -7,11 +6,22 @@ namespace RANGEMODULE
 {
 
 cRangeModule::cRangeModule(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<cRangeModuleConfiguration>())
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for range handling,\n range setting, automatic, adjustment and scaling");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
+}
+
+cRangeModuleConfigData *cRangeModule::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray cRangeModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 cRangeMeasChannel *cRangeModule::getMeasChannel(const QString &name)
@@ -30,13 +40,10 @@ void cRangeModule::setupModule()
     emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
-    cRangeModuleConfigData *pConfData;
-    pConfData = qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
-    m_pChannelCountInfo = new VfModuleMetaData(QString("ChannelCount"), QVariant(pConfData->m_nChannelCount));
+    m_pChannelCountInfo = new VfModuleMetaData(QString("ChannelCount"), QVariant(getConfigData()->m_nChannelCount));
     veinModuleMetaDataList.append(m_pChannelCountInfo);
 
-    m_pGroupCountInfo = new VfModuleMetaData(QString("GroupCount"), QVariant(pConfData->m_nGroupCount));
+    m_pGroupCountInfo = new VfModuleMetaData(QString("GroupCount"), QVariant(getConfigData()->m_nGroupCount));
     veinModuleMetaDataList.append(m_pGroupCountInfo);
 
 
@@ -56,8 +63,8 @@ void cRangeModule::setupModule()
     // we need some program that does the range handling (observation, automatic, setting and grouping)
     // it will also do the scaling job
     m_pRangeObsermatic = new cRangeObsermatic(this,
-                                              pConfData->m_GroupList,
-                                              pConfData->m_ObsermaticConfPar);
+                                              getConfigData()->m_GroupList,
+                                              getConfigData()->m_ObsermaticConfPar);
     m_ModuleActivistList.append(m_pRangeObsermatic);
     connect(m_pRangeObsermatic, &cRangeObsermatic::activated, this, &cRangeModule::activationContinue);
     connect(m_pRangeObsermatic, &cRangeObsermatic::deactivated, this, &cRangeModule::deactivationContinue);
@@ -65,20 +72,19 @@ void cRangeModule::setupModule()
     // we have to connect all cmddone from our meas channel to range obsermatic
     // this is also used for synchronizing purpose
     // additionally we connect the newrangesignal of all measchannels to range obsermatic
-    for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
-    {
+    for (int i = 0; i < m_rangeMeasChannelList.count(); i ++) {
         cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
         connect(pchn, &cRangeMeasChannel::cmdDone, m_pRangeObsermatic, &cRangeObsermatic::catchChannelReply);
     }
 
     // we also need some program for adjustment
-    m_pAdjustment = new cAdjustManagement(this, channelMNames, pConfData->m_subdcChannelList, &pConfData->m_adjustConfPar);
+    m_pAdjustment = new cAdjustManagement(this, channelMNames, getConfigData()->m_subdcChannelList, &getConfigData()->m_adjustConfPar);
     m_ModuleActivistList.append(m_pAdjustment);
     connect(m_pAdjustment, &cAdjustManagement::activated, this, &cRangeModule::activationContinue);
     connect(m_pAdjustment, &cAdjustManagement::deactivated, this, &cRangeModule::deactivationContinue);
 
     // at last we need some program that does the measuring on dsp
-    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pConfiguration);
+    m_pMeasProgram = new cRangeModuleMeasProgram(this);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::activated, this, &cRangeModule::activationContinue);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::deactivated, this, &cRangeModule::deactivationContinue);

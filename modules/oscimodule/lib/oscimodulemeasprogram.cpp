@@ -1,6 +1,5 @@
 #include "oscimodulemeasprogram.h"
 #include "oscimodule.h"
-#include "oscimoduleconfiguration.h"
 #include "servicechannelnamehelper.h"
 #include "taskdspdataacquisition.h"
 #include <scpi.h>
@@ -13,16 +12,14 @@
 namespace OSCIMODULE
 {
 
-cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module,
-                                               const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
+cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module) :
+    cBaseDspMeasProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceOsci(
         m_pModule->getEntityId(),
-        getConfData()->m_valueChannelList,
-        getConfData()->m_nInterpolation);
-
+        m_pModule->getConfigData()->m_valueChannelList,
+        m_pModule->getConfigData()->m_nInterpolation);
 
     m_var2DSPState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_activateDSPState);
@@ -69,7 +66,7 @@ void cOsciModuleMeasProgram::stop()
 
 void cOsciModuleMeasProgram::generateVeinInterface()
 {
-    int n = getConfData()->m_valueChannelList.count();
+    int n = m_pModule->getConfigData()->m_valueChannelList.count();
     for (int i = 0; i < n; i++) {
         VfModuleComponent *pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                              QString("ACT_OSCI%1").arg(i+1),
@@ -81,7 +78,7 @@ void cOsciModuleMeasProgram::generateVeinInterface()
     m_pOsciCountInfo = new VfModuleMetaData(QString("OSCICount"), QVariant(n));
     m_pModule->veinModuleMetaDataList.append(m_pOsciCountInfo);
 
-    QString refChannelMNameConfigured = getConfData()->m_RefChannel.m_sPar;
+    QString refChannelMNameConfigured = m_pModule->getConfigData()->m_RefChannel.m_sPar;
     const QString channelMarkdown = m_pModule->getSharedChannelRangeObserver()->getChannelNamesForMardownDoc();
     QString key;
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -95,7 +92,7 @@ void cOsciModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
 
     cStringValidator *sValidator;
-    sValidator = new cStringValidator(getConfData()->m_valueChannelList);
+    sValidator = new cStringValidator(m_pModule->getConfigData()->m_valueChannelList);
     m_pRefChannelParameter->setValidator(sValidator);
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -126,7 +123,7 @@ void cOsciModuleMeasProgram::setDspVarList()
 
     // and one for actual values
     m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
-    m_pActualValuesDSP->addDspVar("VALXOSCI",m_veinActValueList.count() * getConfData()->m_nInterpolation);
+    m_pActualValuesDSP->addDspVar("VALXOSCI",m_veinActValueList.count() * m_pModule->getConfigData()->m_nInterpolation);
     m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values
 }
 
@@ -134,12 +131,13 @@ void cOsciModuleMeasProgram::setDspCmdList()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     int samples = observer->getSamplesPerPeriod();
-    QString referenceChannel = getConfData()->m_RefChannel.m_sPar;
+    const cOsciModuleConfigData *configData = m_pModule->getConfigData();
+    QString referenceChannel = configData->m_RefChannel.m_sPar;
     int referenceDspChannel = observer->getChannel(referenceChannel)->getDspChannel();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(m_veinActValueList.count() * samples) ); // clear meassignal
-        m_dspInterface->addCycListItem(QString("SETVAL(GAPCOUNT,%1)").arg(getConfData()->m_nGap)); // we start with the first period
-        m_dspInterface->addCycListItem(QString("SETVAL(GAPPAR,%1)").arg(getConfData()->m_nGap+1)); // our value to reload gap
+        m_dspInterface->addCycListItem(QString("SETVAL(GAPCOUNT,%1)").arg(configData->m_nGap)); // we start with the first period
+        m_dspInterface->addCycListItem(QString("SETVAL(GAPPAR,%1)").arg(configData->m_nGap+1)); // our value to reload gap
         m_dspInterface->addCycListItem(QString("SETVAL(REFCHN,%1)").arg(referenceDspChannel));
         m_dspInterface->addCycListItem(QString("SETVAL(DEBUGCOUNT,0)"));
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -167,14 +165,14 @@ void cOsciModuleMeasProgram::setDspCmdList()
 
         // now we do all necessary for each channel we work on
         for (int i = 0; i < m_veinActValueList.count(); i++) {
-            QString channelMName = getConfData()->m_valueChannelList[i];
+            QString channelMName = configData->m_valueChannelList[i];
             int dspChannel = observer->getChannel(channelMName)->getDspChannel();
             m_dspInterface->addCycListItem(QString("COPYMEM(%1,MEASSIGNAL+%2,WORKSPACE)").arg(samples).arg(i * samples));
             m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,WORKSPACE+%2)").arg(dspChannel).arg(samples));
 
             m_dspInterface->addCycListItem(QString("INTERPOLATIONIND(%1,IPOLADR,VALXOSCI+%2)")
-                                             .arg(getConfData()->m_nInterpolation)
-                                             .arg(i * getConfData()->m_nInterpolation));
+                                             .arg(configData->m_nInterpolation)
+                                             .arg(configData->m_nInterpolation * i));
             m_dspInterface->addCycListItem(QString("COPYMEM(%1,WORKSPACE+%2,MEASSIGNAL+%3)").arg(samples).arg(samples).arg(i*samples));
         }
 
@@ -232,17 +230,12 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
     }
 }
 
-cOsciModuleConfigData *cOsciModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cOsciModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
 void cOsciModuleMeasProgram::setActualValuesNames()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-    const QStringList &channelList = getConfData()->m_valueChannelList;
+    const QStringList &channelList = m_pModule->getConfigData()->m_valueChannelList;
     for(int i = 0; i < channelList.count(); i++) {
-        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
+        const QString &channelMNamesEntry = m_pModule->getConfigData()->m_valueChannelList.at(i);
         ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
             ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
         const QString &channelName = aliasUnit.m_channelAlias;
@@ -257,10 +250,10 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
 {
     if (m_bActive) { // maybe we are deactivating !!!!
         for (int i = 0; i < m_veinActValueList.count(); i++) {
-            int offs = i * getConfData()->m_nInterpolation;
+            int offs = i * m_pModule->getConfigData()->m_nInterpolation;
 
             QList<double> osciList;
-            for (int j = 0; j < getConfData()->m_nInterpolation; j++)
+            for (int j = 0; j < m_pModule->getConfigData()->m_nInterpolation; j++)
                 osciList.append(actualValues->at(offs + j));
 
             QVariant list = QVariant::fromValue<QList<double> >(osciList);
@@ -320,7 +313,7 @@ void cOsciModuleMeasProgram::dataAcquisitionDSP()
     if (m_bActive && m_taskDataAcquisition == nullptr) {
         m_pMeasureSignal->setValue(QVariant(0));
         m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
-        connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
+        connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
             m_taskDataAcquisition.reset();
             if (ok)
                 dataReadDSP();
@@ -343,7 +336,7 @@ void cOsciModuleMeasProgram::dataReadDSP()
 void cOsciModuleMeasProgram::newRefChannel(const QVariant &chn)
 {
     QString channelMName = chn.toString();
-    getConfData()->m_RefChannel.m_sPar = channelMName;
+    m_pModule->getConfigData()->m_RefChannel.m_sPar = channelMName;
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
     int dspChannel = channel->getDspChannel();

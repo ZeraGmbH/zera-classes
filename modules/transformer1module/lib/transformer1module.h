@@ -1,8 +1,9 @@
 #ifndef TRANSFORMER1MODULE_H
 #define TRANSFORMER1MODULE_H
 
-#include "transformer1modulemeasprogram.h"
 #include "basemeasmodule.h"
+#include "transformer1moduleconfiguration.h"
+#include "transformer1modulemeasprogram.h"
 
 namespace TRANSFORMER1MODULE {
 
@@ -14,6 +15,8 @@ public:
     static constexpr const char* BaseSCPIModuleName = "TR1";
 
     explicit cTransformer1Module(const ModuleFactoryParam &moduleParam);
+    cTransformer1ModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
@@ -21,6 +24,7 @@ private:
     void stopMeas() override;
 
     cTransformer1ModuleMeasProgram *m_pMeasProgram = nullptr;
+    cTransformer1ModuleConfiguration m_configuration;
 };
 
 }

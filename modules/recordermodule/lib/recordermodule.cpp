@@ -3,12 +3,23 @@
 #include "recordermoduleinit.h"
 
 RecorderModule::RecorderModule(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<RecorderModuleConfiguration>()),
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData),
     m_spRpcEventSystem(std::make_unique<VfRpcEventSystemSimplified>(moduleParam.m_entityId))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("Recorder module");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
+}
+
+RecorderModuleConfigData *RecorderModule::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray RecorderModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 VfRpcEventSystemSimplified *RecorderModule::getRpcEventSystem()
@@ -32,7 +43,7 @@ void RecorderModule::setupModule()
 
     BaseModule::setupModule();
 
-    RecorderModuleInit* moduleActivist = new RecorderModuleInit(this, m_pConfiguration);
+    RecorderModuleInit* moduleActivist = new RecorderModuleInit(this);
     m_ModuleActivistList.append(moduleActivist);
     connect(moduleActivist, &RecorderModuleInit::activated, this, &RecorderModule::activationContinue);
     connect(moduleActivist, &RecorderModuleInit::deactivated, this, &RecorderModule::deactivationContinue);

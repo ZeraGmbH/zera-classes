@@ -5,7 +5,6 @@
 #include <dspinterface.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
-#include <QList>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -30,20 +29,16 @@ enum modemoduleinitCmds
 }
 
 class cModeModule;
-class cModeModuleConfigData;
-
 
 class cModeModuleInit: public cModuleActivist
 {
     Q_OBJECT
-
 public:
-    cModeModuleInit(cModeModule* module, cModeModuleConfigData& configData);
+    explicit cModeModuleInit(cModeModule* module);
     void generateVeinInterface() override;
 
 private:
-    cModeModule* m_pModule; // the module we live in
-    cModeModuleConfigData& m_ConfigData;
+    cModeModule* m_pModule = nullptr; // the module we live in
 
     QHash<quint32, int> m_MsgNrCmdList;
 

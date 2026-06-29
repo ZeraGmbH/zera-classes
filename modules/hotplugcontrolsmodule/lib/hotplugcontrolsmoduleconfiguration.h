@@ -2,30 +2,26 @@
 #define HOTPLUGCONTROLSMODULECONFIGURATION_H
 
 #include "basemoduleconfiguration.h"
+#include "hotplugcontrolsmoduleconfigdata.h"
 
 namespace HOTPLUGCONTROLSMODULE
 {
-
-enum moduleconfigstate
-{
-};
-
-class cHotplugControlsModuleConfigData;
 
 class cHotplugControlsModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cHotplugControlsModuleConfiguration();
-    ~cHotplugControlsModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    cHotplugControlsModuleConfigData* getConfigurationData();
-protected slots:
-    virtual void configXMLInfo(const QString &key);
+    explicit cHotplugControlsModuleConfiguration(const QByteArray& xmlString);
+
+    virtual QByteArray exportConfiguration() const override;
+    cHotplugControlsModuleConfigData* getConfigData();
+
+private slots:
+    void configXMLInfo(const QString &key) override;
     virtual void completeConfiguration(bool ok);
 private:
-    cHotplugControlsModuleConfigData *m_pHotplugControlsModuleConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cHotplugControlsModuleConfigData m_configData;
 };
 
 }

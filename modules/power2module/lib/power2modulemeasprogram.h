@@ -43,8 +43,7 @@ class cPower2ModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cPower2ModuleMeasProgram(cPower2Module* module,
-                             const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    cPower2ModuleMeasProgram(cPower2Module* module);
     void generateVeinInterface() override;
 public slots:
     virtual void start() override;
@@ -53,7 +52,6 @@ signals:
     void activationSkip();
     void deactivationSkip();
 private:
-    cPower2ModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
 
@@ -85,24 +83,24 @@ private:
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
 
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
-    VfModuleMetaData* m_pPQSCountInfo; // the number of values we produce
-    VfModuleMetaData* m_pFoutCount; // number of our frequence outputs
-    VfModuleMetaData* m_pNomFrequencyInfo; // the modules nominal frequency
-    VfModuleParameter* m_pIntegrationParameter;
-    VfModuleParameter* m_pMeasuringmodeParameter;
-    VfModuleComponent* m_pMeasureSignal;
+    VfModuleMetaData* m_pPQSCountInfo = nullptr; // the number of values we produce
+    VfModuleMetaData* m_pFoutCount = nullptr; // number of our frequence outputs
+    VfModuleMetaData* m_pNomFrequencyInfo = nullptr; // the modules nominal frequency
+    VfModuleParameter* m_pIntegrationParameter = nullptr;
+    VfModuleParameter* m_pMeasuringmodeParameter = nullptr;
+    VfModuleComponent* m_pMeasureSignal = nullptr;
 
     QList<QString> infoReadList; // a list of all channel info we have to read
     QString infoRead; // the actual channel info we are working on
     QList<QString> readUrvalueList; // a list with system channel names we need urvalue from
     QString readUrvalueInfo;
 
-    quint8 m_notifierNr;
+    quint8 m_notifierNr = 0;
 
-    DspVarGroupClientInterface* m_pParameterDSP;
-    DspVarGroupClientInterface* m_pActualValuesDSP;
-    DspVarGroupClientInterface* m_pfreqScaleDSP;
-    DspVarGroupClientInterface* m_pNomPower;
+    DspVarGroupClientInterface* m_pParameterDSP = nullptr;
+    DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
+    DspVarGroupClientInterface* m_pfreqScaleDSP = nullptr;
+    DspVarGroupClientInterface* m_pNomPower = nullptr;
 
     // statemachine for activating gets the following states
     QState m_resourceManagerConnectState;

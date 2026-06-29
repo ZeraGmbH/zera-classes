@@ -2,15 +2,12 @@
 #define BASEMEASWORKPROGRAM
 
 #include "moduleactivist.h"
-#include "basemoduleconfiguration.h"
-#include <memory>
 
 class cBaseMeasWorkProgram: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cBaseMeasWorkProgram(const std::shared_ptr<BaseModuleConfiguration> &configuration,
-                         const QString &moduleName);
+    cBaseMeasWorkProgram(const QString &moduleName);
 signals:
     void actualValues(QVector<float>*);
 public slots:
@@ -18,7 +15,6 @@ public slots:
     virtual void stop() = 0; // in interface are not updated when stop
 protected:
     QVector<float> m_ModuleActualValues; // a modules actual values
-    std::shared_ptr<BaseModuleConfiguration> m_pConfiguration;
 };
 
 #endif // BASEMEASWORKPROGRAM

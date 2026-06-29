@@ -1,12 +1,10 @@
 #ifndef POWER3MODULEMEASPROGRAM_H
 #define POWER3MODULEMEASPROGRAM_H
 
-#include "power3moduleconfigdata.h"
 #include "power3measdelegate.h"
 #include <basemeasworkprogram.h>
 #include <vfmodulemetadata.h>
 #include <QFinalState>
-#include <memory>
 
 namespace POWER3MODULE
 {
@@ -16,10 +14,8 @@ class cPower3Module;
 class cPower3ModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
-
 public:
-    cPower3ModuleMeasProgram(cPower3Module* module,
-                             const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cPower3ModuleMeasProgram(cPower3Module* module);
     void generateVeinInterface() override;
 
 public slots:
@@ -27,12 +23,10 @@ public slots:
     void stop() override {};
 
 private:
-    cPower3ModuleConfigData* getConfData();
-
-    cPower3Module* m_pModule;
+    cPower3Module* m_pModule = nullptr;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
-    VfModuleMetaData* m_pHPWCountInfo; // the number of values we produce
-    VfModuleComponent* m_pMeasureSignal;
+    VfModuleMetaData* m_pHPWCountInfo = nullptr; // the number of values we produce
+    VfModuleComponent* m_pMeasureSignal = nullptr;
     VeinStorage::AbstractComponentPtr m_fftSignal;
 
     QList<cPower3MeasDelegate*> m_Power3MeasDelegateList;

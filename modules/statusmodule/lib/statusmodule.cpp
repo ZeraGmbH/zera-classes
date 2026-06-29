@@ -1,16 +1,26 @@
 #include "statusmodule.h"
-#include "statusmoduleconfiguration.h"
 
 namespace STATUSMODULE
 {
 
 cStatusModule::cStatusModule(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<cStatusModuleConfiguration>()),
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData),
     m_spRpcEventSystem(std::make_unique<VfRpcEventSystemSimplified>(moduleParam.m_entityId))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for reading and providing system Status information");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
+}
+
+cStatusModuleConfigData *cStatusModule::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray cStatusModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 VfRpcEventSystemSimplified *cStatusModule::getRpcEventSystem()
@@ -34,11 +44,8 @@ void cStatusModule::setupModule()
 
     cBaseMeasModule::setupModule();
 
-    cStatusModuleConfigData *pConfData;
-    pConfData = qobject_cast<cStatusModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we only have to read some status information from pcb- and dspserver
-    m_pStatusModuleInit = new cStatusModuleInit(this, *pConfData);
+    m_pStatusModuleInit = new cStatusModuleInit(this);
     m_ModuleActivistList.append(m_pStatusModuleInit);
     connect(m_pStatusModuleInit, &cStatusModuleInit::activated, this, &cStatusModule::activationContinue);
     connect(m_pStatusModuleInit, &cStatusModuleInit::deactivated, this, &cStatusModule::deactivationContinue);

@@ -16,7 +16,7 @@ enum hotplugControlsModuleCmds
 class HotplugControlsModuleController : public cModuleActivist
 {
 public:
-    HotplugControlsModuleController(cHotplugControlsModule *module);
+    explicit HotplugControlsModuleController(cHotplugControlsModule *module);
 public slots:
     void activate() override;
     void deactivate() override;
@@ -29,7 +29,7 @@ private:
     void readWriteData(const QString &emobChannelAlias, const QString &mt650eChannelAlias);
     int getEmobId(const QString &emobChannelAlias);
 
-    cHotplugControlsModule *m_module;
+    cHotplugControlsModule *m_module = nullptr;
     PcbServiceConnection m_pcbConnection;
     TaskContainerSequence m_activationTasks;
     QHash<quint32, int> m_MsgNrCmdList;
@@ -42,7 +42,7 @@ private:
     VfModuleRpcPtr m_pEmobdischargeRpcOn;
     VfModuleRpcPtr m_pEmobdischargeRpcOff;
     VfModuleRpcPtr m_pEmobReadPruefgroessenStatusRpc;
-    VfModuleParameter *m_pControllersFound;
+    VfModuleParameter *m_pControllersFound = nullptr;
     TaskContainerInterfacePtr m_readWriteTasks;
 
     static const QString m_bit16ErrorHint;

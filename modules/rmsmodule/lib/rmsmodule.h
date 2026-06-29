@@ -1,6 +1,7 @@
 #ifndef RMSMODULE_H
 #define RMSMODULE_H
 
+#include "rmsmoduleconfiguration.h"
 #include <basemeasmodule.h>
 
 namespace RMSMODULE
@@ -14,13 +15,17 @@ public:
     static constexpr const char* BaseModuleName = "RMSModule";
     static constexpr const char* BaseSCPIModuleName = "RMS";
 
-    cRmsModule(const ModuleFactoryParam &moduleParam);
+    explicit cRmsModule(const ModuleFactoryParam &moduleParam);
+    cRmsModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
+
     cRmsModuleMeasProgram *m_pMeasProgram = nullptr;
+    cRmsModuleConfiguration m_configuration;
 };
 
 }

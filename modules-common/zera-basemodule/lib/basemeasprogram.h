@@ -1,15 +1,13 @@
 #ifndef BASEMEASPROGRAM_H
 #define BASEMEASPROGRAM_H
 
-#include "basemoduleconfiguration.h"
 #include "moduleactivist.h"
-#include "basemodule.h"
 
 class cBaseMeasProgram: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cBaseMeasProgram(const std::shared_ptr<BaseModuleConfiguration> &configuration, const QString &moduleName);
+    explicit cBaseMeasProgram(const QString &moduleName);
 signals:
     void actualValues(QVector<float>*);
 public slots:
@@ -18,8 +16,6 @@ public slots:
     void monitorConnection();
 
 protected:
-    std::shared_ptr<BaseModuleConfiguration> m_pConfiguration;
-
     quint8 m_nConnectionCount = 0;
 
     QVector<float> m_ModuleActualValues; // a modules actual values

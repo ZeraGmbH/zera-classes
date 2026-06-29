@@ -1,34 +1,27 @@
 #include "oscimoduleconfiguration.h"
-#include "oscimoduleconfigdata.h"
-#include <xmlconfigreader.h>
 
 namespace OSCIMODULE
 {
-cOsciModuleConfiguration::cOsciModuleConfiguration()
+
+cOsciModuleConfiguration::cOsciModuleConfiguration(const QByteArray &xmlString)
 {
-    m_pOsciModulConfigData = 0;
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cOsciModuleConfiguration::configXMLInfo);
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cOsciModuleConfiguration::completeConfiguration);
+    setConfiguration(xmlString);
 }
 
-
-cOsciModuleConfiguration::~cOsciModuleConfiguration()
+enum moduleconfigstate
 {
-    if (m_pOsciModulConfigData) delete m_pOsciModulConfigData;
-}
+    setInterpolation,
+    setGap,
+    setValueCount,
+    setRefChannel,
 
+    setValue1 = 20
+};
 
 void cOsciModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
-    m_bConfigured = m_bConfigError = false;
-
-    if (m_pOsciModulConfigData) delete m_pOsciModulConfigData;
-    m_pOsciModulConfigData = new cOsciModuleConfigData();
-
-    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
-
-    // so now we can set up
-    // initializing hash table for xml configuration
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cOsciModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cOsciModuleConfiguration::completeConfiguration);
 
     m_ConfigXMLMap["oscimodconfpar:configuration:measure:interpolation"] = setInterpolation;
     m_ConfigXMLMap["oscimodconfpar:configuration:measure:gap"] = setGap;
@@ -39,56 +32,48 @@ void cOsciModuleConfiguration::setConfiguration(const QByteArray& xmlString)
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
-
-QByteArray cOsciModuleConfiguration::exportConfiguration()
+QByteArray cOsciModuleConfiguration::exportConfiguration() const
 {
-    stringParameter sPar;
-    sPar = m_pOsciModulConfigData->m_RefChannel;
-    m_pXMLReader->setValue(sPar.m_sKey, QString("%1").arg(sPar.m_sPar));
+    const stringParameter paramRefChannel = m_configData.m_RefChannel;
+    m_pXMLReader->setValue(paramRefChannel.m_sKey, QString("%1").arg(paramRefChannel.m_sPar));
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-
-cOsciModuleConfigData *cOsciModuleConfiguration::getConfigurationData()
+cOsciModuleConfigData *cOsciModuleConfiguration::getConfigData()
 {
-    return m_pOsciModulConfigData;
+    return &m_configData;
 }
-
 
 void cOsciModuleConfiguration::configXMLInfo(const QString &key)
 {
-    bool ok;
-
-    if (m_ConfigXMLMap.contains(key))
-    {
-        ok = true;
+    if (m_ConfigXMLMap.contains(key)) {
+        bool ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
         case setInterpolation:
-            m_pOsciModulConfigData->m_nInterpolation = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nInterpolation = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setGap:
-            m_pOsciModulConfigData->m_nGap = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nGap = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setValueCount:
-            m_pOsciModulConfigData->m_nValueCount = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nValueCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for value channel configuration
-            for (int i = 0; i < m_pOsciModulConfigData->m_nValueCount; i++)
+            for (int i = 0; i < m_configData.m_nValueCount; i++)
                 m_ConfigXMLMap[QString("oscimodconfpar:configuration:measure:values:val%1").arg(i+1)] = setValue1+i;
             break;
         case setRefChannel:
-            m_pOsciModulConfigData->m_RefChannel.m_sKey = key;
-            m_pOsciModulConfigData->m_RefChannel.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_RefChannel.m_sKey = key;
+            m_configData.m_RefChannel.m_sPar = m_pXMLReader->getValue(key);
             break;
         default:
-            if ((cmd >= setValue1) && (cmd < setValue1 + 32))
-            {
+            if ((cmd >= setValue1) && (cmd < setValue1 + 32)) {
                 cmd -= setValue1;
                 // it is command for setting value channel name
                 QString valueChannel = m_pXMLReader->getValue(key);
-                m_pOsciModulConfigData->m_valueChannelList.append(valueChannel); // for configuration of our engine
+                m_configData.m_valueChannelList.append(valueChannel); // for configuration of our engine
             }
         }
         m_bConfigError |= !ok;
@@ -97,7 +82,6 @@ void cOsciModuleConfiguration::configXMLInfo(const QString &key)
     else
         m_bConfigError = true;
 }
-
 
 void cOsciModuleConfiguration::completeConfiguration(bool ok)
 {

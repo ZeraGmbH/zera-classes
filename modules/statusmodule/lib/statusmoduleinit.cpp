@@ -15,13 +15,12 @@
 namespace STATUSMODULE
 {
 
-cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigData& configData) :
+cStatusModuleInit::cStatusModuleInit(cStatusModule* module) :
     cModuleActivist(module->getVeinModuleName()),
     m_pModule(module),
-    m_ConfigData(configData),
     m_pPCBInterface(std::make_shared<Zera::cPCBInterface>()),
     m_dspInterface(m_pModule->getServiceInterfaceFactory()->createDspInterfaceStatus(m_pModule->getEntityId())),
-    m_veinUpdateTimer(TimerFactoryQt::createPeriodic(m_ConfigData.m_veinUpdateMs))
+    m_veinUpdateTimer(TimerFactoryQt::createPeriodic(m_pModule->getConfigData()->m_veinUpdateMs))
 {
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
     m_pcbserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadChannelsConnectedChange);
@@ -222,7 +221,9 @@ void cStatusModuleInit::generateVeinInterface()
                                                QString("Accumulator status"),
                                                QVariant(0));
     m_pModule->m_veinModuleParameterMap[key] = m_pAccumulatorStatus;
-    if (m_ConfigData.m_accumulator)
+
+    const cStatusModuleConfigData *configData = m_pModule->getConfigData();
+    if (configData->m_accumulator)
         m_pAccumulatorStatus->setScpiInfo("STATUS", "ACCUSTATUS", SCPI::isQuery);
 
     m_pAccumulatorSoc = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -230,7 +231,7 @@ void cStatusModuleInit::generateVeinInterface()
                                                QString("Accumulator state of charge"),
                                                QVariant(int(0)));
     m_pModule->m_veinModuleParameterMap[key] = m_pAccumulatorSoc;
-    if (m_ConfigData.m_accumulator)
+    if (configData->m_accumulator)
         m_pAccumulatorSoc->setScpiInfo("STATUS", "ACCUSOC", SCPI::isQuery);
 
     m_pInstrument = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -343,202 +344,198 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 break;
             }
     }
-    else
-    {
-        if (m_MsgNrCmdList.contains(msgnr))
+    else if (m_MsgNrCmdList.contains(msgnr)) {
+        const cStatusModuleConfigData *configData = m_pModule->getConfigData();
+        int cmd = m_MsgNrCmdList.take(msgnr);
+        switch (cmd)
         {
-            int cmd = m_MsgNrCmdList.take(msgnr);
-            switch (cmd)
-            {
-            case regClampCatalogNotifier:
-                // we continue in any case - e.g COM5003 does not support clamps
-                // just spit out a warning to journal
-                if (reply != ack) {
-                    qWarning("Register notification for clamps catalog failed - are clamps supported?");
-                }
-                emit activationContinue();
-                break;
-            case regSchnubbelStatusNotifier:
-                if (reply != ack) {
-                    qWarning("Register notification for Schnubbel status failed");
-                }
-                emit activationContinue();
-                break;
-            case regAccumulatorStatusNotifier:
-                if (reply != ack) {
-                    qWarning("Register notification for accumulator status failed - is accumulator supported?");
-                }
-                emit activationContinue();
-                break;
-            case regAccumulatorSocNotifier:
-                if (reply != ack) {
-                    qWarning("Register notification for accumulator soc failed - is accumulator supported?");
-                }
-                emit activationContinue();
-                break;
-            case regCtrlVersionChange:
-                if (reply != ack) {
-                    qWarning("Register notification for hotpluggable ctrl versions failed!");
-                }
-                emit activationContinue();
-                break;
-            case regPCBVersionChange:
-                if (reply != ack) {
-                    qWarning("Register notification for hotpluggable PCB versions failed!");
-                }
-                emit activationContinue();
-                break;
-            case unregNotifiers:
-                if (reply != ack) {
-                    qWarning("Unregister notification failed");
-                }
-                emit deactivationContinue();
-                break;
-
-            case readPCBServerVersion:
-                if (reply == ack) {
-                    m_sPCBServerVersion = answer.toString();
-                    emit activationContinue();
-                }
-                else
-                    notifyActivationError(readPCBServerVersionErrMsg);
-                break;
-
-            case readPCBInfo:
-                if (reply == ack) {
-                    m_sPCBVersion = answer.toString();
-                    m_pPCBVersion->setValue(m_sPCBVersion);
-                    readInstrumentConnected(m_sPCBVersion);
-                    emit activationContinue();
-                }
-                else
-                    notifyActivationError(readPCBInfoErrMsg);
-                break;
-
-            case readPCBServerCtrlVersion:
-                if (reply == ack) {
-                    m_sCtrlVersion = answer.toString();
-                    m_pCtrlVersion->setValue(m_sCtrlVersion);
-                    emit activationContinue();
-                }
-                else
-                    notifyActivationError(readPCBCtrlVersionErrMSG);
-                break;
-
-            case readPCBServerFPGAVersion:
-                if (reply == ack) {
-                    m_sFPGAVersion = answer.toString();
-                    emit activationContinue();
-                }
-                else
-                    notifyActivationError(readPCBFPGAVersionErrMSG);
-                break;
-
-
-            case readPCBServerSerialNumber:
-                if (reply == ack) {
-                    m_sSerialNumber = answer.toString();
-                    emit activationContinue();
-                }
-                else
-                    notifyActivationError(readPCBSerialNrErrMSG);
-                break;
-
-            case writePCBServerSerialNumber:
-                if (reply == ack) {
-                    m_sSerialNumber = wantedSerialNr.toString();
-                    m_pSerialNumber->setValue(wantedSerialNr); // m_pSerialNumber has deferred notification so this will send the event
-                    emit m_pModule->parameterChanged();
-                }
-                else {
-                    m_pSerialNumber->setError(); // in case of error we send an error event
-                    notifyError(writePCBSerialNrErrMSG);
-                }
-                break;
-
-            case readPCBServerAdjStatus:
-                if (reply == ack) {
-                    m_sAdjStatus = answer.toString();
-                    emit activationContinue();
-                }
-                else
-                    notifyActivationError(readadjstatusErrMsg);
-                break;
-
-            case readPCBServerAdjChksum:
-                if (reply == ack) {
-                    m_sAdjChksum = answer.toString();
-                    emit activationContinue();
-                }
-                else
-                    notifyActivationError(readadjchksumErrMsg);
-                break;
-
-            case readDSPServerVersion:
-                if (reply == ack) {
-                    m_sDSPServerVersion = answer.toString();
-                    emit activationContinue();
-                }
-                else
-                    notifyActivationError(readDSPServerVersionErrMsg);
-                break;
-
-            case readDSPServerDSPProgramVersion:
-                if (reply == ack) {
-                    m_sDSPProgramVersion = answer.toString();
-                    emit activationContinue();
-                }
-                else
-                    notifyActivationError(readDSPProgramVersionErrMsg);
-                break;
-
-            case readPCBServerSchnubbelStatus:
-                if (reply == ack) {
-                    m_pSchnubbelStatus->setValue(QVariant(answer.toInt()));
-                    emit activationContinue();
-                }
-                else
-                    notifyActivationError(readschnubbelstatusErrMsg);
-                break;
-
-            case readPCBServerAccumulatorStatus:
-                if (!m_ConfigData.m_accumulator) {
-                   m_pAccumulatorStatus->setValue(QVariant(0));
-                   emit activationContinue();
-                }
-                else {
-                    if (reply == ack) {
-                        m_pAccumulatorStatus->setValue(QVariant(answer.toInt()));
-                        emit activationContinue();
-                    }
-                    else
-                        notifyActivationError(readaccumulatorstatusErrMsg);
-                }
-                break;
-
-            case readPCBServerAccumulatorSoc:
-                if (!m_ConfigData.m_accumulator) {
-                   emit activationContinue();
-                }
-                else {
-                    if (reply == ack) {
-                       m_pAccumulatorSoc->setValue(QVariant(answer.toInt()));
-                       emit activationContinue();
-                    }
-                    else
-                       notifyActivationError(readaccumulatorsocErrMsg);
-                }
-                break;
-            case readPCBChannelsChange:
-                if(reply == ack) {
-                    m_pChannels->setValue(answer.toString());
-                    emit activationContinue();
-                }
-                else {
-                    notifyActivationError(readChannelsErrMsg);
-                }
-                break;
+        case regClampCatalogNotifier:
+            // we continue in any case - e.g COM5003 does not support clamps
+            // just spit out a warning to journal
+            if (reply != ack) {
+                qWarning("Register notification for clamps catalog failed - are clamps supported?");
             }
+            emit activationContinue();
+            break;
+        case regSchnubbelStatusNotifier:
+            if (reply != ack) {
+                qWarning("Register notification for Schnubbel status failed");
+            }
+            emit activationContinue();
+            break;
+        case regAccumulatorStatusNotifier:
+            if (reply != ack) {
+                qWarning("Register notification for accumulator status failed - is accumulator supported?");
+            }
+            emit activationContinue();
+            break;
+        case regAccumulatorSocNotifier:
+            if (reply != ack) {
+                qWarning("Register notification for accumulator soc failed - is accumulator supported?");
+            }
+            emit activationContinue();
+            break;
+        case regCtrlVersionChange:
+            if (reply != ack) {
+                qWarning("Register notification for hotpluggable ctrl versions failed!");
+            }
+            emit activationContinue();
+            break;
+        case regPCBVersionChange:
+            if (reply != ack) {
+                qWarning("Register notification for hotpluggable PCB versions failed!");
+            }
+            emit activationContinue();
+            break;
+        case unregNotifiers:
+            if (reply != ack) {
+                qWarning("Unregister notification failed");
+            }
+            emit deactivationContinue();
+            break;
+
+        case readPCBServerVersion:
+            if (reply == ack) {
+                m_sPCBServerVersion = answer.toString();
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(readPCBServerVersionErrMsg);
+            break;
+
+        case readPCBInfo:
+            if (reply == ack) {
+                m_sPCBVersion = answer.toString();
+                m_pPCBVersion->setValue(m_sPCBVersion);
+                readInstrumentConnected(m_sPCBVersion);
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(readPCBInfoErrMsg);
+            break;
+
+        case readPCBServerCtrlVersion:
+            if (reply == ack) {
+                m_sCtrlVersion = answer.toString();
+                m_pCtrlVersion->setValue(m_sCtrlVersion);
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(readPCBCtrlVersionErrMSG);
+            break;
+
+        case readPCBServerFPGAVersion:
+            if (reply == ack) {
+                m_sFPGAVersion = answer.toString();
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(readPCBFPGAVersionErrMSG);
+            break;
+
+
+        case readPCBServerSerialNumber:
+            if (reply == ack) {
+                m_sSerialNumber = answer.toString();
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(readPCBSerialNrErrMSG);
+            break;
+
+        case writePCBServerSerialNumber:
+            if (reply == ack) {
+                m_sSerialNumber = wantedSerialNr.toString();
+                m_pSerialNumber->setValue(wantedSerialNr); // m_pSerialNumber has deferred notification so this will send the event
+                emit m_pModule->parameterChanged();
+            }
+            else {
+                m_pSerialNumber->setError(); // in case of error we send an error event
+                notifyError(writePCBSerialNrErrMSG);
+            }
+            break;
+
+        case readPCBServerAdjStatus:
+            if (reply == ack) {
+                m_sAdjStatus = answer.toString();
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(readadjstatusErrMsg);
+            break;
+
+        case readPCBServerAdjChksum:
+            if (reply == ack) {
+                m_sAdjChksum = answer.toString();
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(readadjchksumErrMsg);
+            break;
+
+        case readDSPServerVersion:
+            if (reply == ack) {
+                m_sDSPServerVersion = answer.toString();
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(readDSPServerVersionErrMsg);
+            break;
+
+        case readDSPServerDSPProgramVersion:
+            if (reply == ack) {
+                m_sDSPProgramVersion = answer.toString();
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(readDSPProgramVersionErrMsg);
+            break;
+
+        case readPCBServerSchnubbelStatus:
+            if (reply == ack) {
+                m_pSchnubbelStatus->setValue(QVariant(answer.toInt()));
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(readschnubbelstatusErrMsg);
+            break;
+
+        case readPCBServerAccumulatorStatus:
+            if (!configData->m_accumulator) {
+               m_pAccumulatorStatus->setValue(QVariant(0));
+               emit activationContinue();
+            }
+            else {
+                if (reply == ack) {
+                    m_pAccumulatorStatus->setValue(QVariant(answer.toInt()));
+                    emit activationContinue();
+                }
+                else
+                    notifyActivationError(readaccumulatorstatusErrMsg);
+            }
+            break;
+
+        case readPCBServerAccumulatorSoc:
+            if (!configData->m_accumulator) {
+               emit activationContinue();
+            }
+            else {
+                if (reply == ack) {
+                   m_pAccumulatorSoc->setValue(QVariant(answer.toInt()));
+                   emit activationContinue();
+                }
+                else
+                   notifyActivationError(readaccumulatorsocErrMsg);
+            }
+            break;
+        case readPCBChannelsChange:
+            if(reply == ack) {
+                m_pChannels->setValue(answer.toString());
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(readChannelsErrMsg);
+            break;
         }
     }
 }

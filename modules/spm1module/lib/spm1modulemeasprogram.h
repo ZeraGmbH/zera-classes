@@ -1,7 +1,6 @@
 #ifndef SPM1MODULEMEASPROGRAM_H
 #define SPM1MODULEMEASPROGRAM_H
 
-#include "spm1moduleconfigdata.h"
 #include "refpowerconstantobserver.h"
 #include "secresourcetypelist.h"
 #include <basemeasprogram.h>
@@ -10,6 +9,8 @@
 #include <rminterface.h>
 #include <secinterface.h>
 #include <timerperiodicqt.h>
+#include <QDateTime>
+#include <QFinalState>
 
 namespace SPM1MODULE
 {
@@ -52,8 +53,7 @@ class cSpm1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cSpm1ModuleMeasProgram(cSpm1Module* module,
-                           const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cSpm1ModuleMeasProgram(cSpm1Module* module);
     void generateVeinInterface() override;
 signals:
     void setupContinue();
@@ -64,7 +64,7 @@ public slots:
 
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void onRefConstantChanged(QString refPowerName);
+    void onRefConstantChanged(const QString &refPowerName);
     void resourceManagerConnect();
     void sendRMIdent();
     void readResources();
@@ -121,7 +121,6 @@ private slots:
     bool found(QList<TRefInput> &list, QString searched);
 
 private:
-    cSpm1ModuleConfigData* getConfData();
     void setInterfaceComponents();
     void setValidators();
     void setUnits();
@@ -143,7 +142,7 @@ private:
     static void setDateTime(QDateTime var, VfModuleParameter* veinParam);
     void calculateMeasTime();
 
-    cSpm1Module* m_pModule; // the module we live in
+    cSpm1Module* m_pModule = nullptr; // the module we live in
     Zera::cRMInterface m_rmInterface;
     Zera::ProxyClientPtr m_rmClient;
     Zera::cSECInterfacePtr m_secInterface;
@@ -205,7 +204,7 @@ private:
     QHash<QString, double> mPowerUnitFactorHash;
 
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
-    qint32 m_nIt;
+    qint32 m_nIt = 0;
     QList<QString> m_sItList; // for interation over x Input hash
     QString m_sIt;
 
@@ -213,30 +212,30 @@ private:
     QString m_slaveErrCalcName;
     QString m_slave2ErrCalcName;
 
-    VfModuleParameter* m_pRefInputPar;
-    VfModuleParameter* m_pRefConstantPar;
-    VfModuleParameter* m_pTargetedPar;
-    VfModuleParameter* m_pMeasTimePar;
+    VfModuleParameter* m_pRefInputPar = nullptr;
+    VfModuleParameter* m_pRefConstantPar = nullptr;
+    VfModuleParameter* m_pTargetedPar = nullptr;
+    VfModuleParameter* m_pMeasTimePar = nullptr;
 
-    VfModuleParameter* m_pT0InputPar;
-    VfModuleParameter* m_pT1InputPar;
-    VfModuleParameter* m_pInputUnitPar;
-    VfModuleParameter* m_pStartStopPar;
+    VfModuleParameter* m_pT0InputPar = nullptr;
+    VfModuleParameter* m_pT1InputPar = nullptr;
+    VfModuleParameter* m_pInputUnitPar = nullptr;
+    VfModuleParameter* m_pStartStopPar = nullptr;
 
-    VfModuleParameter* m_pStatusAct;
-    VfModuleParameter* m_pTimeAct;
-    VfModuleParameter* m_pEnergyAct;
-    VfModuleParameter* m_pPowerAct;
-    VfModuleParameter* m_pResultAct;
-    VfModuleParameter* m_pRefFreqInput;
-    VfModuleParameter* m_pUpperLimitPar;
-    VfModuleParameter* m_pLowerLimitPar;
-    VfModuleParameter* m_pRatingAct;
-    VfModuleParameter* m_pMeasStartTime;
-    VfModuleParameter* m_pMeasEndTime;
-    VfModuleParameter* m_pMeasDurationMs;
+    VfModuleParameter* m_pStatusAct = nullptr;
+    VfModuleParameter* m_pTimeAct = nullptr;
+    VfModuleParameter* m_pEnergyAct = nullptr;
+    VfModuleParameter* m_pPowerAct = nullptr;
+    VfModuleParameter* m_pResultAct = nullptr;
+    VfModuleParameter* m_pRefFreqInput = nullptr;
+    VfModuleParameter* m_pUpperLimitPar = nullptr;
+    VfModuleParameter* m_pLowerLimitPar = nullptr;
+    VfModuleParameter* m_pRatingAct = nullptr;
+    VfModuleParameter* m_pMeasStartTime = nullptr;
+    VfModuleParameter* m_pMeasEndTime = nullptr;
+    VfModuleParameter* m_pMeasDurationMs = nullptr;
 
-    VfModuleParameter* m_pClientNotifierPar;
+    VfModuleParameter* m_pClientNotifierPar = nullptr;
     ClientActiveComponent m_ClientActiveNotifier;
 
     // vars dealing with error measurement
@@ -253,7 +252,7 @@ private:
 
     QDateTime m_measStartDateTime;
     QDateTime m_measEndDateTime;
-    int m_measDuration;
+    int m_measDuration = 0;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;

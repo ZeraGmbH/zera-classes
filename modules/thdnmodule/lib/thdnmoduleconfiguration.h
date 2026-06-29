@@ -13,18 +13,18 @@ class cThdnModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cThdnModuleConfiguration();
-    ~cThdnModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    cThdnModuleConfigData* getConfigurationData();
+    explicit cThdnModuleConfiguration(const QByteArray& xmlString);
+
+    QByteArray exportConfiguration() const override;
+    cThdnModuleConfigData* getConfigData();
 
 protected slots:
-    virtual void configXMLInfo(const QString &key);
+    virtual void configXMLInfo(const QString &key) override;
     virtual void completeConfiguration(bool ok);
 
 private:
-    cThdnModuleConfigData *m_pThdnModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cThdnModuleConfigData m_configData;
 };
 
 }

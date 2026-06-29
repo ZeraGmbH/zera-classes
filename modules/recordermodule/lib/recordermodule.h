@@ -1,6 +1,7 @@
 #ifndef RECORDERMODULE_H
 #define RECORDERMODULE_H
 
+#include "recordermoduleconfiguration.h"
 #include <basemeasmodule.h>
 #include <vf_cmd_event_handler_system.h>
 #include <vfrpceventsystemsimplified.h>
@@ -12,7 +13,9 @@ public:
     static constexpr const char* BaseModuleName = "RecorderModule";
     static constexpr const char* BaseSCPIModuleName = "REC";
 
-    RecorderModule(const ModuleFactoryParam &moduleParam);
+    explicit RecorderModule(const ModuleFactoryParam &moduleParam);
+    RecorderModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
     VfRpcEventSystemSimplified *getRpcEventSystem();
 
@@ -24,6 +27,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
+    RecorderModuleConfiguration m_configuration;
     std::unique_ptr<VfRpcEventSystemSimplified> m_spRpcEventSystem;
 };
 

@@ -16,9 +16,8 @@
 namespace POWER1MODULE
 {
 
-cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module,
-                                                   const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
+cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module) :
+    cBaseDspMeasProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfacePower1(
@@ -165,8 +164,8 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module,
 
 void cPower1ModuleMeasProgram::start()
 {
-    if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
+    if (m_pModule->getConfigData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue);
         connect(this, &cPower1ModuleMeasProgram::actualValues,
                 &m_movingwindowFilter, &MovingwindowFilter::receiveActualValues);
         connect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues,
@@ -197,32 +196,33 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
 
     m_pPQSCountInfo = new VfModuleMetaData(QString("PQSCount"), QVariant(MeasPhaseCount+SumValueCount));
     m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
-    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency.m_nValue));
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(configData->m_nNominalFrequency.m_nValue));
     m_pModule->veinModuleMetaDataList.append(m_pNomFrequencyInfo);
-    m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(getConfData()->m_nFreqOutputCount));
+    m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(configData->m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
     VfModuleParameter* pFoutParameter;
     bool foutDisplayNameFound = false;
-    for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
+    for (int i = 0; i < configData->m_nFreqOutputCount; i++) {
         // Note: Although components are 'PAR_' they are not changable currently
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                           key = QString("PAR_FOUTConstant%1").arg(i),
                                                           QString("Frequency output constant"),
                                                           QVariant(0.0));
-        if(getConfData()->m_enableScpiCommands)
+        if(configData->m_enableScpiCommands)
             pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), SCPI::isQuery);
 
         m_FoutConstParameterList.append(pFoutParameter);
         m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
 
-        QString foutName = getConfData()->m_FreqOutputConfList.at(i).m_sFreqOutNameDisplayed;
+        QString foutName = configData->m_FreqOutputConfList.at(i).m_sFreqOutNameDisplayed;
         if (!foutName.isEmpty())
             foutDisplayNameFound = true;
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                           key = QString("PAR_FOUT%1").arg(i),
                                                           QString("Frequency output name"),
                                                           QVariant(foutName));
-        if(getConfData()->m_enableScpiCommands)
+        if(configData->m_enableScpiCommands)
             pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1OUT").arg(i), SCPI::isQuery);
 
         m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
@@ -231,14 +231,14 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         // If no scaling Information is provided we will add null pointers to keep the positions correct
         VeinStorage::AbstractComponentPtr scaleInputU;
         VeinStorage::AbstractComponentPtr scaleInputI;
-        if(getConfData()->m_FreqOutputConfList.length() > i) {
-            int entityIdScaleU = getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_entityId;
+        if(configData->m_FreqOutputConfList.length() > i) {
+            int entityIdScaleU = configData->m_FreqOutputConfList.at(i).m_uscale.m_entityId;
             const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
-            QString componentNameScaleU = getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_componentName;
+            QString componentNameScaleU = configData->m_FreqOutputConfList.at(i).m_uscale.m_componentName;
             scaleInputU = storageDb->findComponent(entityIdScaleU, componentNameScaleU);
 
-            int entityIdScaleI = getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_entityId;
-            QString componentNameScaleI = getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_componentName;
+            int entityIdScaleI = configData->m_FreqOutputConfList.at(i).m_iscale.m_entityId;
+            QString componentNameScaleI = configData->m_FreqOutputConfList.at(i).m_iscale.m_componentName;
             scaleInputI = storageDb->findComponent(entityIdScaleI, componentNameScaleI);
         }
         QPair<VeinStorage::AbstractComponentPtr, VeinStorage::AbstractComponentPtr> tmpScalePair(scaleInputU, scaleInputI);
@@ -262,15 +262,15 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_MeasuringMode"),
                                                          QString("Measuring mode"),
-                                                         QVariant(getConfData()->m_sMeasuringMode.m_sValue));
-    if(getConfData()->m_enableScpiCommands)
+                                                         QVariant(configData->m_sMeasuringMode.m_sValue));
+    if(configData->m_enableScpiCommands)
         m_pMeasuringmodeParameter->setScpiInfo("CONFIGURATION","MMODE", SCPI::isQuery|SCPI::isCmdwP);
 
-    cStringValidator *sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
+    cStringValidator *sValidator = new cStringValidator(configData->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasuringmodeParameter; // for modules use
 
-    if(getConfData()->m_enableScpiCommands)
+    if(configData->m_enableScpiCommands)
         m_pModule->scpiCommandList.append(new VfModuleMetaInfoContainer("CONFIGURATION", QString("MMODE:CATALOG"),
                                                                     SCPI::isQuery,
                                                                     m_pMeasuringmodeParameter->getComponentName(),
@@ -280,7 +280,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                          key = QString("PAR_MeasModePhaseSelect"),
                                                          QString("Active phases selection mask"),
                                                          getInitialPhaseOnOffVeinVal());
-    if(getConfData()->m_enableScpiCommands)
+    if(configData->m_enableScpiCommands)
         m_pMModePhaseSelectParameter->setScpiInfo("CONFIGURATION","MEASMODEPHASESELECT", SCPI::isQuery|SCPI::isCmdwP);
     m_MModePhaseSelectValidator = new cStringValidator("");
     m_pMModePhaseSelectParameter->setValidator(m_MModePhaseSelectValidator);
@@ -315,14 +315,14 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
 
     QVariant val;
     QString s, unit;
-    bool btime = (getConfData()->m_sIntegrationMode == "time");
+    bool btime = (configData->m_sIntegrationMode == "time");
     if (btime) {
-        val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
+        val = QVariant(configData->m_fMeasIntervalTime.m_fValue);
         s = QString("Integration time");
         unit = QString("s");
     }
     else {
-        val = QVariant(getConfData()->m_nMeasIntervalPeriod.m_nValue);
+        val = QVariant(configData->m_nMeasIntervalPeriod.m_nValue);
         s = QString("Integration period");
         unit = QString("period");
     }
@@ -333,12 +333,12 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                        val);
     m_pIntegrationParameter->setUnit(unit);
     if (btime) {
-        if(getConfData()->m_enableScpiCommands)
+        if(configData->m_enableScpiCommands)
             m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP);
         m_pIntegrationParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     }
     else {
-        if(getConfData()->m_enableScpiCommands)
+        if(configData->m_enableScpiCommands)
             m_pIntegrationParameter->setScpiInfo("CONFIGURATION","TPERIOD", SCPI::isQuery|SCPI::isCmdwP);
         m_pIntegrationParameter->setValidator(new cIntValidator(5, 5000, 1));
     }
@@ -356,7 +356,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
 void cPower1ModuleMeasProgram::setDspVarList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
-    m_dspVars.setupVarList(m_dspInterface.get(), getConfData(), samples);
+    m_dspVars.setupVarList(m_dspInterface.get(), m_pModule->getConfigData(), samples);
     m_ModuleActualValues.resize(m_dspVars.getActualValues()->getUserMemSize()); // we provide a vector for generated actual values
 }
 
@@ -365,7 +365,7 @@ MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     MeasSystemChannels measChannelUIPairList;
-    for(const auto &measChannelPair : qAsConst(getConfData()->m_sMeasSystemList)) {
+    for(const auto &measChannelPair : qAsConst(m_pModule->getConfigData()->m_sMeasSystemList)) {
         QStringList channelPairSplit = measChannelPair.split(',');
         MeasSystemChannel measChannel;
         measChannel.voltageChannel = observer->getChannel(channelPairSplit.at(0))->getDspChannel();
@@ -378,7 +378,7 @@ MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
 QStringList cPower1ModuleMeasProgram::setupMeasModes(DspChainIdGen& dspChainGen)
 {
     QStringList dspMModesCommandList = Power1DspCmdGenerator::getCmdsInitOutputVars();
-    cPower1ModuleConfigData *confdata = getConfData();
+    cPower1ModuleConfigData *confdata = m_pModule->getConfigData();
     int measSytemCount = confdata->m_sMeasSystemList.count();
     MeasSystemChannels measChannelUIPairList = getMeasChannelUIPairs();
     MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount), dspChainGen);
@@ -402,7 +402,7 @@ QStringList cPower1ModuleMeasProgram::setupMeasModes(DspChainIdGen& dspChainGen)
 void cPower1ModuleMeasProgram::setDspCmdList()
 {
     DspChainIdGen dspChainGen;
-    const cPower1ModuleConfigData *confdata = getConfData();
+    const cPower1ModuleConfigData *confdata = m_pModule->getConfigData();
 
     QStringList dspMModesCommandList = setupMeasModes(dspChainGen);
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
@@ -588,15 +588,10 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
     }
 }
 
-cPower1ModuleConfigData *cPower1ModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cPower1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
 void cPower1ModuleMeasProgram::setActualValuesNames()
 {
     QString powIndicator = "123S"; // (MeasPhaseCount ???)
-    const cMeasModeInfo mminfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
+    const cMeasModeInfo mminfo = MeasModeCatalog::getInfo(m_pModule->getConfigData()->m_sMeasuringMode.m_sValue);
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
         m_veinActValueList.at(i)->setChannelName(QString("%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
         m_veinActValueList.at(i)->setUnit(mminfo.getUnitName());
@@ -606,7 +601,7 @@ void cPower1ModuleMeasProgram::setActualValuesNames()
 
 void cPower1ModuleMeasProgram::setSCPIMeasInfo()
 {
-    if(getConfData()->m_enableScpiCommands) {
+    if(m_pModule->getConfigData()->m_enableScpiCommands) {
         for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
             m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP);
     }
@@ -614,8 +609,9 @@ void cPower1ModuleMeasProgram::setSCPIMeasInfo()
 
 void cPower1ModuleMeasProgram::setFoutMetaInfo()
 {
-    for (int i = 0; i < getConfData()->m_FreqOutputConfList.count(); i++)
-        m_FoutConstParameterList.at(i)->setChannelName(m_FoutInfoMap[getConfData()->m_FreqOutputConfList.at(i).m_sName].alias);
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+    for (int i = 0; i < configData->m_FreqOutputConfList.count(); i++)
+        m_FoutConstParameterList.at(i)->setChannelName(m_FoutInfoMap[configData->m_FreqOutputConfList.at(i).m_sName].alias);
 }
 
 void cPower1ModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
@@ -635,7 +631,8 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
     // as this is our entry point when activating the module, we do some initialization first
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
-    for(const auto &measSystem : qAsConst(getConfData()->m_sMeasSystemList)) {
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+    for(const auto &measSystem : qAsConst(configData->m_sMeasSystemList)) {
         QStringList sl = measSystem.split(',');
         for (int j = 0; j < sl.count(); j++) {
             QString s = sl.at(j);
@@ -646,8 +643,8 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
 
     m_FoutInfoMap.clear();
     cFoutInfo fi;
-    for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
-        QString name = getConfData()->m_FreqOutputConfList.at(i).m_sName;
+    for (int i = 0; i < configData->m_nFreqOutputCount; i++) {
+        QString name = configData->m_FreqOutputConfList.at(i).m_sName;
         if (!m_FoutInfoMap.contains(name))
             m_FoutInfoMap[name] = fi;
     }
@@ -742,8 +739,7 @@ void cPower1ModuleMeasProgram::pcbserverConnect4freqChannels()
 
 void cPower1ModuleMeasProgram::readSourceChannelInformation()
 {
-    if (getConfData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
-    {
+    if (m_pModule->getConfigData()->m_nFreqOutputCount > 0) { // we only have to read information if really configured
         infoReadList = m_FoutInfoMap.keys(); // we have to read information for all channels in this list
         emit activationContinue();
     }
@@ -852,7 +848,8 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     setModeTypesComponent();
     m_pMeasureSignal->setValue(QVariant(1));
 
-    if (getConfData()->m_sIntegrationMode == "time")
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+    if (configData->m_sIntegrationMode == "time")
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newIntegrationtime);
     else
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newIntegrationPeriod);
@@ -860,7 +857,7 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     connect(m_pMModePhaseSelectParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newPhaseList);
     connect(&m_measModeSelector, &MeasModeSelector::sigTransactionOk,
             this, &cPower1ModuleMeasProgram::onModeTransactionOk);
-    if (getConfData()->supportsVariableQrefFrequency())
+    if (configData->supportsVariableQrefFrequency())
         connect(m_QREFFrequencyParameter, &VfModuleComponent::sigValueChanged,
                 this, &cPower1ModuleMeasProgram::newQRefFrequency);
     if (m_pNominalFrequency)
@@ -878,7 +875,7 @@ void cPower1ModuleMeasProgram::freeFreqOutputs()
     m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
-    if (getConfData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
+    if (m_pModule->getConfigData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
     {
         infoReadList = m_FoutInfoMap.keys(); // we have to read information for all channels in this list
         emit deactivationContinue();
@@ -962,9 +959,10 @@ void cPower1ModuleMeasProgram::readUrvalueDone()
 cPower1ModuleMeasProgram::RangeMaxVals cPower1ModuleMeasProgram::calcMaxRangeValues(std::shared_ptr<MeasMode> mode)
 {
     RangeMaxVals maxVals;
-    for (int i = 0; i < getConfData()->m_sMeasSystemList.count(); i++) {
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+    for (int i = 0; i < configData->m_sMeasSystemList.count(); i++) {
         if(mode->isPhaseActive(i)) {
-            QStringList sl = getConfData()->m_sMeasSystemList.at(i).split(',');
+            QStringList sl = configData->m_sMeasSystemList.at(i).split(',');
             double rangeFullVal = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
             if (rangeFullVal > maxVals.maxU)
                 maxVals.maxU = rangeFullVal;
@@ -981,9 +979,10 @@ void cPower1ModuleMeasProgram::setNominalPowerForQref()
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double pmax = maxVals.maxU * maxVals.maxI; // MQREF
-    if (getConfData()->supportsVariableQrefFrequency()) {
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+    if (configData->supportsVariableQrefFrequency()) {
         constexpr double nominalFrequencyKhz = 200;
-        pmax = pmax * getConfData()->m_qrefFrequency.m_fValue / nominalFrequencyKhz;
+        pmax = pmax * configData->m_qrefFrequency.m_fValue / nominalFrequencyKhz;
     }
     QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 9);
     m_dspVars.getNominalPower()->setVarData(datalist);
@@ -992,15 +991,16 @@ void cPower1ModuleMeasProgram::setNominalPowerForQref()
 
 void cPower1ModuleMeasProgram::generateVeinInterfaceForQrefFreq()
 {
-    if(getConfData()->supportsVariableQrefFrequency()) {
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+    if(configData->supportsVariableQrefFrequency()) {
         const QString paramLabel = "PAR_FOUT_QREF_FREQ";
         m_QREFFrequencyParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                         paramLabel,
                                                         QString("Fixed frequency output mode (QREF): frequency value"),
-                                                        QVariant(getConfData()->m_qrefFrequency.m_fValue));
+                                                        QVariant(configData->m_qrefFrequency.m_fValue));
         const QString unit = "kHz";
         m_QREFFrequencyParameter->setUnit(unit);
-        if(getConfData()->m_enableScpiCommands)
+        if(configData->m_enableScpiCommands)
             m_QREFFrequencyParameter->setScpiInfo("CONFIGURATION",QString("FIXFREQ"), SCPI::isQuery|SCPI::isCmdwP);
         cDoubleValidator *validator = new cDoubleValidator(0.001, 200.0, 0.001);
         m_QREFFrequencyParameter->setValidator(validator);
@@ -1011,15 +1011,16 @@ void cPower1ModuleMeasProgram::generateVeinInterfaceForQrefFreq()
 void POWER1MODULE::cPower1ModuleMeasProgram::generateVeinInterfaceNominalFreq()
 {
     QString key = "PAR_FOUT_NOMINAL_FREQ";
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
     m_pNominalFrequency = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key,
                                                 QString("Nominal frequency"),
-                                                QVariant(getConfData()->m_nNominalFrequency.m_nValue));
+                                                QVariant(configData->m_nNominalFrequency.m_nValue));
     m_pNominalFrequency->setUnit("Hz");
     m_pNominalFrequency->setValidator(new cIntValidator(10000, 200000, 1));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalFrequency; // for modules use
     connect(m_pNominalFrequency, &VfModuleParameter::sigValueChanged, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
-    if(getConfData()->m_enableScpiCommands)
+    if(configData->m_enableScpiCommands)
         m_pNominalFrequency->setScpiInfo("CONFIGURATION",QString("NOMINAL_FREQ"), SCPI::isQuery|SCPI::isCmdwP);
 }
 
@@ -1028,17 +1029,18 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
-    double nomFrequency = getConfData()->m_nNominalFrequencyDefault.m_nValue;
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+    double nomFrequency = configData->m_nNominalFrequencyDefault.m_nValue;
     if(m_pNominalFrequency && mode->getName() != "QREF")
         nomFrequency = m_pNominalFrequency->getValue().toDouble();
     double constantImpulsePerWs = nomFrequency / (cfak * maxVals.maxU * maxVals.maxI);
 
     bool isValidConstant = !isinf(constantImpulsePerWs);
-    if (isValidConstant && getConfData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
+    if (isValidConstant && configData->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
         QString datalist = "FREQSCALE:";
-        for (int i = 0; i<getConfData()->m_nFreqOutputCount; i++) {
+        for (int i = 0; i<configData->m_nFreqOutputCount; i++) {
             double frScale;
-            cFoutInfo fi = m_FoutInfoMap[getConfData()->m_FreqOutputConfList.at(i).m_sName];
+            cFoutInfo fi = m_FoutInfoMap[configData->m_FreqOutputConfList.at(i).m_sName];
             frScale = fi.formFactor * constantImpulsePerWs;
 
             if(m_scalingInputs.length() > i) {
@@ -1058,7 +1060,7 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
     }
     setFoutPowerModes();
     double constantImpulsePerKwh = 3600.0 * 1000.0 * constantImpulsePerWs; // imp./kwh
-    for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
+    for (int i = 0; i < configData->m_nFreqOutputCount; i++) {
         // calculate prescaling factor for Fout
         if(m_scalingInputs.length() > i) {
             if(m_scalingInputs.at(i).first && m_scalingInputs.at(i).second){
@@ -1068,7 +1070,7 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
                 constantImpulsePerKwh = constantImpulsePerKwh * scaleTotal;
             }
         }
-        QString key = getConfData()->m_FreqOutputConfList.at(i).m_sName;
+        QString key = configData->m_FreqOutputConfList.at(i).m_sName;
         cFoutInfo fi = m_FoutInfoMap[key];
         if(isValidConstant) {
             m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constantImpulsePerKwh)] = writeparameter;
@@ -1084,9 +1086,10 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
 void cPower1ModuleMeasProgram::setFoutPowerModes()
 {
     QList<QString> keylist = m_FoutInfoMap.keys();
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
     for (int i = 0; i < keylist.count(); i++) {
         QString powtype;
-        int foutmode = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode;
+        int foutmode = configData->m_FreqOutputConfList.at(i).m_nFoutMode;
         switch (foutmode)
         {
         case posPower:
@@ -1098,7 +1101,7 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
         default:
             powtype = "";
         }
-        powtype += MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getActvalName();
+        powtype += MeasModeCatalog::getInfo(configData->m_sMeasuringMode.m_sValue).getActvalName();
         cFoutInfo fi = m_FoutInfoMap[keylist.at(i)];
         m_MsgNrCmdList[fi.pcbIFace->setPowTypeSource(fi.name, powtype)] = writeparameter;
     }
@@ -1106,9 +1109,9 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
 
 QString cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
 {
-    cPower1ModuleConfigData *confData = getConfData();
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
     QString phaseOnOff;
-    for(int phase=0; phase<confData->m_sMeasSystemList.count(); phase++)
+    for(int phase=0; phase<configData->m_sMeasSystemList.count(); phase++)
         phaseOnOff.append("1");
     return phaseOnOff;
 }
@@ -1152,7 +1155,7 @@ void cPower1ModuleMeasProgram::handleMModeParamChange()
 
 void cPower1ModuleMeasProgram::handleMovingWindowIntTimeChange()
 {
-    m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
+    m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue);
     emit m_pModule->parameterChanged();
 }
 
@@ -1169,14 +1172,14 @@ void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
 
 void cPower1ModuleMeasProgram::newQRefFrequency(QVariant frequency)
 {
-    getConfData()->m_qrefFrequency.m_fValue = frequency.toDouble();
+    m_pModule->getConfigData()->m_qrefFrequency.m_fValue = frequency.toDouble();
     setNominalPowerForQref();
     emit m_pModule->parameterChanged();
 }
 
 void cPower1ModuleMeasProgram::newNominalFrequency(QVariant frequency)
 {
-    getConfData()->m_nNominalFrequency.m_nValue = frequency.toInt();
+    m_pModule->getConfigData()->m_nNominalFrequency.m_nValue = frequency.toInt();
     emit m_pModule->parameterChanged();
 }
 
@@ -1187,8 +1190,9 @@ void cPower1ModuleMeasProgram::updatePreScaling()
 
 void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
-    getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble();
-    if (getConfData()->m_bmovingWindow)
+    cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+    configData->m_fMeasIntervalTime.m_fValue = ti.toDouble();
+    if (configData->m_bmovingWindow)
         handleMovingWindowIntTimeChange();
     else
         handleMModeParamChange(); // is this ever reached?
@@ -1197,7 +1201,7 @@ void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
 void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
 {
     // there is no moving window for period
-    getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
+    m_pModule->getConfigData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
     handleMModeParamChange();
 }
 
@@ -1209,20 +1213,21 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 double cPower1ModuleMeasProgram::calcTiTime()
 {
     double tiTime;
-    if (getConfData()->m_sIntegrationMode == "time") {
-        if (getConfData()->m_bmovingWindow)
-            tiTime = getConfData()->m_fmovingwindowInterval*1000.0;
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+    if (configData->m_sIntegrationMode == "time") {
+        if (configData->m_bmovingWindow)
+            tiTime = configData->m_fmovingwindowInterval*1000.0;
         else
-            tiTime = getConfData()->m_fMeasIntervalTime.m_fValue*1000.0;
+            tiTime = configData->m_fMeasIntervalTime.m_fValue*1000.0;
     }
     else // period (just if/else for now)
-        tiTime = getConfData()->m_nMeasIntervalPeriod.m_nValue;
+        tiTime = configData->m_nMeasIntervalPeriod.m_nValue;
     return tiTime;
 }
 
 void cPower1ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> mode)
 {
-    QStringList allPhaseMasks = VeinValidatorPhaseStringGenerator::generate(getConfData()->m_sMeasSystemList.count());
+    QStringList allPhaseMasks = VeinValidatorPhaseStringGenerator::generate(m_pModule->getConfigData()->m_sMeasSystemList.count());
     QStringList allowedPhaseMasks;
     if(canChangePhaseMask(mode)) {
         for(auto &mask : allPhaseMasks)
@@ -1238,7 +1243,7 @@ void cPower1ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> m
 void cPower1ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode)
 {
     QString newPhaseMask = mode->getCurrentMask();
-    const cMeasModeInfo modeInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
+    const cMeasModeInfo modeInfo = MeasModeCatalog::getInfo(m_pModule->getConfigData()->m_sMeasuringMode.m_sValue);
     setPhaseMaskValidator(mode);
     m_pMModePhaseSelectParameter->setValue(newPhaseMask);
     m_MModeCanChangePhaseMask->setValue(canChangePhaseMask(mode));
@@ -1248,7 +1253,7 @@ void cPower1ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<Mea
 
 bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode)
 {
-    bool disablePhase = (getConfData()->m_disablephaseselect == true);
+    bool disablePhase = (m_pModule->getConfigData()->m_disablephaseselect == true);
     bool hasVarMask = mode->hasVarMask();
     bool hasMultipleMeasSystems = mode->getMeasSysCount()>1;
     return hasVarMask && hasMultipleMeasSystems && !disablePhase;
@@ -1258,11 +1263,12 @@ QString cPower1ModuleMeasProgram::getPhasePowerDescription(int measSystemNo)
 {
     QString strDescription;
     if(measSystemNo < MeasPhaseCount) {
-        if(measSystemNo >= getConfData()->m_sMeasSystemList.count())
+        const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+        if(measSystemNo >= configData->m_sMeasSystemList.count())
             strDescription = QString("Unused in this session phase %1").arg(measSystemNo+1);
         else {
             // We found nothing useful filled at the time of call - so hack
-            QStringList powerChannels = getConfData()->m_sMeasSystemList[measSystemNo].split(",");
+            QStringList powerChannels = configData->m_sMeasSystemList[measSystemNo].split(",");
             if(powerChannels.count() == 2) {
                 ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
                 const QString name0 = observer->getChannel(powerChannels[0])->getAlias();
@@ -1281,7 +1287,7 @@ QString cPower1ModuleMeasProgram::getPhasePowerDescription(int measSystemNo)
 void cPower1ModuleMeasProgram::onModeTransactionOk()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-    getConfData()->m_sMeasuringMode.m_sValue = mode->getName();
+    m_pModule->getConfigData()->m_sMeasuringMode.m_sValue = mode->getName();
     handleMModeParamChange();
     updatesForMModeChange();
     updatePhaseMaskVeinComponents(mode);

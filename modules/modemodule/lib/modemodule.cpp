@@ -5,11 +5,22 @@ namespace MODEMODULE
 {
 
 cModeModule::cModeModule(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<cModeModuleConfiguration>())
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for setting measuring mode and resetting dsp adjustment data");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
+}
+
+cModeModuleConfigData *cModeModule::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray cModeModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 void cModeModule::setupModule()
@@ -17,11 +28,8 @@ void cModeModule::setupModule()
     emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
-    cModeModuleConfigData *pConfData;
-    pConfData = qobject_cast<cModeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we only have to initialize the pcb's measuring mode
-    m_pModeModuleInit = new cModeModuleInit(this, *pConfData);
+    m_pModeModuleInit = new cModeModuleInit(this);
     m_ModuleActivistList.append(m_pModeModuleInit);
     connect(m_pModeModuleInit, &cModeModuleInit::activated, this, &cModeModule::activationContinue);
     connect(m_pModeModuleInit, &cModeModuleInit::deactivated, this, &cModeModule::deactivationContinue);

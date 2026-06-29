@@ -1,9 +1,12 @@
 #include "thdnmoduleconfiguration.h"
-#include "thdnmoduleconfigdata.h"
-#include <xmlconfigreader.h>
 
 namespace THDNMODULE
 {
+
+cThdnModuleConfiguration::cThdnModuleConfiguration(const QByteArray &xmlString)
+{
+    setConfiguration(xmlString);
+}
 
 enum moduleconfigstate
 {
@@ -13,55 +16,30 @@ enum moduleconfigstate
     setThdnSourceEntity
 };
 
-cThdnModuleConfiguration::cThdnModuleConfiguration()
-{
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cThdnModuleConfiguration::configXMLInfo);
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cThdnModuleConfiguration::completeConfiguration);
-}
-
-
-cThdnModuleConfiguration::~cThdnModuleConfiguration()
-{
-    delete m_pThdnModulConfigData;
-}
-
-
 void cThdnModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
-    m_bConfigured = m_bConfigError = false;
-
-    if (m_pThdnModulConfigData) delete m_pThdnModulConfigData;
-    m_pThdnModulConfigData = new cThdnModuleConfigData();
-
-    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
-
-    // so now we can set up
-    // initializing hash table for xml configuration
-
     m_ConfigXMLMap["thdnmodconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
     m_ConfigXMLMap["thdnmodconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
     m_ConfigXMLMap["thdnmodconfpar:configuration:thdr_shadow_of"] = setThdnSourceEntity;
 
     m_ConfigXMLMap["thdnmodconfpar:parameter:interval"] = setMeasureInterval;
 
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cThdnModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cThdnModuleConfiguration::completeConfiguration);
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
-
-QByteArray cThdnModuleConfiguration::exportConfiguration()
+QByteArray cThdnModuleConfiguration::exportConfiguration() const
 {
-    doubleParameter* dPar;
-    dPar = &m_pThdnModulConfigData->m_fMeasInterval;
-    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+    const doubleParameter* paramInterval = &m_configData.m_fMeasInterval;
+    m_pXMLReader->setValue(paramInterval->m_sKey, QString("%1").arg(paramInterval->m_fValue));
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-
-cThdnModuleConfigData *cThdnModuleConfiguration::getConfigurationData()
+cThdnModuleConfigData *cThdnModuleConfiguration::getConfigData()
 {
-    return m_pThdnModulConfigData;
+    return &m_configData;
 }
-
 
 void cThdnModuleConfiguration::configXMLInfo(const QString &key)
 {
@@ -71,17 +49,17 @@ void cThdnModuleConfiguration::configXMLInfo(const QString &key)
         switch (cmd)
         {
         case setMovingwindowBool:
-            m_pThdnModulConfigData->m_bmovingWindow = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            m_configData.m_bmovingWindow = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
         case setMovingwindowTime:
-            m_pThdnModulConfigData->m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setThdnSourceEntity:
-            m_pThdnModulConfigData->m_thdrSourceEntity = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_thdrSourceEntity = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setMeasureInterval:
-            m_pThdnModulConfigData->m_fMeasInterval.m_sKey = key;
-            m_pThdnModulConfigData->m_fMeasInterval.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fMeasInterval.m_sKey = key;
+            m_configData.m_fMeasInterval.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         }
         m_bConfigError |= !ok;
@@ -90,7 +68,6 @@ void cThdnModuleConfiguration::configXMLInfo(const QString &key)
     else
         m_bConfigError = true;
 }
-
 
 void cThdnModuleConfiguration::completeConfiguration(bool ok)
 {

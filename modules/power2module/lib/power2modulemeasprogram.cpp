@@ -1,6 +1,5 @@
 #include "power2modulemeasprogram.h"
 #include "power2module.h"
-#include "power2moduleconfiguration.h"
 #include "power2dspcmdgenerator.h"
 #include "measmodephasesetstrategy4wire.h"
 #include "veinvalidatorphasestringgenerator.h"
@@ -18,9 +17,8 @@
 namespace POWER2MODULE
 {
 
-cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module,
-                                                   const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
+cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module) :
+    cBaseDspMeasProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfacePower2(
@@ -168,8 +166,8 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module,
 
 void cPower2ModuleMeasProgram::start()
 {
-    if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
+    if (m_pModule->getConfigData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue);
         connect(this, &cPower2ModuleMeasProgram::actualValues,
                 &m_movingwindowFilter, &MovingwindowFilter::receiveActualValues);
         connect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues,
@@ -216,9 +214,9 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
 
     m_pPQSCountInfo = new VfModuleMetaData(QString("PQSCount"), QVariant(3*(MeasPhaseCount+SumValueCount)));
     m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
-    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency));
+    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(m_pModule->getConfigData()->m_nNominalFrequency));
     m_pModule->veinModuleMetaDataList.append(m_pNomFrequencyInfo);
-    m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(getConfData()->m_nFreqOutputCount));
+    m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(m_pModule->getConfigData()->m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
 
     QString key;
@@ -226,23 +224,23 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
     m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_MeasuringMode"),
                                                          QString("Measuring mode"),
-                                                         QVariant(getConfData()->m_sMeasuringMode.m_sValue));
+                                                         QVariant(m_pModule->getConfigData()->m_sMeasuringMode.m_sValue));
 
     m_pMeasuringmodeParameter->setScpiInfo("CONFIGURATION","MMODE", SCPI::isQuery|SCPI::isCmdwP);
-    cStringValidator *sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
+    cStringValidator *sValidator = new cStringValidator(m_pModule->getConfigData()->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasuringmodeParameter; // for modules use
 
     QVariant val;
     QString s, unit;
-    bool btime = (getConfData()->m_sIntegrationMode == "time");
+    bool btime = (m_pModule->getConfigData()->m_sIntegrationMode == "time");
     if (btime) {
-        val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
+        val = QVariant(m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue);
         s = QString("Integration time");
         unit = QString("s");
     }
     else {
-        val = QVariant(getConfData()->m_nMeasIntervalPeriod.m_nValue);
+        val = QVariant(m_pModule->getConfigData()->m_nMeasIntervalPeriod.m_nValue);
         s = QString("Integration period");
         unit = QString("period");
     }
@@ -296,7 +294,7 @@ void cPower2ModuleMeasProgram::setDspVarList()
 
     // and one for the frequency output scale values, we need 1 value for each configured output
     m_pfreqScaleDSP = m_dspInterface->createVariableGroup("FrequencyScale");
-    m_pfreqScaleDSP->addDspVar("FREQSCALE", getConfData()->m_nFreqOutputCount);
+    m_pfreqScaleDSP->addDspVar("FREQSCALE", m_pModule->getConfigData()->m_nFreqOutputCount);
 
     // and one for nominal power in case that measuring mode is qref
     m_pNomPower = m_dspInterface->createVariableGroup("QRefScale");
@@ -312,7 +310,7 @@ QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
         dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(3*(MeasPhaseCount+SumValueCount))));
         dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
         double integrationTime = calcTiTime();
-        bool intergrationModeTime = getConfData()->m_sIntegrationMode == "time";
+        bool intergrationModeTime = m_pModule->getConfigData()->m_sIntegrationMode == "time";
         dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(integrationTime)); // initial ti time
         if(intergrationModeTime)
             dspCmdList.append("GETSTIME(TISTART)"); // einmal ti start setzen
@@ -325,7 +323,7 @@ void cPower2ModuleMeasProgram::setDspCmdList()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     MeasSystemChannels measChannelPairList;
-    cPower2ModuleConfigData *confdata = getConfData();
+    cPower2ModuleConfigData *confdata = m_pModule->getConfigData();
     for(const auto &measChannelPair : confdata->m_sMeasSystemList) {
         QStringList channelPairSplit = measChannelPair.split(',');
         MeasSystemChannel measChannel;
@@ -555,7 +553,7 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case readresourcetypes:
                 ok = false;
                 if ((reply == ack) && (answer.toString().contains("SENSE"))) { // we need sense  at least
-                    if (getConfData()->m_nFreqOutputCount > 0) {
+                    if (m_pModule->getConfigData()->m_nFreqOutputCount > 0) {
                         if (answer.toString().contains("SOURCE")) // maybe we also need source
                             ok = true;
                     }
@@ -645,15 +643,10 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
     }
 }
 
-cPower2ModuleConfigData *cPower2ModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cPower2ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
 void cPower2ModuleMeasProgram::setActualValuesNames()
 {
     QString powIndicator = "123S";
-    const cMeasModeInfo mminfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
+    const cMeasModeInfo mminfo = MeasModeCatalog::getInfo(m_pModule->getConfigData()->m_sMeasuringMode.m_sValue);
     for (int i = 0; i < 4; i++) {
         m_veinActValueList.at(i*3)->setChannelName(QString("+%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
         m_veinActValueList.at(i*3)->setUnit(mminfo.getUnitName());
@@ -705,7 +698,7 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
     // as this is our entry point when activating the module, we do some initialization first
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
-    for (const auto &measSystem : getConfData()->m_sMeasSystemList) {
+    for (const auto &measSystem : m_pModule->getConfigData()->m_sMeasSystemList) {
         QStringList sl = measSystem.split(',');
         for (int j = 0; j < sl.count(); j++) {
             QString s = sl.at(j);
@@ -716,9 +709,9 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
 
     m_FoutInfoMap.clear();
     cFoutInfo fi;
-    if (getConfData()->m_nFreqOutputCount > 0) {
-        for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
-            QString name = getConfData()->m_FreqOutputConfList.at(i).m_sName;
+    if (m_pModule->getConfigData()->m_nFreqOutputCount > 0) {
+        for (int i = 0; i < m_pModule->getConfigData()->m_nFreqOutputCount; i++) {
+            QString name = m_pModule->getConfigData()->m_FreqOutputConfList.at(i).m_sName;
             if (!m_FoutInfoMap.contains(name))
                 m_FoutInfoMap[name] = fi;
         }
@@ -828,7 +821,7 @@ void cPower2ModuleMeasProgram::readSenseChannelInformationDone()
 
 void cPower2ModuleMeasProgram::readSourceChannelInformation()
 {
-    if (getConfData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
+    if (m_pModule->getConfigData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
     {
         infoReadList = m_FoutInfoMap.keys(); // we have to read information for all channels in this list
         emit activationContinue();
@@ -919,7 +912,7 @@ void cPower2ModuleMeasProgram::activateDSPdone()
     setSCPIMeasInfo();
     m_pMeasureSignal->setValue(QVariant(1));
 
-    if (getConfData()->m_sIntegrationMode == "time")
+    if (m_pModule->getConfigData()->m_sIntegrationMode == "time")
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower2ModuleMeasProgram::newIntegrationtime);
     else
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower2ModuleMeasProgram::newIntegrationPeriod);
@@ -939,7 +932,7 @@ void cPower2ModuleMeasProgram::freeFreqOutputs()
     m_dataAcquisitionMachine.stop();
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
-    if (getConfData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
+    if (m_pModule->getConfigData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
     {
         infoReadList = m_FoutInfoMap.keys(); // we have to read information for all channels in this list
         emit deactivationContinue();
@@ -1023,9 +1016,9 @@ void cPower2ModuleMeasProgram::readUrvalueDone()
 cPower2ModuleMeasProgram::RangeMaxVals cPower2ModuleMeasProgram::calcMaxRangeValues(std::shared_ptr<MeasMode> mode)
 {
     RangeMaxVals maxVals;
-    for (int i = 0; i < getConfData()->m_sMeasSystemList.count(); i++) {
+    for (int i = 0; i < m_pModule->getConfigData()->m_sMeasSystemList.count(); i++) {
         if(mode->isPhaseActive(i)) {
-            QStringList sl = getConfData()->m_sMeasSystemList.at(i).split(',');
+            QStringList sl = m_pModule->getConfigData()->m_sMeasSystemList.at(i).split(',');
             double rangeFullVal = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
             if (rangeFullVal > maxVals.maxU)
                 maxVals.maxU = rangeFullVal;
@@ -1042,13 +1035,13 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
-    double constantImpulsePerWs = getConfData()->m_nNominalFrequency / (cfak * maxVals.maxU * maxVals.maxI);
+    double constantImpulsePerWs = m_pModule->getConfigData()->m_nNominalFrequency / (cfak * maxVals.maxU * maxVals.maxI);
     bool isValidConstant = !isinf(constantImpulsePerWs);
-    if (isValidConstant && getConfData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
+    if (isValidConstant && m_pModule->getConfigData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
         QString datalist = "FREQSCALE:";
-        for (int i = 0; i<getConfData()->m_nFreqOutputCount; i++) {
+        for (int i = 0; i<m_pModule->getConfigData()->m_nFreqOutputCount; i++) {
             double frScale;
-            cFoutInfo fi = m_FoutInfoMap[getConfData()->m_FreqOutputConfList.at(i).m_sName];
+            cFoutInfo fi = m_FoutInfoMap[m_pModule->getConfigData()->m_FreqOutputConfList.at(i).m_sName];
             frScale = fi.formFactor * constantImpulsePerWs;
 
             /*if(m_pScalingInputs.length() > i){
@@ -1066,7 +1059,7 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
     }
     setFoutPowerModes();
     double constantImpulsePerKwh = 3600.0 * 1000.0 * constantImpulsePerWs; // imp./kwh
-    for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
+    for (int i = 0; i < m_pModule->getConfigData()->m_nFreqOutputCount; i++) {
         // calculate prescaling factor for Fout
         /*if(m_pScalingInputs.length() > i){
             if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
@@ -1074,7 +1067,7 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
                 constantImpulsePerKwh = constantImpulsePerKwh * scale;
             }
         }*/
-        QString key = getConfData()->m_FreqOutputConfList.at(i).m_sName;
+        QString key = m_pModule->getConfigData()->m_FreqOutputConfList.at(i).m_sName;
         cFoutInfo fi = m_FoutInfoMap[key];
         if(isValidConstant) {
             m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constantImpulsePerKwh)] = writeparameter;
@@ -1095,7 +1088,7 @@ void cPower2ModuleMeasProgram::setFoutPowerModes()
     QList<QString> keylist = m_FoutInfoMap.keys();
     for (int i = 0; i < keylist.count(); i++) {
         QString powtype;
-        int foutmode = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode;
+        int foutmode = m_pModule->getConfigData()->m_FreqOutputConfList.at(i).m_nFoutMode;
         switch (foutmode)
         {
         case posPower:
@@ -1107,7 +1100,7 @@ void cPower2ModuleMeasProgram::setFoutPowerModes()
         default:
             powtype = "";
         }
-        powtype += MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getActvalName();
+        powtype += MeasModeCatalog::getInfo(m_pModule->getConfigData()->m_sMeasuringMode.m_sValue).getActvalName();
         cFoutInfo fi = m_FoutInfoMap[keylist.at(i)];
         m_MsgNrCmdList[fi.pcbIFace->setPowTypeSource(fi.name, powtype)] = writeparameter;
     }
@@ -1139,14 +1132,14 @@ void cPower2ModuleMeasProgram::updatesForMModeChange()
 
 void cPower2ModuleMeasProgram::handleMovingWindowIntTimeChange()
 {
-    m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasIntervalTime.m_fValue);
+    m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue);
     emit m_pModule->parameterChanged();
 }
 
 void cPower2ModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
-    getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble();
-    if (getConfData()->m_bmovingWindow)
+    m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue = ti.toDouble();
+    if (m_pModule->getConfigData()->m_bmovingWindow)
         handleMovingWindowIntTimeChange();
     else
         handleMModeParamChange(); // is this ever reached?
@@ -1155,7 +1148,7 @@ void cPower2ModuleMeasProgram::newIntegrationtime(QVariant ti)
 void cPower2ModuleMeasProgram::newIntegrationPeriod(QVariant period)
 {
     // there is no moving window for period
-    getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
+    m_pModule->getConfigData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
     handleMModeParamChange();
 }
 
@@ -1167,20 +1160,20 @@ void cPower2ModuleMeasProgram::newMeasMode(QVariant mm)
 double cPower2ModuleMeasProgram::calcTiTime()
 {
     double tiTime;
-    if (getConfData()->m_sIntegrationMode == "time") {
-        if (getConfData()->m_bmovingWindow)
-            tiTime = getConfData()->m_fmovingwindowInterval*1000.0;
+    if (m_pModule->getConfigData()->m_sIntegrationMode == "time") {
+        if (m_pModule->getConfigData()->m_bmovingWindow)
+            tiTime = m_pModule->getConfigData()->m_fmovingwindowInterval*1000.0;
         else
-            tiTime = getConfData()->m_fMeasIntervalTime.m_fValue*1000.0;
+            tiTime = m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue*1000.0;
     }
     else // period (just if/else for now)
-        tiTime = getConfData()->m_nMeasIntervalPeriod.m_nValue;
+        tiTime = m_pModule->getConfigData()->m_nMeasIntervalPeriod.m_nValue;
     return tiTime;
 }
 
 void cPower2ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> mode)
 {
-    QStringList allPhaseMasks = VeinValidatorPhaseStringGenerator::generate(getConfData()->m_sMeasSystemList.count());
+    QStringList allPhaseMasks = VeinValidatorPhaseStringGenerator::generate(m_pModule->getConfigData()->m_sMeasSystemList.count());
     QStringList allowedPhaseMasks;
     for(auto &mask : allPhaseMasks)
         if(mode->canChangeMask(mask))
@@ -1199,7 +1192,7 @@ void cPower2ModuleMeasProgram::onModeTransactionOk()
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     updatePhaseMaskVeinComponents(mode);
     QString newMeasMode = mode->getName();
-    getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
+    m_pModule->getConfigData()->m_sMeasuringMode.m_sValue = newMeasMode;
     handleMModeParamChange();
     updatesForMModeChange();
 }

@@ -1,34 +1,33 @@
 #include "dftmoduleconfiguration.h"
-#include "dftmoduleconfigdata.h"
-#include <xmlconfigreader.h>
 
 namespace DFTMODULE
 {
 
-cDftModuleConfiguration::cDftModuleConfiguration()
+enum moduleconfigstate
 {
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cDftModuleConfiguration::configXMLInfo);
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cDftModuleConfiguration::completeConfiguration);
-}
+    setDftOrder,
+    setValueCount,
+    setrfieldChn1,
+    setrfieldChn2,
+    setrfieldChn3,
+    setMeasureInterval,
+    setRefChannel,
+    setMovingwindowBool,
+    setMovingwindowTime,
+    setRefChannelOn,
 
+    setValue1 = 20
+};
 
-cDftModuleConfiguration::~cDftModuleConfiguration()
+cDftModuleConfiguration::cDftModuleConfiguration(const QByteArray &xmlString)
 {
-    if (m_pDftModulConfigData) delete m_pDftModulConfigData;
+    setConfiguration(xmlString);
 }
-
 
 void cDftModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
-    m_bConfigured = m_bConfigError = false;
-
-    if (m_pDftModulConfigData) delete m_pDftModulConfigData;
-    m_pDftModulConfigData = new cDftModuleConfigData();
-
-    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
-
-    // so now we can set up
-    // initializing hash table for xml configuration
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cDftModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cDftModuleConfiguration::completeConfiguration);
 
     m_ConfigXMLMap["dftmodconfpar:configuration:measure:dftvalues:nr"] = setDftOrder;
     m_ConfigXMLMap["dftmodconfpar:configuration:measure:dftvalues:n"] = setValueCount;
@@ -45,67 +44,59 @@ void cDftModuleConfiguration::setConfiguration(const QByteArray& xmlString)
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
-
-QByteArray cDftModuleConfiguration::exportConfiguration()
+QByteArray cDftModuleConfiguration::exportConfiguration() const
 {
-    doubleParameter* dPar;
-    dPar = &m_pDftModulConfigData->m_fMeasInterval;
-    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+    const doubleParameter* paramMeasInterval = &m_configData.m_fMeasInterval;
+    m_pXMLReader->setValue(paramMeasInterval->m_sKey, QString("%1").arg(paramMeasInterval->m_fValue));
 
-    stringParameter* sPar;
-    sPar = &m_pDftModulConfigData->m_sRefChannel;
-    m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
+    const stringParameter* paramRefChannel = &m_configData.m_sRefChannel;
+    m_pXMLReader->setValue(paramRefChannel->m_sKey, paramRefChannel->m_sPar);
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-
-cDftModuleConfigData *cDftModuleConfiguration::getConfigurationData()
+cDftModuleConfigData *cDftModuleConfiguration::getConfigData()
 {
-    return m_pDftModulConfigData;
+    return &m_configData;
 }
-
 
 void cDftModuleConfiguration::configXMLInfo(const QString &key)
 {
-    bool ok;
-
-    if (m_ConfigXMLMap.contains(key))
-    {
-        ok = true;
+    if (m_ConfigXMLMap.contains(key)) {
+        bool ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
         case setDftOrder:
-            m_pDftModulConfigData->m_nDftOrder = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nDftOrder = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setValueCount:
-            m_pDftModulConfigData->m_nValueCount = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nValueCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for value channel configuration
-            for (int i = 0; i < m_pDftModulConfigData->m_nValueCount; i++)
+            for (int i = 0; i < m_configData.m_nValueCount; i++)
                 m_ConfigXMLMap[QString("dftmodconfpar:configuration:measure:dftvalues:val%1").arg(i+1)] = setValue1+i;
             break;
         case setrfieldChn1:
         case setrfieldChn2:
         case setrfieldChn3:
-            m_pDftModulConfigData->m_rfieldChannelList.append(m_pXMLReader->getValue(key));
+            m_configData.m_rfieldChannelList.append(m_pXMLReader->getValue(key));
             break;
         case setMovingwindowBool:
-            m_pDftModulConfigData->m_bmovingWindow = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            m_configData.m_bmovingWindow = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
         case setMovingwindowTime:
-            m_pDftModulConfigData->m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setMeasureInterval:
-            m_pDftModulConfigData->m_fMeasInterval.m_sKey = key;
-            m_pDftModulConfigData->m_fMeasInterval.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fMeasInterval.m_sKey = key;
+            m_configData.m_fMeasInterval.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setRefChannel:
-            m_pDftModulConfigData->m_sRefChannel.m_sKey = key;
-            m_pDftModulConfigData->m_sRefChannel.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_sRefChannel.m_sKey = key;
+            m_configData.m_sRefChannel.m_sPar = m_pXMLReader->getValue(key);
             break;
         case setRefChannelOn:
-            m_pDftModulConfigData->m_bRefChannelOn = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            m_configData.m_bRefChannelOn = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
 
         default:
@@ -114,7 +105,7 @@ void cDftModuleConfiguration::configXMLInfo(const QString &key)
                 //cmd -= setValue1;
                 // it is command for setting value channel name
                 QString valueChannel = m_pXMLReader->getValue(key);
-                m_pDftModulConfigData->m_valueChannelList.append(valueChannel); // for configuration of our engine
+                m_configData.m_valueChannelList.append(valueChannel); // for configuration of our engine
             }
         }
         m_bConfigError |= !ok;

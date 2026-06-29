@@ -16,8 +16,7 @@ class SourceModuleProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
 public:
-    SourceModuleProgram(SourceModule* module,
-                        const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit SourceModuleProgram(SourceModule* module);
     virtual ~SourceModuleProgram();
     void generateVeinInterface() override;
     void startDestroy();
@@ -42,10 +41,10 @@ private:
     bool tryAddNewSource(int slotPosition);
     void updateDemoCount();
     SourceDeviceManager* m_pSourceDeviceManager = nullptr;
-    SourceModule* m_pModule; // the module we live in
+    SourceModule* m_pModule = nullptr; // the module we live in
 
-    VfModuleComponent* m_pVeinMaxCountAct;
-    VfModuleComponent* m_pVeinCountAct;
+    VfModuleComponent* m_pVeinMaxCountAct = nullptr;
+    VfModuleComponent* m_pVeinCountAct = nullptr;
     VfModuleParameter* m_pVeinDemoSourceCount = nullptr;
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcScanInterface;
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcRemoveInterface;

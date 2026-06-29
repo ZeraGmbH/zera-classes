@@ -19,7 +19,7 @@ void test_scpi_module_sorted_responses::initTestCase()
 void test_scpi_module_sorted_responses::paramQuerySequence()
 {
     SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
-    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfData(), scpiModule->getSCPIServer()->getScpiInterface());
+    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
 
     QStringList scpiResponses;
     connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, this, [&](const QString &scpiResponse) {
@@ -39,7 +39,7 @@ void test_scpi_module_sorted_responses::paramQuerySequence()
 void test_scpi_module_sorted_responses::paramQuerySequenceWithIntermediateServerNotification()
 {
     SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
-    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfData(), scpiModule->getSCPIServer()->getScpiInterface());
+    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
 
     QStringList scpiResponses;
     connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, this, [&](const QString &scpiResponse) {

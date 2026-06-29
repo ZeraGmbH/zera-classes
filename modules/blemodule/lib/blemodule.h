@@ -2,6 +2,7 @@
 #define BLEMODULE_H
 
 #include "blemodulemeasprogram.h"
+#include "blemoduleconfiguration.h"
 #include <basemeasmodule.h>
 
 namespace BLEMODULE
@@ -13,13 +14,17 @@ public:
     static constexpr const char* BaseModuleName = "BleModule";
     static constexpr const char* BaseSCPIModuleName = "BLE";
 
-    cBleModule(const ModuleFactoryParam &moduleParam);
+    explicit cBleModule(const ModuleFactoryParam &moduleParam);
+    cBleModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private:
-    cBleModuleMeasProgram *m_pMeasProgram = nullptr;
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
+
+    cBleModuleMeasProgram *m_pMeasProgram = nullptr;
+    cBleModuleConfiguration m_configuration;
 };
 
 }

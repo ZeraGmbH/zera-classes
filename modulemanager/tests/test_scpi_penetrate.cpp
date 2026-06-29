@@ -93,7 +93,7 @@ QStringList test_scpi_penetrate::getAvailableSessions()
 void test_scpi_penetrate::createScpiClient()
 {
     m_scpiclient = new SCPIMODULE::ScpiTestClient(m_scpiModule,
-                                                  *m_scpiModule->getConfData(),
+                                                  *m_scpiModule->getConfigData(),
                                                   m_scpiModule->getSCPIServer()->getScpiInterface());
     m_scpiModule->getSCPIServer()->appendClient(m_scpiclient);
     connect(m_scpiclient, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, m_scpiclient, [&] (const QString &response) {

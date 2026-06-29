@@ -381,7 +381,7 @@ void ModuleManager::onEventSubSystemRemoved(VeinEvent::EventSystem *t_eventSyste
 
 void ModuleManager::saveModuleConfig(ModuleData *moduleData)
 {
-    QByteArray configData = moduleData->m_module->getConfiguration();
+    QByteArray configData = moduleData->m_module->getConfigXml();
     if(configData.isEmpty() == false) {
         QSaveFile f; //if the application is closed while writing it will not end up with empty files due to truncate
         f.setFileName(moduleData->m_configPath);

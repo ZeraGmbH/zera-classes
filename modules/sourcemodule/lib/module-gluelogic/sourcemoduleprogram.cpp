@@ -10,9 +10,8 @@
 #include <tasklambdarunner.h>
 #include <proxy.h>
 
-SourceModuleProgram::SourceModuleProgram(SourceModule* module,
-                                         const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseMeasWorkProgram(configuration, module->getVeinModuleName()),
+SourceModuleProgram::SourceModuleProgram(SourceModule* module) :
+    cBaseMeasWorkProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
 }

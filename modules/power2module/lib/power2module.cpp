@@ -1,16 +1,26 @@
 #include "power2module.h"
-#include "power2moduleconfiguration.h"
 #include "power2modulemeasprogram.h"
 
 namespace POWER2MODULE
 {
 
 cPower2Module::cPower2Module(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<cPower2ModuleConfiguration>())
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures +/- power with configured measuring and integration modes");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
+}
+
+cPower2ModuleConfigData *cPower2Module::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray cPower2Module::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 void cPower2Module::setupModule()
@@ -20,7 +30,7 @@ void cPower2Module::setupModule()
     cBaseMeasModule::setupModule();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cPower2ModuleMeasProgram(this, m_pConfiguration);
+    m_pMeasProgram = new cPower2ModuleMeasProgram(this);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cModuleActivist::activated, this, &BaseModule::activationContinue);
     connect(m_pMeasProgram, &cModuleActivist::deactivated, this, &BaseModule::deactivationContinue);

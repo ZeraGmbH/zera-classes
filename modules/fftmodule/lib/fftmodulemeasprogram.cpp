@@ -1,5 +1,4 @@
 #include "fftmodulemeasprogram.h"
-#include "fftmoduleconfiguration.h"
 #include "servicechannelnamehelper.h"
 #include "taskdspdataacquisition.h"
 #include "vfmodulecomponentcreator.h"
@@ -14,15 +13,14 @@
 namespace FFTMODULE
 {
 
-cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module,
-                                             const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
+cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module) :
+    cBaseDspMeasProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceFft(
         m_pModule->getEntityId(),
-        getConfData()->m_valueChannelList,
-        getConfData()->m_nFftOrder);
+        m_pModule->getConfigData()->m_valueChannelList,
+        m_pModule->getConfigData()->m_nFftOrder);
 
     m_var2DSPState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_activateDSPState);
@@ -53,8 +51,8 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module,
 
     connect(this, &cFftModuleMeasProgram::actualValues,
             &m_startStopHandler, &ActualValueStartStopHandler::onNewActualValues);
-    if (getConfData()->m_bmovingWindow) {
-        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasInterval.m_fValue);
+    if (m_pModule->getConfigData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasInterval.m_fValue);
         connect(&m_startStopHandler, &ActualValueStartStopHandler::sigNewActualValues,
                 &m_movingwindowFilter, &MovingwindowFilter::receiveActualValues);
         connect(&m_movingwindowFilter, &MovingwindowFilter::sigActualValues,
@@ -78,10 +76,10 @@ void cFftModuleMeasProgram::stop()
 void cFftModuleMeasProgram::generateVeinInterface()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
-    int channelCount = getConfData()->m_valueChannelList.count();
+    int channelCount = m_pModule->getConfigData()->m_valueChannelList.count();
     VfModuleComponentCreator componentCreator(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem());
     for (int i = 0; i < channelCount; i++) {
-        const QString &channelMNamesEntry = getConfData()->m_valueChannelList.at(i);
+        const QString &channelMNamesEntry = m_pModule->getConfigData()->m_valueChannelList.at(i);
         ServiceChannelNameHelper::TChannelAliasUnit aliasUnit =
             ServiceChannelNameHelper::getChannelAndUnit(channelMNamesEntry, observer);
         const QString &channelName = aliasUnit.m_channelAlias;
@@ -105,27 +103,27 @@ void cFftModuleMeasProgram::generateVeinInterface()
 
     m_pFFTCountInfo = new VfModuleMetaData(QString("FFTCount"), QVariant(channelCount));
     m_pModule->veinModuleMetaDataList.append(m_pFFTCountInfo);
-    m_pFFTOrderInfo = new VfModuleMetaData(QString("FFTOrder"), QVariant(getConfData()->m_nFftOrder));
+    m_pFFTOrderInfo = new VfModuleMetaData(QString("FFTOrder"), QVariant(m_pModule->getConfigData()->m_nFftOrder));
     m_pModule->veinModuleMetaDataList.append(m_pFFTOrderInfo);
 
     QString key;
     m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
-                                                           QVariant(getConfData()->m_fMeasInterval.m_fValue));
+                                                           QVariant(m_pModule->getConfigData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("s");
     m_pIntegrationTimeParameter->setScpiInfo("CONFIGURATION","TINTEGRATION", SCPI::isQuery|SCPI::isCmdwP);
     m_pIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
-    QString refChannelMNameConfigured = getConfData()->m_RefChannel.m_sPar;
+    QString refChannelMNameConfigured = m_pModule->getConfigData()->m_RefChannel.m_sPar;
     const QString channelMarkdown = m_pModule->getSharedChannelRangeObserver()->getChannelNamesForMardownDoc();
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_RefChannel"),
                                                    QString("Reference channel\n"
                                                            "%1").arg(channelMarkdown),
                                                    refChannelMNameConfigured);
-    m_pRefChannelParameter->setValidator(new cStringValidator(getConfData()->m_valueChannelList));
+    m_pRefChannelParameter->setValidator(new cStringValidator(m_pModule->getConfigData()->m_valueChannelList));
     m_pRefChannelParameter->setScpiInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP);
     m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
 
@@ -148,7 +146,7 @@ quint16 FFTMODULE::cFftModuleMeasProgram::calcFftResultLenHalf(quint8 fftOrder)
 void cFftModuleMeasProgram::setDspVarList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
-    m_nfftLen = calcFftResultLenHalf(getConfData()->m_nFftOrder);
+    m_nfftLen = calcFftResultLenHalf(m_pModule->getConfigData()->m_nFftOrder);
 
     // work variables without I/O
     // global data segment is 1k words and lies on 1k boundary, so we put fftinput and fftouptut
@@ -176,22 +174,22 @@ void cFftModuleMeasProgram::setDspVarList()
     m_pActualValuesDSP->addDspVar("VALXFFTF", 2 * m_nfftLen * m_veinActValueList.count());
     m_ModuleActualValues.resize(m_pActualValuesDSP->getUserMemSize()); // we provide a vector for generated actual values
 
-    m_FFTModuleActualValues.resize(m_veinActValueList.count() * getConfData()->m_nFftOrder * 2);
+    m_FFTModuleActualValues.resize(m_veinActValueList.count() * m_pModule->getConfigData()->m_nFftOrder * 2);
 }
 
 void cFftModuleMeasProgram::setDspCmdList()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     int samples = observer->getSamplesPerPeriod();
-    QString referenceChannel = getConfData()->m_RefChannel.m_sPar;
+    QString referenceChannel = m_pModule->getConfigData()->m_RefChannel.m_sPar;
     int referenceDspChannel = observer->getChannel(referenceChannel)->getDspChannel();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(2*samples) ); // clear meassignal
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2 * m_nfftLen * m_veinActValueList.count())));
-        if (getConfData()->m_bmovingWindow)
-            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
+        if (m_pModule->getConfigData()->m_bmovingWindow)
+            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(m_pModule->getConfigData()->m_fmovingwindowInterval*1000.0)); // initial ti time
         else
-            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval.m_fValue*1000.0)); // initial ti time
+            m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(m_pModule->getConfigData()->m_fMeasInterval.m_fValue*1000.0)); // initial ti time
         m_dspInterface->addCycListItem(QString("SETVAL(REFCHN,%1)").arg(referenceDspChannel));
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -211,8 +209,8 @@ void cFftModuleMeasProgram::setDspCmdList()
 
 
     // we compute or copy our wanted actual values
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-        QString channelMName = getConfData()->m_valueChannelList[i];
+    for (int i = 0; i < m_pModule->getConfigData()->m_valueChannelList.count(); i++) {
+        QString channelMName = m_pModule->getConfigData()->m_valueChannelList[i];
         int dspChannel = observer->getChannel(channelMName)->getDspChannel();
         m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(dspChannel) );
         m_dspInterface->addCycListItem(QString("COPYDATA(CH%1,0,MEASSIGNAL+%2)").arg(dspChannel).arg(samples));
@@ -284,16 +282,11 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     }
 }
 
-cFftModuleConfigData *cFftModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cFftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
 void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) { // maybe we are deactivating !!!!
         for (int channel = 0; channel < m_veinActValueList.count(); channel++) {
-            int maxOrder = getConfData()->m_nFftOrder;
+            int maxOrder = m_pModule->getConfigData()->m_nFftOrder;
             int offs = channel * maxOrder * 2;
             QList<double> fftList;
             for (int order = 0; order < maxOrder; order++) {
@@ -374,7 +367,7 @@ void cFftModuleMeasProgram::dataReadDSP()
         m_ModuleActualValues = m_pActualValuesDSP->getData();
 
         int nChannels = m_veinActValueList.count();
-        int nHarmonic = getConfData()->m_nFftOrder;
+        int nHarmonic = m_pModule->getConfigData()->m_nFftOrder;
         int resultOffs = nHarmonic * 2;
 
         double scale = 1.0/m_nfftLen;
@@ -411,11 +404,11 @@ void cFftModuleMeasProgram::dataReadDSP()
 
 void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
-    getConfData()->m_fMeasInterval.m_fValue = ti.toDouble();
-    if (getConfData()->m_bmovingWindow)
-        m_movingwindowFilter.setIntegrationTime(getConfData()->m_fMeasInterval.m_fValue);
+    m_pModule->getConfigData()->m_fMeasInterval.m_fValue = ti.toDouble();
+    if (m_pModule->getConfigData()->m_bmovingWindow)
+        m_movingwindowFilter.setIntegrationTime(m_pModule->getConfigData()->m_fMeasInterval.m_fValue);
     else {
-        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(getConfData()->m_fMeasInterval.m_fValue*1000));
+        m_pParameterDSP->setVarData(QString("TIPAR:%1;TISTART:0;").arg(m_pModule->getConfigData()->m_fMeasInterval.m_fValue*1000));
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
     emit m_pModule->parameterChanged();
@@ -424,7 +417,7 @@ void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
 void cFftModuleMeasProgram::newRefChannel(QVariant chn)
 {
     QString channelMName = chn.toString();
-    getConfData()->m_RefChannel.m_sPar = channelMName;
+    m_pModule->getConfigData()->m_RefChannel.m_sPar = channelMName;
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
     int dspChannel = channel->getDspChannel();

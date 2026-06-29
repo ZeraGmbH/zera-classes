@@ -3,7 +3,6 @@
 
 #include "basemeasprogram.h"
 #include "thdnmodule.h"
-#include "thdnmoduleconfigdata.h"
 
 namespace THDNMODULE
 {
@@ -12,8 +11,7 @@ class cThdnShadowModuleMeasProgram : public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cThdnShadowModuleMeasProgram(cThdnModule* module,
-                                 const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cThdnShadowModuleMeasProgram(cThdnModule* module);
     void generateVeinInterface() override;
 
 private slots:
@@ -21,8 +19,6 @@ private slots:
     void stop() override;
     void newIntegrationtime(const QVariant &ti);
 private:
-    cThdnModuleConfigData* getConfData();
-
     cThdnModule* m_pModule = nullptr;
     QState m_activationDoneState;
     QState m_deactivationDoneState;

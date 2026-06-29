@@ -1,48 +1,28 @@
 #ifndef FFTMODULECONFIGURATION_H
 #define FFTMODULECONFIGURATION_H
 
-
-#include <QStringList>
-#include <QByteArray>
-#include <QHash>
-
 #include "basemoduleconfiguration.h"
+#include "fftmoduleconfigdata.h"
 
 namespace FFTMODULE
 {
-
-enum moduleconfigstate
-{
-    setFftorder,
-    setValueCount,
-    setRefChannel,
-    setMeasureInterval,
-    setMovingwindowBool,
-    setMovingwindowTime,
-
-    setValue1 = 20
-};
-
-
-
-class cFftModuleConfigData;
 
 class cFftModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cFftModuleConfiguration();
-    ~cFftModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    cFftModuleConfigData* getConfigurationData();
+    explicit cFftModuleConfiguration(const QByteArray& xmlString);
+
+    QByteArray exportConfiguration() const override;
+    cFftModuleConfigData* getConfigData();
 
 protected slots:
-    virtual void configXMLInfo(const QString &key);
-    virtual void completeConfiguration(bool ok);
+    virtual void configXMLInfo(const QString &key) override;
+    void completeConfiguration(bool ok);
 
 private:
-    cFftModuleConfigData *m_pFftModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cFftModuleConfigData m_configData;
 };
 
 }

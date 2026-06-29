@@ -2,6 +2,7 @@
 #define SPM1MODULE_H
 
 #include "spm1modulemeasprogram.h"
+#include "spm1moduleconfiguration.h"
 #include <basemeasmodule.h>
 
 namespace SPM1MODULE
@@ -17,6 +18,8 @@ public:
     static constexpr const char* BaseSCPIModuleName = "PM01";
 
     explicit cSpm1Module(const ModuleFactoryParam &moduleParam);
+    cSpm1ModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
@@ -24,6 +27,7 @@ private:
     void stopMeas() override;
 
     cSpm1ModuleMeasProgram *m_pMeasProgram = nullptr;
+    cSpm1ModuleConfiguration m_configuration;
 };
 
 }

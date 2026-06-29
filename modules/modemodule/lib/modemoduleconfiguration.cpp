@@ -1,56 +1,43 @@
 #include "modemoduleconfiguration.h"
-#include "modemoduleconfigdata.h"
-#include <xmlconfigreader.h>
 
 namespace MODEMODULE
 {
 
-cModeModuleConfiguration::cModeModuleConfiguration()
+cModeModuleConfiguration::cModeModuleConfiguration(const QByteArray &xmlString)
 {
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cModeModuleConfiguration::configXMLInfo);
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cModeModuleConfiguration::completeConfiguration);
+    setConfiguration(xmlString);
 }
 
-
-cModeModuleConfiguration::~cModeModuleConfiguration()
+enum moduleconfigstate
 {
-    if (m_pModeModulConfigData) delete m_pModeModulConfigData;
-}
-
+    setMeasMode,
+    setSamplingChnNr,
+    setSamplingSigPeriod,
+    setSamplingMeasPeriod
+};
 
 void cModeModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
-    m_bConfigured = m_bConfigError = false;
-
-    if (m_pModeModulConfigData) delete m_pModeModulConfigData;
-    m_pModeModulConfigData = new cModeModuleConfigData();
-
-    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
-
-    // so now we can set up
-    // initializing hash table for xml configuration
-
     m_ConfigXMLMap["modemodconfpar:configuration:pcb:mode"] = setMeasMode;
     m_ConfigXMLMap["modemodconfpar:configuration:dsp:sampling:chnnr"] = setSamplingChnNr;
     m_ConfigXMLMap["modemodconfpar:configuration:dsp:sampling:signalperiod"] = setSamplingSigPeriod;
     m_ConfigXMLMap["modemodconfpar:configuration:dsp:sampling:measureperiod"] = setSamplingMeasPeriod;
 
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cModeModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cModeModuleConfiguration::completeConfiguration);
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
-
-QByteArray cModeModuleConfiguration::exportConfiguration()
+QByteArray cModeModuleConfiguration::exportConfiguration() const
 {
     // nothing to set befor export
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-
-cModeModuleConfigData *cModeModuleConfiguration::getConfigurationData()
+cModeModuleConfigData *cModeModuleConfiguration::getConfigData()
 {
-    return m_pModeModulConfigData;
+    return &m_configData;
 }
-
 
 void cModeModuleConfiguration::configXMLInfo(const QString &key)
 {
@@ -63,16 +50,16 @@ void cModeModuleConfiguration::configXMLInfo(const QString &key)
         switch (cmd)
         {
         case setMeasMode:
-            m_pModeModulConfigData->m_sMode = m_pXMLReader->getValue(key);
+            m_configData.m_sMode = m_pXMLReader->getValue(key);
             break;
         case setSamplingChnNr:
-            m_pModeModulConfigData->m_nChannelnr = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nChannelnr = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setSamplingSigPeriod:
-            m_pModeModulConfigData->m_nSignalPeriod = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nSignalPeriod = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setSamplingMeasPeriod:
-            m_pModeModulConfigData->m_nMeasurePeriod = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nMeasurePeriod = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         }
 
@@ -83,11 +70,9 @@ void cModeModuleConfiguration::configXMLInfo(const QString &key)
         m_bConfigError = true;
 }
 
-
 void cModeModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
 }
 
 }
-

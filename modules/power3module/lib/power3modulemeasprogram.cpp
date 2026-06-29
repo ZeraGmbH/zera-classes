@@ -1,7 +1,6 @@
 #include "power3modulemeasprogram.h"
 #include "power3module.h"
 #include "power3measdelegate.h"
-#include "power3moduleconfiguration.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <scpi.h>
@@ -9,9 +8,8 @@
 namespace POWER3MODULE
 {
 
-cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module,
-                                                   const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseMeasWorkProgram(configuration, module->getVeinModuleName()),
+cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module) :
+    cBaseMeasWorkProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_searchActualValuesState.addTransition(this, &cPower3ModuleMeasProgram::activationContinue, &m_activationDoneState);
@@ -36,14 +34,10 @@ cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module,
     connect(&m_deactivateDoneState, &QState::entered, this, &cPower3ModuleMeasProgram::deactivateMeasDone);
 }
 
-cPower3ModuleConfigData *cPower3ModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cPower3ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
 void cPower3ModuleMeasProgram::generateVeinInterface()
 {
-    for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++) {
+    const cPower3ModuleConfigData *configData = m_pModule->getConfigData();
+    for (int i = 0; i < configData->m_nPowerSystemCount; i++) {
         VfModuleComponent *pActvalue;
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             QString("ACT_HPP%1").arg(i+1),
@@ -72,7 +66,7 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
         m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
-    m_pHPWCountInfo = new VfModuleMetaData(QString("HPWCount"), QVariant(getConfData()->m_nPowerSystemCount));
+    m_pHPWCountInfo = new VfModuleMetaData(QString("HPWCount"), QVariant(configData->m_nPowerSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pHPWCountInfo);
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -87,15 +81,16 @@ void cPower3ModuleMeasProgram::searchActualValues()
 {
     bool error = false;
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
-    m_fftSignal = storageDb->findComponent(getConfData()->m_nModuleId, "SIG_Measuring");
+    const cPower3ModuleConfigData *configData = m_pModule->getConfigData();
+    m_fftSignal = storageDb->findComponent(configData->m_nModuleId, "SIG_Measuring");
     if (m_fftSignal) {
         connect(m_fftSignal.get(), &VeinStorage::AbstractComponent::sigValueChange,
                 this, &cPower3ModuleMeasProgram::onFftSigChange);
-        for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++) {
+        for (int i = 0; i < configData->m_nPowerSystemCount; i++) {
             VeinStorage::AbstractComponentPtr inputU =
-                storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
+                storageDb->findComponent(configData->m_nModuleId, configData->m_powerSystemConfigList.at(i).m_sInputU);
             VeinStorage::AbstractComponentPtr inputI =
-                storageDb->findComponent(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
+                storageDb->findComponent(configData->m_nModuleId, configData->m_powerSystemConfigList.at(i).m_sInputI);
 
             if (inputU && inputI) {
                 cPower3MeasDelegate* cPMD;

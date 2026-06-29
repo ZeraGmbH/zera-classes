@@ -4,14 +4,15 @@
 #include "secmeasinputdictionary.h"
 #include "sfcmoduleconfigdata.h"
 #include "vfmoduleparameter.h"
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
+#include "secresourcetypelist.h"
 #include <rminterface.h>
+#include <pcbinterface.h>
 #include <secinterface.h>
 #include <basemeasprogram.h>
 #include <timertemplateqt.h>
-#include "secresourcetypelist.h"
+#include <QStateMachine>
+#include <QState>
+#include <QFinalState>
 
 namespace SFCMODULE
 {
@@ -46,14 +47,13 @@ enum sfcmoduleCmds
     readstatus
 };
 
-
 class cSfcModule;
+
 class cSfcModuleMeasProgram : public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cSfcModuleMeasProgram(cSfcModule *module,
-                          const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cSfcModuleMeasProgram(cSfcModule *module);
     void generateVeinInterface() override; // here we export our interface (entities)
 
 signals:
@@ -64,9 +64,7 @@ public slots:
     void stop() override;  // in interface are not updated when stop
 
 private:
-    cSfcModuleConfigData *getConfData();
-
-    cSfcModule *m_pModule;
+    cSfcModule *m_pModule = nullptr;
     Zera::cRMInterface m_rmInterface;
     Zera::ProxyClientPtr m_rmClient;
     Zera::cSECInterfacePtr m_secInterface;
@@ -74,7 +72,7 @@ private:
     Zera::ProxyClientPtr m_pcbClient;
 
     QList<VfModuleComponent *> m_veinActValueList; // the list of actual values we work on
-    qint32 m_nIt;
+    qint32 m_nIt = 0;
     QString m_sIt;
     QString m_masterErrCalcName;
     QList<QString> m_sItList; // for interation over x Input hash
@@ -94,10 +92,10 @@ private:
     QState m_freeECalculatorState; // we give back our ecalcunits to sec server
     QFinalState m_deactivationDoneState;
 
-    VfModuleParameter* m_pStartStopPar;
-    VfModuleParameter* m_pFlankCountAct;
-    VfModuleParameter* m_pLedStateAct;
-    VfModuleParameter* m_pLedInitialStateAct;
+    VfModuleParameter* m_pStartStopPar = nullptr;
+    VfModuleParameter* m_pFlankCountAct = nullptr;
+    VfModuleParameter* m_pLedStateAct = nullptr;
+    VfModuleParameter* m_pLedInitialStateAct = nullptr;
 
     // statemachine for activating gets the following states
     QState resourceManagerConnectState; // connect to resource manager
@@ -154,7 +152,6 @@ private slots:
     void activationDone();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void deactivateMeasDone();
     void onStartStopChanged(QVariant newValue);
 
     void readIntRegister();

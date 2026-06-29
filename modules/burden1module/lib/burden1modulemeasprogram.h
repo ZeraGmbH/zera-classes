@@ -17,29 +17,26 @@ class cBurden1Module;
 class cBurden1ModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
-
 public:
-    cBurden1ModuleMeasProgram(cBurden1Module* module,
-                              const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cBurden1ModuleMeasProgram(cBurden1Module* module);
     void generateVeinInterface() override;
 public slots:
     virtual void start() override {}; // follow DFT
     virtual void stop() override {};
 
 private:
-    cBurden1ModuleConfigData* getConfData();
     void setParameters();
 
-    cBurden1Module* m_pModule;
+    cBurden1Module* m_pModule = nullptr;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
-    VfModuleMetaData* m_pBRSCountInfo; // the number of Burden system we are configured for
-    VfModuleComponent* m_pMeasureSignal;
+    VfModuleMetaData* m_pBRSCountInfo = nullptr;  // the number of Burden system we are configured for
+    VfModuleComponent* m_pMeasureSignal = nullptr;
 
-    VfModuleParameter* m_pNominalRangeParameter;
-    VfModuleParameter* m_pNominalRangeFactorParameter;
-    VfModuleParameter* m_pNominalBurdenParameter;
-    VfModuleParameter* m_pWireLengthParameter;
-    VfModuleParameter* m_pWireCrosssectionParameter;
+    VfModuleParameter* m_pNominalRangeParameter = nullptr;
+    VfModuleParameter* m_pNominalRangeFactorParameter = nullptr;
+    VfModuleParameter* m_pNominalBurdenParameter = nullptr;
+    VfModuleParameter* m_pWireLengthParameter = nullptr;
+    VfModuleParameter* m_pWireCrosssectionParameter = nullptr;
     VeinStorage::AbstractComponentPtr m_dftSignal;
 
     QList<cBurden1MeasDelegate*> m_Burden1MeasDelegateList;

@@ -2,7 +2,6 @@
 #define SEC1MODULEMEASPROGRAM_H
 
 #include "sec1module.h"
-#include "sec1moduleconfigdata.h"
 #include "clientactivecomponent.h"
 #include "multipleresulthelper.h"
 #include "secmeasinputdictionary.h"
@@ -55,8 +54,7 @@ class cSec1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cSec1ModuleMeasProgram(cSec1Module* module,
-                           const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cSec1ModuleMeasProgram(cSec1Module* module);
     void generateVeinInterface() override;
 signals:
     void setupContinue();
@@ -129,7 +127,6 @@ private slots:
     bool found(QList<TRefInput> &list, QString searched);
 
 private:
-    cSec1ModuleConfigData* getConfData();
     void setInterfaceComponents();
     void setValidators();
 
@@ -158,7 +155,7 @@ private:
     void setDateTime(QDateTime var, VfModuleParameter* veinParam);
     void calculateMeasTime();
 
-    cSec1Module* m_pModule; // the module we live in
+    cSec1Module* m_pModule = nullptr; // the module we live in
     Zera::cRMInterface m_rmInterface;
     Zera::ProxyClientPtr m_rmClient;
     Zera::cSECInterfacePtr m_secInterface;
@@ -222,51 +219,51 @@ private:
 
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     QStringList m_DUTAliasList;
-    qint32 m_nIt;
+    qint32 m_nIt = 0;
     QList<QString> m_sItList; // for interation over x Input hash
     QString m_sIt;
 
     QString m_masterErrCalcName;
     QString m_slaveErrCalcName;
 
-    VfModuleParameter* m_pDutInputPar;
-    VfModuleParameter* m_pRefInputPar;
-    VfModuleParameter* m_pRefConstantPar;
-    VfModuleParameter* m_pDutConstantPar;
-    VfModuleParameter* m_pDutConstantAuto;
-    VfModuleParameter* m_pDutConstantUScaleDenom;
-    VfModuleParameter* m_pDutConstantUScaleNum;
-    VfModuleParameter* m_pDutConstantIScaleDenom;
-    VfModuleParameter* m_pDutTypeMeasurePoint;
-    VfModuleParameter* m_pDutConstantIScaleNum;
-    VfModuleParameter* m_pDutConstantUnitPar;
-    VfModuleParameter* m_pDutPulsesAct;
-    VfModuleParameter* m_pMRatePar;
-    VfModuleParameter* m_pTargetPar;
-    VfModuleParameter* m_pEnergyPar;
-    VfModuleParameter* m_pStartStopPar;
-    VfModuleParameter* m_pStatusAct;
-    VfModuleParameter* m_pProgressAct;
-    VfModuleParameter* m_pEnergyAct;
-    VfModuleParameter* m_pEnergyFinalAct;
-    VfModuleParameter* m_pResultAct;
-    VfModuleParameter* m_pRefFreqInput;
-    VfModuleParameter* m_pContinuousPar;
-    VfModuleParameter* m_pUpperLimitPar;
-    VfModuleParameter* m_pLowerLimitPar;
-    VfModuleParameter* m_pResultUnit;
-    VfModuleParameter* m_pRatingAct;
-    VfModuleParameter* m_pMeasCountPar;
-    VfModuleParameter* m_pMeasWait;
-    VfModuleParameter* m_pMeasNumAct;
-    VfModuleParameter* m_pMulCountAct;
-    VfModuleParameter* m_pMulResultArray;
-    VfModuleParameter* m_pMeasStartTime;
-    VfModuleParameter* m_pMeasEndTime;
-    VfModuleParameter* m_pMeasDurationMs;
+    VfModuleParameter* m_pDutInputPar = nullptr;
+    VfModuleParameter* m_pRefInputPar = nullptr;
+    VfModuleParameter* m_pRefConstantPar = nullptr;
+    VfModuleParameter* m_pDutConstantPar = nullptr;
+    VfModuleParameter* m_pDutConstantAuto = nullptr;
+    VfModuleParameter* m_pDutConstantUScaleDenom = nullptr;
+    VfModuleParameter* m_pDutConstantUScaleNum = nullptr;
+    VfModuleParameter* m_pDutConstantIScaleDenom = nullptr;
+    VfModuleParameter* m_pDutTypeMeasurePoint = nullptr;
+    VfModuleParameter* m_pDutConstantIScaleNum = nullptr;
+    VfModuleParameter* m_pDutConstantUnitPar = nullptr;
+    VfModuleParameter* m_pDutPulsesAct = nullptr;
+    VfModuleParameter* m_pMRatePar = nullptr;
+    VfModuleParameter* m_pTargetPar = nullptr;
+    VfModuleParameter* m_pEnergyPar = nullptr;
+    VfModuleParameter* m_pStartStopPar = nullptr;
+    VfModuleParameter* m_pStatusAct = nullptr;
+    VfModuleParameter* m_pProgressAct = nullptr;
+    VfModuleParameter* m_pEnergyAct = nullptr;
+    VfModuleParameter* m_pEnergyFinalAct = nullptr;
+    VfModuleParameter* m_pResultAct = nullptr;
+    VfModuleParameter* m_pRefFreqInput = nullptr;
+    VfModuleParameter* m_pContinuousPar = nullptr;
+    VfModuleParameter* m_pUpperLimitPar = nullptr;
+    VfModuleParameter* m_pLowerLimitPar = nullptr;
+    VfModuleParameter* m_pResultUnit = nullptr;
+    VfModuleParameter* m_pRatingAct = nullptr;
+    VfModuleParameter* m_pMeasCountPar = nullptr;
+    VfModuleParameter* m_pMeasWait = nullptr;
+    VfModuleParameter* m_pMeasNumAct = nullptr;
+    VfModuleParameter* m_pMulCountAct = nullptr;
+    VfModuleParameter* m_pMulResultArray = nullptr;
+    VfModuleParameter* m_pMeasStartTime = nullptr;
+    VfModuleParameter* m_pMeasEndTime = nullptr;
+    VfModuleParameter* m_pMeasDurationMs = nullptr;
 
 
-    VfModuleParameter* m_pClientNotifierPar;
+    VfModuleParameter* m_pClientNotifierPar = nullptr;
     ClientActiveComponent m_ClientActiveNotifier;
 
     cStringValidator *m_pDutConstanstUnitValidator;
@@ -292,18 +289,18 @@ private:
     static constexpr quint32 m_nActualizeIntervallHighFreq = 50;
 
     // Multiple measurements
-    qint32 m_nMeasurementsToGo;
-    quint32 m_nMeasurementNo;
+    qint32 m_nMeasurementsToGo = 0;
+    quint32 m_nMeasurementNo = 0;
     QTimer m_WaitMultiTimer;
     QDateTime m_WaitStartDateTime;
 
     quint32 m_lastProgress = 0;
     QDateTime m_measStartDateTime;
     QDateTime m_measEndDateTime;
-    int m_measDuration;
+    int m_measDuration = 0;
 
     MultipleResultHelper m_multipleResultHelper;
-    cDoubleValidator *m_dutConstValidator;
+    cDoubleValidator *m_dutConstValidator = nullptr;
 
     QElapsedTimer m_demoTimeSinceStart;
 };

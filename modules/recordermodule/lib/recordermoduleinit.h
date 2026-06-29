@@ -3,7 +3,6 @@
 
 #include "moduleactivist.h"
 #include "recordermodule.h"
-#include "recordermoduleconfigdata.h"
 #include "vfmodulecomponentstoragefetchonly.h"
 #include <timersingleshotqt.h>
 #include <vs_storagerecorder.h>
@@ -12,8 +11,7 @@
 class RecorderModuleInit : public cModuleActivist
 {
 public:
-    RecorderModuleInit(RecorderModule *module,
-                       const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit RecorderModuleInit(RecorderModule *module);
 public slots:
     void activate() override;
     void deactivate() override;
@@ -24,8 +22,7 @@ private slots:
 private:
     void createRecorder();
 
-    RecorderModule *m_module;
-    RecorderModuleConfigData* m_confData;
+    RecorderModule *m_module = nullptr;
 
     TimerTemplateQtPtr m_stopLoggingTimer; // Hack: avoid out of memory by stopping after a while
 

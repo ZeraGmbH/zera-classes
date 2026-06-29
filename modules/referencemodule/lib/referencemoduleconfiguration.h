@@ -1,46 +1,26 @@
 #ifndef REFERENCEMODULECONFIGURATION_H
 #define REFERENCEMODULECONFIGURATION_H
 
-
-#include <QStringList>
-#include <QByteArray>
-#include <QHash>
-
 #include "basemoduleconfiguration.h"
+#include "referencemoduleconfigdata.h"
 
 namespace REFERENCEMODULE
 {
-
-enum moduleconfigstate
-{
-    setChannelCount,
-    setMeasureInterval,
-    setMeasureIgnore,
-
-    setReferenceChannel1 = 16 // max. 32 channels
-
-};
-
-
-
-class cReferenceModuleConfigData;
 
 class cReferenceModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cReferenceModuleConfiguration();
-    ~cReferenceModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    cReferenceModuleConfigData* getConfigurationData();
+    explicit cReferenceModuleConfiguration(const QByteArray& xmlString);
+    QByteArray exportConfiguration() const override;
+    cReferenceModuleConfigData* getConfigData();
 
-protected slots:
-    virtual void configXMLInfo(const QString &key);
-    virtual void completeConfiguration(bool ok);
-
+private slots:
+    void configXMLInfo(const QString &key) override;
+    void completeConfiguration(bool ok);
 private:
-    cReferenceModuleConfigData *m_pReferenceModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cReferenceModuleConfigData m_configData;
 };
 
 }

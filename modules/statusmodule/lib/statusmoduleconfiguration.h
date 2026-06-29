@@ -1,33 +1,27 @@
 #ifndef STATUSMODULECONFIGURATION_H
 #define STATUSMODULECONFIGURATION_H
 
-
-#include <QStringList>
-#include <QByteArray>
-#include <QHash>
-
 #include "basemoduleconfiguration.h"
+#include "statusmoduleconfigdata.h"
 
 namespace STATUSMODULE
 {
-
-
-class cStatusModuleConfigData;
 
 class cStatusModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cStatusModuleConfiguration();
-    ~cStatusModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    cStatusModuleConfigData* getConfigurationData();
-protected slots:
-    virtual void configXMLInfo(const QString &key);
-    virtual void completeConfiguration(bool ok);
+    explicit cStatusModuleConfiguration(const QByteArray& xmlString);
+
+    QByteArray exportConfiguration() const override;
+    cStatusModuleConfigData* getConfigData();
+
+private slots:
+    void configXMLInfo(const QString &key) override;
+    void completeConfiguration(bool ok);
 private:
-    cStatusModuleConfigData *m_pStatusModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cStatusModuleConfigData m_configData;
 };
 
 }

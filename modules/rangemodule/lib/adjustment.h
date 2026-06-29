@@ -35,7 +35,7 @@ class cAdjustManagement: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cAdjustManagement(cRangeModule* module, QStringList chnlist, QStringList subdclist, adjustConfPar *adjustmentConfig);
+    explicit cAdjustManagement(cRangeModule* module, QStringList chnlist, QStringList subdclist, adjustConfPar *adjustmentConfig);
     void generateVeinInterface() override;
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
@@ -45,22 +45,22 @@ signals:
 private:
     double getIgnoreRmsCorrFactor();
 
-    cRangeModule* m_pModule; // the module we live in
+    cRangeModule* m_pModule = nullptr; // the module we live in
     QStringList m_ChannelNameList; // the list of channels (names) we work on
     QStringList m_subdcChannelNameList; // the list of channels we have to subtract dc
-    adjustConfPar *m_adjustmentConfig;
+    adjustConfPar *m_adjustmentConfig = nullptr;
     Zera::DspInterfacePtr m_dspInterface;
     Zera::ProxyClientPtr m_dspClient;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
     QList<cRangeMeasChannel*> m_subDCChannelList;
     // Those are the actual values without preSacling
-    quint8 m_nChannelIt;
+    quint8 m_nChannelIt = 0;
     QHash<quint32, int> m_MsgNrCmdList;
     TimerTemplateQtPtr m_AdjustTimer;
-    bool m_bAdjustTrigger;
+    bool m_bAdjustTrigger = false;
 
-    VfModuleParameter *m_ParIgnoreRmsValues;
-    VfModuleParameter *m_ParIgnoreRmsValuesOnOff;
+    VfModuleParameter *m_ParIgnoreRmsValues = nullptr;
+    VfModuleParameter *m_ParIgnoreRmsValuesOnOff = nullptr;
     QList<VfModuleParameter*> m_invertedPhasesParList;
 
     // statemachine for activating gets the following states
@@ -88,14 +88,14 @@ private:
     QState m_getOffsetCorrFromPcbServerState, m_prepareOffsetCorrForDspServerState;
     QFinalState m_adjustDoneState;
 
-    DspVarGroupClientInterface* m_pGainCorrectionDSP; // copy of dsp internal correction data
-    DspVarGroupClientInterface* m_pPhaseCorrectionDSP;
-    DspVarGroupClientInterface* m_pOffsetCorrectionDSP;
+    DspVarGroupClientInterface* m_pGainCorrectionDSP = nullptr; // copy of dsp internal correction data
+    DspVarGroupClientInterface* m_pPhaseCorrectionDSP = nullptr;
+    DspVarGroupClientInterface* m_pOffsetCorrectionDSP = nullptr;
 
-    float* m_dspGainCorrValues;
+    float* m_dspGainCorrValues = nullptr;
     QVector<float> m_fGainKeeperForFakingRmsValues;
-    float* m_dspPhaseCorrValues;
-    float* m_dspOffsetCorrValues;
+    float* m_dspPhaseCorrValues = nullptr;
+    float* m_dspOffsetCorrValues = nullptr;
 
 
 private slots:

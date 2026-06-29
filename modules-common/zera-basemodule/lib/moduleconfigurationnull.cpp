@@ -2,16 +2,10 @@
 
 ModuleConfigurationNull::ModuleConfigurationNull()
 {
-}
-
-void ModuleConfigurationNull::setConfiguration(const QByteArray& xmlString)
-{
-    Q_UNUSED(xmlString)
     m_bConfigured = true;
-    m_bConfigError = false;
 }
 
-QByteArray ModuleConfigurationNull::exportConfiguration()
+QByteArray ModuleConfigurationNull::exportConfiguration() const
 {
     return QByteArray();
 }

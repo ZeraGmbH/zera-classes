@@ -1,6 +1,5 @@
 #include "lambdamodulemeasprogram.h"
 #include "lambdamodule.h"
-#include "lambdamoduleconfiguration.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <scpi.h>
@@ -8,9 +7,8 @@
 namespace LAMBDAMODULE
 {
 
-cLambdaModuleMeasProgram::cLambdaModuleMeasProgram(cLambdaModule* module,
-                                                   const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseMeasWorkProgram(configuration, module->getVeinModuleName()),
+cLambdaModuleMeasProgram::cLambdaModuleMeasProgram(cLambdaModule* module) :
+    cBaseMeasWorkProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_searchActualValuesState.addTransition(this, &cLambdaModuleMeasProgram::activationContinue, &m_activationDoneState);
@@ -35,14 +33,10 @@ cLambdaModuleMeasProgram::cLambdaModuleMeasProgram(cLambdaModule* module,
     connect(&m_deactivateDoneState, &QState::entered, this, &cLambdaModuleMeasProgram::deactivateMeasDone);
 }
 
-cLambdaModuleConfigData *cLambdaModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cLambdaModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
 void cLambdaModuleMeasProgram::generateVeinInterface()
 {
-    for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
+    const cLambdaModuleConfigData *configData =  m_pModule->getConfigData();
+    for (int i = 0; i < configData->m_nLambdaSystemCount; i++) {
         VfModuleComponent *pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                              QString("ACT_Lambda%1").arg(i+1),
                                                              QString("Actual lambda value"));
@@ -59,7 +53,7 @@ void cLambdaModuleMeasProgram::generateVeinInterface()
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue);
     }
 
-    m_pLAMBDACountInfo = new VfModuleMetaData(QString("LambdaCount"), QVariant(getConfData()->m_nLambdaSystemCount));
+    m_pLAMBDACountInfo = new VfModuleMetaData(QString("LambdaCount"), QVariant(configData->m_nLambdaSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pLAMBDACountInfo);
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -72,13 +66,14 @@ void cLambdaModuleMeasProgram::generateVeinInterface()
 void cLambdaModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    m_lambdaCalcDelegate = new LambdaCalcDelegate(getConfData()->m_activeMeasModeAvail, m_veinLambdaActValues, m_veinLoadTypeList);
+    const cLambdaModuleConfigData *configData =  m_pModule->getConfigData();
+    m_lambdaCalcDelegate = new LambdaCalcDelegate(configData->m_activeMeasModeAvail, m_veinLambdaActValues, m_veinLoadTypeList);
     connect(m_lambdaCalcDelegate, &LambdaCalcDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
     VeinStorage::AbstractComponentPtr activeMeasModeComponent =
-        storageDb->findComponent(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModeComponent);
+        storageDb->findComponent(configData->m_activeMeasModeEntity, configData->m_activeMeasModeComponent);
     VeinStorage::AbstractComponentPtr activeMeasModePhaseComponent =
-        storageDb->findComponent(getConfData()->m_activeMeasModeEntity, getConfData()->m_activeMeasModePhaseComponent);
+        storageDb->findComponent(configData->m_activeMeasModeEntity, configData->m_activeMeasModePhaseComponent);
     if (activeMeasModeComponent && activeMeasModePhaseComponent) {
         connect(activeMeasModeComponent.get(), &VeinStorage::AbstractComponent::sigValueChange,
                 m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerMeasModeChange);
@@ -88,14 +83,14 @@ void cLambdaModuleMeasProgram::searchActualValues()
                 m_lambdaCalcDelegate, &LambdaCalcDelegate::onActivePowerPhaseMaskChange);
         m_lambdaCalcDelegate->onActivePowerPhaseMaskChange(activeMeasModePhaseComponent->getValue());
 
-        for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
+        for (int i = 0; i < configData->m_nLambdaSystemCount; i++) {
             if (!error) {
                 VeinStorage::AbstractComponentPtr inputPComponent =
-                    storageDb->findComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
+                    storageDb->findComponent(configData->m_lambdaSystemConfigList.at(i).m_nInputPEntity, configData->m_lambdaSystemConfigList.at(i).m_sInputP);
                 VeinStorage::AbstractComponentPtr inputQComponent =
-                    storageDb->findComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputQEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputQ);
+                    storageDb->findComponent(configData->m_lambdaSystemConfigList.at(i).m_nInputQEntity, configData->m_lambdaSystemConfigList.at(i).m_sInputQ);
                 VeinStorage::AbstractComponentPtr inputSComponent =
-                    storageDb->findComponent(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
+                    storageDb->findComponent(configData->m_lambdaSystemConfigList.at(i).m_nInputSEntity, configData->m_lambdaSystemConfigList.at(i).m_sInputS);
 
                 if (inputPComponent && inputQComponent && inputSComponent) {
                     connect(inputPComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {

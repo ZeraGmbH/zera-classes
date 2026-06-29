@@ -1,6 +1,7 @@
 #ifndef BURDEN1MODULE_H
 #define BURDEN1MODULE_H
 
+#include "burden1moduleconfiguration.h"
 #include "burden1modulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -13,13 +14,17 @@ public:
     static constexpr const char* BaseModuleName = "Burden1Module";
     static constexpr const char* BaseSCPIModuleName = "BD1";
 
-    cBurden1Module(const ModuleFactoryParam &moduleParam);
+    explicit cBurden1Module(const ModuleFactoryParam &moduleParam);
+    cBurden1ModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private:
-    cBurden1ModuleMeasProgram *m_pMeasProgram = nullptr;
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
+
+    cBurden1ModuleMeasProgram *m_pMeasProgram = nullptr;
+    cBurden1ModuleConfiguration m_configuration;
 };
 
 }

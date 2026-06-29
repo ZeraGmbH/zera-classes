@@ -51,8 +51,7 @@ class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cAdjustmentModuleMeasProgram(cAdjustmentModule* module,
-                                 const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cAdjustmentModuleMeasProgram(cAdjustmentModule* module);
     void generateVeinInterface() override;
     static double symAngle(double ang);
 
@@ -106,7 +105,6 @@ private slots:
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
-    cAdjustmentModuleConfigData* getConfData() const;
     bool checkExternalVeinComponents();
     enum ChannelRangesAllowed {
         ALL_RANGES,

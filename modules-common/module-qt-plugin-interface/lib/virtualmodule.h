@@ -24,7 +24,7 @@ public:
     QString getVeinModuleName() { return m_sModuleName; };
     QString getSCPIModuleName() { return m_sSCPIModuleName; };
 
-    virtual QByteArray getConfiguration() const = 0;
+    virtual QByteArray getConfigXml() const = 0;
 
     virtual void startModule() = 0;
     virtual void stopModule() = 0;

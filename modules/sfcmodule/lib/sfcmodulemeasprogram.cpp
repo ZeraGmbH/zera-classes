@@ -1,10 +1,9 @@
 #include "sfcmodulemeasprogram.h"
 #include "sfcmodule.h"
-#include "sfcmoduleconfiguration.h"
 #include <errormessages.h>
 #include <intvalidator.h>
-#include <reply.h>
 #include <scpi.h>
+#include <reply.h>
 #include <proxy.h>
 #include <proxyclient.h>
 #include <timerfactoryqt.h>
@@ -12,9 +11,8 @@
 namespace SFCMODULE
 {
 
-cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module,
-                                             const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseMeasProgram(configuration, module->getVeinModuleName()),
+cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
+    cBaseMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
@@ -119,7 +117,7 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module,
     connect(&m_freeECalculatorState, &QState::entered, this, &cSfcModuleMeasProgram::freeECalculator);
     connect(&m_deactivationDoneState, &QState::entered, this, &cSfcModuleMeasProgram::deactivationDone);
 
-    m_resourceTypeList.addTypesFromConfig(getConfData()->m_dutInpList);
+    m_resourceTypeList.addTypesFromConfig(m_pModule->getConfigData()->m_dutInpList);
 }
 
 void cSfcModuleMeasProgram::start()
@@ -128,11 +126,6 @@ void cSfcModuleMeasProgram::start()
 
 void cSfcModuleMeasProgram::stop()
 {
-}
-
-cSfcModuleConfigData *cSfcModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cSfcModuleConfiguration *>(m_pConfiguration.get())->getConfigurationData();
 }
 
 void cSfcModuleMeasProgram::handleSECInterrupt()
@@ -186,7 +179,7 @@ void cSfcModuleMeasProgram::readResource()
 
 void cSfcModuleMeasProgram::testSecInputs()
 {
-    const auto dutInplist = getConfData()->m_dutInpList;
+    const auto dutInplist = m_pModule->getConfigData()->m_dutInpList;
     QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
     qint32 dutInputCountLeftToCheck = dutInplist.count();
     for (int dutInputNo = 0; dutInputNo < dutInplist.count(); dutInputNo++) {
@@ -261,7 +254,7 @@ void cSfcModuleMeasProgram::setsecINTNotifier()
 
 void cSfcModuleMeasProgram::setMasterMux()
 {
-    QString dutInputName = getConfData()->m_sDutInput.m_sPar;
+    const QString &dutInputName = m_pModule->getConfigData()->m_sDutInput.m_sPar;
     m_MsgNrCmdList[m_secInterface->setMux(m_masterErrCalcName, dutInputName)] = setmastermux;
 }
 
@@ -468,11 +461,6 @@ void cSfcModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pLedInitialStateAct;
 }
 
-void cSfcModuleMeasProgram::deactivateMeasDone()
-{
-    emit deactivated();
-}
-
 void cSfcModuleMeasProgram::onStartStopChanged(QVariant newValue)
 {
     bool ok;
@@ -496,7 +484,7 @@ void cSfcModuleMeasProgram::resetIntRegister()
 
 void cSfcModuleMeasProgram::checkForRestart()
 {
-    interruptContinue();
+    emit interruptContinue();
 }
 
 void cSfcModuleMeasProgram::stopECCalculator()
@@ -517,7 +505,7 @@ void cSfcModuleMeasProgram::deactivationDone()
     disconnect(m_secInterface.get(), 0, this, 0);
     disconnect(m_pcbInterface.get(), 0, this, 0);
 
-    emit deactivateMeasDone();
+    emit deactivated();
 }
 
 void cSfcModuleMeasProgram::enableInterrupt()

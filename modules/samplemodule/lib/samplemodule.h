@@ -2,6 +2,7 @@
 #define SAMPLEMODULE_H
 
 #include "samplemodulemeasprogram.h"
+#include "samplemoduleconfiguration.h"
 #include <basemeasmodule.h>
 
 namespace SAMPLEMODULE
@@ -14,6 +15,8 @@ public:
     static constexpr const char* BaseSCPIModuleName = "SAM";
 
     explicit cSampleModule(const ModuleFactoryParam &moduleParam);
+    cSampleModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private slots:
     void activationFinished() override;
@@ -24,6 +27,7 @@ private:
     void stopMeas() override  { /* no start/stop */ };
 
     cSampleModuleMeasProgram *m_pMeasProgram = nullptr;
+    cSampleModuleConfiguration m_configuration;
 };
 
 }

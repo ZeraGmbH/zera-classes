@@ -1,33 +1,29 @@
 #ifndef APIMODULECONFIGURATION_H
 #define APIMODULECONFIGURATION_H
 
-#include "apimoduleconfigdata.h"
 #include "basemoduleconfiguration.h"
+#include "apimoduleconfigdata.h"
 
 namespace APIMODULE
 {
 
-    enum moduleconfigstate
-    {
-    };
+class cApiModuleConfiguration : public BaseModuleConfiguration
+{
+    Q_OBJECT
+public:
+    explicit cApiModuleConfiguration(const QByteArray& xmlString);
 
-    class cApiModuleConfiguration : public BaseModuleConfiguration
-    {
-        Q_OBJECT
-    public:
-        cApiModuleConfiguration();
-        ~cApiModuleConfiguration();
-        virtual void setConfiguration(const QByteArray& xmlString);
-        virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-        cApiModuleConfigData *getConfigurationData();
+    QByteArray exportConfiguration() const override;
+    cApiModuleConfigData *getConfigData();
 
-    protected slots:
-        virtual void configXMLInfo(const QString &key);
-        virtual void completeConfiguration(bool ok);
+protected slots:
+    void configXMLInfo(const QString &key) override;
+    void completeConfiguration(bool ok);
 
-    private:
-        cApiModuleConfigData *m_pApiModulConfigData = nullptr; // configuration
-    };
+private:
+    void setConfiguration(const QByteArray& xmlString);
+    cApiModuleConfigData m_configData;
+};
 
 }
 

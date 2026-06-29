@@ -1,31 +1,23 @@
 #ifndef TRANSFORMER1MODULEMEASPROGRAM_H
 #define TRANSFORMER1MODULEMEASPROGRAM_H
 
-#include "transformer1moduleconfigdata.h"
 #include "basemeasworkprogram.h"
+#include "transformer1measdelegate.h"
+#include "vfmodulemetadata.h"
+#include "vfmoduleparameter.h"
 #include <QList>
 #include <QFinalState>
-
-class VfModuleComponent;
-class VfModuleMetaData;
-class VfModuleComponent;
-class VfModuleParameter;
 
 namespace TRANSFORMER1MODULE
 {
 
-class cTransformer1ModuleConfigData;
-class cTransformer1MeasDelegate;
 class cTransformer1Module;
 
 class cTransformer1ModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
-
 public:
-    cTransformer1ModuleMeasProgram(cTransformer1Module* module,
-                                   const std::shared_ptr<BaseModuleConfiguration> &configuration);
-    virtual ~cTransformer1ModuleMeasProgram();
+    explicit cTransformer1ModuleMeasProgram(cTransformer1Module* module);
     void generateVeinInterface() override;
 
 public slots:
@@ -33,19 +25,17 @@ public slots:
     void stop() override;
 
 private:
-    cTransformer1ModuleConfigData* getConfData();
-
-    cTransformer1Module* m_pModule;
+    cTransformer1Module* m_pModule = nullptr;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
-    VfModuleMetaData* m_pTRSCountInfo; // the number of transformer system we are configured for
-    VfModuleComponent* m_pMeasureSignal;
+    VfModuleMetaData* m_pTRSCountInfo = nullptr; // the number of transformer system we are configured for
+    VfModuleComponent* m_pMeasureSignal = nullptr;
 
-    VfModuleParameter* m_pPrimClampPrimParameter;
-    VfModuleParameter* m_pPrimClampSecParameter;
-    VfModuleParameter* m_pSecClampPrimParameter;
-    VfModuleParameter* m_pSecClampSecParameter;
-    VfModuleParameter* m_pPrimDutParameter;
-    VfModuleParameter* m_pSecDutParameter;
+    VfModuleParameter* m_pPrimClampPrimParameter = nullptr;
+    VfModuleParameter* m_pPrimClampSecParameter = nullptr;
+    VfModuleParameter* m_pSecClampPrimParameter = nullptr;
+    VfModuleParameter* m_pSecClampSecParameter = nullptr;
+    VfModuleParameter* m_pPrimDutParameter = nullptr;
+    VfModuleParameter* m_pSecDutParameter = nullptr;
 
     QList<cTransformer1MeasDelegate*> m_Transformer1MeasDelegateList;
 

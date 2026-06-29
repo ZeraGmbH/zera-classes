@@ -14,9 +14,8 @@
 namespace DSPSUPERMODULE
 {
 
-DspSuperModuleMeasProgram::DspSuperModuleMeasProgram(DspSuperModule* module,
-                                                     const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
+DspSuperModuleMeasProgram::DspSuperModuleMeasProgram(DspSuperModule* module) :
+    cBaseDspMeasProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceDspSuper(m_pModule->getEntityId());
@@ -118,11 +117,11 @@ void DspSuperModuleMeasProgram::setDspVarList()
     tmpDspVarGroup->addDspVar("PERIODCURR", 1, dspDataTypeInt);
     tmpDspVarGroup->addDspVar("PERIODMAX", 1, dspDataTypeInt);
     tmpDspVarGroup->addDspVar("RESULT_BUFF_IDX", 1, dspDataTypeInt);
-    tmpDspVarGroup->addDspVar("RESULT_ARRAY_WORK", getConfData()->m_dspArrayEntrySize * COUNT_SUPER_ENTRIES, dspDataTypeInt); // double buffer -> RESULT_ARRAY
+    tmpDspVarGroup->addDspVar("RESULT_ARRAY_WORK", m_pModule->getConfigData()->m_dspArrayEntrySize * COUNT_SUPER_ENTRIES, dspDataTypeInt); // double buffer -> RESULT_ARRAY
 
     // result array (we choose int for transparent transfer)
     m_pActualValuesDSP = m_dspInterface->createVariableGroup("ActualValues");
-    m_pActualValuesDSP->addDspVar("RESULT_ARRAY", getConfData()->m_dspArrayEntrySize  * COUNT_SUPER_ENTRIES, dspDataTypeInt);
+    m_pActualValuesDSP->addDspVar("RESULT_ARRAY", m_pModule->getConfigData()->m_dspArrayEntrySize  * COUNT_SUPER_ENTRIES, dspDataTypeInt);
 }
 
 void DspSuperModuleMeasProgram::setDspCmdList()
@@ -142,7 +141,7 @@ void DspSuperModuleMeasProgram::setDspCmdList()
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)");
         m_dspInterface->addCycListItem(QString("SETVAL(GLOBALPERIODCOUNT,1)"));
         m_dspInterface->addCycListItem(QString("SETVAL(PERIODCURR,0)"));
-        m_dspInterface->addCycListItem(QString("SETVAL(PERIODMAX,%1)").arg(getConfData()->m_dspArrayEntrySize));
+        m_dspInterface->addCycListItem(QString("SETVAL(PERIODMAX,%1)").arg(m_pModule->getConfigData()->m_dspArrayEntrySize));
         m_dspInterface->addCycListItem(QString("SETVAL(RESULT_BUFF_IDX,RESULT_ARRAY_WORK)"));
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)");
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)");
@@ -170,7 +169,7 @@ void DspSuperModuleMeasProgram::setDspCmdList()
 
     m_dspInterface->addCycListItem("STARTCHAIN(0,1,0x0102)");
         m_dspInterface->addCycListItem(QString("SETVAL(RESULT_BUFF_IDX,RESULT_ARRAY_WORK)"));
-        m_dspInterface->addCycListItem(QString("COPYMEM(%1,RESULT_ARRAY_WORK,RESULT_ARRAY)").arg(getConfData()->m_dspArrayEntrySize*COUNT_SUPER_ENTRIES));
+        m_dspInterface->addCycListItem(QString("COPYMEM(%1,RESULT_ARRAY_WORK,RESULT_ARRAY)").arg(m_pModule->getConfigData()->m_dspArrayEntrySize*COUNT_SUPER_ENTRIES));
         m_dspInterface->addCycListItem("XDSPINTTRIGGER(0x0,PERIODCURR)");
         m_dspInterface->addCycListItem("SETVAL(PERIODCURR,0)");
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0102)");
@@ -191,7 +190,7 @@ void DspSuperModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply
         const QString strAnswer = answer.toString();
         if (strAnswer.startsWith("DSPINT:")) {
             quint32 countPeriodsToFetch = strAnswer.section(":", 1).toUInt();
-            if (countPeriodsToFetch == 0 || countPeriodsToFetch > getConfData()->m_dspArrayEntrySize) {
+            if (countPeriodsToFetch == 0 || countPeriodsToFetch > m_pModule->getConfigData()->m_dspArrayEntrySize) {
                 qCritical("Invalid periods reported: %i / 0x%04X!", countPeriodsToFetch, countPeriodsToFetch);
                 return;
             }
@@ -230,11 +229,6 @@ void DspSuperModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply
             }
         }
     }
-}
-
-DspSuperModuleConfigData *DspSuperModuleMeasProgram::getConfData()
-{
-    return qobject_cast<DspSuperModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
 void DspSuperModuleMeasProgram::dspserverConnect()
@@ -319,7 +313,7 @@ void DspSuperModuleMeasProgram::decodeDspDataAcquired(int countPeriodsFetched)
         }
         entries.append(currEntry);
     }
-    dspCommonSupervisor->addSupervisorEntries(entries, getConfData()->m_periodsTotal);
+    dspCommonSupervisor->addSupervisorEntries(entries, m_pModule->getConfigData()->m_periodsTotal);
 }
 
 void DspSuperModuleMeasProgram::startDataAcquisitionDSP(int countPeriodsToFetch)

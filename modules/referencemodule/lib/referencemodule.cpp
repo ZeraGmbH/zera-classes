@@ -1,11 +1,11 @@
 #include "referencemodule.h"
-#include "referencemoduleconfiguration.h"
 
 namespace REFERENCEMODULE
 {
 
 cReferenceModule::cReferenceModule(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<cReferenceModuleConfiguration>())
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures reference actual values for configured channels");
@@ -43,16 +43,21 @@ cReferenceModule::cReferenceModule(const ModuleFactoryParam &moduleParam) :
     connect(&m_DeactivationFinishedState, &QStateMachine::entered, this, &cReferenceModule::deactivationFinished);
 }
 
-cReferenceModule::~cReferenceModule()
+cReferenceModuleConfigData *cReferenceModule::getConfigData()
 {
-    delete m_pReferenceAdjustment; // not in m_ModuleActivistList
+    return m_configuration.getConfigData();
+}
+
+QByteArray cReferenceModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 cReferenceMeasChannel *cReferenceModule::getMeasChannel(const QString &name)
 {
-    cReferenceMeasChannel* p_rmc = 0;
+    cReferenceMeasChannel* p_rmc = nullptr;
     for (int i = 0; i < m_ReferenceMeasChannelList.count(); i++) {
-        p_rmc =  m_ReferenceMeasChannelList.at(i);
+        p_rmc = m_ReferenceMeasChannelList.at(i);
         if ((p_rmc->getMName()) == name)
             return p_rmc;
     }
@@ -64,38 +69,40 @@ void cReferenceModule::setupModule()
     emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
-    cReferenceModuleConfigData *pConfData = qobject_cast<cReferenceModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // setting of mode has been done by seperate mode module
     // first we build a list of our meas channels
-    for (int i = 0; i < pConfData->m_nChannelCount; i ++) {
-        const QString channelMName = pConfData->m_referenceChannelList.at(i);
+    for (int i = 0; i < getConfigData()->m_nChannelCount; i ++) {
+        const QString channelMName = getConfigData()->m_referenceChannelList.at(i);
         cReferenceMeasChannel* pchn = new cReferenceMeasChannel(getSharedChannelRangeObserver()->getChannel(channelMName),
                                                                 getNetworkConfig()->m_pcbServiceConnectionInfo,
                                                                 getNetworkConfig()->m_tcpNetworkFactory,
                                                                 getVeinModuleName());
         m_ReferenceMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
-        connect(pchn, &cReferenceMeasChannel::activated, this, &cReferenceModule::activationContinue);
-        connect(pchn, &cReferenceMeasChannel::deactivated, this, &cReferenceModule::deactivationContinue);
+        connect(pchn, &cReferenceMeasChannel::activated,
+                this, &cReferenceModule::activationContinue);
+        connect(pchn, &cReferenceMeasChannel::deactivated,
+                this, &cReferenceModule::deactivationContinue);
     }
 
     // we don't actvate this per our activation loop in m_ModuleActivistList
     // instead adjustment is activated after all other activists
     // means that module emits activationReady after reference measurement adjustment is finished
-    m_pReferenceAdjustment = new cReferenceAdjustment(this, pConfData);
-
-    connect(m_pReferenceAdjustment, &cReferenceAdjustment::activated, this, &cReferenceModule::activationContinue);
-    connect(m_pReferenceAdjustment, &cReferenceAdjustment::deactivated, this, &cReferenceModule::deactivationContinue);
+    m_referenceAdjustment = std::make_unique<cReferenceAdjustment>(this);
+    connect(m_referenceAdjustment.get(), &cReferenceAdjustment::activated,
+            this, &cReferenceModule::activationContinue);
+    connect(m_referenceAdjustment.get(), &cReferenceAdjustment::deactivated,
+            this, &cReferenceModule::deactivationContinue);
 
     // we have to connect all cmddone from our reference meas channels to refernce adjustment
     for (int i = 0; i < m_ReferenceMeasChannelList.count(); i ++) {
         cReferenceMeasChannel* pchn = m_ReferenceMeasChannelList.at(i);
-        connect(pchn, &cReferenceMeasChannel::cmdDone, m_pReferenceAdjustment, &cReferenceAdjustment::catchChannelReply);
+        connect(pchn, &cReferenceMeasChannel::cmdDone,
+                m_referenceAdjustment.get(), &cReferenceAdjustment::catchChannelReply);
     }
 
     // at last we need some program that does the measuring job on dsp
-    m_pMeasProgram = new cReferenceModuleMeasProgram(this, m_pConfiguration);
+    m_pMeasProgram = new cReferenceModuleMeasProgram(this);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cReferenceModuleMeasProgram::activated, this, &cReferenceModule::activationContinue);
     connect(m_pMeasProgram, &cReferenceModuleMeasProgram::deactivated, this, &cReferenceModule::deactivationContinue);
@@ -117,18 +124,21 @@ void cReferenceModule::stopMeas()
 void cReferenceModule::activationAdjustment()
 {
     // we connect the measurement output to our adjustment module
-    connect(m_pMeasProgram, &cReferenceModuleMeasProgram::actualValues, m_pReferenceAdjustment, &cReferenceAdjustment::ActionHandler);
+    connect(m_pMeasProgram, &cReferenceModuleMeasProgram::actualValues,
+            m_referenceAdjustment.get(), &cReferenceAdjustment::ActionHandler);
 
-    m_pReferenceAdjustment->activate();
+    m_referenceAdjustment->activate();
 }
 
 void cReferenceModule::deactivationStart()
 {
     // we first disconnect all what we connected when activation took place
-    disconnect(m_pMeasProgram, &cReferenceModuleMeasProgram::actualValues, m_pReferenceAdjustment, &cReferenceAdjustment::ActionHandler);
+    disconnect(m_pMeasProgram, &cReferenceModuleMeasProgram::actualValues,
+               m_referenceAdjustment.get(), &cReferenceAdjustment::ActionHandler);
     for (int i = 0; i<m_ReferenceMeasChannelList.count(); i++) {
         const cReferenceMeasChannel* pchn = m_ReferenceMeasChannelList.at(i);
-        disconnect(pchn, &cReferenceMeasChannel::cmdDone, m_pReferenceAdjustment, &cReferenceAdjustment::catchChannelReply);
+        disconnect(pchn, &cReferenceMeasChannel::cmdDone,
+                   m_referenceAdjustment.get(), &cReferenceAdjustment::catchChannelReply);
     }
 
     m_nActivationIt = 0; // we start with the first

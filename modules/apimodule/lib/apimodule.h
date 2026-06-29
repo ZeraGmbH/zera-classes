@@ -2,6 +2,7 @@
 #define APIMODULE_H
 
 #include "vfeventsytemmoduleparam.h"
+#include "apimoduleconfiguration.h"
 #include <basemodule.h>
 #include <vfrpceventsystem.h>
 
@@ -14,12 +15,14 @@ public:
     static constexpr const char *BaseModuleName = "ApiModule";
     static constexpr const char *BaseSCPIModuleName = "API";
 
+    explicit cApiModule(const ModuleFactoryParam &moduleParam);
+    cApiModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
+
     VfEventSytemModuleParam* getValidatorEventSystem();
     VfRpcEventSystem *getRpcEventSystem() const;
 
     void setTrustListPath(const QString &path);
-
-    cApiModule(const ModuleFactoryParam &moduleParam);
 
 private slots:
     void activationFinished() override;
@@ -28,6 +31,7 @@ protected:
     void startMeas() override;                               // we make the measuring program start here
     void stopMeas() override;
 
+    cApiModuleConfiguration m_configuration;
     std::shared_ptr<VfEventSytemModuleParam> m_spModuleValidator;
     std::shared_ptr<VfRpcEventSystem> m_spRpcEventSystem;
     QString m_persistencyBasePath;

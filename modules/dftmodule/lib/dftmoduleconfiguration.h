@@ -1,53 +1,28 @@
 #ifndef DFTMODULECONFIGURATION_H
 #define DFTMODULECONFIGURATION_H
 
-
-#include <QStringList>
-#include <QByteArray>
-#include <QHash>
-
 #include "basemoduleconfiguration.h"
+#include "dftmoduleconfigdata.h"
 
 namespace DFTMODULE
 {
-
-enum moduleconfigstate
-{
-    setDftOrder,
-    setValueCount,
-    setrfieldChn1,
-    setrfieldChn2,
-    setrfieldChn3,
-    setMeasureInterval,
-    setRefChannel,
-    setMovingwindowBool,
-    setMovingwindowTime,
-    setRefChannelOn,
-
-    setValue1 = 20
-};
-
-
-
-class cDftModuleConfigData;
 
 class cDftModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cDftModuleConfiguration();
-    ~cDftModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString) override;
-    virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
-    cDftModuleConfigData* getConfigurationData();
+    explicit cDftModuleConfiguration(const QByteArray& xmlString);
 
-protected slots:
-    virtual void configXMLInfo(const QString &key) override;
+    QByteArray exportConfiguration() const override;
+    cDftModuleConfigData* getConfigData();
+
 private slots:
-    virtual void completeConfiguration(bool ok);
+    virtual void configXMLInfo(const QString &key) override;
+    void completeConfiguration(bool ok);
 
 private:
-    cDftModuleConfigData *m_pDftModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cDftModuleConfigData m_configData;
 };
 
 }

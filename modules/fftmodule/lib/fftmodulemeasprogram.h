@@ -2,12 +2,9 @@
 #define FFTMODULEMEASPROGRAM_H
 
 #include "fftmodule.h"
-#include "fftmoduleconfigdata.h"
 #include "actualvaluestartstophandler.h"
 #include <basedspmeasprogram.h>
 #include <movingwindowfilter.h>
-#include <QList>
-#include <QHash>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -19,8 +16,7 @@ class cFftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cFftModuleMeasProgram(cFftModule* module,
-                          const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cFftModuleMeasProgram(cFftModule* module);
     void generateVeinInterface() override;
 public slots:
     virtual void start() override;
@@ -41,7 +37,6 @@ private slots:
     void newIntegrationtime(QVariant ti);
     void newRefChannel(QVariant chn);
 private:
-    cFftModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
     void dataAcquisitionDSP();

@@ -2,6 +2,7 @@
 #define OSCIMODULE_H
 
 #include "basemeasmodule.h"
+#include "oscimoduleconfiguration.h"
 
 namespace OSCIMODULE {
 
@@ -14,7 +15,9 @@ public:
     static constexpr const char* BaseModuleName = "OSCIModule";
     static constexpr const char* BaseSCPIModuleName = "OSC";
 
-    cOsciModule(const ModuleFactoryParam &moduleParam);
+    explicit cOsciModule(const ModuleFactoryParam &moduleParam);
+    cOsciModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
@@ -22,6 +25,7 @@ private:
     void stopMeas() override;
 
     cOsciModuleMeasProgram *m_pMeasProgram = nullptr;
+    cOsciModuleConfiguration m_configuration;
 };
 
 }

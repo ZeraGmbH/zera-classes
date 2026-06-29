@@ -1,60 +1,27 @@
 #ifndef RANGEMODULECONFIGURATION_H
 #define RANGEMODULECONFIGURATION_H
 
-
-#include <QStringList>
-#include <QByteArray>
-#include <QHash>
-
-#include <basemoduleconfiguration.h>
+#include "basemoduleconfiguration.h"
+#include "rangemoduleconfigdata.h"
 
 namespace RANGEMODULE
 {
-
-enum moduleconfigstate
-{
-    setSession,
-    setChannelCount,
-    setSubdcCount,
-    setGroupCount,
-    setGrouping,
-    setRangeAutomatic,
-    setTime,
-    setMeasureInterval,
-    setAdjustInterval,
-    setAdjustIgnoreRmsValuesEnable,
-    setAdjustIgnoreRmsValuesThreshold,
-
-    setDefaultRange1 = 40, // max. 32 channels
-    setSenseChannel1 = 72, // dito
-    setSubdcChannel1 = 104, // dito
-    setExtendChannel1 = 136, // dito
-    setInvertChannel1 = 168, // dito
-
-    setGroup1ChannelCount = 222, // max. 10 groups
-    setGroup1Channel1 = 200
-};
-
-
-
-class cRangeModuleConfigData;
 
 class cRangeModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cRangeModuleConfiguration();
-    ~cRangeModuleConfiguration();
-    void setConfiguration(const QByteArray& xmlString) override;
-    virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
-    cRangeModuleConfigData* getConfigurationData();
+    explicit cRangeModuleConfiguration(const QByteArray& xmlString);
 
-protected slots:
+    QByteArray exportConfiguration() const override;
+    cRangeModuleConfigData* getConfigData();
+
+private slots:
     virtual void configXMLInfo(const QString &key) override;
-    virtual void completeConfiguration(bool ok);
-
+    void completeConfiguration(bool ok);
 private:
-    cRangeModuleConfigData *m_pRangeModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cRangeModuleConfigData m_configData;
 };
 
 }

@@ -2,7 +2,6 @@
 #define DSPSUPERMODULEMEASPROGRAM_H
 
 #include "dspsupermodule.h"
-#include "dspsupermoduleconfigdata.h"
 #include "dspsupermoduleintegrationcomponentfinder.h"
 #include <basedspmeasprogram.h>
 #include <QStateMachine>
@@ -17,8 +16,7 @@ class DspSuperModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    DspSuperModuleMeasProgram(DspSuperModule* module,
-                              const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit DspSuperModuleMeasProgram(DspSuperModule* module);
     void generateVeinInterface() override;
 
 public slots:
@@ -37,7 +35,6 @@ private slots:
 
     void deactivateDSPStart();
 private:
-    DspSuperModuleConfigData* getConfData();
     void decodeDspDataAcquired(int countPeriodsFetched);
     void setDspVarList();
     void setDspCmdList();

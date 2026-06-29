@@ -2,7 +2,6 @@
 #define BASEMODULE_H
 
 #include "moduleactivist.h"
-#include "basemoduleconfiguration.h"
 #include "modulefactoryparam.h"
 #include "vfmodulemetadata.h"
 #include "vfmodulerpc.h"
@@ -10,15 +9,13 @@
 #include <virtualmodule.h>
 #include <vs_abstracteventsystem.h>
 #include <vf-cpp-rpc-simplified.h>
-#include <memory>
 
 class BaseModule : public ZeraModules::VirtualModule
 {
 Q_OBJECT
 
 public:
-    BaseModule(const ModuleFactoryParam &moduleParam,
-               const std::shared_ptr<BaseModuleConfiguration> &modcfg);
+    BaseModule(const ModuleFactoryParam &moduleParam);
     virtual ~BaseModule();
     virtual void startModule() override;
     virtual void stopModule() override;
@@ -26,7 +23,6 @@ public:
     virtual void exportMetaData();
 
     int getEntityId() const;
-    QByteArray getConfiguration() const override;
     VeinStorage::AbstractDatabase *getStorageDb() const;
     bool getDemo();
     const AbstractFactoryServiceInterfacesPtr getServiceInterfaceFactory() const;
@@ -74,7 +70,6 @@ protected:
     QList<cModuleActivist*> m_ModuleActivistList;
     qint32 m_nActivationIt;
 
-    std::shared_ptr<BaseModuleConfiguration> m_pConfiguration; // our xml configuration
     QString m_sModuleDescription;
 
     VfModuleMetaData *m_pModuleName;

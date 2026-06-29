@@ -12,9 +12,8 @@ namespace APIMODULE
 class cApiModuleAuthorize : public cModuleActivist
 {
     Q_OBJECT
-
 public:
-    cApiModuleAuthorize(cApiModule *module, QString persistencyBasePath);
+    explicit cApiModuleAuthorize(cApiModule *module, QString persistencyBasePath);
 public slots:
     void generateVeinInterface() override;
     void activate() override;
@@ -29,11 +28,11 @@ private:
 
     QString m_trustListPath = "/opt/websam-vein-api/authorize/trustlist.json";
 
-    cApiModule* m_module;
+    cApiModule* m_module = nullptr;
     QUuid m_rpcRequest;
 
-    VfModuleParameter* m_pGuiDialogFinished;
-    VfModuleParameter* m_pReloadTrustList;
+    VfModuleParameter* m_pGuiDialogFinished = nullptr;
+    VfModuleParameter* m_pReloadTrustList = nullptr;
 
     std::shared_ptr<VfModuleComponent> m_spPendingRequestAct;
     std::shared_ptr<VfModuleComponent> m_spTrustListAct;
@@ -41,7 +40,7 @@ private:
 
     VfCpp::cVeinModuleRpc::Ptr m_spRpcAuthenticateInterface;
 
-    bool m_bDialogIsOpen;
+    bool m_bDialogIsOpen = false;
 
 signals:
     void finishDialog(QVariant dialogFinished);

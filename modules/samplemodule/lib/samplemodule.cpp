@@ -5,11 +5,22 @@ namespace SAMPLEMODULE
 {
 
 cSampleModule::cSampleModule(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<cSampleModuleConfiguration>())
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for pll range setting\n, pll channel selection and automatic");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
+}
+
+cSampleModuleConfigData *cSampleModule::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray cSampleModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 void cSampleModule::setupModule()
@@ -17,7 +28,7 @@ void cSampleModule::setupModule()
     emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
-    m_pMeasProgram = new cSampleModuleMeasProgram(this, m_pConfiguration);
+    m_pMeasProgram = new cSampleModuleMeasProgram(this);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cSampleModuleMeasProgram::activated, this, &cSampleModule::activationContinue);
     connect(m_pMeasProgram, &cSampleModuleMeasProgram::deactivated, this, &cSampleModule::deactivationContinue);

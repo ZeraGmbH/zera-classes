@@ -2,6 +2,7 @@
 #define MODEMODULE_H
 
 #include "basemeasmodule.h"
+#include "modemoduleconfiguration.h"
 #include "modemoduleinit.h"
 
 namespace MODEMODULE {
@@ -13,7 +14,9 @@ public:
     static constexpr const char* BaseModuleName = "ModeModule";
     static constexpr const char* BaseSCPIModuleName = "MOD";
 
-    cModeModule(const ModuleFactoryParam &moduleParam);
+    explicit cModeModule(const ModuleFactoryParam &moduleParam);
+    cModeModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private slots:
     void activationFinished() override;
@@ -23,6 +26,7 @@ private:
     void stopMeas() override;
 
     cModeModuleInit *m_pModeModuleInit = nullptr;
+    cModeModuleConfiguration m_configuration;
 };
 
 }

@@ -7,40 +7,27 @@
 #include <QHash>
 
 #include "basemoduleconfiguration.h"
+#include "power3moduleconfigdata.h"
 
 namespace POWER3MODULE
 {
-
-enum moduleconfigstate
-{
-    setInputModule,
-    setSystemCount,
-
-    setMeasSystem1 = 16, // we leave some place for additional cmds
-
-    setnext = setMeasSystem1 + 16
-};
-
-
-
-class cPower3ModuleConfigData;
 
 class cPower3ModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cPower3ModuleConfiguration();
-    ~cPower3ModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    cPower3ModuleConfigData* getConfigurationData();
+    explicit cPower3ModuleConfiguration(const QByteArray& xmlString);
 
-protected slots:
-    virtual void configXMLInfo(const QString &key);
-    virtual void completeConfiguration(bool ok);
+    QByteArray exportConfiguration() const override;
+    cPower3ModuleConfigData* getConfigData();
+
+private slots:
+    void configXMLInfo(const QString &key) override;
+    void completeConfiguration(bool ok);
 
 private:
-    cPower3ModuleConfigData *m_pPower3ModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cPower3ModuleConfigData m_configData;
 };
 
 }

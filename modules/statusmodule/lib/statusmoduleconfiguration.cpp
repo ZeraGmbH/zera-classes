@@ -1,7 +1,4 @@
-#include <QPoint>
 #include "statusmoduleconfiguration.h"
-#include "statusmoduleconfigdata.h"
-#include <xmlconfigreader.h>
 
 namespace STATUSMODULE
 {
@@ -13,61 +10,44 @@ enum moduleconfigstate
     setVeinUpdateMs
 };
 
-cStatusModuleConfiguration::cStatusModuleConfiguration()
+cStatusModuleConfiguration::cStatusModuleConfiguration(const QByteArray &xmlString)
 {
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cStatusModuleConfiguration::configXMLInfo);
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cStatusModuleConfiguration::completeConfiguration);
-}
-
-
-cStatusModuleConfiguration::~cStatusModuleConfiguration()
-{
-    if (m_pStatusModulConfigData) delete m_pStatusModulConfigData;
+    setConfiguration(xmlString);
 }
 
 void cStatusModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
-    m_bConfigured = m_bConfigError = false;
-
-    if (m_pStatusModulConfigData) delete m_pStatusModulConfigData;
-    m_pStatusModulConfigData = new cStatusModuleConfigData();
-
-    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
-
-    // so now we can set up
-    // initializing hash table for xml configuration
     m_ConfigXMLMap["statusmodconfpar:configuration:accumulator"] = setAccumulator;
     m_ConfigXMLMap["statusmodconfpar:configuration:veinupdatems"] = setVeinUpdateMs;
 
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cStatusModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cStatusModuleConfiguration::completeConfiguration);
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
-QByteArray cStatusModuleConfiguration::exportConfiguration()
+QByteArray cStatusModuleConfiguration::exportConfiguration() const
 {
     // nothing to set befor export
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-cStatusModuleConfigData *cStatusModuleConfiguration::getConfigurationData()
+cStatusModuleConfigData *cStatusModuleConfiguration::getConfigData()
 {
-    return m_pStatusModulConfigData;
+    return &m_configData;
 }
 
 void cStatusModuleConfiguration::configXMLInfo(const QString &key)
 {
-    bool ok;
-
-    if (m_ConfigXMLMap.contains(key))
-    {
-        ok = true;
+    if (m_ConfigXMLMap.contains(key)) {
+        bool ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
         case setAccumulator:
-            m_pStatusModulConfigData->m_accumulator = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_accumulator = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setVeinUpdateMs:
-            m_pStatusModulConfigData->m_veinUpdateMs = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_veinUpdateMs = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         }
 
@@ -85,4 +65,3 @@ void cStatusModuleConfiguration::completeConfiguration(bool ok)
 }
 
 }
-

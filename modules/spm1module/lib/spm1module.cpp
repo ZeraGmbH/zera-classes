@@ -5,11 +5,22 @@ namespace SPM1MODULE
 {
 
 cSpm1Module::cSpm1Module(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<cSpm1ModuleConfiguration>())
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module provides a configurable power error calculator");
     m_sSCPIModuleName = QString(BaseSCPIModuleName);
+}
+
+cSpm1ModuleConfigData *cSpm1Module::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray cSpm1Module::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 void cSpm1Module::setupModule()
@@ -18,7 +29,7 @@ void cSpm1Module::setupModule()
     cBaseMeasModule::setupModule();
 
     // we only have this activist
-    m_pMeasProgram = new cSpm1ModuleMeasProgram(this, m_pConfiguration);
+    m_pMeasProgram = new cSpm1ModuleMeasProgram(this);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cSpm1ModuleMeasProgram::activated, this, &cSpm1Module::activationContinue);
     connect(m_pMeasProgram, &cSpm1ModuleMeasProgram::deactivated, this, &cSpm1Module::deactivationContinue);

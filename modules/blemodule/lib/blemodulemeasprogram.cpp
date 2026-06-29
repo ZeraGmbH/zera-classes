@@ -1,6 +1,5 @@
 #include "blemodulemeasprogram.h"
 #include "blemodule.h"
-#include "blemoduleconfiguration.h"
 #include <boolvalidator.h>
 #include <regexvalidator.h>
 #include <errormessages.h>
@@ -10,9 +9,8 @@
 namespace BLEMODULE
 {
 
-cBleModuleMeasProgram::cBleModuleMeasProgram(cBleModule* module,
-                                             const std::shared_ptr<BaseModuleConfiguration> configuration) :
-    cBaseMeasWorkProgram(configuration, module->getVeinModuleName()),
+cBleModuleMeasProgram::cBleModuleMeasProgram(cBleModule* module) :
+    cBaseMeasWorkProgram(module->getVeinModuleName()),
     m_pModule(module)
 {
     m_bluetooth = BluetoothConvenienceFacade::getInstance();
@@ -36,11 +34,6 @@ void cBleModuleMeasProgram::start()
 
 void cBleModuleMeasProgram::stop()
 {
-}
-
-cBleModuleConfigData *cBleModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cBleModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
 void cBleModuleMeasProgram::generateVeinInterface()
@@ -100,7 +93,7 @@ void cBleModuleMeasProgram::generateVeinInterface()
     m_pBluetoothOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("PAR_BluetoothOn"),
                                               QString("Bluetooth on"),
-                                              QVariant(getConfData()->m_bluetoothOn.m_nActive)); // bool validator ruins true/false
+                                              QVariant(m_pModule->getConfigData()->m_bluetoothOn.m_nActive)); // bool validator ruins true/false
     m_pBluetoothOnOff->setValidator(new cBoolValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pBluetoothOnOff;
     connect(m_pBluetoothOnOff, &VfModuleComponent::sigValueChanged,
@@ -122,7 +115,7 @@ void cBleModuleMeasProgram::activateDone()
     connect(m_bluetooth, &BluetoothConvenienceFacade::sigOnOff,
             this, &cBleModuleMeasProgram::onBluetoothStatusChanged);
     switchBluetooth(m_pBluetoothOnOff->getValue().toBool());
-    m_pMacAddress->setValue(getConfData()->m_macAddress.m_sPar);
+    m_pMacAddress->setValue(m_pModule->getConfigData()->m_macAddress.m_sPar);
     onVeinMacAddressChanged(m_pMacAddress->getValue());
     m_bActive = true;
     emit activated();
@@ -196,7 +189,7 @@ void cBleModuleMeasProgram::handleDemoActualValues()
 void cBleModuleMeasProgram::onVeinBluetoothOnChanged(QVariant on)
 {
     switchBluetooth(on.toBool());
-    getConfData()->m_bluetoothOn.m_nActive = on.toInt();
+    m_pModule->getConfigData()->m_bluetoothOn.m_nActive = on.toInt();
     emit m_pModule->parameterChanged();
 
     if(m_pModule->getDemo())
@@ -214,9 +207,9 @@ void cBleModuleMeasProgram::onVeinMacAddressChanged(QVariant macAddress)
         connect(sensor.get(), &EfentoEnvironmentSensor::sigNewValues,
                 this, &cBleModuleMeasProgram::onNewValues);
         m_bleDispatcherId = m_bluetooth->addBleDecoder(sensor);
-        const QString oldMac = getConfData()->m_macAddress.m_sPar;
+        const QString oldMac = m_pModule->getConfigData()->m_macAddress.m_sPar;
         if(oldMac != newMac) {
-            getConfData()->m_macAddress.m_sPar = newMac;
+            m_pModule->getConfigData()->m_macAddress.m_sPar = newMac;
             emit m_pModule->parameterChanged();
         }
     }

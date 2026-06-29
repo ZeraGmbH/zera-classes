@@ -1,30 +1,24 @@
 #ifndef ADJUSTMENTMODULECONFIGURATION_H
 #define ADJUSTMENTMODULECONFIGURATION_H
 
-
-#include <QStringList>
-#include <QByteArray>
-#include <QHash>
-
 #include "basemoduleconfiguration.h"
-
-class cAdjustmentModuleConfigData;
+#include "adjustmentmoduleconfigdata.h"
 
 class cAdjustmentModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cAdjustmentModuleConfiguration();
-    ~cAdjustmentModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString) override;
-    virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
-    cAdjustmentModuleConfigData* getConfigurationData();
-protected slots:
-    virtual void configXMLInfo(const QString &key) override;
+    explicit cAdjustmentModuleConfiguration(const QByteArray& xmlString);
+
+    QByteArray exportConfiguration() const override;
+    cAdjustmentModuleConfigData* getConfigData();
+
 private slots:
+    void configXMLInfo(const QString &key) override;
     void completeConfiguration(bool ok);
 private:
-    cAdjustmentModuleConfigData *m_pAdjustmentModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cAdjustmentModuleConfigData m_configData;
 };
 
 #endif // ADJUSTMENTMODULCONFIGURATION_H

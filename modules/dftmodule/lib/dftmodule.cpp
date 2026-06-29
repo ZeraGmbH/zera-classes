@@ -1,16 +1,26 @@
 #include "dftmodule.h"
-#include "dftmoduleconfiguration.h"
 #include "dftmodulemeasprogram.h"
 
 namespace DFTMODULE
 {
 
 cDftModule::cDftModule(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<cDftModuleConfiguration>())
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured order dft values for configured channels");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
+}
+
+cDftModuleConfigData *cDftModule::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray cDftModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 void cDftModule::setupModule()
@@ -19,7 +29,7 @@ void cDftModule::setupModule()
     cBaseMeasModule::setupModule();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cDftModuleMeasProgram(this, m_pConfiguration);
+    m_pMeasProgram = new cDftModuleMeasProgram(this);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cDftModuleMeasProgram::activated, this, &cDftModule::activationContinue);
     connect(m_pMeasProgram, &cDftModuleMeasProgram::deactivated, this, &cDftModule::deactivationContinue);

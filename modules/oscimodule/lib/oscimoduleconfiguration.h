@@ -1,46 +1,27 @@
 #ifndef OSCIMODULECONFIGURATION_H
 #define OSCIMODULECONFIGURATION_H
 
-
-#include <QStringList>
-#include <QByteArray>
-#include <QHash>
-
 #include "basemoduleconfiguration.h"
+#include "oscimoduleconfigdata.h"
 
 namespace OSCIMODULE
 {
-
-enum moduleconfigstate
-{
-    setInterpolation,
-    setGap,
-    setValueCount,
-    setRefChannel,
-
-    setValue1 = 20
-};
-
-
-
-class cOsciModuleConfigData;
 
 class cOsciModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cOsciModuleConfiguration();
-    ~cOsciModuleConfiguration();
-    virtual void setConfiguration(const QByteArray& xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    cOsciModuleConfigData* getConfigurationData();
+    explicit cOsciModuleConfiguration(const QByteArray& xmlString);
 
-protected slots:
-    virtual void configXMLInfo(const QString &key);
-    virtual void completeConfiguration(bool ok);
+    QByteArray exportConfiguration() const override;
+    cOsciModuleConfigData* getConfigData();
 
+private slots:
+    void configXMLInfo(const QString &key) override;
+    void completeConfiguration(bool ok);
 private:
-    cOsciModuleConfigData *m_pOsciModulConfigData = nullptr;  // configuration
+    void setConfiguration(const QByteArray& xmlString);
+    cOsciModuleConfigData m_configData;
 };
 
 }

@@ -1,7 +1,6 @@
 #ifndef REFERENCEADJUSTMENT_H
 #define REFERENCEADJUSTMENT_H
 
-#include "referencemoduleconfigdata.h"
 #include "referencemeaschannel.h"
 #include <dspinterface.h>
 #include <moduleactivist.h>
@@ -28,7 +27,7 @@ class cReferenceAdjustment: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cReferenceAdjustment(cReferenceModule* module, cReferenceModuleConfigData* confData);
+    explicit cReferenceAdjustment(cReferenceModule* module);
     void generateVeinInterface() override;
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
@@ -36,18 +35,17 @@ signals:
     void adjustContinue();
     void repeatStateMachine();
 private:
-    cReferenceModule* m_pModule; // the module we live in
-    cReferenceModuleConfigData* m_pConfigData;
+    cReferenceModule* m_pModule = nullptr;
     Zera::DspInterfacePtr m_dspInterface;
     Zera::ProxyClientPtr m_dspClient;
     Zera::PcbInterfacePtr m_pPCBInterface;
     Zera::ProxyClientPtr m_pPCBClient;
     QList<cReferenceMeasChannel*> m_ChannelList;
     QVector<float> m_ActualValues;
-    quint32 m_nIgnoreCount;
-    bool m_bAdjustmentDone;
+    quint32 m_nIgnoreCount = 0;
+    bool m_bAdjustmentDone = false;
 
-    qint32 m_nRangeSetPending;
+    qint32 m_nRangeSetPending = 0;
     QHash<quint32, int> m_MsgNrCmdList;
 
     // statemachine for activating gets the following states
@@ -68,10 +66,10 @@ private:
     QState m_set10VRangeState;
     QFinalState m_referenceAdjustDoneState;
 
-    DspVarGroupClientInterface* m_pGainCorrectionDSP; // copy of dsp internal correction data
-    DspVarGroupClientInterface* m_pOffset2CorrectionDSP; // copy of dsp internal correction data (set 2)
-    float* m_fGainCorr;
-    float* m_fOffset2Corr;
+    DspVarGroupClientInterface* m_pGainCorrectionDSP = nullptr; // copy of dsp internal correction data
+    DspVarGroupClientInterface* m_pOffset2CorrectionDSP = nullptr; // copy of dsp internal correction data (set 2)
+    float* m_fGainCorr = nullptr;
+    float* m_fOffset2Corr = nullptr;
 public slots:
     void catchChannelReply(quint32 msgnr);
 private slots:

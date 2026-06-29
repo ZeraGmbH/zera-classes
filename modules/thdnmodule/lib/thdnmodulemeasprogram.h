@@ -2,7 +2,6 @@
 #define THDNMODULEMEASPROGRAM_H
 
 #include "thdnmodule.h"
-#include "thdnmoduleconfigdata.h"
 #include "actualvaluestartstophandler.h"
 #include <basedspmeasprogram.h>
 #include <movingwindowfilter.h>
@@ -17,8 +16,7 @@ class cThdnModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cThdnModuleMeasProgram(cThdnModule* module,
-                           const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cThdnModuleMeasProgram(cThdnModule* module);
     void generateVeinInterface() override;
 
 private slots:
@@ -37,7 +35,6 @@ private slots:
 
     void newIntegrationtime(const QVariant &ti);
 private:
-    cThdnModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
     void dataAcquisitionDSP();

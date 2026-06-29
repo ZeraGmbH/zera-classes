@@ -20,7 +20,7 @@ class cStatusModuleInit: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cStatusModuleInit(cStatusModule* module, cStatusModuleConfigData& configData);
+    explicit cStatusModuleInit(cStatusModule* module);
     void generateVeinInterface() override;
 signals:
     void activationError();
@@ -64,8 +64,7 @@ private:
     QJsonObject QStringToQJsonObject(QString strJson);
     std::shared_ptr<QJsonObject> m_versionsJson;
 
-    cStatusModule* m_pModule; // the module we live in
-    cStatusModuleConfigData& m_ConfigData;
+    cStatusModule* m_pModule = nullptr; // the module we live in
 
     QHash<quint32, int> m_MsgNrCmdList;
 
@@ -121,23 +120,23 @@ private:
     QString m_sDeviceType;
     QString m_sCPUInfo;
 
-    VfModuleParameter *m_pPCBServerVersion;
-    VfModuleParameter *m_pPCBVersion;
-    VfModuleParameter *m_pCtrlVersion;
-    VfModuleParameter *m_pFPGAVersion;
-    VfModuleParameter *m_pSerialNumber;
-    VfModuleParameter *m_pDSPServerVersion;
-    VfModuleParameter *m_pDSPProgramVersion;
-    VfModuleParameter *m_pReleaseNumber;
-    VfModuleParameter *m_pDeviceType;
-    VfModuleParameter *m_pCPUInfo;
-    VfModuleParameter *m_pAdjustmentStatus;
-    VfModuleParameter *m_pAdjustmentChksum;
-    VfModuleParameter *m_pSchnubbelStatus;
-    VfModuleParameter *m_pAccumulatorStatus;
-    VfModuleParameter *m_pAccumulatorSoc;
-    VfModuleParameter *m_pInstrument;
-    VfModuleParameter *m_pChannels;
+    VfModuleParameter *m_pPCBServerVersion = nullptr;
+    VfModuleParameter *m_pPCBVersion = nullptr;
+    VfModuleParameter *m_pCtrlVersion = nullptr;
+    VfModuleParameter *m_pFPGAVersion = nullptr;
+    VfModuleParameter *m_pSerialNumber = nullptr;
+    VfModuleParameter *m_pDSPServerVersion = nullptr;
+    VfModuleParameter *m_pDSPProgramVersion = nullptr;
+    VfModuleParameter *m_pReleaseNumber = nullptr;
+    VfModuleParameter *m_pDeviceType = nullptr;
+    VfModuleParameter *m_pCPUInfo = nullptr;
+    VfModuleParameter *m_pAdjustmentStatus = nullptr;
+    VfModuleParameter *m_pAdjustmentChksum = nullptr;
+    VfModuleParameter *m_pSchnubbelStatus = nullptr;
+    VfModuleParameter *m_pAccumulatorStatus = nullptr;
+    VfModuleParameter *m_pAccumulatorSoc = nullptr;
+    VfModuleParameter *m_pInstrument = nullptr;
+    VfModuleParameter *m_pChannels = nullptr;
     VfModuleRpcPtr m_createVersionFileRpc = nullptr;
 
     QVariant wantedSerialNr;

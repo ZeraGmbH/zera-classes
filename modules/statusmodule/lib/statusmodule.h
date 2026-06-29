@@ -1,6 +1,7 @@
 #ifndef STATUSMODULE_H
 #define STATUSMODULE_H
 
+#include "statusmoduleconfiguration.h"
 #include "statusmoduleinit.h"
 #include <basemeasmodule.h>
 #include <vfrpceventsystemsimplified.h>
@@ -16,6 +17,8 @@ public:
     static constexpr const char* BaseSCPIModuleName = "DEV";
 
     explicit cStatusModule(const ModuleFactoryParam &moduleParam);
+    cStatusModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
     VfRpcEventSystemSimplified *getRpcEventSystem();
 
@@ -28,6 +31,7 @@ private:
     void stopMeas() override;
 
     cStatusModuleInit *m_pStatusModuleInit = nullptr;
+    cStatusModuleConfiguration m_configuration;
     std::unique_ptr<VfRpcEventSystemSimplified> m_spRpcEventSystem;
 };
 

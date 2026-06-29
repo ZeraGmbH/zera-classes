@@ -1,9 +1,12 @@
 #include "dspsupermoduleconfiguration.h"
-#include "dspsupermoduleconfigdata.h"
-#include <xmlconfigreader.h>
 
 namespace DSPSUPERMODULE
 {
+
+DspSuperModuleConfiguration::DspSuperModuleConfiguration(const QByteArray &xmlString)
+{
+    setConfiguration(xmlString);
+}
 
 enum moduleconfigstate
 {
@@ -13,26 +16,10 @@ enum moduleconfigstate
     setValue1 = 20
 };
 
-DspSuperModuleConfiguration::DspSuperModuleConfiguration()
+void DspSuperModuleConfiguration::setConfiguration(const QByteArray &xmlString)
 {
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &DspSuperModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &DspSuperModuleConfiguration::completeConfiguration);
-}
-
-DspSuperModuleConfiguration::~DspSuperModuleConfiguration()
-{
-    delete m_dspSuperModulConfigData;
-}
-
-void DspSuperModuleConfiguration::setConfiguration(const QByteArray &xmlString)
-{
-    m_bConfigured = m_bConfigError = false;
-
-    if (m_dspSuperModulConfigData)
-        delete m_dspSuperModulConfigData;
-    m_dspSuperModulConfigData = new DspSuperModuleConfigData();
-
-    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
 
     m_ConfigXMLMap["dspsupermodconfpar:configuration:dspperiodarraysize"] = setDspPeriodsArraySize;
     m_ConfigXMLMap["dspsupermodconfpar:configuration:periodstotal"] = setPeriodsTotal;
@@ -40,14 +27,14 @@ void DspSuperModuleConfiguration::setConfiguration(const QByteArray &xmlString)
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
-QByteArray DspSuperModuleConfiguration::exportConfiguration()
+QByteArray DspSuperModuleConfiguration::exportConfiguration() const
 {
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-DspSuperModuleConfigData *DspSuperModuleConfiguration::getConfigurationData()
+DspSuperModuleConfigData *DspSuperModuleConfiguration::getConfigData()
 {
-    return m_dspSuperModulConfigData;
+    return &m_configData;
 }
 
 void DspSuperModuleConfiguration::configXMLInfo(const QString &key)
@@ -57,10 +44,10 @@ void DspSuperModuleConfiguration::configXMLInfo(const QString &key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd) {
         case setDspPeriodsArraySize:
-            m_dspSuperModulConfigData->m_dspArrayEntrySize = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_dspArrayEntrySize = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setPeriodsTotal:
-            m_dspSuperModulConfigData->m_periodsTotal = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_periodsTotal = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         default:
             break;

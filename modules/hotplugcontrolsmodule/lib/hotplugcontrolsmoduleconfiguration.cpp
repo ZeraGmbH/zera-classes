@@ -1,54 +1,34 @@
-#include <QPoint>
 #include "hotplugcontrolsmoduleconfiguration.h"
-#include "hotplugcontrolsmoduleconfigdata.h"
-#include <xmlconfigreader.h>
 
 namespace HOTPLUGCONTROLSMODULE
 {
-cHotplugControlsModuleConfiguration::cHotplugControlsModuleConfiguration()
-{
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cHotplugControlsModuleConfiguration::configXMLInfo);
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cHotplugControlsModuleConfiguration::completeConfiguration);
-}
 
-
-cHotplugControlsModuleConfiguration::~cHotplugControlsModuleConfiguration()
+cHotplugControlsModuleConfiguration::cHotplugControlsModuleConfiguration(const QByteArray &xmlString)
 {
-    if (m_pHotplugControlsModuleConfigData)
-        delete m_pHotplugControlsModuleConfigData;
+    setConfiguration(xmlString);
 }
 
 void cHotplugControlsModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
-    m_bConfigured = m_bConfigError = false;
-    if (m_pHotplugControlsModuleConfigData)
-        delete m_pHotplugControlsModuleConfigData;
-    m_pHotplugControlsModuleConfigData = new cHotplugControlsModuleConfigData();
-
-    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
-
-    // so now we can set up
-    // initializing hash table for xml configuration
-
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cHotplugControlsModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cHotplugControlsModuleConfiguration::completeConfiguration);
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
-QByteArray cHotplugControlsModuleConfiguration::exportConfiguration()
+QByteArray cHotplugControlsModuleConfiguration::exportConfiguration() const
 {
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-cHotplugControlsModuleConfigData *cHotplugControlsModuleConfiguration::getConfigurationData()
+cHotplugControlsModuleConfigData *cHotplugControlsModuleConfiguration::getConfigData()
 {
-    return m_pHotplugControlsModuleConfigData;
+    return &m_configData;
 }
 
 void cHotplugControlsModuleConfiguration::configXMLInfo(const QString &key)
 {
-    bool ok;
-    if (m_ConfigXMLMap.contains(key))
-    {
-        ok = true;
+    if (m_ConfigXMLMap.contains(key)) {
+        bool ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {

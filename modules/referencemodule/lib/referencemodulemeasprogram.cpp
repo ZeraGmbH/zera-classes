@@ -1,7 +1,6 @@
 #include "referencemodulemeasprogram.h"
 #include "referencemodule.h"
 #include "referencemeaschannel.h"
-#include "referencemoduleconfiguration.h"
 #include <errormessages.h>
 #include <proxy.h>
 #include <proxyclient.h>
@@ -11,12 +10,11 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* module,
-                                                         const std::shared_ptr<BaseModuleConfiguration> &configuration) :
-    cBaseDspMeasProgram(configuration, module->getVeinModuleName()),
-    m_pModule(module)
+cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* module) :
+    cBaseDspMeasProgram(module->getVeinModuleName()),
+    m_pModule(module),
+    m_ChannelList(m_pModule->getConfigData()->m_referenceChannelList)
 {
-    m_ChannelList = getConfData()->m_referenceChannelList;
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRefProg(
         m_pModule->getEntityId(),
         m_ChannelList);
@@ -88,7 +86,7 @@ void cReferenceModuleMeasProgram::setDspCmdList()
 {
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2*m_ChannelList.count())));
-        m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
+        m_dspInterface->addCycListItem(QString("SETVAL(TIPAR,%1)").arg(m_pModule->getConfigData()->m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_dspInterface->addCycListItem("GETSTIME(TISTART)"); // einmal ti start setzen
         m_dspInterface->addCycListItem("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_dspInterface->addCycListItem("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -164,11 +162,6 @@ void cReferenceModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 rep
             }
         }
     }
-}
-
-cReferenceModuleConfigData *cReferenceModuleMeasProgram::getConfData()
-{
-    return qobject_cast<cReferenceModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
 void cReferenceModuleMeasProgram::dspserverConnect()

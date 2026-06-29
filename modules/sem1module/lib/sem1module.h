@@ -1,6 +1,7 @@
 #ifndef SEM1MODULE_H
 #define SEM1MODULE_H
 
+#include "sem1moduleconfiguration.h"
 #include "sem1modulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -16,7 +17,9 @@ public:
     // and each energy measurement  will have an additional scpi parent with its number 0001 .. 9999
     static constexpr const char* BaseSCPIModuleName = "EM01";
 
-    cSem1Module(const ModuleFactoryParam &moduleParam);
+    explicit cSem1Module(const ModuleFactoryParam &moduleParam);
+    cSem1ModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
@@ -24,6 +27,7 @@ private:
     void stopMeas() override;
 
     cSem1ModuleMeasProgram *m_pMeasProgram = nullptr;
+    cSem1ModuleConfiguration m_configuration;
 };
 
 }

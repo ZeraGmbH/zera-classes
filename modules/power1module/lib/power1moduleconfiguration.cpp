@@ -1,33 +1,87 @@
 #include "power1moduleconfiguration.h"
-#include "power1moduleconfigdata.h"
 #include "foutinfo.h"
-#include <xmlconfigreader.h>
 
 namespace POWER1MODULE
 {
-cPower1ModuleConfiguration::cPower1ModuleConfiguration()
+
+cPower1ModuleConfiguration::cPower1ModuleConfiguration(const QByteArray &xmlString)
 {
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cPower1ModuleConfiguration::configXMLInfo);
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cPower1ModuleConfiguration::completeConfiguration);
+    setConfiguration(xmlString);
 }
 
-cPower1ModuleConfiguration::~cPower1ModuleConfiguration()
+enum moduleconfigstate
 {
-    if (m_pPower1ModulConfigData) delete m_pPower1ModulConfigData;
-}
+    setMeasModeCount,
+    setMeasSystem1,
+    setMeasSystem2,
+    setMeasSystem3,
+    setDisablePhaseSelect,
+    setIntegrationMode,
+    setMovingwindowBool,
+    setMovingwindowTime,
+    setNominalFrequency,
+    setNominalFrequencyDefault,
+    setFrequencyActualizationMode,
+    setFrequencyOutputCount,
+    setEnableScpiCommands,
+
+    setMeasuringMode,
+    setModePhaseCount,
+    setMeasureIntervalTime,
+    setMeasureIntervalPeriod,
+    setQREFFrequency,
+
+    setMeasMode1 = 32, // we leave some place for additional cmds
+    setMeasModePhases1 = setMeasMode1 + 32,
+
+    setfreqout1Name = setMeasModePhases1 + 32, // 32 measuring modes should be enough
+    setfreqout2Name,
+    setfreqout3Name,
+    setfreqout4Name,
+
+    setfreqout1Source = setfreqout1Name +8, // also some place for additional frequency outputs
+    setfreqout2Source,
+    setfreqout3Source,
+    setfreqout4Source,
+
+    setfreqout1Type = setfreqout1Source + 8,
+    setfreqout2Type,
+    setfreqout3Type,
+    setfreqout4Type,
+
+    setfreqout1NameDisplayed = setfreqout1Type + 8,
+    setfreqout2Plug,
+    setfreqout3Plug,
+    setfreqout4Plug,
+
+    setnext = setfreqout1NameDisplayed + 8,
+
+    setfreqout1UScaleEntity = setnext+8,
+    setfreqout2UScaleEntity,
+    setfreqout3UScaleEntity,
+    setfreqout4UScaleEntity,
+
+    setfreqout1UScaleComponent = setfreqout1UScaleEntity + 8,
+    setfreqout2UScaleComponent,
+    setfreqout3UScaleComponent,
+    setfreqout4UScaleComponent,
+
+    setfreqout1IScaleEntity = setfreqout1UScaleComponent+8,
+    setfreqout2IScaleEntity,
+    setfreqout3IScaleEntity,
+    setfreqout4IScaleEntity,
+
+    setfreqout1IScaleComponent = setfreqout1IScaleEntity + 8,
+    setfreqout2IScaleComponent,
+    setfreqout3IScaleComponent,
+    setfreqout4IScaleComponent
+};
 
 void cPower1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
-    m_bConfigured = m_bConfigError = false;
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cPower1ModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cPower1ModuleConfiguration::completeConfiguration);
 
-    if (m_pPower1ModulConfigData)
-        delete m_pPower1ModulConfigData;
-    m_pPower1ModulConfigData = new cPower1ModuleConfigData();
-
-    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
-
-    // so now we can set up
-    // initializing hash table for xml configuration
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:modes:n"] = setMeasModeCount;
 
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:system:pms1"] = setMeasSystem1;
@@ -55,38 +109,35 @@ void cPower1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
-QByteArray cPower1ModuleConfiguration::exportConfiguration()
+QByteArray cPower1ModuleConfiguration::exportConfiguration() const
 {
-    doubleParameter* dPar;
-    dPar = &m_pPower1ModulConfigData->m_fMeasIntervalTime;
-    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+    const doubleParameter* parInterval = &m_configData.m_fMeasIntervalTime;
+    m_pXMLReader->setValue(parInterval->m_sKey, QString("%1").arg(parInterval->m_fValue));
 
-    intParameter* iPar;
-    iPar = &m_pPower1ModulConfigData->m_nMeasIntervalPeriod;
-    m_pXMLReader->setValue(iPar->m_sKey, QString("%1").arg(iPar->m_nValue));
+    const intParameter* parPeriod = &m_configData.m_nMeasIntervalPeriod;
+    m_pXMLReader->setValue(parPeriod->m_sKey, QString("%1").arg(parPeriod->m_nValue));
 
-    stringParameter* sPar;
-    sPar = &m_pPower1ModulConfigData->m_sMeasuringMode;
-    m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sValue);
+    const stringParameter* parMeasMode = &m_configData.m_sMeasuringMode;
+    m_pXMLReader->setValue(parMeasMode->m_sKey, parMeasMode->m_sValue);
 
-    dPar = &m_pPower1ModulConfigData->m_qrefFrequency;
-    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+    const doubleParameter* parFreq = &m_configData.m_qrefFrequency;
+    m_pXMLReader->setValue(parFreq->m_sKey, QString("%1").arg(parFreq->m_fValue));
 
-    iPar = &m_pPower1ModulConfigData->m_nNominalFrequency;
-    m_pXMLReader->setValue(iPar->m_sKey, QString("%1").arg(iPar->m_nValue));
+    const intParameter* parNomFreq = &m_configData.m_nNominalFrequency;
+    m_pXMLReader->setValue(parNomFreq->m_sKey, QString("%1").arg(parNomFreq->m_nValue));
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-cPower1ModuleConfigData *cPower1ModuleConfiguration::getConfigurationData()
+cPower1ModuleConfigData *cPower1ModuleConfiguration::getConfigData()
 {
-    return m_pPower1ModulConfigData;
+    return &m_configData;
 }
 
-void cPower1ModuleConfiguration::addMeasSys(QString val)
+void cPower1ModuleConfiguration::addMeasSys(const QString &val)
 {
     if(!val.isEmpty())
-        m_pPower1ModulConfigData->m_sMeasSystemList.append(val);
+        m_configData.m_sMeasSystemList.append(val);
 }
 
 void cPower1ModuleConfiguration::configXMLInfo(const QString &key)
@@ -97,49 +148,49 @@ void cPower1ModuleConfiguration::configXMLInfo(const QString &key)
         switch (cmd)
         {
         case setMeasModeCount:
-            m_pPower1ModulConfigData->m_nMeasModeCount = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nMeasModeCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for value channel configuration
-            for (int i = 0; i < m_pPower1ModulConfigData->m_nMeasModeCount; i++)
+            for (int i = 0; i < m_configData.m_nMeasModeCount; i++)
                 m_ConfigXMLMap[QString("pow1modconfpar:configuration:measure:modes:m%1").arg(i+1)] = setMeasMode1+i;
             break;
         case setMeasSystem1:
-            Q_ASSERT(m_pPower1ModulConfigData->m_sMeasSystemList.count() == 0);
+            Q_ASSERT(m_configData.m_sMeasSystemList.count() == 0);
             addMeasSys(m_pXMLReader->getValue(key));
             break;
         case setMeasSystem2:
-            Q_ASSERT(m_pPower1ModulConfigData->m_sMeasSystemList.count() == 1);
+            Q_ASSERT(m_configData.m_sMeasSystemList.count() == 1);
             addMeasSys(m_pXMLReader->getValue(key));
             break;
         case setMeasSystem3:
-            Q_ASSERT(m_pPower1ModulConfigData->m_sMeasSystemList.count() == 2);
+            Q_ASSERT(m_configData.m_sMeasSystemList.count() == 2);
             addMeasSys(m_pXMLReader->getValue(key));
             break;
         case setDisablePhaseSelect:
-            m_pPower1ModulConfigData->m_disablephaseselect = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_disablephaseselect = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setIntegrationMode:
-            m_pPower1ModulConfigData->m_sIntegrationMode = m_pXMLReader->getValue(key);
+            m_configData.m_sIntegrationMode = m_pXMLReader->getValue(key);
             break;
         case setMovingwindowBool:
-            m_pPower1ModulConfigData->m_bmovingWindow = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            m_configData.m_bmovingWindow = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
         case setMovingwindowTime:
-            m_pPower1ModulConfigData->m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setNominalFrequency:
-            m_pPower1ModulConfigData->m_nNominalFrequency.m_sKey = key;
-            m_pPower1ModulConfigData->m_nNominalFrequency.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nNominalFrequency.m_sKey = key;
+            m_configData.m_nNominalFrequency.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setNominalFrequencyDefault:
-            m_pPower1ModulConfigData->m_nNominalFrequencyDefault.m_sKey = key;
-            m_pPower1ModulConfigData->m_nNominalFrequencyDefault.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nNominalFrequencyDefault.m_sKey = key;
+            m_configData.m_nNominalFrequencyDefault.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
         case setFrequencyActualizationMode:
-            m_pPower1ModulConfigData->m_sFreqActualizationMode = m_pXMLReader->getValue(key);
+            m_configData.m_sFreqActualizationMode = m_pXMLReader->getValue(key);
             break;
         case setFrequencyOutputCount:
-            m_pPower1ModulConfigData->m_nFreqOutputCount = m_pXMLReader->getValue(key).toInt(&ok);
-            if (m_pPower1ModulConfigData->m_nFreqOutputCount > 0) {
-                for (int i = 0; i < m_pPower1ModulConfigData->m_nFreqOutputCount; i++) {
+            m_configData.m_nFreqOutputCount = m_pXMLReader->getValue(key).toInt(&ok);
+            if (m_configData.m_nFreqOutputCount > 0) {
+                for (int i = 0; i < m_configData.m_nFreqOutputCount; i++) {
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:name").arg(i+1)] = setfreqout1Name+i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:source").arg(i+1)] = setfreqout1Source+i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:type").arg(i+1)] = setfreqout1Type+i;
@@ -149,33 +200,33 @@ void cPower1ModuleConfiguration::configXMLInfo(const QString &key)
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:scaling:iscale:inputentity").arg(i+1)] = setfreqout1IScaleEntity + i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:scaling:iscale:inputcomponent").arg(i+1)] = setfreqout1IScaleComponent + i;
                     freqoutconfiguration fconf;
-                    m_pPower1ModulConfigData->m_FreqOutputConfList.append(fconf);
+                    m_configData.m_FreqOutputConfList.append(fconf);
                 }
             }
             break;
         case setEnableScpiCommands:
-            m_pPower1ModulConfigData->m_enableScpiCommands = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_enableScpiCommands = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setMeasuringMode:
-            m_pPower1ModulConfigData->m_sMeasuringMode.m_sKey = key;
-            m_pPower1ModulConfigData->m_sMeasuringMode.m_sValue = m_pXMLReader->getValue(key);
+            m_configData.m_sMeasuringMode.m_sKey = key;
+            m_configData.m_sMeasuringMode.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setModePhaseCount:
-            m_pPower1ModulConfigData->m_measmodePhaseCount = m_pXMLReader->getValue(key).toInt();
-            for (int i = 0; i < m_pPower1ModulConfigData->m_measmodePhaseCount; i++)
+            m_configData.m_measmodePhaseCount = m_pXMLReader->getValue(key).toInt();
+            for (int i = 0; i < m_configData.m_measmodePhaseCount; i++)
                 m_ConfigXMLMap[QString("pow1modconfpar:parameter:modePhases:m%1").arg(i+1)] = setMeasModePhases1+i;
             break;
         case setMeasureIntervalTime:
-            m_pPower1ModulConfigData->m_fMeasIntervalTime.m_sKey = key;
-            m_pPower1ModulConfigData->m_fMeasIntervalTime.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fMeasIntervalTime.m_sKey = key;
+            m_configData.m_fMeasIntervalTime.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setMeasureIntervalPeriod:
-            m_pPower1ModulConfigData->m_nMeasIntervalPeriod.m_sKey = key;
-            m_pPower1ModulConfigData->m_nMeasIntervalPeriod.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nMeasIntervalPeriod.m_sKey = key;
+            m_configData.m_nMeasIntervalPeriod.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setQREFFrequency:
-            m_pPower1ModulConfigData->m_qrefFrequency.m_sKey = key;
-            m_pPower1ModulConfigData->m_qrefFrequency.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_qrefFrequency.m_sKey = key;
+            m_configData.m_qrefFrequency.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
 
         default:
@@ -183,25 +234,25 @@ void cPower1ModuleConfiguration::configXMLInfo(const QString &key)
             if ((cmd >= setMeasMode1) && (cmd < setMeasMode1 + 32)) {
                 // it is command for setting measuring mode
                 QString measMode = m_pXMLReader->getValue(key);
-                m_pPower1ModulConfigData->m_sMeasmodeList.append(measMode); // for configuration of our engine
+                m_configData.m_sMeasmodeList.append(measMode); // for configuration of our engine
             }
             else if ((cmd >= setMeasModePhases1) && (cmd < setMeasModePhases1 + 32)) {
                 QString measModePhase = m_pXMLReader->getValue(key);
-                m_pPower1ModulConfigData->m_measmodePhaseList.append(measModePhase);
+                m_configData.m_measmodePhaseList.append(measModePhase);
             }
             else if ((cmd >= setfreqout1Name) && (cmd < setfreqout1Name + 8)) {
                 cmd -= setfreqout1Name;
                 freqoutconfiguration fconf;
-                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf = m_configData.m_FreqOutputConfList.at(cmd);
                 fconf.m_sName = m_pXMLReader->getValue(key);
-                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+                m_configData.m_FreqOutputConfList.replace(cmd, fconf);
             }
             else if ((cmd >= setfreqout1Source) && (cmd < setfreqout1Source + 8)) {
                 QString s;
                 s = m_pXMLReader->getValue(key);
                 cmd -= setfreqout1Source;
                 freqoutconfiguration fconf;
-                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf = m_configData.m_FreqOutputConfList.at(cmd);
                 if (s == "pms1")
                     fconf.m_nSource = 0;
                 if (s == "pms2")
@@ -210,14 +261,14 @@ void cPower1ModuleConfiguration::configXMLInfo(const QString &key)
                     fconf.m_nSource = 2;
                 if (s == "pmss")
                     fconf.m_nSource = 3;
-                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+                m_configData.m_FreqOutputConfList.replace(cmd, fconf);
             }
             else if ((cmd >= setfreqout1Type) && (cmd < setfreqout1Type+ 8)) {
                 QString s;
                 cmd -= setfreqout1Type;
                 s = m_pXMLReader->getValue(key);
                 freqoutconfiguration fconf;
-                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf = m_configData.m_FreqOutputConfList.at(cmd);
                 if (s == "+-")
                     fconf.m_nFoutMode = absPower;
                 if (s == "+")
@@ -225,42 +276,42 @@ void cPower1ModuleConfiguration::configXMLInfo(const QString &key)
                 if (s == "-")
                     fconf.m_nFoutMode = negPower;
 
-                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+                m_configData.m_FreqOutputConfList.replace(cmd, fconf);
             }
             else if ((cmd >= setfreqout1NameDisplayed) && (cmd < setfreqout1NameDisplayed + 8)) {
                 cmd -= setfreqout1NameDisplayed;
                 freqoutconfiguration fconf;
-                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf = m_configData.m_FreqOutputConfList.at(cmd);
                 fconf.m_sFreqOutNameDisplayed = m_pXMLReader->getValue(key);
-                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+                m_configData.m_FreqOutputConfList.replace(cmd, fconf);
             }
             else if ((cmd >= setfreqout1UScaleEntity) && (cmd < setfreqout1UScaleEntity + 8)) {
                 cmd -= setfreqout1UScaleEntity;
                 freqoutconfiguration fconf;
-                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf = m_configData.m_FreqOutputConfList.at(cmd);
                 fconf.m_uscale.m_entityId = m_pXMLReader->getValue(key).toInt();
-                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+                m_configData.m_FreqOutputConfList.replace(cmd, fconf);
             }
             else if ((cmd >= setfreqout1UScaleComponent) && (cmd < setfreqout1UScaleComponent + 8)) {
                 cmd -= setfreqout1UScaleComponent;
                 freqoutconfiguration fconf;
-                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf = m_configData.m_FreqOutputConfList.at(cmd);
                 fconf.m_uscale.m_componentName = m_pXMLReader->getValue(key);
-                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+                m_configData.m_FreqOutputConfList.replace(cmd, fconf);
             }
             else if ((cmd >= setfreqout1IScaleEntity) && (cmd < setfreqout1IScaleEntity + 8)) {
                 cmd -= setfreqout1IScaleEntity;
                 freqoutconfiguration fconf;
-                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf = m_configData.m_FreqOutputConfList.at(cmd);
                 fconf.m_iscale.m_entityId = m_pXMLReader->getValue(key).toInt();
-                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+                m_configData.m_FreqOutputConfList.replace(cmd, fconf);
             }
             else if ((cmd >= setfreqout1IScaleComponent) && (cmd < setfreqout1IScaleComponent + 8)) {
                 cmd -= setfreqout1IScaleComponent;
                 freqoutconfiguration fconf;
-                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf = m_configData.m_FreqOutputConfList.at(cmd);
                 fconf.m_iscale.m_componentName = m_pXMLReader->getValue(key);
-                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+                m_configData.m_FreqOutputConfList.replace(cmd, fconf);
             }
         }
         m_bConfigError |= !ok;

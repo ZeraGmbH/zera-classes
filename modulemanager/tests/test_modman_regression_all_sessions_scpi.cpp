@@ -46,7 +46,7 @@ void test_modman_regression_all_sessions_scpi::init()
         QVERIFY(m_scpiModule != nullptr);
 
         m_scpiclient = new SCPIMODULE::ScpiTestClient(m_scpiModule,
-                                                      *m_scpiModule->getConfData(),
+                                                      *m_scpiModule->getConfigData(),
                                                       m_scpiModule->getSCPIServer()->getScpiInterface());
         m_scpiModule->getSCPIServer()->appendClient(m_scpiclient); // deletes client
         connect(m_scpiclient, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, m_scpiclient, [&] (const QString &response) {

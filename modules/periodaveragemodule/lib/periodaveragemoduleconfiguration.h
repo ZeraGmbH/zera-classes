@@ -12,17 +12,17 @@ class PeriodAverageModuleConfiguration: public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    PeriodAverageModuleConfiguration();
-    ~PeriodAverageModuleConfiguration();
-    void setConfiguration(const QByteArray &xmlString) override;
-    virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
-    PeriodAverageModuleConfigData* getConfigurationData();
+    explicit PeriodAverageModuleConfiguration(const QByteArray &xmlString);
+
+    QByteArray exportConfiguration() const override;
+    PeriodAverageModuleConfigData* getConfigData();
 
 private slots:
     void configXMLInfo(const QString &key) override;
     void completeConfiguration(bool ok);
 private:
-    PeriodAverageModuleConfigData *m_periodAverageModulConfigData = nullptr;
+    void setConfiguration(const QByteArray &xmlString);
+    PeriodAverageModuleConfigData m_configData;
 };
 
 }

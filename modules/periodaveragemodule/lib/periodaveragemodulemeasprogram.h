@@ -2,7 +2,6 @@
 #define PERIODAVERAGEMODULEMEASPROGRAM_H
 
 #include "periodaveragemodule.h"
-#include "periodaveragemoduleconfigdata.h"
 #include "actualvaluestartstophandler.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
@@ -18,8 +17,7 @@ class PeriodAverageModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    PeriodAverageModuleMeasProgram(PeriodAverageModule* module,
-                                   const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit PeriodAverageModuleMeasProgram(PeriodAverageModule* module);
     void generateVeinInterface() override;
 
 public slots:
@@ -41,23 +39,22 @@ private slots:
 
     void newPeriodCount(const QVariant &periodCount);
 private:
-    PeriodAverageModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
     void dataAcquisitionDSP();
     void dataReadDSP();
 
-    PeriodAverageModule* m_pModule;
+    PeriodAverageModule* m_pModule = nullptr;
     ChannelRangeObserver::SystemObserverPtr m_observer;
     ActualValueStartStopHandler m_startStopHandler;
 
     QList<VfModuleComponent*> m_periodValues;
     QList<VfModuleComponent*> m_averageValues;
-    VfModuleComponent* m_pMeasureSignal;
-    VfModuleParameter* m_periodCountParameter;
+    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleParameter* m_periodCountParameter= nullptr;
 
-    DspVarGroupClientInterface* m_pParameterDSP;
-    DspVarGroupClientInterface* m_pActualValuesDSP;
+    DspVarGroupClientInterface* m_pParameterDSP= nullptr;
+    DspVarGroupClientInterface* m_pActualValuesDSP= nullptr;
 
     // statemachine for activating
     QState m_dspserverConnectState;

@@ -6,11 +6,22 @@ namespace FFTMODULE
 {
 
 cFftModule::cFftModule(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_unique<cFftModuleConfiguration>())
+    cBaseMeasModule(moduleParam),
+    m_configuration(moduleParam.m_configXmlData)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module measures configured number of fft values for configured channels");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
+}
+
+cFftModuleConfigData *cFftModule::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray cFftModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
 }
 
 void cFftModule::setupModule()
@@ -19,7 +30,7 @@ void cFftModule::setupModule()
     cBaseMeasModule::setupModule();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cFftModuleMeasProgram(this, m_pConfiguration);
+    m_pMeasProgram = new cFftModuleMeasProgram(this);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cFftModuleMeasProgram::activated, this, &cFftModule::activationContinue);
     connect(m_pMeasProgram, &cFftModuleMeasProgram::deactivated, this, &cFftModule::deactivationContinue);

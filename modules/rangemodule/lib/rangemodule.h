@@ -1,6 +1,7 @@
 #ifndef RANGEMODULE_H
 #define RANGEMODULE_H
 
+#include "rangemoduleconfiguration.h"
 #include "rangemodulemeasprogram.h"
 #include "rangemeaschannel.h"
 #include "rangeobsermatic.h"
@@ -18,6 +19,9 @@ public:
     static constexpr const char* BaseSCPIModuleName = "RNG";
 
     explicit cRangeModule(const ModuleFactoryParam &moduleParam);
+    cRangeModuleConfigData *getConfigData();
+    QByteArray getConfigXml() const override;
+
     cRangeMeasChannel* getMeasChannel(const QString &name); // also used for callback
 
 private slots:
@@ -30,6 +34,8 @@ private:
     void stopMeas() override;
 
     cRangeModuleMeasProgram *m_pMeasProgram = nullptr;
+    cRangeModuleConfiguration m_configuration;
+
     cAdjustManagement *m_pAdjustment = nullptr; // our justifying and normation program
     cRangeObsermatic *m_pRangeObsermatic = nullptr; // our range handling
     QList<cRangeMeasChannel*> m_rangeMeasChannelList; // our meas channels

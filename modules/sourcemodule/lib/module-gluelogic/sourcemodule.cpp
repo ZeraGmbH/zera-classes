@@ -1,32 +1,31 @@
 #include "sourcemodule.h"
-#include "moduleconfigurationnull.h"
 
 SourceModule::SourceModule(const ModuleFactoryParam &moduleParam) :
-    cBaseMeasModule(moduleParam, std::make_shared<ModuleConfigurationNull>()),
-    m_rpcEventSystem(new VfRpcEventSystem(moduleParam.m_entityId))
+    cBaseMeasModule(moduleParam),
+    m_rpcEventSystem(moduleParam.m_entityId)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("Module to access voltage and current sources");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
 }
 
-SourceModule::~SourceModule()
+QByteArray SourceModule::getConfigXml() const
 {
-    delete m_rpcEventSystem;
+    return QByteArray();
 }
 
-VfRpcEventSystem *SourceModule::getRpcEventSystem() const
+VfRpcEventSystem *SourceModule::getRpcEventSystem()
 {
-    return m_rpcEventSystem;
+    return &m_rpcEventSystem;
 }
 
 void SourceModule::setupModule()
 {
     emit addEventSystem(getValidatorEventSystem());
-    emit addEventSystem(m_rpcEventSystem);
+    emit addEventSystem(&m_rpcEventSystem);
     BaseModule::setupModule();
 
-    m_pProgram = new SourceModuleProgram(this, m_pConfiguration);
+    m_pProgram = new SourceModuleProgram(this);
     m_ModuleActivistList.append(m_pProgram);
     connect(m_pProgram, &SourceModuleProgram::activated, this, &SourceModule::activationContinue);
 

@@ -27,29 +27,27 @@ class cRangeModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cRangeModuleMeasProgram(cRangeModule* module,
-                            const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cRangeModuleMeasProgram(cRangeModule* module);
     void generateVeinInterface() override;
 public slots:
     void start() override {};
     void stop() override {};
     void syncRanging(QVariant sync);
 private:
-    cRangeModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
 
-    cRangeModule* m_pModule; // the module we live in
-    bool m_bRanging;
-    bool m_bIgnore;
+    cRangeModule* m_pModule = nullptr; // the module we live in
+    bool m_bRanging = false;
+    bool m_bIgnore = false;
 
-    VfModuleComponent *m_pMeasureSignal;
+    VfModuleComponent *m_pMeasureSignal = nullptr;
     QList<VfModuleComponent*> m_veinActValueList;
     QList<VfModuleComponent*> m_veinRmsValueList;
     TimerTemplateQtPtr m_dspWatchdogTimer;
 
-    DspVarGroupClientInterface* m_pParameterDSP;
-    DspVarGroupClientInterface* m_pActualValuesDSP;
+    DspVarGroupClientInterface* m_pParameterDSP = nullptr;
+    DspVarGroupClientInterface* m_pActualValuesDSP = nullptr;
 
     // statemachine for activating gets the following states
     QState m_dspserverConnectState;

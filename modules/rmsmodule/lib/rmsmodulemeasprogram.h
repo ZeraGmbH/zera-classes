@@ -2,7 +2,6 @@
 #define RMSMODULEMEASPROGRAM_H
 
 #include "rmsmodule.h"
-#include "rmsmoduleconfigdata.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <movingwindowfilterwithoutsumfifo.h>
@@ -16,8 +15,7 @@ class cRmsModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cRmsModuleMeasProgram(cRmsModule* module,
-                          const std::shared_ptr<BaseModuleConfiguration> &configuration);
+    explicit cRmsModuleMeasProgram(cRmsModule* module);
     void generateVeinInterface() override;
 public slots:
     void start() override;
@@ -38,7 +36,6 @@ private slots:
     void newIntegrationtime(QVariant ti);
     void newIntegrationPeriod(QVariant period);
 private:
-    cRmsModuleConfigData* getConfData();
     void setDspVarList();
     void setDspCmdList();
     void dataAcquisitionDSP();
