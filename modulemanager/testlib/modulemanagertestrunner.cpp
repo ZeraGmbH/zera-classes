@@ -203,7 +203,8 @@ void ModuleManagerTestRunner::fireActualValues()
         findDspInterfaceByType(INJECT_RANGE_PROGRAM),
         findDspInterfaceByType(INJECT_RMS),
         findAllDspInterfaceByType(INJECT_POWER1),
-        findDspInterfaceByType(INJECT_OSCI)
+        findDspInterfaceByType(INJECT_OSCI),
+        findAllDspInterfaceByType(INJECT_THD)
         );
 }
 

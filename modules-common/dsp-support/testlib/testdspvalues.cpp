@@ -13,6 +13,7 @@ TestDspValues::TestDspValues(const QStringList &valueChannelList, int dftOrder)
     m_rmsValues = std::make_unique<DemoDspValuesRms>(valueChannelList);
     m_power1Values = std::make_unique<DemoDspValuesPower1>();
     m_osciValues = std::make_unique<DemoDspValuesOsci>(valueChannelList);
+    m_thdValues = std::make_unique<DemoDspValuesThd>(valueChannelList);
 }
 
 void TestDspValues::setAllValuesSymmetricAc(float voltage, float current, float angleUi, float frequency, bool invertedSequence)
@@ -27,6 +28,7 @@ void TestDspValues::setAllValuesSymmetricAc(float voltage, float current, float 
         m_rmsValues->setAllValuesSymmetric(voltage, current);
         m_power1Values->setAllValuesSymmetric(voltage, current);
         m_osciValues->setAllValuesSymmetricAc(voltage, current);
+        m_thdValues->setAllValuesSymmetric();
     }
 }
 
@@ -41,6 +43,7 @@ void TestDspValues::setAllValuesSymmetricDc(float voltage, float current)
         m_rmsValues->setAllValuesSymmetric(0, 0);
         m_power1Values->setAllValuesSymmetric(voltage, current);
         m_osciValues->setAllValuesSymmetricDc(voltage, current);
+        m_thdValues->setAllValuesSymmetric();
     }
 }
 
@@ -80,12 +83,19 @@ void TestDspValues::fireOsciActualValues(const MockDspInterfacePtr &dspOsci)
         dspOsci->fireActValInterrupt(m_osciValues->getDspValues(), 0 /* dummy */);
 }
 
+void TestDspValues::fireThdActualValues(const QList<TestDspInterfacePtr> &dspThd)
+{
+    for(const MockDspInterfacePtr &dspInterface : dspThd)
+        dspInterface->fireActValInterrupt(m_thdValues->getDspValues(), 0 /* dummy */);
+}
+
 void TestDspValues::fireAllActualValues(const MockDspInterfacePtr &dspDft,
                                         const MockDspInterfacePtr &dspFft,
                                         const MockDspInterfacePtr &dspRange,
                                         const MockDspInterfacePtr &dspRms,
                                         const QList<TestDspInterfacePtr> &dspPower1,
-                                        const MockDspInterfacePtr &dspOsci)
+                                        const MockDspInterfacePtr &dspOsci,
+                                        const QList<TestDspInterfacePtr> &dspThd)
 {
     fireDftActualValues(dspDft);
     fireFftActualValues(dspFft);
@@ -93,4 +103,5 @@ void TestDspValues::fireAllActualValues(const MockDspInterfacePtr &dspDft,
     fireRmsActualValues(dspRms);
     firePower1ActualValues(dspPower1);
     fireOsciActualValues(dspOsci);
+    fireThdActualValues(dspThd);
 }

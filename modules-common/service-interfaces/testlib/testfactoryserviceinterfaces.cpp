@@ -85,7 +85,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceThdn(int e
                                                                            const QStringList &valueChannelList)
 {
     return createDspInterfaceCommon(entityId,
-                                    INJECT_NOT_SUPPORTED,
+                                    INJECT_THD,
                                     0 /* dummy */,
                                     valueChannelList);
 }

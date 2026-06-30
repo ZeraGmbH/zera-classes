@@ -11,7 +11,8 @@ void AdjModuleTestHelper::setAllValuesSymmetricAc(ModuleManagerTestRunner &testR
         testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM),
         testRunner.findDspInterfaceByType(INJECT_RMS),
         testRunner.findAllDspInterfaceByType(INJECT_POWER1),
-        testRunner.findDspInterfaceByType(INJECT_OSCI)
+        testRunner.findDspInterfaceByType(INJECT_OSCI),
+        testRunner.findAllDspInterfaceByType(INJECT_THD)
         );
 }
 
@@ -25,7 +26,8 @@ void AdjModuleTestHelper::setAllValuesSymmetricDc(ModuleManagerTestRunner &testR
         testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM),
         testRunner.findDspInterfaceByType(INJECT_RMS),
         testRunner.findAllDspInterfaceByType(INJECT_POWER1),
-        testRunner.findDspInterfaceByType(INJECT_OSCI)
+        testRunner.findDspInterfaceByType(INJECT_OSCI),
+        testRunner.findAllDspInterfaceByType(INJECT_THD)
         );
 }
 
