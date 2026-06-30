@@ -1,11 +1,11 @@
 #ifndef TESTDSPVALUES_H
 #define TESTDSPVALUES_H
 
-#include "demovaluesdspdft.h"
-#include "demovaluesdspfft.h"
-#include "demovaluesdsppower1.h"
-#include "demovaluesdsprange.h"
-#include "demovaluesdsprms.h"
+#include "demodspvaluesdft.h"
+#include "demodspvaluesfft.h"
+#include "demodspvaluespower1.h"
+#include "demodspvaluesrange.h"
+#include "demodspvaluesrms.h"
 #include "testdspinterface.h"
 #include <memory>
 
@@ -29,11 +29,11 @@ public:
                              const QList<TestDspInterfacePtr> &dspPower1);
 private:
     // Why unique pointers: we need to inject params in ctors which have to be calculated first
-    std::unique_ptr<DemoValuesDspDft> m_dftValues;
-    std::unique_ptr<DemoValuesDspFft> m_fftValues;
-    std::unique_ptr<DemoValuesDspRange> m_rangeValues;
-    std::unique_ptr<DemoValuesDspRms> m_rmsValues;
-    std::unique_ptr<DemoValuesDspPower1> m_power1Values;
+    std::unique_ptr<DemoDspValuesDft> m_dftValues;
+    std::unique_ptr<DemoDspValuesFft> m_fftValues;
+    std::unique_ptr<DemoDspValuesRange> m_rangeValues;
+    std::unique_ptr<DemoDspValuesRms> m_rmsValues;
+    std::unique_ptr<DemoDspValuesPower1> m_power1Values;
     QStringList m_channelList;
 };
 

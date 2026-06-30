@@ -1,5 +1,5 @@
 #include "demodspinterfacedft.h"
-#include "demovaluesdspdft.h"
+#include "demodspvaluesdft.h"
 #include <timerfactoryqt.h>
 
 DemoDspInterfaceDft::DemoDspInterfaceDft(const QStringList &valueChannelList,
@@ -19,7 +19,7 @@ DemoDspInterfaceDft::DemoDspInterfaceDft(const QStringList &valueChannelList,
 
 void DemoDspInterfaceDft::onTimer()
 {
-    DemoValuesDspDft dftValues(m_valueChannelList, m_dftOrder);
+    DemoDspValuesDft dftValues(m_valueChannelList, m_dftOrder);
     QVector<float> demoValues;
     if(m_dftOrder > 0) {
         if (m_valueType == RotatingValues) {

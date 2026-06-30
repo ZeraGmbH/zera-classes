@@ -1,6 +1,6 @@
 #include "test_dosage.h"
 #include "modulemanagertestrunner.h"
-#include "demovaluesdspfft.h"
+#include "demodspvaluesfft.h"
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
@@ -123,7 +123,7 @@ void test_dosage::testDosageDcAllBelowLimits()
     TestDspInterfacePtr dspFftInterface = testRunner.findDspInterfaceByEntityId(fftModule1EntityId);
     TestDspInterfacePtr dspPowInterface = testRunner.findDspInterfaceByEntityId(power1module4EntityId);
 
-    DemoValuesDspFft dspValues(dspFftInterface->getValueList().count());
+    DemoDspValuesFft dspValues(dspFftInterface->getValueList().count());
     dspValues.setValue(0, 0, 2, 0);     // int channelNo, int harmonicNo, float re, float im
     dspValues.setValue(1, 0, 2, 0);
     dspValues.setValue(2, 0, 2, 0);

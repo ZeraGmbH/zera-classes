@@ -1,5 +1,5 @@
 #include "demodspinterfacerange.h"
-#include "demovaluesdsprange.h"
+#include "demodspvaluesrange.h"
 #include <timerfactoryqt.h>
 
 DemoDspInterfaceRange::DemoDspInterfaceRange(int entityId,
@@ -22,7 +22,7 @@ DemoDspInterfaceRange::DemoDspInterfaceRange(int entityId,
 void DemoDspInterfaceRange::onTimer()
 {
     QVector<float> randomChannelRMS = demoChannelRms();
-    DemoValuesDspRange rangeValues(m_valueChannelList.count());
+    DemoDspValuesRange rangeValues(m_valueChannelList.count());
     for(int channel=0; channel<m_valueChannelList.count(); channel++)
         rangeValues.setRmsPeakDCValue(channel, randomChannelRMS[channel]);
     rangeValues.setFrequency(demoFrequency());

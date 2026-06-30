@@ -1,5 +1,5 @@
 #include "test_fft_module_regression.h"
-#include "demovaluesdspfft.h"
+#include "demodspvaluesfft.h"
 #include "modulemanagertestrunner.h"
 #include <vs_dumpjson.h>
 #include <vf_entity_component_event_item.h>
@@ -60,7 +60,7 @@ void test_fft_module_regression::injectValues()
     ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
     TestDspInterfacePtr fftDspInterface = testRunner.findDspInterfaceByEntityId(fftEntityId);
 
-    DemoValuesDspFft dspValues(fftDspInterface->getValueList().count());
+    DemoDspValuesFft dspValues(fftDspInterface->getValueList().count());
     dspValues.setValue(0, 0, 1, 1);
     dspValues.setValue(0, 1, 2, 0);
     dspValues.setValue(0, 2, 0, 3);

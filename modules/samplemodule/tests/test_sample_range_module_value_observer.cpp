@@ -1,6 +1,6 @@
 #include "test_sample_range_module_value_observer.h"
 #include "rangemodulevalueobserver.h"
-#include "demovaluesdsprange.h"
+#include "demodspvaluesrange.h"
 #include <vf-cpp-entity.h>
 #include <timemachineobject.h>
 #include <QSignalSpy>
@@ -101,7 +101,7 @@ void test_sample_range_module_value_observer::createModule(int entityId, QMap<QS
 void test_sample_range_module_value_observer::fireRangeValues(float rmsValue, int phaseCount)
 {
     TestDspInterfacePtr dspInterface = m_testRunner->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
-    DemoValuesDspRange rangeValues(phaseCount);
+    DemoDspValuesRange rangeValues(phaseCount);
     for(int i = 0; i < phaseCount; i++)
         rangeValues.setRmsPeakDCValue(i, rmsValue);
     dspInterface->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);

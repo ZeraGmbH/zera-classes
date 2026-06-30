@@ -1,5 +1,5 @@
 #include "test_rms_demovalues.h"
-#include "demovaluesdsprms.h"
+#include "demodspvaluesrms.h"
 #include <QTest>
 #include <math.h>
 
@@ -9,7 +9,7 @@ const QStringList test_rms_demovalues::mtRmsLayout = QStringList() << "m0" << "m
 
 void test_rms_demovalues::addVoltage()
 {
-    DemoValuesDspRms rmsValues(mtRmsLayout);
+    DemoDspValuesRms rmsValues(mtRmsLayout);
     rmsValues.setValue("m0", 42);
 
     QVector<float> dspValue = rmsValues.getDspValues();
@@ -26,7 +26,7 @@ void test_rms_demovalues::addVoltage()
 
 void test_rms_demovalues::addCurrent()
 {
-    DemoValuesDspRms rmsValues(mtRmsLayout);
+    DemoDspValuesRms rmsValues(mtRmsLayout);
     rmsValues.setValue("m3", 42);
 
     QVector<float> dspValue = rmsValues.getDspValues();
@@ -43,7 +43,7 @@ void test_rms_demovalues::addCurrent()
 
 void test_rms_demovalues::setSymmetric()
 {
-    DemoValuesDspRms rmsValues(mtRmsLayout);
+    DemoDspValuesRms rmsValues(mtRmsLayout);
     const float voltage = 230;
     const float current = 5;
     rmsValues.setAllValuesSymmetric(voltage, current);

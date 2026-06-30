@@ -1,12 +1,12 @@
-#ifndef DEMOVALUESDSPRANGE_H
-#define DEMOVALUESDSPRANGE_H
+#ifndef DEMODSPVALUESRANGE_H
+#define DEMODSPVALUESRANGE_H
 
 #include <QVector>
 
-class DemoValuesDspRange
+class DemoDspValuesRange
 {
 public:
-    DemoValuesDspRange(int channels);
+    DemoDspValuesRange(int channels);
     void setRmsPeakDCValue(int channel, float rmsValue);
     void setRmsPeakDCValue(int channel, float rmsValue, float peakValue);
     void setFrequency(float frequency);
@@ -19,4 +19,4 @@ private:
     QVector<float> m_dcValues;
 };
 
-#endif // DEMOVALUESDSPRANGE_H
+#endif // DEMODSPVALUESRANGE_H

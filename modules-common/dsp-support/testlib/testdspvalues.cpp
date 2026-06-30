@@ -7,11 +7,11 @@ TestDspValues::TestDspValues(const QStringList &valueChannelList, int dftOrder)
         if(valueChannel.split("-").count() == 1)
             m_channelList.append(valueChannel);
     }
-    m_dftValues = std::make_unique<DemoValuesDspDft>(valueChannelList, dftOrder);
-    m_fftValues = std::make_unique<DemoValuesDspFft>(m_channelList.count());
-    m_rangeValues = std::make_unique<DemoValuesDspRange>(m_channelList.count());
-    m_rmsValues = std::make_unique<DemoValuesDspRms>(valueChannelList);
-    m_power1Values = std::make_unique<DemoValuesDspPower1>();
+    m_dftValues = std::make_unique<DemoDspValuesDft>(valueChannelList, dftOrder);
+    m_fftValues = std::make_unique<DemoDspValuesFft>(m_channelList.count());
+    m_rangeValues = std::make_unique<DemoDspValuesRange>(m_channelList.count());
+    m_rmsValues = std::make_unique<DemoDspValuesRms>(valueChannelList);
+    m_power1Values = std::make_unique<DemoDspValuesPower1>();
 }
 
 void TestDspValues::setAllValuesSymmetricAc(float voltage, float current, float angleUi, float frequency, bool invertedSequence)

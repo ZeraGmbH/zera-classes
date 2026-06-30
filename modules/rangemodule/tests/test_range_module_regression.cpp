@@ -1,6 +1,6 @@
 #include "test_range_module_regression.h"
 #include "modulemanagertestrunner.h"
-#include "demovaluesdsprange.h"
+#include "demodspvaluesrange.h"
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
@@ -71,7 +71,7 @@ void test_range_module_regression::checkActualValueCount()
 
 
     // injectActualValues:
-    DemoValuesDspRange rangeValues(rangeChannelCount);
+    DemoDspValuesRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsPeakDCValue(i, i);
@@ -110,7 +110,7 @@ void test_range_module_regression::injectActualValuesWithCheating()
     TestDspInterfacePtr sampleDspInterfaceProg = testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.findDspInterfaceByType(INJECT_RANGE_ADJUST);
 
-    DemoValuesDspRange rangeValues(rangeChannelCount);
+    DemoDspValuesRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsPeakDCValue(i, i);
@@ -164,7 +164,7 @@ void test_range_module_regression::injectActualValuesWithCheatingAndRangeChanged
     TestDspInterfacePtr sampleDspInterfaceProg = testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.findDspInterfaceByType(INJECT_RANGE_ADJUST);
 
-    DemoValuesDspRange rangeValues(rangeChannelCount);
+    DemoDspValuesRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsPeakDCValue(i, i);
@@ -209,7 +209,7 @@ void test_range_module_regression::injectIncreasingActualValuesWithCheatingEnabl
     TestDspInterfacePtr sampleDspInterfaceProg = testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.findDspInterfaceByType(INJECT_RANGE_ADJUST);
 
-    DemoValuesDspRange rangeValues(rangeChannelCount);
+    DemoDspValuesRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsPeakDCValue(i, 0.1);
@@ -259,7 +259,7 @@ void test_range_module_regression::injectActualValuesCheatingEnabledWithPreScali
     TestDspInterfacePtr sampleDspInterfaceProg = testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     TestDspInterfacePtr sampleDspInterfaceAdj = testRunner.findDspInterfaceByType(INJECT_RANGE_ADJUST);
 
-    DemoValuesDspRange rangeValues(rangeChannelCount);
+    DemoDspValuesRange rangeValues(rangeChannelCount);
     rangeValues.setFrequency(15);
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsPeakDCValue(i, i*2.0);

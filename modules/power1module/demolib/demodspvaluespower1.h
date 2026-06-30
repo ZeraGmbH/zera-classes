@@ -1,14 +1,14 @@
-#ifndef DEMOVALUESDSPPOWER1_H
-#define DEMOVALUESDSPPOWER1_H
+#ifndef DEMODSPVALUESPOWER1_H
+#define DEMODSPVALUESPOWER1_H
 
 #include "measmodeselector.h"
 #include <QStringList>
 
-class DemoValuesDspPower1
+class DemoDspValuesPower1
 {
 public:
-    DemoValuesDspPower1();
-    DemoValuesDspPower1(int entityId, std::function<double (int)> valueGenerator, MeasModeSelector *measMode);
+    DemoDspValuesPower1();
+    DemoDspValuesPower1(int entityId, std::function<double (int)> valueGenerator, MeasModeSelector *measMode);
     void setAllValuesSymmetric(float voltage, float current);
     QVector<float> getDspValues() const;
 private:
@@ -19,4 +19,4 @@ private:
     QVector<float> m_powerValues;
 };
 
-#endif // DEMOVALUESDSPPOWER1_H
+#endif // DEMODSPVALUESPOWER1_H

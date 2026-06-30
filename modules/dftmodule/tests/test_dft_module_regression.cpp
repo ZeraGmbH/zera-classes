@@ -1,5 +1,5 @@
 #include "test_dft_module_regression.h"
-#include "demovaluesdspdft.h"
+#include "demodspvaluesdft.h"
 #include "modulemanagertestrunner.h"
 #include <timemachineobject.h>
 #include <vf_core_stack_client.h>
@@ -135,7 +135,7 @@ void test_dft_module_regression::injectSymmetricalOrder0()
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-noref-order-0.json");
 
     TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
-    DemoValuesDspDft dspValues(dftDspInterface->getValueList(), 0);
+    DemoDspValuesDft dspValues(dftDspInterface->getValueList(), 0);
     dspValues.setAllValuesSymmetric(20, 10, 30);
 
     dftDspInterface->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);
@@ -152,7 +152,7 @@ void test_dft_module_regression::injectSymmetricalOrder1()
     ModuleManagerTestRunner testRunner(":/sessions/dft-no-movingwindow-ref.json");
 
     TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
-    DemoValuesDspDft dspValues(dftDspInterface->getValueList(), 1);
+    DemoDspValuesDft dspValues(dftDspInterface->getValueList(), 1);
     dspValues.setAllValuesSymmetric(230, 10, 30);
 
     dftDspInterface->fireActValInterrupt(dspValues.getDspValues(), /*dummy*/ 0);

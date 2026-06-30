@@ -1,13 +1,13 @@
-#include "demovaluesdspfft.h"
+#include "demodspvaluesfft.h"
 
-DemoValuesDspFft::DemoValuesDspFft(int channels, int fftLen) :
+DemoDspValuesFft::DemoDspValuesFft(int channels, int fftLen) :
     m_dspValues(channels * 2* fftLen),
     m_channels(channels),
     m_fftLen(fftLen)
 {
 }
 
-void DemoValuesDspFft::setValue(int channelNo, int harmonicNo, float re, float im)
+void DemoDspValuesFft::setValue(int channelNo, int harmonicNo, float re, float im)
 {
     // see cFftModuleMeasProgram::dataReadDSP() for more details
     Q_ASSERT(channelNo>=0 && channelNo < m_channels);
@@ -36,12 +36,12 @@ void DemoValuesDspFft::setValue(int channelNo, int harmonicNo, float re, float i
 
 }
 
-QVector<float> DemoValuesDspFft::getDspValues()
+QVector<float> DemoDspValuesFft::getDspValues()
 {
     return m_dspValues;
 }
 
-int DemoValuesDspFft::getFFtLen() const
+int DemoDspValuesFft::getFFtLen() const
 {
     return m_fftLen;
 }

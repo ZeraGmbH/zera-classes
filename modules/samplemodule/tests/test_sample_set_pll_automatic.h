@@ -1,7 +1,7 @@
 #ifndef TEST_SAMPLE_SET_PLL_AUTOMATIC_H
 #define TEST_SAMPLE_SET_PLL_AUTOMATIC_H
 
-#include "demovaluesdsprange.h"
+#include "demodspvaluesrange.h"
 #include "modulemanagertestrunner.h"
 #include <QObject>
 
@@ -16,7 +16,7 @@ private:
     void fireRangeValues(ModuleManagerTestRunner &testRunner,
                          float rmsValue,
                          QList<int> activePhaseIdxs,
-                         DemoValuesDspRange &dspRangeValues);
+                         DemoDspValuesRange &dspRangeValues);
 };
 
 #endif // TEST_SAMPLE_SET_PLL_AUTOMATIC_H

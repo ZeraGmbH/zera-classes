@@ -1,5 +1,5 @@
 #include "test_dft_demovalues.h"
-#include "demovaluesdspdft.h"
+#include "demodspvaluesdft.h"
 #include <QTest>
 
 QTEST_MAIN(test_dft_demovalues)
@@ -8,7 +8,7 @@ const QStringList test_dft_demovalues::mtRmsLayout = QStringList() << "m0" << "m
 
 void test_dft_demovalues::addVoltage()
 {
-    DemoValuesDspDft dftValues(mtRmsLayout, 1);
+    DemoDspValuesDft dftValues(mtRmsLayout, 1);
     dftValues.setValue("m0", std::complex<float>(42, 0));
 
     QVector<float> dspValue = dftValues.getDspValues();
@@ -25,7 +25,7 @@ void test_dft_demovalues::addVoltage()
 
 void test_dft_demovalues::addCurrent()
 {
-    DemoValuesDspDft dftValues(mtRmsLayout, 1);
+    DemoDspValuesDft dftValues(mtRmsLayout, 1);
     dftValues.setValue("m3", std::complex<float>(42, 0));
 
     QVector<float> dspValue = dftValues.getDspValues();
@@ -42,7 +42,7 @@ void test_dft_demovalues::addCurrent()
 
 void test_dft_demovalues::setSymmetric()
 {
-    DemoValuesDspDft dftValues(mtRmsLayout, 1);
+    DemoDspValuesDft dftValues(mtRmsLayout, 1);
     const double voltage = 230;
     const double current = 5;
     const double angle = 30;

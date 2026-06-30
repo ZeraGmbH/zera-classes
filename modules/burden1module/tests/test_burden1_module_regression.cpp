@@ -1,5 +1,5 @@
 #include "test_burden1_module_regression.h"
-#include "demovaluesdspdft.h"
+#include "demodspvaluesdft.h"
 #include "modulemanagertestrunner.h"
 #include "burden1measdelegate.h"
 #include <vs_dumpjson.h>
@@ -54,7 +54,7 @@ void test_burden1_module_regression::voltageBurden230V1ADefaultSettings()
     TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
 
     QStringList valueList = dftDspInterface->getValueList();
-    DemoValuesDspDft dspValues(valueList, 1);
+    DemoDspValuesDft dspValues(valueList, 1);
     constexpr double voltage = 230;
     constexpr double current = 5;
     constexpr double angle = 0;
@@ -96,7 +96,7 @@ void test_burden1_module_regression::voltageBurden100V1A60DefaultSettings()
     TestDspInterfacePtr dftDspInterface = testRunner.findDspInterfaceByEntityId(dftEntityId);
 
     QStringList valueList = dftDspInterface->getValueList();
-    DemoValuesDspDft dspValues(valueList, 1);
+    DemoDspValuesDft dspValues(valueList, 1);
     constexpr double voltage = 100;
     constexpr double current = 1;
     constexpr double angle = 60;

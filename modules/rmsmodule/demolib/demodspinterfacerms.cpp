@@ -1,5 +1,5 @@
 #include "demodspinterfacerms.h"
-#include "demovaluesdsprms.h"
+#include "demodspvaluesrms.h"
 #include <timerfactoryqt.h>
 
 DemoDspInterfaceRms::DemoDspInterfaceRms(int entityId,
@@ -19,7 +19,7 @@ DemoDspInterfaceRms::DemoDspInterfaceRms(int entityId,
 
 void DemoDspInterfaceRms::onTimer()
 {
-    DemoValuesDspRms rmsValues(m_valueChannelList);
+    DemoDspValuesRms rmsValues(m_valueChannelList);
     rmsValues.setAllValuesSymmetric(230, 1);
     QVector<float> demoValues = rmsValues.getDspValues();
     for(int i=0; i<demoValues.count(); i++) {

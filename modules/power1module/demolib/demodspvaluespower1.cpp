@@ -1,18 +1,18 @@
-#include "demovaluesdsppower1.h"
+#include "demodspvaluespower1.h"
 
-DemoValuesDspPower1::DemoValuesDspPower1() :
+DemoDspValuesPower1::DemoDspValuesPower1() :
     m_valueGenerator([](int) { return 0.5; })
 {
 }
 
-DemoValuesDspPower1::DemoValuesDspPower1(int entityId, std::function<double (int)> valueGenerator, MeasModeSelector *measMode) :
+DemoDspValuesPower1::DemoDspValuesPower1(int entityId, std::function<double (int)> valueGenerator, MeasModeSelector *measMode) :
     m_entityId(entityId),
     m_valueGenerator(valueGenerator),
     m_measMode(measMode)
 {
 }
 
-void DemoValuesDspPower1::setAllValuesSymmetric(float voltage, float current)
+void DemoDspValuesPower1::setAllValuesSymmetric(float voltage, float current)
 {
     QVector<float> valuesDemo;
     QString phaseMask = "111";
@@ -37,7 +37,7 @@ void DemoValuesDspPower1::setAllValuesSymmetric(float voltage, float current)
     m_powerValues = valuesDemo;
 }
 
-QVector<float> DemoValuesDspPower1::getDspValues() const
+QVector<float> DemoDspValuesPower1::getDspValues() const
 {
     return m_powerValues;
 }

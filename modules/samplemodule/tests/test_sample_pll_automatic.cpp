@@ -107,7 +107,7 @@ void test_sample_pll_automatic::emitUL2IfUL1IsBelowAndUl2IsAbove()
     PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0" << "m1"<< "m2");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
-    DemoValuesDspRange dspRangeValues(phaseCountMt);
+    DemoDspValuesRange dspRangeValues(phaseCountMt);
     fireRangeValues(UMtBelow, QList<int>() << 0, dspRangeValues);
     fireRangeValues(UMtAbove, QList<int>() << 1, dspRangeValues);
     QCOMPARE(spy.count(), 0);
@@ -123,7 +123,7 @@ void test_sample_pll_automatic::emitIL1IfVoltagesAreBelow()
     PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
-    DemoValuesDspRange dspRangeValues(phaseCountMt);
+    DemoDspValuesRange dspRangeValues(phaseCountMt);
     fireRangeValues(UMtBelow, QList<int>() << 0, dspRangeValues);
     fireRangeValues(UMtBelow, QList<int>() << 1, dspRangeValues);
     fireRangeValues(UMtBelow, QList<int>() << 2, dspRangeValues);
@@ -143,7 +143,7 @@ void test_sample_pll_automatic::emitIL2IfLeadingAreBelow()
     PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
-    DemoValuesDspRange dspRangeValues(phaseCountMt);
+    DemoDspValuesRange dspRangeValues(phaseCountMt);
     fireRangeValues(UMtBelow, QList<int>() << 0, dspRangeValues);
     fireRangeValues(UMtBelow, QList<int>() << 1, dspRangeValues);
     fireRangeValues(UMtBelow, QList<int>() << 2, dspRangeValues);
@@ -163,7 +163,7 @@ void test_sample_pll_automatic::emitSequence()
     PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
-    DemoValuesDspRange dspRangeValues(phaseCountMt);
+    DemoDspValuesRange dspRangeValues(phaseCountMt);
     fireRangeValues(UMtAbove, QList<int>() << 0, dspRangeValues);
     fireRangeValues(UMtAbove, QList<int>() << 1, dspRangeValues);
     fireRangeValues(UMtAbove, QList<int>() << 2, dspRangeValues);
@@ -193,7 +193,7 @@ void test_sample_pll_automatic::allBelowDefaultsUL1()
     PllAutomatic pllAuto(m_testRunner->getVeinStorageDb(), QStringList() << "m0" << "m1"<< "m2" << "m3" << "m4"<< "m5");
     QSignalSpy spy(&pllAuto, &PllAutomatic::sigSelectPllChannel);
 
-    DemoValuesDspRange dspRangeValues(phaseCountMt);
+    DemoDspValuesRange dspRangeValues(phaseCountMt);
     fireRangeValues(UMtBelow, QList<int>() << 0, dspRangeValues);
     fireRangeValues(UMtBelow, QList<int>() << 1, dspRangeValues);
     fireRangeValues(UMtBelow, QList<int>() << 2, dspRangeValues);
@@ -220,7 +220,7 @@ void test_sample_pll_automatic::emitNothingOnEmptyChannelList()
 void test_sample_pll_automatic::fireRangeValues(float rmsValue, QList<int> activePhaseIdxs)
 {
     TestDspInterfacePtr dspInterface = m_testRunner->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
-    DemoValuesDspRange dspRangeValues(phaseCountMt);
+    DemoDspValuesRange dspRangeValues(phaseCountMt);
     for(int i = 0; i < phaseCountMt; i++)
         if (activePhaseIdxs.contains(i))
             dspRangeValues.setRmsPeakDCValue(i, rmsValue);
@@ -228,7 +228,7 @@ void test_sample_pll_automatic::fireRangeValues(float rmsValue, QList<int> activ
     TimeMachineObject::feedEventLoop();
 }
 
-void test_sample_pll_automatic::fireRangeValues(float rmsValue, QList<int> activePhaseIdxs, DemoValuesDspRange &dspRangeValues)
+void test_sample_pll_automatic::fireRangeValues(float rmsValue, QList<int> activePhaseIdxs, DemoDspValuesRange &dspRangeValues)
 {
     TestDspInterfacePtr dspInterface = m_testRunner->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     for(int i = 0; i < phaseCountMt; i++)

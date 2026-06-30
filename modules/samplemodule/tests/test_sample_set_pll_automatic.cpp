@@ -33,7 +33,7 @@ void test_sample_set_pll_automatic::startActivatedAndFireValues()
     ModuleManagerTestRunner testRunner(":/sessions/range-and-sample.json");
     QCOMPARE(testRunner.getVfComponent(sampleEntityId, "PAR_PllAutomaticOnOff"), 1);
 
-    DemoValuesDspRange dspRangeValues(phaseCountMt);
+    DemoDspValuesRange dspRangeValues(phaseCountMt);
     fireRangeValues(testRunner, UMtBelow, QList<int>() << 0, dspRangeValues);
     fireRangeValues(testRunner, UMtBelow, QList<int>() << 1, dspRangeValues);
     fireRangeValues(testRunner, UMtAbove, QList<int>() << 2, dspRangeValues);
@@ -67,7 +67,7 @@ void test_sample_set_pll_automatic::activateOnNoValuesFired()
 void test_sample_set_pll_automatic::fireRangeValues(ModuleManagerTestRunner &testRunner,
                                                     float rmsValue,
                                                     QList<int> activePhaseIdxs,
-                                                    DemoValuesDspRange &dspRangeValues)
+                                                    DemoDspValuesRange &dspRangeValues)
 {
     TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     for(int i = 0; i < phaseCountMt; i++)

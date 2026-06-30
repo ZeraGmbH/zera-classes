@@ -1,14 +1,14 @@
-#ifndef DEMOVALUESDSPDFT_H
-#define DEMOVALUESDSPDFT_H
+#ifndef DEMODSPVALUESDFT_H
+#define DEMODSPVALUESDFT_H
 
 #include <QStringList>
 #include <QHash>
 #include <complex>
 
-class DemoValuesDspDft
+class DemoDspValuesDft
 {
 public:
-    DemoValuesDspDft(const QStringList &valueChannelList, int dftOrder);
+    DemoDspValuesDft(const QStringList &valueChannelList, int dftOrder);
     void setValue(QString valueChannelName, std::complex<double> value);
     void setAllValuesSymmetric(double voltage, double current, double angleUi, bool invertedSequence = false);
     void setAllValuesSymmetricDc(double voltage, double current);
@@ -20,4 +20,4 @@ private:
     QHash<QString, std::complex<float>> m_values;
 };
 
-#endif // DEMOVALUESDSPDFT_H
+#endif // DEMODSPVALUESDFT_H

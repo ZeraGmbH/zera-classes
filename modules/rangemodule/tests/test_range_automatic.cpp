@@ -1,5 +1,5 @@
 #include "test_range_automatic.h"
-#include "demovaluesdsprange.h"
+#include "demodspvaluesrange.h"
 #include "vf_client_component_setter.h"
 #include <mocktcpnetworkfactory.h>
 #include <testfactoryi2cctrl.h>
@@ -744,7 +744,7 @@ void test_range_automatic::fireNewActualValues(float rmsValue, bool includeIAux)
 {
     TestDspInterfacePtr dspInterface = m_serviceInterfaceFactory->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
 
-    DemoValuesDspRange rangeValues(rangeChannelCount);
+    DemoDspValuesRange rangeValues(rangeChannelCount);
     for(int i = 0; i < rangeChannelCount; i++) {
         if ((i == 7) && !includeIAux)
             rangeValues.setRmsPeakDCValue(i, 0);
@@ -759,7 +759,7 @@ void test_range_automatic::fireDifferentVoltageValues(QList<float> rmsValues, bo
 {
     TestDspInterfacePtr dspInterface = m_serviceInterfaceFactory->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
 
-    DemoValuesDspRange rangeValues(rangeChannelCount);
+    DemoDspValuesRange rangeValues(rangeChannelCount);
     for(int i = 0; i < rangeChannelCount; i++) {
         if ((i == 7) && !includeIAux)
             rangeValues.setRmsPeakDCValue(i, 0);
@@ -779,7 +779,7 @@ void test_range_automatic::fireNewActualValues(float rmsValue, float peakValue, 
     TestDspInterfacePtr dspInterface =
         m_serviceInterfaceFactory->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
 
-    DemoValuesDspRange rangeValues(rangeChannelCount);
+    DemoDspValuesRange rangeValues(rangeChannelCount);
     for(int i = 0; i < rangeChannelCount; i++) {
         if ((i == 7) && !includeIAux)
             rangeValues.setRmsPeakDCValue(i, 0, 0);

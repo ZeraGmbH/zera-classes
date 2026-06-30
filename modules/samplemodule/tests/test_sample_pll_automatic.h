@@ -2,7 +2,7 @@
 #define TEST_SAMPLE_PLL_AUTOMATIC_H
 
 #include "modulemanagertestrunner.h"
-#include "demovaluesdsprange.h"
+#include "demodspvaluesrange.h"
 #include <QList>
 #include <QObject>
 
@@ -27,7 +27,7 @@ private slots:
 
 private:
     void fireRangeValues(float rmsValue, QList<int> activePhaseIdxs);
-    void fireRangeValues(float rmsValue, QList<int> activePhaseIdxs, DemoValuesDspRange &dspRangeValues);
+    void fireRangeValues(float rmsValue, QList<int> activePhaseIdxs, DemoDspValuesRange &dspRangeValues);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
 };

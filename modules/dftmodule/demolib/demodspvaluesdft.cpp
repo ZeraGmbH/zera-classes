@@ -1,7 +1,7 @@
-#include "demovaluesdspdft.h"
+#include "demodspvaluesdft.h"
 #include "servicechannelnamehelper.h"
 
-DemoValuesDspDft::DemoValuesDspDft(const QStringList &valueChannelList, int dftOrder) :
+DemoDspValuesDft::DemoDspValuesDft(const QStringList &valueChannelList, int dftOrder) :
     m_valueChannelList(valueChannelList),
     m_dftOrder(dftOrder)
 {
@@ -9,13 +9,13 @@ DemoValuesDspDft::DemoValuesDspDft(const QStringList &valueChannelList, int dftO
         m_values.insert(valueName, std::complex<float>());
 }
 
-void DemoValuesDspDft::setValue(QString valueChannelName, std::complex<double> value)
+void DemoDspValuesDft::setValue(QString valueChannelName, std::complex<double> value)
 {
     if(m_values.contains(valueChannelName))
         m_values[valueChannelName] = value;
 }
 
-void DemoValuesDspDft::setAllValuesSymmetric(double voltage, double current, double angleUi, bool invertedSequence)
+void DemoDspValuesDft::setAllValuesSymmetric(double voltage, double current, double angleUi, bool invertedSequence)
 {
     double multiplier = M_SQRT2;
     if(m_dftOrder == 0)
@@ -41,7 +41,7 @@ void DemoValuesDspDft::setAllValuesSymmetric(double voltage, double current, dou
     // Note: Phase-phase values are (re-)calulated in cDftModuleMeasProgram::turnVectorsToRefChannel
 }
 
-void DemoValuesDspDft::setAllValuesSymmetricDc(double voltage, double current)
+void DemoDspValuesDft::setAllValuesSymmetricDc(double voltage, double current)
 {
     // If not configured for DC (DFT order != 0) DC values cause values ~0.0
     double multiplier = 1e-9;
@@ -61,7 +61,7 @@ void DemoValuesDspDft::setAllValuesSymmetricDc(double voltage, double current)
     }
 }
 
-QVector<float> DemoValuesDspDft::getDspValues()
+QVector<float> DemoDspValuesDft::getDspValues()
 {
     QVector<float> valueList;
     if(m_dftOrder != 0)
@@ -77,7 +77,7 @@ QVector<float> DemoValuesDspDft::getDspValues()
     return valueList;
 }
 
-int DemoValuesDspDft::nextSymmetricAngle(int angle)
+int DemoDspValuesDft::nextSymmetricAngle(int angle)
 {
     angle += 120;
     if(angle >= 360)
