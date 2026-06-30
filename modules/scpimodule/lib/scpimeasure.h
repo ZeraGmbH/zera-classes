@@ -99,7 +99,6 @@ private slots:
     void measureConfigure();
     void measureInit();
     void measureFetch();
-    void measureDone();
 
     void configure();
     void configureDone();
@@ -107,7 +106,6 @@ private slots:
     void read();
     void readInit();
     void readFetch();
-    void readDone();
 
     void init();
     void initDone();
@@ -115,7 +113,6 @@ private slots:
     void fetch();
     void fetchSync();
     void fetchFetch();
-    void fetchDone();
 };
 
 }

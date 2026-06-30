@@ -181,12 +181,6 @@ void cSCPIMeasure::measureFetch()
 }
 
 
-void cSCPIMeasure::measureDone()
-{
-    // only finished statemachine
-}
-
-
 void cSCPIMeasure::configure()
 {
     // for scpi compliance we have a configue but for the moment
@@ -225,12 +219,6 @@ void cSCPIMeasure::readFetch()
     emit sigReadDone(m_sAnswer, m_readScpiTransactionId);
     m_readScpiTransactionId = ScpiTransactionId();
     emit readContinue();
-}
-
-
-void cSCPIMeasure::readDone()
-{
-    // only finished statemachine
 }
 
 
@@ -278,12 +266,6 @@ void cSCPIMeasure::fetchFetch()
 }
 
 
-void cSCPIMeasure::fetchDone()
-{
-    // only finished statemachine
-}
-
-
 void cSCPIMeasure::initialize()
 {
     m_bInitPending = false;
@@ -301,7 +283,6 @@ void cSCPIMeasure::initialize()
     connect(&m_measureConfigureState, &QState::entered, this, &cSCPIMeasure::measureConfigure);
     connect(&m_measureInitState, &QState::entered, this, &cSCPIMeasure::measureInit);
     connect(&m_measureFetchState, &QState::entered, this, &cSCPIMeasure::measureFetch);
-    connect(&m_measureDoneState, &QState::entered, this, &cSCPIMeasure::measureDone);
     m_MeasureStateMachine.setInitialState(&m_measureState);
 
     m_confConfigureState.addTransition(this, &cSCPIMeasure::confContinue, &m_confConfigureDoneState);
@@ -321,7 +302,6 @@ void cSCPIMeasure::initialize()
     connect(&m_readState, &QState::entered, this, &cSCPIMeasure::read);
     connect(&m_readInitState, &QState::entered, this, &cSCPIMeasure::readInit);
     connect(&m_readFetchState, &QState::entered, this, &cSCPIMeasure::readFetch);
-    connect(&m_readDoneState, &QState::entered, this, &cSCPIMeasure::readDone);
     m_ReadStateMachine.setInitialState(&m_readState);
 
     m_initInitState.addTransition(this, &cSCPIMeasure::initContinue, &m_initDoneState);
@@ -341,9 +321,7 @@ void cSCPIMeasure::initialize()
     connect(&m_fetchState, &QState::entered, this, &cSCPIMeasure::fetch);
     connect(&m_fetchSyncState, &QState::entered, this, &cSCPIMeasure::fetchSync);
     connect(&m_fetchFetchState, &QState::entered, this, &cSCPIMeasure::fetchFetch);
-    connect(&m_fetchDoneState, &QState::entered, this, &cSCPIMeasure::fetchDone);
     m_FetchStateMachine.setInitialState(&m_fetchState);
 }
-
 
 }
