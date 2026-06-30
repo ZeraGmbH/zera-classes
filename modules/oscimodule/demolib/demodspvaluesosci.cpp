@@ -37,7 +37,7 @@ void DemoDspValuesOsci::setAllValuesSymmetricAc(float voltage, float current)
         else
             demoValues.append(generateSineCurve(m_sampleCount, voltage, phase));
     }
-    m_powerValues = demoValues;
+    m_dspValues = demoValues;
 }
 
 void DemoDspValuesOsci::setAllValuesSymmetricDc(float voltage, float current)
@@ -50,12 +50,12 @@ void DemoDspValuesOsci::setAllValuesSymmetricDc(float voltage, float current)
         else
             demoValues.append(generateDcCurve(m_sampleCount, voltage * randomVal));
     }
-    m_powerValues = demoValues;
+    m_dspValues = demoValues;
 }
 
 QVector<float> DemoDspValuesOsci::getDspValues() const
 {
-    return m_powerValues;
+    return m_dspValues;
 }
 
 QVector<float> DemoDspValuesOsci::generateSineCurve(int sampleCount, int amplitude, float phase)

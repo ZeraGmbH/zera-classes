@@ -34,10 +34,10 @@ void DemoDspValuesPower1::setAllValuesSymmetric(float voltage, float current)
         valuesDemo.append(val);
     }
     valuesDemo.append(valuesDemo[0] + valuesDemo[1] + valuesDemo[2]);
-    m_powerValues = valuesDemo;
+    m_dspValues = valuesDemo;
 }
 
 QVector<float> DemoDspValuesPower1::getDspValues() const
 {
-    return m_powerValues;
+    return m_dspValues;
 }

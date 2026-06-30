@@ -27,7 +27,7 @@ private:
     int m_sampleCount = 128;
     std::function<double(int)> m_valueGenerator;
 
-    QVector<float> m_powerValues;
+    QVector<float> m_dspValues;
 };
 
 #endif // DEMODSPVALUESOSCI_H

@@ -16,7 +16,7 @@ private:
     std::function<double (int)> m_valueGenerator;
     MeasModeSelector *m_measMode = nullptr;
 
-    QVector<float> m_powerValues;
+    QVector<float> m_dspValues;
 };
 
 #endif // DEMODSPVALUESPOWER1_H
