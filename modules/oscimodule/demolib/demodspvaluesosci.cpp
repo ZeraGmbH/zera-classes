@@ -60,16 +60,16 @@ QVector<float> DemoDspValuesOsci::getDspValues() const
 
 QVector<float> DemoDspValuesOsci::generateSineCurve(int sampleCount, int amplitude, float phase)
 {
-    QVector<float> samples;
+    QVector<float> samples(sampleCount, 0.0);
     for(int i = 0; i < sampleCount; i++)
-        samples.append(amplitude * M_SQRT2 * sin((2 * M_PI * i / sampleCount) + phase));
+        samples[i] = amplitude * M_SQRT2 * sin((2 * M_PI * i / sampleCount) + phase);
     return samples;
 }
 
 QVector<float> DemoDspValuesOsci::generateDcCurve(int sampleCount, int amplitude)
 {
-    QVector<float> samples;
+    QVector<float> samples(sampleCount, 0.0);
     for(int i = 0; i < sampleCount; i++)
-        samples.append(amplitude);
+        samples[i] = amplitude;
     return samples;
 }
