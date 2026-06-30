@@ -10,16 +10,14 @@ class DemoDspInterfaceOsci : public MockDspInterface
 public:
     DemoDspInterfaceOsci(int entityId,
                          const QStringList &valueChannelList,
-                         int interpolation,
+                         int sampleCount,
                          std::function<double(int)> valueGenerator);
 private slots:
     void onTimer();
 private:
-    QVector<float> generateSineCurve(int sampleCount, int amplitude, float phase);
-
     int m_entityId;
     QStringList m_valueChannelList;
-    int m_interpolation;
+    int m_sampleCount;
     TimerTemplateQtPtr m_periodicTimer;
     std::function<double(int)> m_valueGenerator;
 };

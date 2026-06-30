@@ -1,15 +1,15 @@
 #include "demodspinterfaceosci.h"
-#include "servicechannelnamehelper.h"
+#include "demodspvaluesosci.h"
 #include <timerfactoryqt.h>
 #include <math.h>
 
 DemoDspInterfaceOsci::DemoDspInterfaceOsci(int entityId,
                                            const QStringList &valueChannelList,
-                                           int interpolation,
+                                           int sampleCount,
                                            std::function<double (int)> valueGenerator) :
     m_entityId(entityId),
     m_valueChannelList(valueChannelList),
-    m_interpolation(interpolation),
+    m_sampleCount(sampleCount),
     m_periodicTimer(TimerFactoryQt::createPeriodic(500)),
     m_valueGenerator(valueGenerator)
 {
@@ -20,32 +20,10 @@ DemoDspInterfaceOsci::DemoDspInterfaceOsci(int entityId,
     });
 }
 
-QVector<float> DemoDspInterfaceOsci::generateSineCurve(int sampleCount, int amplitude, float phase)
-{
-    QVector<float> samples;
-    for(int i = 0; i < sampleCount; i++) {
-        samples.append(amplitude * M_SQRT2 * sin((2 * M_PI * i / sampleCount) + phase));
-    }
-    return samples;
-}
-
 void DemoDspInterfaceOsci::onTimer()
 {
-    QVector<float> demoValues;
-    for(const QString &channelName : qAsConst(m_valueChannelList)) {
-        double randomVal = m_valueGenerator(m_entityId);
-        float phase = 0.0;
-        if(channelName == "m1" || channelName == "m4") //UL2,IL2
-            phase = randomVal * M_PI/2;
-        else if(channelName == "m2" || channelName == "m5") //UL3,IL3
-            phase = randomVal * -M_PI/2;
-        else
-            phase = 0.0;
-
-        if(ServiceChannelNameHelper::isCurrent(channelName))
-            demoValues.append(generateSineCurve(m_interpolation, 10, phase));
-        else
-            demoValues.append(generateSineCurve(m_interpolation, 230, phase));
-    }
+    DemoDspValuesOsci osciValues(m_entityId, m_valueChannelList, m_sampleCount, m_valueGenerator);
+    osciValues.setAllValuesSymmetricAc(230, 10); // for now just AC
+    QVector<float> demoValues = osciValues.getDspValues();
     fireActValInterrupt(demoValues, 6 /* that is what module expects currently */);
 }
