@@ -1,3 +1,4 @@
+#include "demorandomgenerators.h"
 #include "demofactoryserviceinterfaces.h"
 #include "demodspinterfacerange.h"
 #include "demodspinterfacedft.h"
@@ -10,41 +11,18 @@
 #include "demodspinterfaceperiodaverage.h"
 #include "demodspinterfacedspsuper.h"
 
-static double generatorFixed(int entityId) {
-    Q_UNUSED(entityId)
-    return 1.0;
-}
-
-static double generatorReproducibleChange(int entityId) {
-    constexpr double initValue = 0.9;
-    static QMap<int, double> values;
-    double value = initValue;
-    if (values.contains(entityId))
-        value = values[entityId];
-    value += 0.001;
-    if (value > 1.0)
-        value = initValue;
-    values[entityId] = value;
-    return value;
-}
-
-static double generatorRandom(int entityId) {
-    Q_UNUSED(entityId)
-    return (double)rand() / double(RAND_MAX);
-}
-
 DemoFactoryServiceInterfaces::DemoFactoryServiceInterfaces(ValueTypes valueType) :
     m_valueType(valueType)
 {
     switch(valueType) {
     case RandomValues:
-        m_valueGenerator = generatorRandom;
+        m_valueGenerator = DemoRandomGenerators::generatorRandom;
         break;
     case FixedValues:
-        m_valueGenerator = generatorFixed;
+        m_valueGenerator = DemoRandomGenerators::generatorFixed;
         break;
     case ReproducableChangeValues:
-        m_valueGenerator = generatorReproducibleChange;
+        m_valueGenerator = DemoRandomGenerators::generatorReproducibleChange;
         break;
     }
 }
