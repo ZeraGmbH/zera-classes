@@ -76,7 +76,7 @@ void cThdnShadowModuleMeasProgram::start()
         return;
 
     for (int i=0; i<m_veinActValueList.count(); ++i)
-        connect(m_sourceActValueList[i].get(), &VeinStorage::AbstractComponent::sigValueChange,
+        connect(m_sourceActValueList[i].get(), &VeinStorage::AbstractComponent::sigValueSet, // values set for sake of SCPI
                 m_veinActValueList[i], &VfModuleComponent::setValue);
     connect(m_sourceIntegrationTimeParameter.get(), &VeinStorage::AbstractComponent::sigValueChange,
             m_pIntegrationTimeParameter, &VfModuleComponent::setValue);
@@ -91,7 +91,7 @@ void cThdnShadowModuleMeasProgram::stop()
         return;
 
     for (int i=0; i<m_veinActValueList.count(); ++i)
-        disconnect(m_sourceActValueList[i].get(), &VeinStorage::AbstractComponent::sigValueChange,
+        disconnect(m_sourceActValueList[i].get(), &VeinStorage::AbstractComponent::sigValueSet,
                    m_veinActValueList[i], &VfModuleComponent::setValue);
     disconnect(m_sourceIntegrationTimeParameter.get(), &VeinStorage::AbstractComponent::sigValueChange,
                m_pIntegrationTimeParameter, &VfModuleComponent::setValue);
