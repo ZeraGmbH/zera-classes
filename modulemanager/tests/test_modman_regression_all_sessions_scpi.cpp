@@ -13,9 +13,7 @@ void test_modman_regression_all_sessions_scpi::initTestCase()
     TimerFactoryQtForTest::enableTest();
     TestModuleManager::enableTests();
 
-    // TODO on lambdamodule: With fixed values lambdamodule causes empty SCPI return
-    // TODO on SCPI: With fixed values SCPI can return just semicolons
-    m_serviceInterfaceFactory = std::make_shared<DemoFactoryServiceInterfaces>(DemoFactoryServiceInterfaces::ReproducableChangeValues);
+    m_serviceInterfaceFactory = std::make_shared<DemoFactoryServiceInterfaces>(DemoFactoryServiceInterfaces::FixedValues);
     m_licenseSystem = std::make_unique<TestLicenseSystem>();
     m_modmanFacade = std::make_unique<ModuleManagerSetupFacade>(m_licenseSystem.get());
 
