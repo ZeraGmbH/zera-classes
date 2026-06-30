@@ -96,7 +96,7 @@ Zera::DspInterfacePtr TestFactoryServiceInterfaces::createDspInterfaceOsci(int e
 {
     Q_UNUSED(interpolation)
     return createDspInterfaceCommon(entityId,
-                                    INJECT_NOT_SUPPORTED,
+                                    INJECT_OSCI,
                                     0 /* dummy */,
                                     valueChannelList);
 }

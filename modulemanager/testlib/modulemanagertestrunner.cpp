@@ -202,7 +202,9 @@ void ModuleManagerTestRunner::fireActualValues()
         findDspInterfaceByType(INJECT_FFT),
         findDspInterfaceByType(INJECT_RANGE_PROGRAM),
         findDspInterfaceByType(INJECT_RMS),
-        findAllDspInterfaceByType(INJECT_POWER1));
+        findAllDspInterfaceByType(INJECT_POWER1),
+        findDspInterfaceByType(INJECT_OSCI)
+        );
 }
 
 VfCmdEventHandlerSystemPtr ModuleManagerTestRunner::getVfCmdEventHandlerSystemPtr()
