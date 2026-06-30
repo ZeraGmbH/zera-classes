@@ -93,14 +93,14 @@ void cLambdaModuleMeasProgram::searchActualValues()
                     storageDb->findComponent(configData->m_lambdaSystemConfigList.at(i).m_nInputSEntity, configData->m_lambdaSystemConfigList.at(i).m_sInputS);
 
                 if (inputPComponent && inputQComponent && inputSComponent) {
-                    connect(inputPComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
-                        m_lambdaCalcDelegate->handleActivePowerChange(i, value);
+                    connect(inputPComponent.get(), &VeinStorage::AbstractComponent::sigValueSet, m_lambdaCalcDelegate, [=](QVariant value) {
+                        m_lambdaCalcDelegate->handleActivePowerSet(i, value);
                     });
                     connect(inputQComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
-                        m_lambdaCalcDelegate->handleReactivePowerChange(i, value);
+                        m_lambdaCalcDelegate->handleReactivePowerSet(i, value);
                     });
                     connect(inputSComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, m_lambdaCalcDelegate, [=](QVariant value) {
-                        m_lambdaCalcDelegate->handleApparentPowerChange(i, value);
+                        m_lambdaCalcDelegate->handleApparentPowerSet(i, value);
                     });
                 }
                 else

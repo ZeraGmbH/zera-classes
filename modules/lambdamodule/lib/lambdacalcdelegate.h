@@ -15,9 +15,9 @@ public:
                        const QList<VfModuleComponent*> &veinLambdaActValues,
                        const QList<VfModuleComponent*> &veinLoadTypeValues);
     PhaseSumValues getLambdaValues();
-    void handleActivePowerChange(int phaseOrSum, QVariant power);
-    void handleReactivePowerChange(int phaseOrSum, QVariant power);
-    void handleApparentPowerChange(int phaseOrSum, QVariant power);
+    void handleActivePowerSet(int phaseOrSum, QVariant power);
+    void handleReactivePowerSet(int phaseOrSum, QVariant power);
+    void handleApparentPowerSet(int phaseOrSum, QVariant power);
 public slots:
     void onActivePowerMeasModeChange(QVariant measMode);
     void onActivePowerPhaseMaskChange(QVariant phaseMask);

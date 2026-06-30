@@ -14,17 +14,17 @@ PhaseSumValues LambdaCalcDelegate::getLambdaValues()
     return m_lambdaValues;
 }
 
-void LambdaCalcDelegate::handleActivePowerChange(int phaseOrSum, QVariant power)
+void LambdaCalcDelegate::handleActivePowerSet(int phaseOrSum, QVariant power)
 {
     if(phaseOrSum >= 0 && phaseOrSum < m_activePowerValues.size()) {
         m_activePowerValues[phaseOrSum] = power.toDouble();
         updateLambdaValues();
     }
     else
-        qWarning("handleActivePowerChange: Phase out of limits: %i", phaseOrSum);
+        qWarning("handleActivePowerSet: Phase out of limits: %i", phaseOrSum);
 }
 
-void LambdaCalcDelegate::handleReactivePowerChange(int phaseOrSum, QVariant power)
+void LambdaCalcDelegate::handleReactivePowerSet(int phaseOrSum, QVariant power)
 {
     /*if(power.toFloat() >= 0)
         m_veinLoadTypeValues[phaseOrSum]->setValue("Ind");
@@ -36,10 +36,10 @@ void LambdaCalcDelegate::handleReactivePowerChange(int phaseOrSum, QVariant powe
         updateLambdaValues();
     }
     else
-        qWarning("handleActivePowerChange: Phase out of limits: %i", phaseOrSum);
+        qWarning("handleActivePowerSet: Phase out of limits: %i", phaseOrSum);
 }
 
-void LambdaCalcDelegate::handleApparentPowerChange(int phaseOrSum, QVariant power)
+void LambdaCalcDelegate::handleApparentPowerSet(int phaseOrSum, QVariant power)
 {
     if(phaseOrSum >= 0 && phaseOrSum < m_apparentPowerValues.size()) {
         m_apparentPowerValues[phaseOrSum] = power.toDouble();
@@ -48,7 +48,7 @@ void LambdaCalcDelegate::handleApparentPowerChange(int phaseOrSum, QVariant powe
         emit measuring(1);
     }
     else
-        qWarning("handleApparentPowerChange: Phase out of limits: %i", phaseOrSum);
+        qWarning("handleApparentPowerSet: Phase out of limits: %i", phaseOrSum);
 }
 
 void LambdaCalcDelegate::onActivePowerMeasModeChange(QVariant measMode)
