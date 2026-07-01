@@ -16,11 +16,11 @@ public:
                          QHash<cSCPIMeasure*, cSCPIMeasure*> &scpiMeasureTranslationHash);
     void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
     void executeClient(cSCPIClient *client, const ScpiTransactionId &scpiTransactionId);
-    void addscpimeasureObject(cSCPIMeasure* measureobject);
+    void addScpiMeasureObject(cSCPIMeasure* measureobject);
 
 private slots:
-    void receiveDone(const ScpiTransactionId &scpiTransactionId);
-    void onCmdFinish(QString s, const ScpiTransactionId &scpiTransactionId);
+    void onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId);
+    void onSingleScpiQueryDone(QString s, const ScpiTransactionId &scpiTransactionId);
 
 private:
     quint8 m_nMeasCode;

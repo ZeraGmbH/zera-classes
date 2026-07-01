@@ -181,7 +181,7 @@ void cModuleInterface::addSCPIMeasureCommand(const QString &cmdparent,
     cSCPIMeasureDelegatePtr delegate;
     if (m_scpiMeasureDelegateHash.contains(cmdcomplete)) {
         delegate = m_scpiMeasureDelegateHash.value(cmdcomplete);
-        delegate->addscpimeasureObject(measureObject);
+        delegate->addScpiMeasureObject(measureObject);
     }
     else {
         delegate = std::make_shared<cSCPIMeasureDelegate>(cmdparent, cmd, cmdType , measCode, measureObject);

@@ -71,19 +71,19 @@ void cSCPIMeasureDelegate::executeClient(cSCPIClient *client, const ScpiTransact
             switch (m_nMeasCode)
             {
             case SCPIModelType::measure:
-                connect(measure, &cSCPIMeasure::sigMeasDone, this, &cSCPIMeasureDelegate::onCmdFinish);
+                connect(measure, &cSCPIMeasure::sigMeasDone, this, &cSCPIMeasureDelegate::onSingleScpiQueryDone);
                 break;
             case SCPIModelType::configure:
-                connect(measure, &cSCPIMeasure::sigConfDone, this, &cSCPIMeasureDelegate::receiveDone);
+                connect(measure, &cSCPIMeasure::sigConfDone, this, &cSCPIMeasureDelegate::onSingleScpiCmdDone);
                 break;
             case SCPIModelType::read:
-                connect(measure, &cSCPIMeasure::sigReadDone, this, &cSCPIMeasureDelegate::onCmdFinish);
+                connect(measure, &cSCPIMeasure::sigReadDone, this, &cSCPIMeasureDelegate::onSingleScpiQueryDone);
                 break;
             case SCPIModelType::init:
-                connect(measure, &cSCPIMeasure::sigInitDone, this, &cSCPIMeasureDelegate::receiveDone);
+                connect(measure, &cSCPIMeasure::sigInitDone, this, &cSCPIMeasureDelegate::onSingleScpiCmdDone);
                 break;
             case SCPIModelType::fetch:
-                connect(measure, &cSCPIMeasure::sigFetchDone, this, &cSCPIMeasureDelegate::onCmdFinish);
+                connect(measure, &cSCPIMeasure::sigFetchDone, this, &cSCPIMeasureDelegate::onSingleScpiQueryDone);
                 break;
             }
             measure->execute(m_nMeasCode, scpiTransactionId);
@@ -93,12 +93,12 @@ void cSCPIMeasureDelegate::executeClient(cSCPIClient *client, const ScpiTransact
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
-void cSCPIMeasureDelegate::addscpimeasureObject(cSCPIMeasure *measureobject)
+void cSCPIMeasureDelegate::addScpiMeasureObject(cSCPIMeasure *measureobject)
 {
     m_scpimeasureObjectList.append(measureobject);
 }
 
-void cSCPIMeasureDelegate::receiveDone(const ScpiTransactionId &scpiTransactionId)
+void cSCPIMeasureDelegate::onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId)
 {
     const cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
     disconnect(measure,0,this,0);
@@ -107,7 +107,7 @@ void cSCPIMeasureDelegate::receiveDone(const ScpiTransactionId &scpiTransactionI
         m_pClient->handleCmdFinishStatusOnly(ZSCPI::ack, scpiTransactionId);
 }
 
-void cSCPIMeasureDelegate::onCmdFinish(QString s, const ScpiTransactionId &scpiTransactionId)
+void cSCPIMeasureDelegate::onSingleScpiQueryDone(QString s, const ScpiTransactionId &scpiTransactionId)
 {
     const cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
     disconnect(measure,0,this,0);
