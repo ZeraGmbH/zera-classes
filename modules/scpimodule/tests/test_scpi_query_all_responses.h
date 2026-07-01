@@ -13,6 +13,7 @@ private slots:
     void checkScpiQueryResponse_data();
     void checkScpiQueryResponse();
 
+    void checkScpiEmptyResponse();
 private:
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
 };

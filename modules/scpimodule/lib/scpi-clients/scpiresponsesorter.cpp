@@ -17,7 +17,7 @@ ScpiTransactionId ScpiResponseSorter::createTransaction(const QString &scpi)
     return id;
 }
 
-QStringList ScpiResponseSorter::genOrDelaySortedOutput(const QString &scpiSingleResponse, const ScpiTransactionId &scpiTransactionId)
+NullableStringList ScpiResponseSorter::genOrDelaySortedOutput(const NullableString &scpiSingleResponse, const ScpiTransactionId &scpiTransactionId)
 {
     const quint64 chrono = scpiTransactionId.getChrono();
     ScpiTransactionId pendingTransaction = m_transactionsPending.take(chrono);
@@ -25,12 +25,14 @@ QStringList ScpiResponseSorter::genOrDelaySortedOutput(const QString &scpiSingle
         m_transactionsFinished.insert(chrono, scpiSingleResponse);
         return createAccumulatedResponse();
     }
-    return QStringList() << scpiSingleResponse;
+    NullableStringList ret;
+    ret.append(scpiSingleResponse);
+    return ret;
 }
 
-QStringList ScpiResponseSorter::createAccumulatedResponse()
+NullableStringList ScpiResponseSorter::createAccumulatedResponse()
 {
-    QStringList responseList;
+    NullableStringList responseList;
     QList<quint64> toDeleteList;
     for (auto iter = m_transactionsFinished.cbegin(); iter != m_transactionsFinished.cend(); ++iter) {
         quint64 currentChrono = iter.key();

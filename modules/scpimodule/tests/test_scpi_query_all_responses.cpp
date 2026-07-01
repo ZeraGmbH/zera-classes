@@ -18,7 +18,7 @@ void test_scpi_query_all_responses::checkScpiQueryResponse_data()
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
     client.sendScpiCmds("dev:iface?");
     TimeMachineObject::feedEventLoop();
-    const QString &devIface = client.getLastResponse();
+    const QString &devIface = client.getLastResponse().getStr();
 
     QTest::addColumn<QString>("scpiPath");
     XmlDocument xml;
@@ -46,6 +46,20 @@ void test_scpi_query_all_responses::checkScpiQueryResponse()
     client.sendScpiCmds(scpiPath + "?");
     TimeMachineObject::feedEventLoop();
 
-    qInfo("Response: %s", qPrintable(client.getLastResponse()));
+    qInfo("Response: %s", qPrintable(client.getLastResponse().getStr()));
     QCOMPARE(client.getUnhandledResponses(), 0);
+    bool nullExpected = scpiPath == "CALCULATE:ADJ1:SEND"; // Transparent send (without command) is a super nasty/special exception - let's make it a test case
+    QCOMPARE(client.getLastResponse().isNull(), nullExpected);
+}
+
+void test_scpi_query_all_responses::checkScpiEmptyResponse()
+{
+    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
+
+    client.sendScpiCmds("STATUS:DEV1:CPUINFO?"); // We can rely this reponds empty on all non-target environments - until...
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(client.getUnhandledResponses(), 0);
+    QCOMPARE(client.getLastResponse().isNull(), false);
+    QCOMPARE(client.getLastResponse().getStr(), "");
 }

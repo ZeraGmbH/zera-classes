@@ -2,6 +2,7 @@
 #define SCPIRESPONSESORTER_H
 
 #include "scpitransactionid.h"
+#include "nullablestring.h"
 #include <QString>
 #include <QMap>
 
@@ -9,13 +10,13 @@ class ScpiResponseSorter
 {
 public:
     ScpiTransactionId createTransaction(const QString &scpi);
-    QStringList genOrDelaySortedOutput(const QString &scpiSingleResponse, const ScpiTransactionId &scpiTransactionId);
+    NullableStringList genOrDelaySortedOutput(const NullableString &scpiSingleResponse, const ScpiTransactionId &scpiTransactionId);
 
 private:
-    QStringList createAccumulatedResponse();
+    NullableStringList createAccumulatedResponse();
 
     QMap<quint64, ScpiTransactionId> m_transactionsPending;
-    QMap<quint64, QString> m_transactionsFinished;
+    QMap<quint64, NullableString> m_transactionsFinished;
 };
 
 #endif // SCPIRESPONSESORTER_H

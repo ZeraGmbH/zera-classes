@@ -24,7 +24,7 @@ cSCPIInterface* ScpiTestClient::getScpiInterface()
     return m_pSCPIInterface;
 }
 
-const QString &ScpiTestClient::getLastResponse() const
+const NullableString &ScpiTestClient::getLastResponse() const
 {
     return m_lastResponse;
 }
@@ -34,18 +34,16 @@ int ScpiTestClient::getUnhandledResponses() const
     return m_unhandledResponses;
 }
 
-void ScpiTestClient::handleCmdFinish(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
+void ScpiTestClient::handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
 {
     Q_UNUSED(logType)
 
     m_lastResponse = scpiResponse;
     m_unhandledResponses--;
 
-    const QStringList sortedResponses = m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId);
-    for (const QString &response : sortedResponses)
-        // Test client signals empty responses for more detailed analysis of behaviour
-        // Production clients might not send out empty responses
-        emit sigScpiAnswer(response);
+    const NullableStringList sortedResponses = m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId);
+    for (const NullableString &response : sortedResponses)
+        emit sigScpiAnswer(response.getStr(), response.isNull());
 }
 
 void ScpiTestClient::cmdInput()

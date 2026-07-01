@@ -25,20 +25,18 @@ cSCPISerialClient::~cSCPISerialClient()
 }
 
 
-void cSCPISerialClient::handleCmdFinish(const QString &answ, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
+void cSCPISerialClient::handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
 {
-    // for now
-    if (answ.isEmpty())
+    // For now: As soon as sorter comes in this can block sorter forever!!
+    if (scpiResponse.isNull())
         return;
 
-    QString answer;
-    QByteArray ba;
-    answer = answ + m_endChar;
+    QString answer = scpiResponse.getStr() + m_endChar;
     answer.replace("\n", m_endChar);
 
-    ba = answer.toLatin1();
+    QByteArray ba = answer.toLatin1();
     m_pSerialPort->write(ba.data(), ba.size());
-    qInfo("Serial SCPI command response : %s", logType == LOG_SKIP ? "<skipped>" : qPrintable(answ));
+    qInfo("Serial SCPI command response : %s", logType == LOG_SKIP ? "<skipped>" : qPrintable(scpiResponse.getStr()));
 }
 
 

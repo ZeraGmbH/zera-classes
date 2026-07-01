@@ -16,15 +16,15 @@ cSCPIEthClient::~cSCPIEthClient()
     m_pSocket->deleteLater();
 }
 
-void cSCPIEthClient::handleCmdFinish(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
+void cSCPIEthClient::handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
 {
-    // for now
-    if (scpiResponse.isEmpty())
+    // For now: As soon as sorter comes in this can block sorter forever!!
+    if (scpiResponse.isNull())
         return;
 
-    QByteArray ba = scpiResponse.toUtf8() + "\n";
+    QByteArray ba = scpiResponse.getStr().toUtf8() + "\n";
     m_pSocket->write(ba);
-    qInfo("Network SCPI command response : %s", logType == LOG_SKIP ? "<skipped>" : qPrintable(scpiResponse));
+    qInfo("Network SCPI command response : %s", logType == LOG_SKIP ? "<skipped>" : qPrintable(scpiResponse.getStr()));
 }
 
 QString cSCPIEthClient::getPeerAddress()

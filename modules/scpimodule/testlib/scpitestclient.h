@@ -12,20 +12,20 @@ class ScpiTestClient : public cSCPIClient
 public:
     ScpiTestClient(cSCPIModule* module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface);
 
-    void handleCmdFinish(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) override;
+    void handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) override;
     cSCPIInterface* getScpiInterface();
 
     void sendScpiCmds(QString cmds);
-    const QString &getLastResponse() const;
+    const NullableString &getLastResponse() const;
     int getUnhandledResponses() const;
 signals:
-    void sigScpiAnswer(const QString &scpiResponse);
+    void sigScpiAnswer(const QString &scpiResponse, bool isNull);
 
 private slots:
     void cmdInput() override;
 
 private:
-    QString m_lastResponse;
+    NullableString m_lastResponse;
     int m_unhandledResponses = 0;
 };
 

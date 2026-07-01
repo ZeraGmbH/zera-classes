@@ -209,7 +209,7 @@ void cSCPIClient::handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId
         m_pIEEE4882->addEventError(CommandError);
         break;
     }
-    handleCmdFinish("", scpiTransactionId);
+    handleCmdFinish(NullableString(), scpiTransactionId);
 }
 
 cSCPIClient::EntityHash cSCPIClient::getEntitiesWithScpi() const

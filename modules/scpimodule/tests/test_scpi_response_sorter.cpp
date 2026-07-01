@@ -38,8 +38,8 @@ void test_scpi_response_sorter::start_1_Response_1()
     ScpiResponseSorter sorter;
     ScpiTransactionId transaction = sorter.createTransaction(dummyScpiQuery);
 
-    QString response = "1";
-    QStringList sortedResponses = sorter.genOrDelaySortedOutput(response, transaction);
+    NullableString response = QString("1");
+    NullableStringList sortedResponses = sorter.genOrDelaySortedOutput(response, transaction);
 
     QCOMPARE(sortedResponses.size(), 1);
     QCOMPARE(sortedResponses[0], response);
@@ -51,10 +51,10 @@ void test_scpi_response_sorter::start_1_2_Response_1_2()
     ScpiTransactionId transaction1 = sorter.createTransaction(dummyScpiQuery);
     ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
 
-    QString response1 = "1";
-    QString response2 = "2";
-    QStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, transaction1);
-    QStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
+    NullableString response1 = QString("1");
+    NullableString response2 = QString("2");
+    NullableStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, transaction1);
+    NullableStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
 
     QCOMPARE(sortedResponses1.size(), 1);
     QCOMPARE(sortedResponses1[0], response1);
@@ -68,10 +68,10 @@ void test_scpi_response_sorter::start_1_2_Response_2_1()
     ScpiTransactionId transaction1 = sorter.createTransaction(dummyScpiQuery);
     ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
 
-    QString response1 = "1";
-    QString response2 = "2";
-    QStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
-    QStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, transaction1);
+    NullableString response1 = QString("1");
+    NullableString response2 = QString("2");
+    NullableStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
+    NullableStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, transaction1);
 
     QCOMPARE(sortedResponses2.size(), 0);
     QCOMPARE(sortedResponses1.size(), 2);
@@ -86,12 +86,12 @@ void test_scpi_response_sorter::start_1_2_3_Response_2_1_3()
     ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
     ScpiTransactionId transaction3 = sorter.createTransaction(dummyScpiQuery);
 
-    QString response1 = "1";
-    QString response2 = "2";
-    QString response3 = "3";
-    QStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
-    QStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, transaction1);
-    QStringList sortedResponses3 = sorter.genOrDelaySortedOutput(response3, transaction3);
+    NullableString response1 = QString("1");
+    NullableString response2 = QString("2");
+    NullableString response3 = QString("3");
+    NullableStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
+    NullableStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, transaction1);
+    NullableStringList sortedResponses3 = sorter.genOrDelaySortedOutput(response3, transaction3);
 
     QCOMPARE(sortedResponses2.size(), 0);
     QCOMPARE(sortedResponses1.size(), 2);
@@ -108,12 +108,12 @@ void test_scpi_response_sorter::start_1_2_3_Response_3_1_2()
     ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
     ScpiTransactionId transaction3 = sorter.createTransaction(dummyScpiQuery);
 
-    QString response1 = "1";
-    QString response2 = "2";
-    QString response3 = "3";
-    QStringList sortedResponses3 = sorter.genOrDelaySortedOutput(response3, transaction3);
-    QStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, transaction1);
-    QStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
+    NullableString response1 = QString("1");
+    NullableString response2 = QString("2");
+    NullableString response3 = QString("3");
+    NullableStringList sortedResponses3 = sorter.genOrDelaySortedOutput(response3, transaction3);
+    NullableStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, transaction1);
+    NullableStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
 
     QCOMPARE(sortedResponses3.size(), 0);
     QCOMPARE(sortedResponses1.size(), 1);
@@ -127,10 +127,10 @@ void test_scpi_response_sorter::twoResponsesOnInvalidTransaction()
 {
     ScpiResponseSorter sorter;
 
-    QString response1 = "1";
-    QString response2 = "2";
-    QStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, ScpiTransactionId());
-    QStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, ScpiTransactionId());
+    NullableString response1 = QString("1");
+    NullableString response2 = QString("2");
+    NullableStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, ScpiTransactionId());
+    NullableStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, ScpiTransactionId());
 
     QCOMPARE(sortedResponses1.size(), 1);
     QCOMPARE(sortedResponses1[0], response1);
@@ -143,12 +143,12 @@ void test_scpi_response_sorter::start_2_Response_1_2_3()
     ScpiResponseSorter sorter;
     ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
 
-    QString response1 = "1";
-    QString response2 = "2";
-    QString response3 = "3";
-    QStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, ScpiTransactionId());
-    QStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
-    QStringList sortedResponses3 = sorter.genOrDelaySortedOutput(response3, ScpiTransactionId());
+    NullableString response1 = QString("1");
+    NullableString response2 = QString("2");
+    NullableString response3 = QString("3");
+    NullableStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, ScpiTransactionId());
+    NullableStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
+    NullableStringList sortedResponses3 = sorter.genOrDelaySortedOutput(response3, ScpiTransactionId());
 
     QCOMPARE(sortedResponses1.size(), 1);
     QCOMPARE(sortedResponses1[0], response1);
@@ -164,12 +164,12 @@ void test_scpi_response_sorter::start_1_2_Response_3_2_1()
     ScpiTransactionId transaction1 = sorter.createTransaction(dummyScpiQuery);
     ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
 
-    QString response1 = "1";
-    QString response2 = "2";
-    QString response3 = "3";
-    QStringList sortedResponses3 = sorter.genOrDelaySortedOutput(response3, ScpiTransactionId());
-    QStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
-    QStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, transaction1);
+    NullableString response1 = QString("1");
+    NullableString response2 = QString("2");
+    NullableString response3 = QString("3");
+    NullableStringList sortedResponses3 = sorter.genOrDelaySortedOutput(response3, ScpiTransactionId());
+    NullableStringList sortedResponses2 = sorter.genOrDelaySortedOutput(response2, transaction2);
+    NullableStringList sortedResponses1 = sorter.genOrDelaySortedOutput(response1, transaction1);
 
     QCOMPARE(sortedResponses1.size(), 2);
     QCOMPARE(sortedResponses1[0], response1);
@@ -185,20 +185,20 @@ void test_scpi_response_sorter::start_1_2_Response_2_1_2_1()
     ScpiTransactionId transaction1 = sorter.createTransaction(dummyScpiQuery);
     ScpiTransactionId transaction2 = sorter.createTransaction(dummyScpiQuery);
 
-    QString response1a = "1a";
-    QString response2a = "2a";
-    QStringList sortedResponses2a = sorter.genOrDelaySortedOutput(response2a, transaction2);
-    QStringList sortedResponses1a = sorter.genOrDelaySortedOutput(response1a, transaction1);
+    NullableString response1a = QString("1a");
+    NullableString response2a = QString("2a");
+    NullableStringList sortedResponses2a = sorter.genOrDelaySortedOutput(response2a, transaction2);
+    NullableStringList sortedResponses1a = sorter.genOrDelaySortedOutput(response1a, transaction1);
     QCOMPARE(sortedResponses2a.size(), 0);
     QCOMPARE(sortedResponses1a.size(), 2);
     QCOMPARE(sortedResponses1a[0], response1a);
     QCOMPARE(sortedResponses1a[1], response2a);
 
     // multiresponse is treated same as invalid
-    QString response1b = "1b";
-    QString response2b = "2b";
-    QStringList sortedResponses2b = sorter.genOrDelaySortedOutput(response2b, transaction2);
-    QStringList sortedResponses1b = sorter.genOrDelaySortedOutput(response1b, transaction1);
+    NullableString response1b = QString("1b");
+    NullableString response2b = QString("2b");
+    NullableStringList sortedResponses2b = sorter.genOrDelaySortedOutput(response2b, transaction2);
+    NullableStringList sortedResponses1b = sorter.genOrDelaySortedOutput(response1b, transaction1);
     QCOMPARE(sortedResponses1b.size(), 1);
     QCOMPARE(sortedResponses1b[0], response1b);
     QCOMPARE(sortedResponses2b.size(), 1);

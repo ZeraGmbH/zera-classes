@@ -38,7 +38,7 @@ void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QStri
         }
         else
             emit sigEventError(CommandError);
-        client->handleCmdFinish("", scpiTransactionId);
+        client->handleCmdFinish(NullableString(), scpiTransactionId);
     }
 }
 
@@ -53,7 +53,7 @@ void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString in
         client->handleCmdFinish(QString("%1").arg(status), scpiTransactionId);
     else {
         emit sigEventError(CommandError);
-        client->handleCmdFinish("", scpiTransactionId);
+        client->handleCmdFinish(NullableString(), scpiTransactionId);
     }
 }
 

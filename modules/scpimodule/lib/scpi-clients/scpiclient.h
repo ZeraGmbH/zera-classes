@@ -9,6 +9,7 @@
 #include "ieee488-2.h"
 #include "scpimoduleconfigdata.h"
 #include "signalconnectiondelegate.h"
+#include "nullablestring.h"
 #include <QJsonObject>
 #include <QUuid>
 #include <QHash>
@@ -37,7 +38,7 @@ public:
         LOG_FULL,
         LOG_SKIP
     };
-    virtual void handleCmdFinish(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) = 0;
+    virtual void handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) = 0;
     void handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId &scpiTransactionId);
 public slots:
     void removeSCPIClientInfo(const QString &key);

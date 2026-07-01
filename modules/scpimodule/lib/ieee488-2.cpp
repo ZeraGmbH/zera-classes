@@ -41,7 +41,7 @@ cIEEE4882::cIEEE4882(cSCPIClient *client, const QString &deviceFamilyFromConfig,
 void cIEEE4882::AddEventErrorWithResponse(int error, const ScpiTransactionId &scpiTransactionId)
 {
     addEventError(error);
-    m_pClient->handleCmdFinish("", scpiTransactionId);
+    m_pClient->handleCmdFinish(NullableString(), scpiTransactionId);
 }
 
 void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
@@ -54,7 +54,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             // for the moment we only reset opcstate, means we only support sequential commands
             m_nOPCState = OCAS;
             SetnoOperFlag(true); // wir setzen ocas, setzen das nooperpending flag => setzen opc im sesr
-            client->handleCmdFinish("", scpiTransactionId);
+            client->handleCmdFinish(NullableString(), scpiTransactionId);
         }
         else if (cmd.isQuery())
             client->handleCmdFinish(stringifyRegisterForOutput(client->operationComplete()), scpiTransactionId);
@@ -68,7 +68,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             quint8 par = cmd.getParam(0).toInt(&ok);
             if (ok) {
                 SetESE(par);
-                client->handleCmdFinish("", scpiTransactionId);
+                client->handleCmdFinish(NullableString(), scpiTransactionId);
             }
             else
                 AddEventErrorWithResponse(NumericDataError, scpiTransactionId);
@@ -85,7 +85,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             quint8 par = cmd.getParam(0).toInt(&ok);
             if (ok) {
                 SetSRE(par);
-                client->handleCmdFinish("", scpiTransactionId);
+                client->handleCmdFinish(NullableString(), scpiTransactionId);
             }
             else
                 AddEventErrorWithResponse(NumericDataError, scpiTransactionId);
@@ -99,7 +99,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
     case clearstatus:
         if (cmd.isCommand(0)) {
             ClearStatus();
-            client->handleCmdFinish("", scpiTransactionId);
+            client->handleCmdFinish(NullableString(), scpiTransactionId);
         }
         else if (cmd.isQuery())
             AddEventErrorWithResponse(QueryError, scpiTransactionId);
@@ -110,7 +110,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
     case reset:
         if (cmd.isCommand(0)) {
             ResetDevice();
-            client->handleCmdFinish("", scpiTransactionId);
+            client->handleCmdFinish(NullableString(), scpiTransactionId);
         }
         else if (cmd.isQuery())
             AddEventErrorWithResponse(QueryError, scpiTransactionId);
@@ -270,7 +270,7 @@ void cIEEE4882::SetSTB(quint8 b)
         m_nSTB |= (1 << STBrqs); // we set the request service bit in stb
         if (((m_nSTB & m_nSRE) & (1 << STBrqs)) != 0)
             // This look like an additional 'async' response => return with invalid id
-            m_pClient->handleCmdFinish("SRQ", ScpiTransactionId());
+            m_pClient->handleCmdFinish(QString("SRQ"), ScpiTransactionId());
     }
 }
 
