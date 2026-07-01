@@ -40,7 +40,7 @@ void test_modman_regression_all_sessions_scpi::init()
         QCOMPARE(m_modmanFacade->getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session").toString(), sessionFile);
         TimeMachineForTest::getInstance()->processTimers(valueWaitTime);
 
-        m_scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_modMan->getModule(9999));
+        m_scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_modMan->getModule(9999));
         QVERIFY(m_scpiModule != nullptr);
 
         m_scpiclient = new SCPIMODULE::ScpiTestClient(m_scpiModule,
