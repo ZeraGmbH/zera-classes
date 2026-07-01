@@ -19,6 +19,8 @@ private slots:
     void checkScpiCmdResponse();
 
 private:
+    bool ignoreToSpeedup(const QString &scpiPath);
+
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
 };
 

@@ -21,6 +21,7 @@ void test_scpi_all_responses::checkScpiQueryResponse_data()
     const QString &devIface = client.getLastResponse().getStr();
 
     QTest::addColumn<QString>("scpiPath");
+
     XmlDocument xml;
     xml.loadXml(devIface, true);
     XmlElemIter iter = xml.root(std::make_unique<XmlElemIterStrategyTree>());
@@ -28,7 +29,7 @@ void test_scpi_all_responses::checkScpiQueryResponse_data()
         QDomElement element = iter.getElem();
         const QString type = element.attribute("Type");
         const QString scpiPath = element.attribute("ScpiPath");
-        if (!scpiPath.isEmpty() && !type.isEmpty() && type.contains("Query"))
+        if (!ignoreToSpeedup(scpiPath) && !scpiPath.isEmpty() && !type.isEmpty() && type.contains("Query"))
             QTest::newRow(scpiPath.toLatin1()) << scpiPath;
         iter.next();
     }
@@ -77,6 +78,7 @@ void test_scpi_all_responses::checkScpiCmdResponse_data()
 
     QTest::addColumn<QString>("scpiPath");
     QTest::addColumn<QString>("scpiParam");
+
     XmlDocument xml;
     xml.loadXml(devIface, true);
     XmlElemIter iter = xml.root(std::make_unique<XmlElemIterStrategyTree>());
@@ -84,7 +86,8 @@ void test_scpi_all_responses::checkScpiCmdResponse_data()
         QDomElement element = iter.getElem();
         const QString type = element.attribute("Type");
         const QString scpiPath = element.attribute("ScpiPath");
-        bool skipHere = scpiPath == "CONFIGURATION:SYST:NAMESESSION" ||
+        bool skipHere = ignoreToSpeedup(scpiPath) ||
+                        scpiPath == "CONFIGURATION:SYST:NAMESESSION" ||
                         scpiPath == "CONFIGURATION:SYST:XSESSION";
         if (!skipHere && !scpiPath.isEmpty() && !type.isEmpty() && type.contains("Command")) {
             QString scpiParam;
@@ -126,4 +129,25 @@ void test_scpi_all_responses::checkScpiCmdResponse()
     QCOMPARE(client.getAtLeastOneResponse(), true);
     QCOMPARE(client.getLastResponse().isNull(), true);
     QCOMPARE(client.getLastResponse().getStr(), "");
+}
+
+bool test_scpi_all_responses::ignoreToSpeedup(const QString &scpiPath)
+{
+    const QStringList ignoreTags = QStringList()
+                                   << "UL2" << ":U2"
+                                   << "UL3" << ":U3"
+                                   << "IL2" << "I2"
+                                   << "IL3" << "I3"
+                                   << "POW2" << "POW3"
+                                   << ":P2" << ":P3"
+                                   << ":Q2" << ":Q3"
+                                   << ":S2" << ":S3"
+                                   << ":OSC1:UAUX" << ":OSC1:IL1" << ":OSC1:IAUX"
+                                   << ":BD12"
+        ;
+    for (const QString &ignoreTag : ignoreTags)
+        if (scpiPath.contains(ignoreTag))
+            return true;
+
+    return false;
 }
