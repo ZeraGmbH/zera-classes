@@ -24,7 +24,7 @@ private slots:
 
 private:
     quint8 m_nMeasCode;
-    int m_nPending;
+    int m_nPending = 0;
     QString m_sAnswer;
     cSCPIClient *m_pClient = nullptr;
     QList<cSCPIMeasure*> m_scpimeasureObjectList;

@@ -12,16 +12,14 @@ cSCPIMeasureDelegate::cSCPIMeasureDelegate(const QString &cmdParent,
                                            quint8 measCode,
                                            cSCPIMeasure* scpimeasureobject) :
     ScpiBaseDelegate(cmdParent, cmd, type),
-    m_nMeasCode(measCode),
-    m_nPending(0)
+    m_nMeasCode(measCode)
 {
     m_scpimeasureObjectList.append(scpimeasureobject);
 }
 
-cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate & delegate, QHash<cSCPIMeasure *, cSCPIMeasure *> &scpiMeasureTranslationHash)
+cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate &delegate, QHash<cSCPIMeasure*, cSCPIMeasure*> &scpiMeasureTranslationHash) :
+    m_nMeasCode(delegate.m_nMeasCode)
 {
-    m_nMeasCode = delegate.m_nMeasCode;
-    m_nPending = 0;
     for (int i = 0; i < delegate.m_scpimeasureObjectList.count(); i++) {
         cSCPIMeasure* scpiModuleMeasure = delegate.m_scpimeasureObjectList.at(i);
         if (scpiMeasureTranslationHash.contains(scpiModuleMeasure))
