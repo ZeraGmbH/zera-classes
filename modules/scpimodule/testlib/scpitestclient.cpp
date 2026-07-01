@@ -34,10 +34,16 @@ int ScpiTestClient::getUnhandledResponses() const
     return m_unhandledResponses;
 }
 
+bool ScpiTestClient::getAtLeastOneResponse() const
+{
+    return m_atLeastOneResponse;
+}
+
 void ScpiTestClient::handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
 {
     Q_UNUSED(logType)
 
+    m_atLeastOneResponse = true;
     m_lastResponse = scpiResponse;
     m_unhandledResponses--;
 
