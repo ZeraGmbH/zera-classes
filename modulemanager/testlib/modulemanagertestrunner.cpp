@@ -183,7 +183,7 @@ QMap<int, QList<TestDspInterfacePtr> > ModuleManagerTestRunner::getAllDspInterfa
 
 void ModuleManagerTestRunner::fireActualValues()
 {
-    constexpr double testvoltage = 120;
+    constexpr double testvoltage = 230;
     constexpr double testcurrent = 10;
     constexpr double testangle = 0;
     constexpr double testfrequency = 50;
