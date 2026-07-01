@@ -17,11 +17,11 @@ cSCPIMeasureDelegate::cSCPIMeasureDelegate(const QString &cmdParent,
     m_scpimeasureObjectList.append(scpimeasureobject);
 }
 
-cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate &delegate, QHash<cSCPIMeasure*, cSCPIMeasure*> &scpiMeasureTranslationHash) :
-    m_nMeasCode(delegate.m_nMeasCode)
+cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate &moduleInterfaceDelegate, QHash<cSCPIMeasure*, cSCPIMeasure*> &scpiMeasureTranslationHash) :
+    m_nMeasCode(moduleInterfaceDelegate.m_nMeasCode)
 {
-    for (int i = 0; i < delegate.m_scpimeasureObjectList.count(); i++) {
-        cSCPIMeasure* scpiModuleMeasure = delegate.m_scpimeasureObjectList.at(i);
+    for (int i = 0; i < moduleInterfaceDelegate.m_scpimeasureObjectList.count(); i++) {
+        cSCPIMeasure* scpiModuleMeasure = moduleInterfaceDelegate.m_scpimeasureObjectList.at(i);
         if (scpiMeasureTranslationHash.contains(scpiModuleMeasure))
             m_scpimeasureObjectList.append(scpiMeasureTranslationHash[scpiModuleMeasure]);
         else {

@@ -9,9 +9,11 @@ namespace SCPIMODULE {
 
 class cSCPIMeasureDelegate: public ScpiBaseDelegate
 {
-   Q_OBJECT
+    Q_OBJECT
 public:
+    // Moduleinterface initials
     cSCPIMeasureDelegate(const QString &cmdParent, const QString &cmd, quint8 type, quint8 measCode, cSCPIMeasure* scpimeasureobject);
+    // Scpi interface copies
     cSCPIMeasureDelegate(const cSCPIMeasureDelegate& delegate,
                          QHash<cSCPIMeasure*, cSCPIMeasure*> &scpiMeasureTranslationHash);
     void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
