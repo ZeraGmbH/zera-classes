@@ -142,12 +142,12 @@
         }
     },
     "1020": {
-        "ACT_Channel1Peak": 169.70562744140625,
-        "ACT_Channel1Rms": 120,
-        "ACT_Channel2Peak": 169.70562744140625,
-        "ACT_Channel2Rms": 120,
-        "ACT_Channel3Peak": 169.70562744140625,
-        "ACT_Channel3Rms": 120,
+        "ACT_Channel1Peak": 325.2691345214844,
+        "ACT_Channel1Rms": 230,
+        "ACT_Channel2Peak": 325.2691345214844,
+        "ACT_Channel2Rms": 230,
+        "ACT_Channel3Peak": 325.2691345214844,
+        "ACT_Channel3Rms": 230,
         "ACT_Channel4Peak": 14.142135620117188,
         "ACT_Channel4Rms": 10,
         "ACT_Channel5Peak": 14.142135620117188,
@@ -853,22 +853,22 @@
         "SIG_Ranging": 0
     },
     "1050": {
-        "ACT_DC1": 120,
-        "ACT_DC2": 120,
-        "ACT_DC3": 120,
+        "ACT_DC1": 230,
+        "ACT_DC2": 230,
+        "ACT_DC3": 230,
         "ACT_DC4": 10,
         "ACT_DC5": 10,
         "ACT_DC6": 10,
         "ACT_DFTPN1": [
-            120,
+            230,
             0
         ],
         "ACT_DFTPN2": [
-            120,
+            230,
             0
         ],
         "ACT_DFTPN3": [
-            120,
+            230,
             0
         ],
         "ACT_DFTPN4": [
