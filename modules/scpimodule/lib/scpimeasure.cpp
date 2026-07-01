@@ -69,35 +69,35 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
 {
     switch (cmd)
     {
-    case SCPIModelType::measure:
+    case ScpiModelType::measure:
         if (!m_MeasureStateMachine.isRunning()) {
             m_measureScpiTransactionId = scpiTransactionId;
             m_MeasureStateMachine.start();
         }
         break;
 
-    case SCPIModelType::configure:
+    case ScpiModelType::configure:
         if (!m_ConfigureStateMachine.isRunning()) {
             m_configureScpiTransactionId = scpiTransactionId;
             m_ConfigureStateMachine.start();
         }
         break;
 
-    case SCPIModelType::read:
+    case ScpiModelType::read:
         if (!m_ReadStateMachine.isRunning()) {
             m_readScpiTransactionId = scpiTransactionId;
             m_ReadStateMachine.start();
         }
         break;
 
-    case SCPIModelType::init:
+    case ScpiModelType::init:
         if (!m_InitStateMachine.isRunning()) {
             m_initScpiTransactionId = scpiTransactionId;
             m_InitStateMachine.start();
         }
         break;
 
-    case SCPIModelType::fetch:
+    case ScpiModelType::fetch:
         if (!m_FetchStateMachine.isRunning()) {
             m_fetchScpiTransactionId = scpiTransactionId;
             m_FetchStateMachine.start();

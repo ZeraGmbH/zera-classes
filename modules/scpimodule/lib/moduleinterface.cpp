@@ -1,25 +1,14 @@
-#include <QList>
-#include <QJsonDocument>
-#include <QJsonArray>
-#include <QJsonObject>
-#include <QJsonValue>
-
+#include "moduleinterface.h"
+#include "scpimodule.h"
+#include "scpiparameterdelegate.h"
+#include "scpicatalogcmddelegate.h"
+#include "scpirpcdelegate.h"
 #include <vs_abstracteventsystem.h>
 #include <ve_commandevent.h>
 #include <vcmp_componentdata.h>
-
 #include <scpi.h>
-
-#include "scpimodule.h"
-#include "scpimeasure.h"
-#include "scpiinterface.h"
-#include "moduleinterface.h"
-#include "scpicmdinfo.h"
-#include "scpiparameterdelegate.h"
-#include "scpicatalogcmddelegate.h"
-#include "scpimeasuredelegate.h"
-#include "scpirpcdelegate.h"
-
+#include <QJsonDocument>
+#include <QJsonValue>
 
 namespace SCPIMODULE
 {
@@ -122,23 +111,23 @@ void cModuleInterface::addSCPICommand(const cSCPICmdInfoPtr &scpiCmdInfo)
         cSCPIMeasure* measureObject = new cSCPIMeasure(m_pModule->m_scpiMeasureHash, scpiCmdInfo);
         m_measureObjectsToDelete.append(measureObject);
 
-        addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, SCPIModelType::measure, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("CONFIGURE"), SCPI::isNode | SCPI::isCmd, SCPIModelType::configure, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("READ"), SCPI::isNode | SCPI::isQuery, SCPIModelType::read, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("INIT"), SCPI::isNode | SCPI::isCmd, SCPIModelType::init, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("FETCH"), SCPI::isNode | SCPI::isQuery, SCPIModelType::fetch, measureObject);
+        addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, ScpiModelType::measure, measureObject);
+        addSCPIMeasureCommand(QString(""), QString("CONFIGURE"), SCPI::isNode | SCPI::isCmd, ScpiModelType::configure, measureObject);
+        addSCPIMeasureCommand(QString(""), QString("READ"), SCPI::isNode | SCPI::isQuery, ScpiModelType::read, measureObject);
+        addSCPIMeasureCommand(QString(""), QString("INIT"), SCPI::isNode | SCPI::isCmd, ScpiModelType::init, measureObject);
+        addSCPIMeasureCommand(QString(""), QString("FETCH"), SCPI::isNode | SCPI::isQuery, ScpiModelType::fetch, measureObject);
 
-        addSCPIMeasureCommand(QString("MEASURE"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, SCPIModelType::measure, measureObject);
-        addSCPIMeasureCommand(QString("CONFIGURE"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, SCPIModelType::configure, measureObject);
-        addSCPIMeasureCommand(QString("READ"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, SCPIModelType::read, measureObject);
-        addSCPIMeasureCommand(QString("INIT"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, SCPIModelType::init, measureObject);
-        addSCPIMeasureCommand(QString("FETCH"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, SCPIModelType::fetch, measureObject);
+        addSCPIMeasureCommand(QString("MEASURE"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelType::measure, measureObject);
+        addSCPIMeasureCommand(QString("CONFIGURE"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, ScpiModelType::configure, measureObject);
+        addSCPIMeasureCommand(QString("READ"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelType::read, measureObject);
+        addSCPIMeasureCommand(QString("INIT"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, ScpiModelType::init, measureObject);
+        addSCPIMeasureCommand(QString("FETCH"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelType::fetch, measureObject);
 
-        addSCPIMeasureCommand(QString("MEASURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::measure, measureObject, scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(QString("CONFIGURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, SCPIModelType::configure, measureObject, scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(QString("READ:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::read, measureObject, scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(QString("INIT:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, SCPIModelType::init, measureObject, scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::fetch, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(QString("MEASURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelType::measure, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(QString("CONFIGURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, ScpiModelType::configure, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(QString("READ:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelType::read, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(QString("INIT:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, ScpiModelType::init, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelType::fetch, measureObject, scpiCmdInfo->veinComponentInfo);
 
     }
     else {
@@ -172,8 +161,8 @@ void cModuleInterface::addRPCCommand(const cSCPICmdInfoPtr &scpiCmdInfo)
 
 void cModuleInterface::addSCPIMeasureCommand(const QString &cmdparent,
                                              const QString &cmd,
-                                             quint8 cmdType,
-                                             quint8 measCode,
+                                             quint8 scpiCmdQueryFlags,
+                                             ScpiModelType modelType,
                                              cSCPIMeasure *measureObject,
                                              QJsonObject veinComponentInfo)
 {
@@ -184,7 +173,7 @@ void cModuleInterface::addSCPIMeasureCommand(const QString &cmdparent,
         delegate->addScpiMeasureObject(measureObject);
     }
     else {
-        delegate = std::make_shared<cSCPIMeasureDelegate>(cmdparent, cmd, cmdType , measCode, measureObject);
+        delegate = std::make_shared<cSCPIMeasureDelegate>(cmdparent, cmd, scpiCmdQueryFlags, modelType, measureObject);
         m_scpiMeasureDelegateHash[cmdcomplete] = delegate;
         m_pSCPIInterface->addSCPICommand(delegate);
     }

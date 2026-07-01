@@ -2,6 +2,7 @@
 #define SCPIMODULEINTERFACE_H
 
 #include "baseinterface.h"
+#include "scpiinterface.h"
 #include "scpibasedelegate.h"
 #include "scpimeasuredelegate.h"
 #include "scpicmdinfo.h"
@@ -12,19 +13,11 @@
 namespace SCPIMODULE
 {
 
-namespace SCPIModelType {
-    enum scpiModelType {normal, measure, configure, read, init, fetch };
-}
-
 class cSCPIModule;
-class cSCPIInterface;
-class cSCPIParameterDelegate;
 class cSCPICatalogCmdDelegate;
-class cSCPIMeasure;
 
 // the class for our module interface connections
-
-class cModuleInterface: public cBaseInterface
+class cModuleInterface : public cBaseInterface
 {
     Q_OBJECT
 public:
@@ -44,8 +37,8 @@ private:
     void addRPCCommand(const cSCPICmdInfoPtr &scpiCmdInfo);
     void addSCPIMeasureCommand(const QString &cmdparent,
                                const QString &cmd,
-                               quint8 cmdType,
-                               quint8 measCode,
+                               quint8 scpiCmdQueryFlags,
+                               ScpiModelType modelType,
                                cSCPIMeasure* measureObject,
                                QJsonObject veinComponentInfo = QJsonObject());
     void setXmlComponentInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);

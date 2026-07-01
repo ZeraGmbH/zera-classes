@@ -8,17 +8,18 @@ namespace SCPIMODULE {
 
 cSCPIMeasureDelegate::cSCPIMeasureDelegate(const QString &cmdParent,
                                            const QString &cmd,
-                                           quint8 type,
-                                           quint8 measCode,
+                                           quint8 scpiCmdQueryFlags,
+                                           ScpiModelType modelType,
                                            cSCPIMeasure* scpimeasureobject) :
-    ScpiBaseDelegate(cmdParent, cmd, type),
-    m_nMeasCode(measCode)
+    ScpiBaseDelegate(cmdParent, cmd, scpiCmdQueryFlags),
+    m_modelType(modelType)
 {
     m_scpimeasureObjectList.append(scpimeasureobject);
 }
 
-cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate &moduleInterfaceDelegate, QHash<cSCPIMeasure*, cSCPIMeasure*> &scpiMeasureTranslationHash) :
-    m_nMeasCode(moduleInterfaceDelegate.m_nMeasCode)
+cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate &moduleInterfaceDelegate,
+                                           QHash<cSCPIMeasure*, cSCPIMeasure*> &scpiMeasureTranslationHash) :
+    m_modelType(moduleInterfaceDelegate.m_modelType)
 {
     for (int i = 0; i < moduleInterfaceDelegate.m_scpimeasureObjectList.count(); i++) {
         cSCPIMeasure* scpiModuleMeasure = moduleInterfaceDelegate.m_scpimeasureObjectList.at(i);
@@ -51,10 +52,10 @@ void cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, const QString &scpi,
 void cSCPIMeasureDelegate::executeClient(cSCPIClient *client, const ScpiTransactionId &scpiTransactionId)
 {
     bool reentryPossible;
-    switch (m_nMeasCode)
+    switch (m_modelType)
     {
-    case SCPIModelType::init:
-    case SCPIModelType::configure:
+    case ScpiModelType::init:
+    case ScpiModelType::configure:
         reentryPossible = true;
         break;
     default:
@@ -66,25 +67,25 @@ void cSCPIMeasureDelegate::executeClient(cSCPIClient *client, const ScpiTransact
         m_sAnswer = "";
         for (int i = 0; i < m_scpimeasureObjectList.count(); i++) {
             cSCPIMeasure* measure = m_scpimeasureObjectList.at(i);
-            switch (m_nMeasCode)
+            switch (m_modelType)
             {
-            case SCPIModelType::measure:
+            case ScpiModelType::measure:
                 connect(measure, &cSCPIMeasure::sigMeasDone, this, &cSCPIMeasureDelegate::onSingleScpiQueryDone);
                 break;
-            case SCPIModelType::configure:
+            case ScpiModelType::configure:
                 connect(measure, &cSCPIMeasure::sigConfDone, this, &cSCPIMeasureDelegate::onSingleScpiCmdDone);
                 break;
-            case SCPIModelType::read:
+            case ScpiModelType::read:
                 connect(measure, &cSCPIMeasure::sigReadDone, this, &cSCPIMeasureDelegate::onSingleScpiQueryDone);
                 break;
-            case SCPIModelType::init:
+            case ScpiModelType::init:
                 connect(measure, &cSCPIMeasure::sigInitDone, this, &cSCPIMeasureDelegate::onSingleScpiCmdDone);
                 break;
-            case SCPIModelType::fetch:
+            case ScpiModelType::fetch:
                 connect(measure, &cSCPIMeasure::sigFetchDone, this, &cSCPIMeasureDelegate::onSingleScpiQueryDone);
                 break;
             }
-            measure->execute(m_nMeasCode, scpiTransactionId);
+            measure->execute(m_modelType, scpiTransactionId);
         }
     }
     else
