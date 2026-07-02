@@ -14,24 +14,12 @@ void test_scpi_all_responses::initTestCase()
 
 void test_scpi_all_responses::checkScpiQueryResponse_data()
 {
-    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
-    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
-    client.sendScpiCmds("dev:iface?");
-    TimeMachineObject::feedEventLoop();
-    const QString &devIface = client.getLastResponse().getStr();
+    QTest::addColumn<QString>("scpiQuery");
 
-    QTest::addColumn<QString>("scpiPath");
-
-    XmlDocument xml;
-    xml.loadXml(devIface, true);
-    XmlElemIter iter = xml.root(std::make_unique<XmlElemIterStrategyTree>());
-    while(!iter.isEnd()) {
-        QDomElement element = iter.getElem();
-        const QString type = element.attribute("Type");
-        const QString scpiPath = element.attribute("ScpiPath");
-        if (!ignoreToSpeedup(scpiPath) && !scpiPath.isEmpty() && !type.isEmpty() && type.contains("Query"))
-            QTest::newRow(scpiPath.toLatin1()) << scpiPath;
-        iter.next();
+    const QStringList scpiQueries = getAllScpiQueriesFromDevIface();
+    for (const QString &scpiQuery : scpiQueries) {
+        if (!ignoreToSpeedup(scpiQuery))
+            QTest::newRow(scpiQuery.toLatin1()) << scpiQuery;
     }
 }
 
@@ -40,17 +28,17 @@ void test_scpi_all_responses::checkScpiQueryResponse()
     SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
 
-    QFETCH(QString, scpiPath);
-    if (scpiPath.startsWith("MEAS") || scpiPath.startsWith("READ")) {
+    QFETCH(QString, scpiQuery);
+    if (scpiQuery.startsWith("MEAS") || scpiQuery.startsWith("READ")) {
         m_testRunner->fireActualValues();
     }
-    client.sendScpiCmds(scpiPath + "?");
+    client.sendScpiCmds(scpiQuery);
     TimeMachineObject::feedEventLoop();
 
     qInfo("Response: %s", qPrintable(client.getLastResponse().getStr()));
     QCOMPARE(client.getAtLeastOneResponse(), true);
     QCOMPARE(client.getUnhandledResponses(), 0);
-    bool nullExpected = scpiPath == "CALCULATE:ADJ1:SEND"; // Transparent send (without command) is a super nasty/special exception - let's make it a test case
+    bool nullExpected = scpiQuery == "CALCULATE:ADJ1:SEND?"; // Transparent send (without command) is a super nasty/special exception - let's make it a test case
     QCOMPARE(client.getLastResponse().isNull(), nullExpected);
 }
 
@@ -70,26 +58,76 @@ void test_scpi_all_responses::checkScpiQueryEmptyResponse()
 
 void test_scpi_all_responses::checkScpiCmdResponse_data()
 {
+    QTest::addColumn<QString>("scpiCommand");
+
+    const QStringList scpiCommands = getAllScpiCommandsWithParamFromDevIface();
+    for (const QString &scpiCommand : scpiCommands) {
+        bool skipHere = ignoreToSpeedup(scpiCommand) ||
+                        scpiCommand.startsWith("CONFIGURATION:SYST:NAMESESSION") ||
+                        scpiCommand.startsWith("CONFIGURATION:SYST:XSESSION");
+        if (!skipHere)
+            QTest::newRow(scpiCommand.toLatin1()) << scpiCommand;
+    }
+}
+
+void test_scpi_all_responses::checkScpiCmdResponse()
+{
+    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
+
+    QFETCH(QString, scpiCommand);
+    qInfo("%s", qPrintable(scpiCommand));
+
+    QCOMPARE(client.getAtLeastOneResponse(), false);
+    client.sendScpiCmds(scpiCommand);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(client.getAtLeastOneResponse(), true);
+    QCOMPARE(client.getLastResponse().isNull(), true);
+    QCOMPARE(client.getLastResponse().getStr(), "");
+}
+
+QStringList test_scpi_all_responses::getAllScpiQueriesFromDevIface()
+{
     SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
     client.sendScpiCmds("dev:iface?");
     TimeMachineObject::feedEventLoop();
     const QString &devIface = client.getLastResponse().getStr();
 
-    QTest::addColumn<QString>("scpiPath");
-    QTest::addColumn<QString>("scpiParam");
-
     XmlDocument xml;
     xml.loadXml(devIface, true);
     XmlElemIter iter = xml.root(std::make_unique<XmlElemIterStrategyTree>());
+    QStringList scpiPaths;
     while(!iter.isEnd()) {
         QDomElement element = iter.getElem();
         const QString type = element.attribute("Type");
         const QString scpiPath = element.attribute("ScpiPath");
-        bool skipHere = ignoreToSpeedup(scpiPath) ||
-                        scpiPath == "CONFIGURATION:SYST:NAMESESSION" ||
-                        scpiPath == "CONFIGURATION:SYST:XSESSION";
-        if (!skipHere && !scpiPath.isEmpty() && !type.isEmpty() && type.contains("Command")) {
+
+        if (!scpiPath.isEmpty() && type.contains("Query"))
+            scpiPaths.append(scpiPath + "?");
+        iter.next();
+    }
+    return scpiPaths;
+}
+
+QStringList test_scpi_all_responses::getAllScpiCommandsWithParamFromDevIface()
+{
+    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
+    client.sendScpiCmds("dev:iface?");
+    TimeMachineObject::feedEventLoop();
+    const QString &devIface = client.getLastResponse().getStr();
+
+    XmlDocument xml;
+    xml.loadXml(devIface, true);
+    XmlElemIter iter = xml.root(std::make_unique<XmlElemIterStrategyTree>());
+    QStringList scpiCommands;
+    while(!iter.isEnd()) {
+        QDomElement element = iter.getElem();
+        const QString type = element.attribute("Type");
+        const QString scpiPath = element.attribute("ScpiPath");
+        if (!scpiPath.isEmpty() && type.contains("Command")) {
             QString scpiParam;
             if (type.contains("Command+Par")) {
                 const QString validPar = element.attribute("ValidPar");
@@ -102,33 +140,16 @@ void test_scpi_all_responses::checkScpiCmdResponse_data()
                 else if(!max.isEmpty())
                     scpiParam = max;
             }
-            QTest::newRow(scpiPath.toLatin1()) << scpiPath << scpiParam;
+            QString scpiCmd;
+            if(!scpiParam.isEmpty())
+                scpiCmd = scpiPath + " " + scpiParam + ";";
+            else
+                scpiCmd = scpiPath + ";";
+            scpiCommands.append(scpiCmd);
         }
         iter.next();
     }
-}
-
-void test_scpi_all_responses::checkScpiCmdResponse()
-{
-    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
-    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
-
-    QFETCH(QString, scpiPath);
-    QFETCH(QString, scpiParam);
-    QString scpiCmd;
-    if(!scpiParam.isEmpty())
-        scpiCmd = scpiPath + " " + scpiParam + ";";
-    else
-        scpiCmd = scpiPath + ";";
-
-    qInfo("%s", qPrintable(scpiCmd));
-    QCOMPARE(client.getAtLeastOneResponse(), false);
-    client.sendScpiCmds(scpiCmd);
-    TimeMachineObject::feedEventLoop();
-
-    QCOMPARE(client.getAtLeastOneResponse(), true);
-    QCOMPARE(client.getLastResponse().isNull(), true);
-    QCOMPARE(client.getLastResponse().getStr(), "");
+    return scpiCommands;
 }
 
 bool test_scpi_all_responses::ignoreToSpeedup(const QString &scpiPath)
