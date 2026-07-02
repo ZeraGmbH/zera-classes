@@ -16,7 +16,7 @@ void test_adj_module_phase::init()
     if(!m_testRunner)
         m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/session-minimal.json", true);
     if(!m_scpiClient)
-        m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
+        m_scpiClient = std::make_unique<ScpiModuleNetClientBlocked>();
     QString response = m_scpiClient->sendReceive("*cls|CALC:ADJ1:INIT IL1,10A;|*stb?");
     QCOMPARE(response, "+0");
     response = m_scpiClient->sendReceive("*cls|CALC:ADJ1:INIT UL2,250V;|*stb?");
@@ -46,7 +46,7 @@ void test_adj_module_phase::validActValuesWithoutPermission()
 {
     destroyCommonTestRunner();
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false);
-    ScpiModuleClientBlocked scpiClient;
+    ScpiModuleNetClientBlocked scpiClient;
 
     AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, zeroangle, testfrequency);
     QString response = scpiClient.sendReceive("calc:adj1:phas IL1,10A,0;|*stb?");

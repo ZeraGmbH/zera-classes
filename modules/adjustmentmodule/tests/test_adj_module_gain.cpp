@@ -16,7 +16,7 @@ void test_adj_module_gain::init()
     if(!m_testRunner)
         m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/session-minimal.json", true);
     if(!m_scpiClient)
-        m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
+        m_scpiClient = std::make_unique<ScpiModuleNetClientBlocked>();
     QString response = m_scpiClient->sendReceive("*cls|CALC:ADJ1:INIT UL1,250V;|*stb?");
     QCOMPARE(response, "+0");
 }
@@ -50,7 +50,7 @@ void test_adj_module_gain::validActValuesWithoutPermission()
 {
     destroyCommonTestRunner();
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false);
-    ScpiModuleClientBlocked scpiClient;
+    ScpiModuleNetClientBlocked scpiClient;
 
     AdjModuleTestHelper::setAllValuesSymmetricAc(testRunner, testvoltage, testcurrent, testangle, testfrequency);
     QString response = scpiClient.sendReceive("calc:adj1:ampl UL1,250V,100;|*stb?");

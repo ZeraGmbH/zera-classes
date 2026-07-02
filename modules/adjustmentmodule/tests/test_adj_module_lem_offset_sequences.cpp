@@ -190,7 +190,7 @@ void test_adj_module_lem_offset_sequences::internalNoPermission()
 void test_adj_module_lem_offset_sequences::setupServers()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>("mt310s2-dc-session.json");
-    m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
+    m_scpiClient = std::make_unique<ScpiModuleNetClientBlocked>();
 }
 
 void test_adj_module_lem_offset_sequences::insertClamps(cClamp::ClampTypes clampPhase1To3,

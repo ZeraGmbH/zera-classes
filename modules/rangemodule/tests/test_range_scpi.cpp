@@ -1,6 +1,6 @@
 #include "test_range_scpi.h"
 #include "modulemanagertestrunner.h"
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include "scpimodule.h"
 #include "scpitestclient.h"
 #include <timemachineobject.h>
@@ -24,7 +24,7 @@ void test_range_scpi::scpiQueryAndCommand()
     // We put all in here to save time - starting module-manager takes
     // significant amount of time and if one fails trouble is near anyway...
     ModuleManagerTestRunner testRunner(":/session-range-scpi.json");
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
 
     // initial state queries
     QCOMPARE(client.sendReceive("CONFIGURATION:RNG1:GROUPING?"), "1");

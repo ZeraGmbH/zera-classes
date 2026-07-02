@@ -25,7 +25,7 @@ void test_readInstrumentType::init()
     m_veinClientStack->subscribeEntity(systemEntityId);
     m_veinClientStack->subscribeEntity(statusEntityId);
     TimeMachineObject::feedEventLoop();
-    m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
+    m_scpiClient = std::make_unique<ScpiModuleNetClientBlocked>();
 }
 
 void test_readInstrumentType::cleanup()

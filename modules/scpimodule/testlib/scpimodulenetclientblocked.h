@@ -1,16 +1,16 @@
-#ifndef SCPIMODULECLIENTBLOCKED_H
-#define SCPIMODULECLIENTBLOCKED_H
+#ifndef SCPIMODULENETCLIENTBLOCKED_H
+#define SCPIMODULENETCLIENTBLOCKED_H
 
 #include <QTcpSocket>
 #include <QObject>
 #include <QByteArrayList>
 
 // Simple SCPI I/O - if tests require more insights, use ScpiTestClient
-class ScpiModuleClientBlocked : public QObject
+class ScpiModuleNetClientBlocked : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScpiModuleClientBlocked(QString ipAddress = "127.0.0.1", int port = 6320);
+    explicit ScpiModuleNetClientBlocked(QString ipAddress = "127.0.0.1", int port = 6320);
     void setLogFile(const QString &logFileName);
 
     QByteArray sendReceive(const QByteArray &send, bool removeLineFeedOnReceive = true);
@@ -29,4 +29,4 @@ private:
     void addLog(LogDirection direction, const QByteArray &logData);
 };
 
-#endif // SCPIMODULECLIENTBLOCKED_H
+#endif // SCPIMODULENETCLIENTBLOCKED_H

@@ -2,7 +2,7 @@
 #define TEST_EMOB_VEIN_SCPI_H
 
 #include "modulemanagertestrunner.h"
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include <testjsonspyeventsystem.h>
 #include <vf_core_stack_client.h>
 #include <QObject>
@@ -60,7 +60,7 @@ private:
     std::unique_ptr<VeinNet::NetworkSystem> m_netSystem;
     std::unique_ptr<VeinNet::TcpSystem> m_tcpSystem;
 
-    std::unique_ptr<ScpiModuleClientBlocked> m_scpiClient;
+    std::unique_ptr<ScpiModuleNetClientBlocked> m_scpiClient;
     std::unique_ptr<VfCoreStackClient> m_veinClientStack;
     VfRPCInvokerPtr m_rpcInvoker;
 

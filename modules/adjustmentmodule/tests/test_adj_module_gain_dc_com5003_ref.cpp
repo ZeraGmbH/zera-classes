@@ -33,7 +33,7 @@ void test_adj_module_gain_dc_com5003_ref::init()
     if(!m_testRunner)
         m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/com5003-ref-session-minimal.json", true, "com5003");
     if(!m_scpiClient)
-        m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
+        m_scpiClient = std::make_unique<ScpiModuleNetClientBlocked>();
     QFETCH_GLOBAL(QString, refChannel);
     m_refChannel = refChannel;
     QCOMPARE(setRangeGroupingOff(), "+0");

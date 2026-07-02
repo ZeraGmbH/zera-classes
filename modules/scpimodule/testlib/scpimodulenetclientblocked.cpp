@@ -1,22 +1,22 @@
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include <timemachineobject.h>
 #include <testloghelpers.h>
 #include <QElapsedTimer>
 #include <QFile>
 
-ScpiModuleClientBlocked::ScpiModuleClientBlocked(QString ipAddress, int port)
+ScpiModuleNetClientBlocked::ScpiModuleNetClientBlocked(QString ipAddress, int port)
 {
     m_socket.connectToHost(ipAddress, port);
     TimeMachineObject::feedEventLoop();
 }
 
-void ScpiModuleClientBlocked::setLogFile(const QString &logFileName)
+void ScpiModuleNetClientBlocked::setLogFile(const QString &logFileName)
 {
     m_logFileName = logFileName;
     TestLogHelpers::writeFile(m_logFileName, ""); // more a write with parent dirs
 }
 
-QByteArray ScpiModuleClientBlocked::sendReceive(const QByteArray &send, bool removeLineFeedOnReceive)
+QByteArray ScpiModuleNetClientBlocked::sendReceive(const QByteArray &send, bool removeLineFeedOnReceive)
 {
     QElapsedTimer timer;
     timer.start();
@@ -36,7 +36,7 @@ QByteArray ScpiModuleClientBlocked::sendReceive(const QByteArray &send, bool rem
     return ret;
 }
 
-void ScpiModuleClientBlocked::sendMulti(const QByteArrayList &send)
+void ScpiModuleNetClientBlocked::sendMulti(const QByteArrayList &send)
 {
     for(const auto &item : send) {
         QByteArray line = item + "\n";
@@ -45,7 +45,7 @@ void ScpiModuleClientBlocked::sendMulti(const QByteArrayList &send)
     }
 }
 
-QByteArrayList ScpiModuleClientBlocked::receiveMulti()
+QByteArrayList ScpiModuleNetClientBlocked::receiveMulti()
 {
     QByteArray receive = m_socket.readAll();
     addLog(LOG_RECEIVE, receive);
@@ -54,12 +54,12 @@ QByteArrayList ScpiModuleClientBlocked::receiveMulti()
     return receive.split('\n');
 }
 
-void ScpiModuleClientBlocked::closeSocket()
+void ScpiModuleNetClientBlocked::closeSocket()
 {
     m_socket.close();
 }
 
-void ScpiModuleClientBlocked::addLog(LogDirection direction, const QByteArray &logData)
+void ScpiModuleNetClientBlocked::addLog(LogDirection direction, const QByteArray &logData)
 {
     if (m_logFileName.isEmpty())
         return;

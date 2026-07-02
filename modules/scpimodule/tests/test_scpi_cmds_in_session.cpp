@@ -1,7 +1,7 @@
 #include "test_scpi_cmds_in_session.h"
 #include "modulemanagertestrunner.h"
 #include "modulemanagerconfig.h"
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include <timemachineobject.h>
 #include <scpimodule.h>
 #include <scpitestclient.h>
@@ -30,7 +30,7 @@ void test_scpi_cmds_in_session::initialTestClient()
 {
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString receive1 = client.sendReceive("*STB?");
     QString receive2 = client.sendReceive("*STB?");
 
@@ -43,7 +43,7 @@ void test_scpi_cmds_in_session::minScpiDevIface()
     ModulemanagerConfig::setDemoDevice("mt310s2");
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString receive = client.sendReceive("dev:iface?", false);
 
     QFile ifaceBaseXmlFile("://dev-iface-basic.xml");
@@ -57,7 +57,7 @@ void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
 {
     ModuleManagerTestRunner testRunner(":/session-two-modules.json");
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString receive1 = client.sendReceive("*STB?");
     QString receive2 = client.sendReceive("STATUS:DEV1:SERIAL?");
     QString receive3 = client.sendReceive("*STB?");
@@ -78,7 +78,7 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
     ModuleManagerTestRunner testRunner(":/session-three-modules.json");
 
     // multi read to cause double delete crasher
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString receive1 = client.sendReceive("CONFIGURATION:RNG1:RNGAUTO?");
     QString receive2 = client.sendReceive("CONFIGURATION:RNG1:GROUPING?");
     client.sendReceive("SENSE:RNG1:UL1:RANGE?");
@@ -93,7 +93,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 {
     ModuleManagerTestRunner testRunner(":/session-three-modules.json");
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString dumped = client.sendReceive("dev:iface?", false);
     QString expected = TestLogHelpers::loadFile(":/dev-iface-three.xml");
 
@@ -107,7 +107,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()
 {
     ModuleManagerTestRunner testRunner(":/range-min-session.json");
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString currRange = client.sendReceive("SENSE:RNG1:Il1:RANGE?");
     QCOMPARE(currRange, "10A");
 
@@ -115,7 +115,7 @@ void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()
     client.closeSocket();
     TimeMachineObject::feedEventLoop();
 
-    ScpiModuleClientBlocked clientCheck;
+    ScpiModuleNetClientBlocked clientCheck;
     currRange = clientCheck.sendReceive("SENSE:RNG1:Il1:RANGE?");
     QCOMPARE(currRange, "25mA");
 }
@@ -123,7 +123,7 @@ void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()
 void test_scpi_cmds_in_session::multilineCommandsLastOpc()
 {
     ModuleManagerTestRunner testRunner(":/range-min-session.json");
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QByteArrayList commands = QByteArrayList() << "SENSE:RNG1:UL1:RANGE 8V;|SENSE:RNG1:UL2:RANGE 8V;|SENSE:RNG1:UL3:RANGE 8V;|SENSE:RNG1:UAUX:RANGE 8V;"
                                                << "*OPC?";
     client.sendMulti(commands);
@@ -140,7 +140,7 @@ void test_scpi_cmds_in_session::multilineCommandsLastOpc()
 void test_scpi_cmds_in_session::catalogFormat()
 {
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString sessionCatalog = client.sendReceive("CONFIGURATION:SYST:SESSION:CATALOG?");
     QCOMPARE(sessionCatalog, "Default;EMOB AC;EMOB DC;DC: 4*Voltage / 1*Current");
 }
@@ -148,7 +148,7 @@ void test_scpi_cmds_in_session::catalogFormat()
 void test_scpi_cmds_in_session::executeRpcQueryWrongRpcName()
 {
     ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString status = client.sendReceive("CALCULATE:EM01:0001:FOO?");
     QCOMPARE(status, "");
 }
@@ -156,7 +156,7 @@ void test_scpi_cmds_in_session::executeRpcQueryWrongRpcName()
 void test_scpi_cmds_in_session::executeRpcReadLockStateQuery()
 {
     ModuleManagerTestRunner testRunner(":/hotpluscontrols-min-session.json");
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString status = client.sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
     QCOMPARE(status, "4");
 }
@@ -171,7 +171,7 @@ void test_scpi_cmds_in_session::executeRpcQueryInvalidParams()
     testRunner.start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString answer = client.sendReceive("CALCULATE:RPC1? 7;");
     QCOMPARE(answer, "");
 }
@@ -186,7 +186,7 @@ void test_scpi_cmds_in_session::executeRpcQueryOneParam()
     testRunner.start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString answer = client.sendReceive("CALCULATE:RPC1? true;");
     QCOMPARE(answer, "false");
 }
@@ -201,7 +201,7 @@ void test_scpi_cmds_in_session::doNotExecuteRpcQueryMultipleParams()
     testRunner.start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString answer = client.sendReceive("CALCULATE:RPC2? foo;true;");
     QCOMPARE(answer, "");
 }

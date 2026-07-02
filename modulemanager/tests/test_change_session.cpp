@@ -1,7 +1,7 @@
 #include "test_change_session.h"
 #include "testfactoryserviceinterfaces.h"
 #include "modulemanagerconfig.h"
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include "testmodulemanager.h"
 #include "vf_client_component_setter.h"
 #include <modulemanagersetupfacade.h>
@@ -98,7 +98,7 @@ void test_change_session::changeSessionMt310s2SCPICmd()
     modMan.changeSessionFile("mt310s2-meas-session.json");
     modMan.waitUntilModulesAreReady();
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     client.sendReceive("CONFIGURATION:SYST:NAMESESSION EMOB DC;");
     modMan.waitUntilModulesAreReady();
     QCOMPARE(modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session").toString(), QString("mt310s2-emob-session-dc.json"));
@@ -139,7 +139,7 @@ void test_change_session::changeSessionCom5003SCPICmd()
     modMan.changeSessionFile("com5003-meas-session.json");
     modMan.waitUntilModulesAreReady();
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     client.sendReceive("CONFIGURATION:SYST:NAMESESSION 3 Systems / 2 Wires;");
     modMan.waitUntilModulesAreReady();
     QCOMPARE(modManSetupFacade.getStorageSystem()->getDb()->getStoredValue(systemEntityId, "Session").toString(), QString("com5003-perphase-session.json"));
@@ -216,7 +216,7 @@ void test_change_session::testSessionCatalogScpiCmd()
     modMan.changeSessionFile("mt310s2-meas-session.json");
     modMan.waitUntilModulesAreReady();
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString receivedSessionList = client.sendReceive("CONFIGURATION:SYST:SESSION:CATALOG?");
     QJsonObject jsonConfig = cJsonFileLoader::loadJsonFile(ModulemanagerConfig::getConfigFileNameFull()).value("mt310s2").toObject();
     QJsonArray jsonSessionArray = jsonConfig.value("sessionDisplayStrings").toArray();

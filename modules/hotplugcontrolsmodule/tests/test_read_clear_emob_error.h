@@ -2,7 +2,7 @@
 #define TEST_READ_CLEAR_EMOB_ERROR_H
 
 #include "modulemanagertestrunner.h"
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include <QObject>
 #include <testjsonspyeventsystem.h>
 #include <vf_core_stack_client.h>
@@ -26,7 +26,7 @@ private slots:
 
 private:
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
-    std::unique_ptr<ScpiModuleClientBlocked> m_scpiClient;
+    std::unique_ptr<ScpiModuleNetClientBlocked> m_scpiClient;
 };
 
 #endif // TEST_READ_CLEAR_EMOB_ERROR_H

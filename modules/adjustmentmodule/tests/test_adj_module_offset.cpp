@@ -12,7 +12,7 @@ void test_adj_module_offset::init()
     if(!m_testRunner)
         m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/session-minimal-dc.json", true);
     if(!m_scpiClient)
-        m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
+        m_scpiClient = std::make_unique<ScpiModuleNetClientBlocked>();
     QString response = m_scpiClient->sendReceive("*cls|CALC:ADJ1:INIT UAUX,250V;|*stb?");
     QCOMPARE(response, "+0");
 }
@@ -36,7 +36,7 @@ void test_adj_module_offset::validActValuesWithoutPermission()
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false);
     AdjModuleTestHelper::setAllValuesSymmetricDc(testRunner, testvoltage, testcurrent);
 
-    ScpiModuleClientBlocked scpiClient;
+    ScpiModuleNetClientBlocked scpiClient;
     QString response = scpiClient.sendReceive("calc:adj1:offs UAUX,250V,0;|*stb?");
     QCOMPARE(response, "+4");
 }

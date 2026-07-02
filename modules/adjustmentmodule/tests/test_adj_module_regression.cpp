@@ -19,7 +19,7 @@ void test_adj_module_regression::init()
     if(!m_testRunner)
         m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/session-minimal-dc.json", true);
     if(!m_scpiClient)
-        m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
+        m_scpiClient = std::make_unique<ScpiModuleNetClientBlocked>();
 }
 
 void test_adj_module_regression::destroyCommonTestRunner()
@@ -60,7 +60,7 @@ void test_adj_module_regression::adjInitWithoutPermission()
 {
     destroyCommonTestRunner();
     ModuleManagerTestRunner testRunner(":/session-minimal.json", false);
-    ScpiModuleClientBlocked scpiClient;
+    ScpiModuleNetClientBlocked scpiClient;
 
     QString response = scpiClient.sendReceive("calc:adj1:init IL1,10A;|*stb?");
     QCOMPARE(response, "+0"); // Init seem to work without permission...

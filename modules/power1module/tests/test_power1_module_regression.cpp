@@ -2,7 +2,7 @@
 #include "modulemanagertestrunner.h"
 #include "modulemanagerconfig.h"
 #include "power1modulemeasprogram.h"
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include <timemachineobject.h>
 #include <testloghelpers.h>
 #include <vs_dumpjson.h>
@@ -192,7 +192,7 @@ void test_power1_module_regression::scpiDumpMtPower1Module1()
     ModulemanagerConfig::setDemoDevice("mt310s2");
     ModuleManagerTestRunner testRunner(":/sessions/session-power1module1-scpi.json");
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString dumped = client.sendReceive("dev:iface?", false);
 
     QFile ifaceBaseXmlFile("://scpiDumps/session-power1module1-scpi.xml");
@@ -211,7 +211,7 @@ void test_power1_module_regression::scpiDumpMtPower1Module4()
     ModulemanagerConfig::setDemoDevice("mt310s2");
     ModuleManagerTestRunner testRunner(":/sessions/session-power1module4-scpi.json");
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString dumped = client.sendReceive("dev:iface?", false);
 
     QFile ifaceBaseXmlFile("://scpiDumps/session-power1module4-scpi.xml");

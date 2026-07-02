@@ -2,7 +2,7 @@
 #define TEST_ADJ_MODULE_GAIN_H
 
 #include "modulemanagertestrunner.h"
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include <QObject>
 
 class test_adj_module_gain : public QObject
@@ -35,7 +35,7 @@ private:
     void resetLooksLikeABugOnInit(); // TODO: Do coefficients remain for recalibration?
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
-    std::unique_ptr<ScpiModuleClientBlocked> m_scpiClient;
+    std::unique_ptr<ScpiModuleNetClientBlocked> m_scpiClient;
 };
 
 #endif // TEST_ADJ_MODULE_GAIN_H

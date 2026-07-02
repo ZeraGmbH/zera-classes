@@ -48,7 +48,7 @@ void test_emob_vein_scpi::cleanupTestCase()
 
 void test_emob_vein_scpi::init()
 {
-    m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
+    m_scpiClient = std::make_unique<ScpiModuleNetClientBlocked>();
 }
 
 void test_emob_vein_scpi::cleanup()

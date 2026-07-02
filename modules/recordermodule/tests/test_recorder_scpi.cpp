@@ -1,5 +1,5 @@
 #include "test_recorder_scpi.h"
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include <timerfactoryqtfortest.h>
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
@@ -31,33 +31,33 @@ void test_recorder_scpi::cleanup()
 
 void test_recorder_scpi::scpiQueryRunInitial()
 {
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QCOMPARE(client.sendReceive("RECORDER:REC1:RUN?"), "0");
 }
 
 void test_recorder_scpi::scpiQueryCountEmpty()
 {
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QCOMPARE(client.sendReceive("RECORDER:REC1:COUNT?"), "0");
 }
 
 void test_recorder_scpi::scpiWriteCountIgnored()
 {
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QCOMPARE(client.sendReceive("*cls|RECORDER:REC1:COUNT 1;|*stb?"), "+4");
     QCOMPARE(client.sendReceive("*cls|RECORDER:REC1:COUNT?"), "0");
 }
 
 void test_recorder_scpi::scpiQueryAll()
 {
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QCOMPARE(client.sendReceive("*cls|RECORDER|*stb?"), "+4");
     QCOMPARE(client.sendReceive("*cls|RECORDER:REC1|*stb?"), "+4");
 }
 
 void test_recorder_scpi::scpiQueryJsonExportEmpty()
 {
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString receive = client.sendReceive("RECORDER:REC1:EXPORT:JSON?", false);
     QCOMPARE(receive, "{\n"
                       "}\n"
@@ -72,7 +72,7 @@ void test_recorder_scpi::scpiQueryJsonFireValuesOnce()
                                                       QTime(17, 21, 37, 1),
                                                       QTimeZone(3*3600));
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     client.sendReceive("RECORDER:REC1:RUN 1;");
 
     fireActualValues();
@@ -89,7 +89,7 @@ void test_recorder_scpi::scpiQueryJsonFireValuesTwice()
                                                       QTime(8, 2, 59, 999),
                                                       QTimeZone(1*3600));
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     client.sendReceive("RECORDER:REC1:RUN 1;");
 
     fireActualValues();
@@ -104,7 +104,7 @@ void test_recorder_scpi::scpiQueryJsonFireValuesTwice()
 void test_recorder_scpi::scpiQueryCsvExportEmpty()
 {
     createModulesManually();
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString csvDumped = client.sendReceive("RECORDER:REC1:EXPORT:CSV?", false);
     QString csvExpected = TestLogHelpers::loadFile(":/fireValuesNone.csv");
 
@@ -118,7 +118,7 @@ void test_recorder_scpi::scpiQueryCsvFireValuesOnce()
                                                       QTime(19, 21, 37, 1),
                                                       QTimeZone(3*3600));
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     client.sendReceive("RECORDER:REC1:RUN 1;");
 
     fireActualValues();
@@ -136,7 +136,7 @@ void test_recorder_scpi::scpiQueryCsvFireValuesTwice()
                                                       QTime(23, 25, 38, 2),
                                                       QTimeZone(3*3600));
 
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     client.sendReceive("RECORDER:REC1:RUN 1;");
 
     fireActualValues();

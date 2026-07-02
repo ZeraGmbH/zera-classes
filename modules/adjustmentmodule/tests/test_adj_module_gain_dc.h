@@ -2,7 +2,7 @@
 #define TEST_ADJ_MODULE_GAIN_DC_H
 
 #include "modulemanagertestrunner.h"
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include <QObject>
 
 class test_adj_module_gain_dc : public QObject
@@ -34,7 +34,7 @@ private slots:
 private:
     void destroyCommonTestRunner();
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
-    std::unique_ptr<ScpiModuleClientBlocked> m_scpiClient;
+    std::unique_ptr<ScpiModuleNetClientBlocked> m_scpiClient;
 };
 
 #endif // TEST_ADJ_MODULE_GAIN_DC_H

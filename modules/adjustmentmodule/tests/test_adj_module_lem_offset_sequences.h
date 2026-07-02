@@ -2,7 +2,7 @@
 #define TEST_ADJ_MODULE_LEM_OFFSET_SEQUENCES_H
 
 #include "modulemanagertestrunner.h"
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include <clamp.h>
 
 class test_adj_module_lem_offset_sequences : public QObject
@@ -52,7 +52,7 @@ private:
     void setLogFileName(const QString &currentTestFunction, const QString &currentDataTag);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
-    std::unique_ptr<ScpiModuleClientBlocked> m_scpiClient;
+    std::unique_ptr<ScpiModuleNetClientBlocked> m_scpiClient;
 };
 
 #endif // TEST_ADJ_MODULE_LEM_OFFSET_SEQUENCES_H

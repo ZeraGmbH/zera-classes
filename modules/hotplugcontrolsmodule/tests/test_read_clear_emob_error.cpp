@@ -14,7 +14,7 @@ static constexpr int systemEntityId = 0;
 void test_read_clear_emob_error::init()
 {
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/hotpluscontrols-min-session.json");
-    m_scpiClient = std::make_unique<ScpiModuleClientBlocked>();
+    m_scpiClient = std::make_unique<ScpiModuleNetClientBlocked>();
 }
 
 void test_read_clear_emob_error::cleanup()

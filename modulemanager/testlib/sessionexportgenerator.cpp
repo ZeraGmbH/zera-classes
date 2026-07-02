@@ -1,5 +1,5 @@
 #include "sessionexportgenerator.h"
-#include "scpimoduleclientblocked.h"
+#include "scpimodulenetclientblocked.h"
 #include "testdspvalues.h"
 #include <timemachineobject.h>
 #include <vcmp_remoteproceduredata.h>
@@ -62,7 +62,7 @@ void SessionExportGenerator::changeSession(const QString &session)
 
 void SessionExportGenerator::generateDevIfaceXml(const QString &xmlDir)
 {
-    ScpiModuleClientBlocked client;
+    ScpiModuleNetClientBlocked client;
     QString scpiIface = client.sendReceive("dev:iface?", true);
     QString currentSession = m_modmanTestRunner->getVfComponent(system_entity, "Session").toString();
     QString xmlFileName(xmlDir + currentSession);
