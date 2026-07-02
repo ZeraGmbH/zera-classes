@@ -96,10 +96,10 @@ void cSCPIMeasureDelegate::addScpiMeasureObject(cSCPIMeasure *measureobject)
     m_scpimeasureObjectList.append(measureobject);
 }
 
-void cSCPIMeasureDelegate::onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId)
+void cSCPIMeasureDelegate::onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const cSCPIMeasure *sender)
 {
-    const cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
-    disconnect(measure,0,this,0);
+    disconnect(sender, 0, this, 0);
+
     m_nPending--;
     if (m_nPending == 0)
         m_pClient->handleCmdFinishStatusOnly(ZSCPI::ack, scpiTransactionId);
@@ -107,11 +107,12 @@ void cSCPIMeasureDelegate::onSingleScpiCmdDone(const ScpiTransactionId &scpiTran
         qCritical("cSCPIMeasureDelegate::onSingleScpiCmdDone: m_nPending < 0");
 }
 
-void cSCPIMeasureDelegate::onSingleScpiQueryDone(QString s, const ScpiTransactionId &scpiTransactionId)
+void cSCPIMeasureDelegate::onSingleScpiQueryDone(const QString scpiResponse, const ScpiTransactionId &scpiTransactionId, const cSCPIMeasure *sender)
 {
-    const cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
-    disconnect(measure,0,this,0);
-    m_sAnswer += QString("%1;").arg(s);
+    disconnect(sender, 0, this, 0);
+
+    m_sAnswer += QString("%1;").arg(scpiResponse);
+
     m_nPending--;
     if (m_nPending == 0)
         m_pClient->handleCmdFinish(m_sAnswer, scpiTransactionId);

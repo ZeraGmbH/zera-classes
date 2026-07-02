@@ -37,11 +37,11 @@ signals:
     void initContinue();
     void fetchContinue();
 
-    void sigMeasDone(const QString& answer, const ScpiTransactionId &scpiTransactionId);
-    void sigConfDone(const ScpiTransactionId &scpiTransactionId);
-    void sigReadDone(const QString& answer, const ScpiTransactionId &scpiTransactionId);
-    void sigInitDone(const ScpiTransactionId &scpiTransactionId);
-    void sigFetchDone(const QString& answer, const ScpiTransactionId &scpiTransactionId);
+    void sigMeasDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
+    void sigConfDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
+    void sigReadDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
+    void sigInitDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
+    void sigFetchDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
 
 private:
     static QString convertVariantToString(const QVariant &value);

@@ -33,8 +33,8 @@ public:
     void addScpiMeasureObject(cSCPIMeasure* measureobject);
 
 private slots:
-    void onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId);
-    void onSingleScpiQueryDone(QString s, const ScpiTransactionId &scpiTransactionId);
+    void onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
+    void onSingleScpiQueryDone(const QString scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
 
 private:
     ScpiModelType m_modelType;

@@ -175,7 +175,7 @@ void cSCPIMeasure::measureInit()
 
 void cSCPIMeasure::measureFetch()
 {
-    emit sigMeasDone(m_sAnswer, m_measureScpiTransactionId);
+    emit sigMeasDone(m_sAnswer, m_measureScpiTransactionId, this);
     m_measureScpiTransactionId = ScpiTransactionId();
     emit measContinue();
 }
@@ -191,7 +191,7 @@ void cSCPIMeasure::configure()
 
 void cSCPIMeasure::configureDone()
 {
-    emit sigConfDone(m_configureScpiTransactionId);
+    emit sigConfDone(m_configureScpiTransactionId, this);
 }
 
 
@@ -216,7 +216,7 @@ void cSCPIMeasure::readInit()
 
 void cSCPIMeasure::readFetch()
 {
-    emit sigReadDone(m_sAnswer, m_readScpiTransactionId);
+    emit sigReadDone(m_sAnswer, m_readScpiTransactionId, this);
     m_readScpiTransactionId = ScpiTransactionId();
     emit readContinue();
 }
@@ -238,7 +238,7 @@ void cSCPIMeasure::init()
 void cSCPIMeasure::initDone()
 {
     m_bInitPending = false;
-    emit sigInitDone(m_initScpiTransactionId);
+    emit sigInitDone(m_initScpiTransactionId, this);
 }
 
 
@@ -260,7 +260,7 @@ void cSCPIMeasure::fetchSync()
 
 void cSCPIMeasure::fetchFetch()
 {
-    emit sigFetchDone(m_sAnswer, m_fetchScpiTransactionId);
+    emit sigFetchDone(m_sAnswer, m_fetchScpiTransactionId, this);
     m_fetchScpiTransactionId = ScpiTransactionId();
     emit fetchContinue();
 }
