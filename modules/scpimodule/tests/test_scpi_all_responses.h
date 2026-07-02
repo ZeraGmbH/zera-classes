@@ -21,10 +21,15 @@ private slots:
     void checkScpiCmdResponse_data();
     void checkScpiCmdResponse();
 
+    void checkScpiMulipleTransactionCmdResponse_data();
+    void checkScpiMulipleTransactionCmdResponse();
+
 private:
     QStringList getAllScpiQueriesFromDevIface();
     QStringList getAllScpiCommandsWithParamFromDevIface();
     bool ignoreToSpeedup(const QString &scpiPath);
+    QString scpiShortHeader(const QString scpiCmd);
+    void addTestRow(const QStringList scpiTransaction);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
 };

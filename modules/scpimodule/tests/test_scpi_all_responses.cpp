@@ -4,6 +4,7 @@
 #include <xmldocument.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
+#include <scpinode.h>
 #include <QTest>
 
 QTEST_MAIN(test_scpi_all_responses)
@@ -69,11 +70,13 @@ void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse_data()
         if (!ignoreToSpeedup(scpiQuery)) {
             queryTransaction.append(scpiQuery);
             if (queryTransaction.size() >= transactionSize) {
-                QTest::newRow(queryTransaction.join(" ").toLatin1()) << queryTransaction.join("\n");
+                addTestRow(queryTransaction);
                 queryTransaction.clear();
             }
         }
     }
+    if (!queryTransaction.isEmpty())
+        addTestRow(queryTransaction);
 }
 
 void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse()
@@ -110,6 +113,46 @@ void test_scpi_all_responses::checkScpiCmdResponse_data()
 }
 
 void test_scpi_all_responses::checkScpiCmdResponse()
+{
+    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
+
+    QFETCH(QString, scpiCommand);
+    qInfo("%s", qPrintable(scpiCommand));
+
+    QCOMPARE(client.getAtLeastOneResponse(), false);
+    client.sendScpiCmds(scpiCommand);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(client.getAtLeastOneResponse(), true);
+    QCOMPARE(client.getLastResponse().isNull(), true);
+    QCOMPARE(client.getLastResponse().getStr(), "");
+}
+
+void test_scpi_all_responses::checkScpiMulipleTransactionCmdResponse_data()
+{
+    QTest::addColumn<QString>("scpiCommand");
+
+    constexpr int transactionSize = 6; // Played around with this to get mix of e.g CONFIGURATION & SENSE
+    const QStringList scpiCommands = getAllScpiCommandsWithParamFromDevIface();
+    QStringList cmdTransaction;
+    for (const QString &scpiCommand : scpiCommands) {
+        bool skipHere = ignoreToSpeedup(scpiCommand) ||
+                        scpiCommand.startsWith("CONFIGURATION:SYST:NAMESESSION") ||
+                        scpiCommand.startsWith("CONFIGURATION:SYST:XSESSION");
+        if (!skipHere) {
+            cmdTransaction.append(scpiCommand);
+            if (cmdTransaction.size() >= transactionSize) {
+                addTestRow(cmdTransaction);
+                cmdTransaction.clear();
+            }
+        }
+    }
+    if (!cmdTransaction.isEmpty())
+        addTestRow(cmdTransaction);
+}
+
+void test_scpi_all_responses::checkScpiMulipleTransactionCmdResponse()
 {
     SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
@@ -210,4 +253,24 @@ bool test_scpi_all_responses::ignoreToSpeedup(const QString &scpiPath)
             return true;
 
     return false;
+}
+
+QString test_scpi_all_responses::scpiShortHeader(const QString scpiCmd)
+{
+    QString testName = scpiCmd.split(" ")[0]; // remove param
+    testName.remove(";");
+    testName.remove("?");
+    const QStringList scpiEntries = testName.split(":");
+    QStringList scpiEntriesShort;
+    for (const QString &scpiHeader : scpiEntries)
+        scpiEntriesShort.append(ScpiNode::createShortHeader(scpiHeader));
+    return scpiEntriesShort.join(":");
+}
+
+void test_scpi_all_responses::addTestRow(const QStringList scpiTransaction)
+{
+    QStringList shortTestNamesNoParams;
+    for (const QString &cmd : scpiTransaction)
+        shortTestNamesNoParams.append(scpiShortHeader(cmd));
+    QTest::newRow(shortTestNamesNoParams.join(" ").toLatin1()) << scpiTransaction.join("\n");
 }
