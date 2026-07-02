@@ -29,9 +29,8 @@ void test_scpi_all_responses::checkScpiQueryResponse()
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
 
     QFETCH(QString, scpiQuery);
-    if (scpiQuery.startsWith("MEAS") || scpiQuery.startsWith("READ")) {
+    if (scpiQuery.startsWith("MEASURE") || scpiQuery.startsWith("READ"))
         m_testRunner->fireActualValues();
-    }
     client.sendScpiCmds(scpiQuery);
     TimeMachineObject::feedEventLoop();
 
@@ -54,6 +53,43 @@ void test_scpi_all_responses::checkScpiQueryEmptyResponse()
     QCOMPARE(client.getUnhandledResponses(), 0);
     QCOMPARE(client.getLastResponse().isNull(), false);
     QCOMPARE(client.getLastResponse().getStr(), "");
+}
+
+void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse_data()
+{
+    QTest::addColumn<QString>("scpiQuery");
+
+    constexpr int transactionSize = 4; // Played around with this to get mix of e.g CONFIGURATION & SENSE
+    const QStringList scpiQueries = getAllScpiQueriesFromDevIface();
+    QStringList queryTransaction;
+    for (const QString &scpiQuery : scpiQueries) {
+        if (!ignoreToSpeedup(scpiQuery)) {
+            queryTransaction.append(scpiQuery);
+            if (queryTransaction.size() >= transactionSize) {
+                QTest::newRow(queryTransaction.join(" ").toLatin1()) << queryTransaction.join("\n");
+                queryTransaction.clear();
+            }
+        }
+    }
+}
+
+void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse()
+{
+    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
+
+    QFETCH(QString, scpiQuery);
+    if (scpiQuery.contains("MEASURE") || scpiQuery.contains("READ"))
+        m_testRunner->fireActualValues();
+
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, this, [](const QString &scpiResponse) {
+        qInfo("Response: %s", qPrintable(scpiResponse));
+    });
+    client.sendScpiCmds(scpiQuery);
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(client.getAtLeastOneResponse(), true);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_all_responses::checkScpiCmdResponse_data()

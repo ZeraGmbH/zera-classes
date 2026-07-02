@@ -15,6 +15,9 @@ private slots:
 
     void checkScpiQueryEmptyResponse();
 
+    void checkScpiMulipleTransactionQueryResponse_data();
+    void checkScpiMulipleTransactionQueryResponse();
+
     void checkScpiCmdResponse_data();
     void checkScpiCmdResponse();
 
