@@ -1,5 +1,4 @@
 #include "scpimeasuredelegate.h"
-#include "scpigroupmeasureandfriends.h"
 #include "scpimeasure.h"
 #include "scpiclient.h"
 #include <zscpi_response_definitions.h>
