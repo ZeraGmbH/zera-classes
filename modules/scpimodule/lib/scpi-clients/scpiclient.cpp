@@ -7,7 +7,7 @@
 #include "signalconnectiondelegate.h"
 #include "statusbitdescriptor.h"
 #include "scpiserver.h"
-#include "moduleinterface.h"
+#include "scpigroupmeasureandfriends.h"
 #include "scpimeasuredelegate.h"
 #include "scpimeasure.h"
 #include <scpi.h>

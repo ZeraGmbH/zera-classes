@@ -3,7 +3,7 @@
 #include "scpiveintransactioninfo.h"
 #include "signalconnectiondelegate.h"
 #include "scpiserver.h"
-#include "moduleinterface.h"
+#include "scpigroupmeasureandfriends.h"
 #include <zscpi_response_definitions.h>
 #include <vcmp_componentdata.h>
 #include <vcmp_errordata.h>

@@ -2,12 +2,14 @@ file(GLOB SOURCES
     *.cpp
     delegates/*.cpp
     scpi-clients/*.cpp
+    scpi-groups/*.cpp
     )
 
 file(GLOB HEADER
     *.h
     delegates/*.h
     scpi-clients/*.h
+    scpi-groups/*.h
     )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
@@ -22,6 +24,7 @@ target_include_directories(scpimodule-static
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/delegates>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-clients>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-groups>
     )
 
 target_link_libraries(scpimodule-static

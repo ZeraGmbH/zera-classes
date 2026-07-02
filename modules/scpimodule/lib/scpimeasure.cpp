@@ -1,6 +1,6 @@
 #include "scpicmdinfo.h"
 #include "scpimeasure.h"
-#include "moduleinterface.h"
+#include "scpigroupmeasureandfriends.h"
 #include <scpi.h>
 #include <ve_commandevent.h>
 #include <vcmp_componentdata.h>

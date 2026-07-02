@@ -1,3 +1,17 @@
+#include "scpiserver.h"
+#include "errormessages.h"
+#include "scpimoduleconfigdata.h"
+#include "scpimodule.h"
+#include "scpiethclient.h"
+#include "scpiserialclient.h"
+#include "scpiinterface.h"
+#include "scpigroupmeasureandfriends.h"
+#include "scpigroupdeviface.h"
+#include "scpigroupieee4882.h"
+#include "scpimoduleconfigdata.h"
+#include <zenuxdeviceinfo.h>
+#include <vfmoduleparameter.h>
+#include <boolvalidator.h>
 #include <QList>
 #include <QFile>
 #include <QJsonDocument>
@@ -6,26 +20,7 @@
 #include <QJsonValue>
 #include <QHostAddress>
 #include <QTcpSocket>
-
 #include <QtSerialPort/QSerialPort>
-//#include <QtSerialPort/QSerialPortInfo>
-
-#include <vfmoduleparameter.h>
-#include <boolvalidator.h>
-
-#include "errormessages.h"
-#include "scpimoduleconfigdata.h"
-#include "scpimodule.h"
-#include "scpiserver.h"
-#include "scpiethclient.h"
-#include "scpiserialclient.h"
-#include "scpiinterface.h"
-#include "moduleinterface.h"
-#include "interfaceinterface.h"
-#include "statusinterface.h"
-#include "ieee4882interface.h"
-#include "scpimoduleconfigdata.h"
-#include <zenuxdeviceinfo.h>
 
 namespace SCPIMODULE
 {
@@ -39,8 +34,8 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     m_scpiInterface(m_ConfigData.m_sDeviceName),
     m_moduleInterface(m_pModule, &m_scpiInterface),
     m_interfaceInterface(m_pModule, &m_scpiInterface),
-    m_statusInterface(m_pModule, &m_scpiInterface),
-    m_ieee488Interface(m_pModule, &m_scpiInterface),
+    m_statusInterface(&m_scpiInterface),
+    m_ieee488Interface(&m_scpiInterface),
     m_bSerialScpiActive(false)
 {
     m_bActive = false;
@@ -88,7 +83,7 @@ void cSCPIServer::generateVeinInterface()
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
 }
 
-cModuleInterface *cSCPIServer::getModuleInterface()
+ScpiGroupMeasureAndFriends *cSCPIServer::getModuleInterface()
 {
     return &m_moduleInterface;
 }
@@ -188,10 +183,10 @@ void cSCPIServer::setupTCPServer()
 {
     // before we can call listen we must set up a valid interface that clients can connect to
     QString errorMsg;
-    bool ok = m_moduleInterface.setupInterface();
-    ok = ok && m_interfaceInterface.setupInterface();
-    ok = ok && m_statusInterface.setupInterface();
-    ok = ok && m_ieee488Interface.setupInterface();
+    bool ok = m_moduleInterface.setupScpi();
+    ok = ok && m_interfaceInterface.setupScpi();
+    ok = ok && m_statusInterface.setupScpi();
+    ok = ok && m_ieee488Interface.setupScpi();
     if (!ok)
         errorMsg = interfacejsonErrMsg;
 

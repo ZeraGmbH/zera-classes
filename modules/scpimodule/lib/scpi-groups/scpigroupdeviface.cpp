@@ -1,4 +1,4 @@
-#include "interfaceinterface.h"
+#include "scpigroupdeviface.h"
 #include "scpimodule.h"
 #include "scpiinterfacedelegate.h"
 #include <zscpi_response_definitions.h>
@@ -7,8 +7,9 @@
 namespace SCPIMODULE
 {
 
-cInterfaceInterface::cInterfaceInterface(cSCPIModule *module, cSCPIInterface *iface) :
-    cBaseInterface(module, iface)
+ScpiGroupDevIface::ScpiGroupDevIface(cSCPIModule *module, cSCPIInterface *iface) :
+    ScpiGroupBase(iface),
+    m_pModule(module)
 {
 }
 
@@ -17,19 +18,19 @@ enum scpiinterfacecommands
     deviceinterfacecmd
 };
 
-bool cInterfaceInterface::setupInterface()
+bool ScpiGroupDevIface::setupScpi()
 {
     cSCPIInterfaceDelegatePtr delegate = std::make_shared<cSCPIInterfaceDelegate>(
         QString("DEVICE"), QString("IFACE"), SCPI::isQuery, deviceinterfacecmd);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate.get(), &cSCPIInterfaceDelegate::signalExecuteSCPI, this, &cInterfaceInterface::executeCmd);
+    connect(delegate.get(), &cSCPIInterfaceDelegate::signalExecuteSCPI, this, &ScpiGroupDevIface::executeCmd);
 
     // for module integrity we also have to add this command to the scpi command list (exported at INF_ModuleInterface)
     m_pModule->scpiCommandList.append(new VfModuleMetaInfoContainer("", QString("DEVICE:IFACE"), SCPI::isQuery, ""));
     return true;
 }
 
-void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
+void ScpiGroupDevIface::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
 {
     cSCPICommand cmd = sInput;
     switch (cmdCode)
@@ -45,7 +46,7 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
     }
 }
 
-QString cInterfaceInterface::getDevIface()
+QString ScpiGroupDevIface::getDevIface()
 {
     if (m_devIfaceCache.isEmpty()) {
         QMap<QString, QString> modelListBaseEntry({{"RELEASE", ZenuxDeviceInfo::getZenuxRelease()}});

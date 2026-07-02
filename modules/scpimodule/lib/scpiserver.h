@@ -1,12 +1,12 @@
 #ifndef SCPISERVER_H
 #define SCPISERVER_H
 
-#include "moduleinterface.h"
+#include "scpigroupmeasureandfriends.h"
 #include "scpimoduleconfigdata.h"
 #include "scpiclient.h"
-#include "interfaceinterface.h"
-#include "statusinterface.h"
-#include "ieee4882interface.h"
+#include "scpigroupdeviface.h"
+#include "scpigroupstatus.h"
+#include "scpigroupieee4882.h"
 #include "scpiserialclient.h"
 #include "tcpserverlimitedconn.h"
 #include <vfmoduleparameter.h>
@@ -28,7 +28,7 @@ public:
     cSCPIServer(cSCPIModule* module, cSCPIModuleConfigData& configData);
     virtual ~cSCPIServer();
     void generateVeinInterface() override;
-    cModuleInterface* getModuleInterface();
+    ScpiGroupMeasureAndFriends* getModuleInterface();
     void appendClient(cSCPIClient *client);
     cSCPIInterface* getScpiInterface();
 public slots:
@@ -56,10 +56,10 @@ private:
     cSCPIInterface m_scpiInterface;
     QList<cSCPIClient*> m_SCPIClientList;
 
-    cModuleInterface m_moduleInterface;
-    cInterfaceInterface m_interfaceInterface;
-    cStatusInterface m_statusInterface;
-    cIEEE4882Interface m_ieee488Interface;
+    ScpiGroupMeasureAndFriends m_moduleInterface;
+    ScpiGroupDevIface m_interfaceInterface;
+    ScpiGroupStatus m_statusInterface;
+    ScpiGroupIEEE4882 m_ieee488Interface;
 
     // statemachine for activating gets the following states
     QState m_setupTCPServerState;

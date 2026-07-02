@@ -1,7 +1,7 @@
 #ifndef SCPIMODULEINTERFACE_H
 #define SCPIMODULEINTERFACE_H
 
-#include "baseinterface.h"
+#include "scpigroupbase.h"
 #include "scpiinterface.h"
 #include "scpibasedelegate.h"
 #include "scpimeasuredelegate.h"
@@ -17,19 +17,20 @@ class cSCPIModule;
 class cSCPICatalogCmdDelegate;
 
 // the class for our module interface connections
-class cModuleInterface : public cBaseInterface
+class ScpiGroupMeasureAndFriends : public ScpiGroupBase
 {
     Q_OBJECT
 public:
-    cModuleInterface(cSCPIModule* module, cSCPIInterface* iface);
-    ~cModuleInterface() override;
+    ScpiGroupMeasureAndFriends(cSCPIModule* module, cSCPIInterface* iface);
+    ~ScpiGroupMeasureAndFriends() override;
 
-    bool setupInterface() override;
+    bool setupScpi();
     virtual void actualizeInterface(QVariant modInterface);
 
     QHash<QString, cSCPIMeasureDelegatePtr>* getSCPIMeasDelegateHash();
 
 private:
+    cSCPIModule* m_pModule = nullptr;
     QHash<QString, cSCPIMeasureDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
     QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 

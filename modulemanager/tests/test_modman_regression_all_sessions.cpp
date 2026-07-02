@@ -3,7 +3,7 @@
 #include "modulemanagerconfig.h"
 #include "scpimeasure.h"
 #include "scpibasedelegate.h"
-#include "baseinterface.h"
+#include "scpigroupbase.h"
 #include "sessionexportgenerator.h"
 #include <testloghelpers.h>
 #include <mocklxdmsessionchangeparamgenerator.h>
@@ -183,7 +183,7 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     constexpr int peersLeftServerDown = 0;
     QCOMPARE(VeinTcp::TcpPeer::getInstanceCount(), peersLeftServerDown);
 
-    QCOMPARE(SCPIMODULE::cBaseInterface::getInstanceCount(), 0);
+    QCOMPARE(SCPIMODULE::ScpiGroupBase::getInstanceCount(), 0);
     QCOMPARE(SCPIMODULE::cSCPIMeasure::getInstanceCount(), 0);
     QCOMPARE(SCPIMODULE::ScpiBaseDelegate::getInstanceCount(), 0);
 
