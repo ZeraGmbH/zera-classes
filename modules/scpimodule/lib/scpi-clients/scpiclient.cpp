@@ -1,20 +1,13 @@
-#include "scpimodule.h"
-#include "ieee488-2.h"
 #include "scpiclient.h"
-#include "scpiinterface.h"
-#include "scpistatus.h"
+#include "scpimodule.h"
 #include "scpimoduleconfigdata.h"
-#include "signalconnectiondelegate.h"
 #include "statusbitdescriptor.h"
 #include "scpiserver.h"
 #include "scpigroupmeasureandfriends.h"
-#include "scpimeasuredelegate.h"
-#include "scpimeasure.h"
-#include <scpi.h>
 #include <zscpi_response_definitions.h>
 #include <vs_abstracteventsystem.h>
+#include <QJsonObject>
 #include <QJsonDocument>
-#include <QUuid>
 
 namespace SCPIMODULE
 {

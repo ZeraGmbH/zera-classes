@@ -2,7 +2,6 @@
 
 #include "scpistatus.h"
 #include "scpiclient.h"
-#include "ieee488-2.h"
 
 namespace SCPIMODULE
 {

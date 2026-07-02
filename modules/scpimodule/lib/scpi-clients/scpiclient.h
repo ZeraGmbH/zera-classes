@@ -1,16 +1,13 @@
 #ifndef SCPICLIENT_H
 #define SCPICLIENT_H
 
-#include "scpiresponsesorter.h"
 #include "scpiinterface.h"
-#include "scpistatus.h"
 #include "scpimeasuredelegate.h"
+#include "signalconnectiondelegate.h"
 #include "scpiveintransactioninfo.h"
 #include "ieee488-2.h"
 #include "scpimoduleconfigdata.h"
-#include "signalconnectiondelegate.h"
-#include "nullablestring.h"
-#include <QJsonObject>
+#include "scpiresponsesorter.h"
 #include <QUuid>
 #include <QHash>
 
