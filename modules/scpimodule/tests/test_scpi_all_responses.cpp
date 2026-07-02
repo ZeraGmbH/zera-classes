@@ -3,12 +3,15 @@
 #include "scpitestclient.h"
 #include <xmldocument.h>
 #include <timemachineobject.h>
+#include <timerfactoryqtfortest.h>
 #include <QTest>
 
 QTEST_MAIN(test_scpi_all_responses)
 
 void test_scpi_all_responses::initTestCase()
 {
+    qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
     m_testRunner = std::make_unique<ModuleManagerTestRunner>("mt310s2-meas-session.json");
 }
 

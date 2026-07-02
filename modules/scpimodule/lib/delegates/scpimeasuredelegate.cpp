@@ -103,6 +103,8 @@ void cSCPIMeasureDelegate::onSingleScpiCmdDone(const ScpiTransactionId &scpiTran
     m_nPending--;
     if (m_nPending == 0)
         m_pClient->handleCmdFinishStatusOnly(ZSCPI::ack, scpiTransactionId);
+    else if (m_nPending < 0)
+        qCritical("cSCPIMeasureDelegate::onSingleScpiCmdDone: m_nPending < 0");
 }
 
 void cSCPIMeasureDelegate::onSingleScpiQueryDone(QString s, const ScpiTransactionId &scpiTransactionId)
@@ -113,6 +115,8 @@ void cSCPIMeasureDelegate::onSingleScpiQueryDone(QString s, const ScpiTransactio
     m_nPending--;
     if (m_nPending == 0)
         m_pClient->handleCmdFinish(m_sAnswer, scpiTransactionId);
+    else if (m_nPending < 0)
+        qCritical("cSCPIMeasureDelegate::onSingleScpiQueryDone: m_nPending < 0");
 }
 
 }
