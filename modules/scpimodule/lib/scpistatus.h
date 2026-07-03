@@ -24,7 +24,7 @@ class cSCPIStatus: public QObject
 {
     Q_OBJECT
 public:
-    cSCPIStatus(quint8 tothrow);
+    explicit cSCPIStatus(quint8 bitPositionToThrow);
     void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId);
 
     quint16 m_nCondition; // condition reg.
@@ -43,7 +43,7 @@ private:
     void readwriteStatusReg(cSCPIClient* client, quint16 &status, const QString &input, const ScpiTransactionId &scpiTransactionId);
     void readStatusReg(cSCPIClient* client, quint16 &status, const QString &input, const ScpiTransactionId &scpiTransactionId);
 
-    quint8 m_n2Throw; // the bit position
+    quint8 m_bitPositionToThrow; // the bit position
 };
 
 }

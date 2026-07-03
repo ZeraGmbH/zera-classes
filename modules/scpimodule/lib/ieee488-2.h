@@ -56,20 +56,20 @@ struct scpiErrorType
     char* ErrTxt; // fehler text
 };
 
-
-enum STBBits
-{   STBbit0,
-    STBbit1,
-    STBeeQueueNotEmpty,
-    STBques,
-    STBmav,
-    STBesb,
-    STBrqs,
-    STBoper
+// Page 160 famous John M. Pieper book ISBN-13: 978-3939837022
+enum STBBitPositions    // Status byte
+{   STBbit0,            // Device dependent - unused here
+    STBbit1,            // Device dependent - unused here
+    STBeeQueueNotEmpty, // Error queue not empty - cSCPIClient creates a cSCPIStatus for this bit position
+    STBques,            // Questionable (=non fatal errors / warnings) - cSCPIClient creates a cSCPIStatus for this bit position
+    STBmav,             // Message available - unused here (just cleared in ClearEventError())
+    STBesb,             // Event summary
+    STBrqs,             // Requested service (or MSS Master summary status)
+    STBoper             // Operation status
 };
 
-
-enum SESRBits
+// Page 168
+enum SESRBitValues
 {
     SESROperationComplete = 1,
     SESRRequestControl = 2,
@@ -96,9 +96,9 @@ class cIEEE4882: public QObject
     Q_OBJECT
 
 public:
-    cIEEE4882(cSCPIClient* client, const QString &deviceFamilyFromConfig, quint16 errorqueuelen, VeinStorage::AbstractDatabase *storageDb);
+    cIEEE4882(cSCPIClient* client, const QString &deviceFamilyFromConfig, VeinStorage::AbstractDatabase *storageDb);
     void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId);
-
+    static int getErrorQueueLength();
 signals:
     void setQuestionableCondition(quint16);
     void setOperationCondition(quint16);
@@ -111,7 +111,6 @@ public slots:
 private:
     cSCPIClient* m_pClient;
     QString m_deviceFamilyFromConfig;
-    quint16 m_nQueueLen; // max. entries in m_ErrEventQueue
     const VeinStorage::AbstractComponentPtr m_serNoComponent;
     QVector<int> m_ErrEventQueue;
 

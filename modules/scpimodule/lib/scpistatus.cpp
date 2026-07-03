@@ -5,8 +5,8 @@
 namespace SCPIMODULE
 {
 
-cSCPIStatus::cSCPIStatus(quint8 tothrow) :
-    m_n2Throw(tothrow)
+cSCPIStatus::cSCPIStatus(quint8 bitPositionToThrow) :
+    m_bitPositionToThrow(bitPositionToThrow)
 {
     // we have an all clear scpi conform status system
     m_nCondition = m_nPTransition = m_nNTransition = m_nEvent = m_nEnable = 0;
@@ -79,9 +79,9 @@ void cSCPIStatus::setCondition(quint16 condition)
     m_nEvent = (changedCondition & ((m_nPTransition & m_nCondition) | (m_nNTransition & (~m_nCondition))));
     if ( (m_nEvent & m_nEnable) > 0 ) {
         if (posTransition)
-            emit sigEvent(m_n2Throw, 1);
+            emit sigEvent(m_bitPositionToThrow, 1);
         else
-            emit sigEvent(m_n2Throw, 0);
+            emit sigEvent(m_bitPositionToThrow, 0);
     }
 }
 

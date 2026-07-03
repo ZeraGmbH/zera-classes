@@ -25,4 +25,5 @@ SETUP_QTESTS_MODULE(
     test_scpi_response_sorter
     test_scpi_module_sorted_responses
     test_scpi_all_responses
+    test_scpi_error_and_status
 )

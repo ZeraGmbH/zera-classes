@@ -28,10 +28,9 @@ scpiErrorType SCPIError[scpiLastError] = {  {0,(char*)"No error"},
                                             {-500,(char*)"Power on"} };
 
 
-cIEEE4882::cIEEE4882(cSCPIClient *client, const QString &deviceFamilyFromConfig, quint16 errorqueuelen, VeinStorage::AbstractDatabase *storageDb) :
+cIEEE4882::cIEEE4882(cSCPIClient *client, const QString &deviceFamilyFromConfig, VeinStorage::AbstractDatabase *storageDb) :
     m_pClient(client),
     m_deviceFamilyFromConfig(deviceFamilyFromConfig),
-    m_nQueueLen(errorqueuelen),
     m_serNoComponent(storageDb->getFutureComponent(1150, "PAR_SerialNr"))
 {
     m_nSTB = m_nSRE = m_nESR = m_nESE = 0;
@@ -178,11 +177,15 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
     }
 }
 
+int cIEEE4882::getErrorQueueLength()
+{
+    return 50;
+}
 
 void cIEEE4882::addEventError(int error)
 {
     SetSTB(m_nSTB | (1 << STBeeQueueNotEmpty)); // we have something in our output queue -> so we set status byte
-    if ( m_ErrEventQueue.count() == m_nQueueLen ) {
+    if ( m_ErrEventQueue.count() == getErrorQueueLength() ) {
         m_ErrEventQueue.pop_back();
         m_ErrEventQueue.append(QueueOverflow);
     }
