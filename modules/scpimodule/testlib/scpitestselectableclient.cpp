@@ -26,6 +26,18 @@ QString ScpiTestSelectableClient::sendReceive(const QString &scpi)
 
 }
 
+bool ScpiTestSelectableClient::commandsPending() const
+{
+    if (m_clientType == TEST) {
+        bool commandsPerfomedAndCompleted = m_testClient->getAtLeastOneResponse() &&
+                                            m_testClient->getUnhandledResponses() == 0;
+        return !commandsPerfomedAndCompleted;
+    }
+    else
+        // No way to deduce -> assume all done
+        return false;
+}
+
 void ScpiTestSelectableClient::onTestScpiAnswer(const QString &scpiResponse)
 {
     m_testClientResponse = scpiResponse;

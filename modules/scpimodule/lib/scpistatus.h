@@ -34,7 +34,7 @@ public:
     quint16 m_nEnable; // enable register
 signals:
     void sigEvent(quint8, quint8); // status object can send an event with 16bit mask
-    void sigEventError(int errorNo);
+    void sigEventErrorCmdFinish(int errorNo, const ScpiTransactionId &scpiTransactionId);
 public slots:
     void setCondition(quint16 condition); // we can set our condition reg.
     void SetConditionBit(quint8 bitpos, quint8 val);

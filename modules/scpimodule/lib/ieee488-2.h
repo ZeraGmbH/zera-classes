@@ -105,7 +105,7 @@ signals:
     void setOperationMeasureCondition(quint16);
 
 public slots:
-    void addEventError(int error); // if any error occurs from scpi commands we report them here
+    void addEventErrorWithResponse(int error, const ScpiTransactionId &scpiTransactionId);
     void setStatusByte(quint8 stb, quint8); // we accept 16bit unless stb is 8 bit, but scpi status system uses 16 bit
 
 private:
@@ -128,7 +128,6 @@ private:
     void SetSRE(quint8 b); // set SRE service request enable register
     void SetESR(quint8 b); // set ESR standard event status register
     void SetESE(quint8 b); // set ESE event status enable register
-    void addEventErrorWithResponse(int error, const ScpiTransactionId &scpiTransactionId);
 
     quint8 m_nSTB; // status byte !!!!!! setting/resetting these 4 registers must be done using dedicated functions
     quint8 m_nSRE; // service reguest enable

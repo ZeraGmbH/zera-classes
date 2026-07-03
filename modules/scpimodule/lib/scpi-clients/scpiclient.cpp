@@ -39,9 +39,9 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     connect(m_pIEEE4882, &cIEEE4882::setOperationMeasureCondition, scpiOperMeasStatus, &cSCPIStatus::setCondition);
 
     // and we must connect event error signals of scpi status systems to common status
-    connect(scpiQuestStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::addEventError);
-    connect(scpiOperStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::addEventError);
-    connect(scpiOperMeasStatus, &cSCPIStatus::sigEventError, m_pIEEE4882, &cIEEE4882::addEventError);
+    connect(scpiQuestStatus, &cSCPIStatus::sigEventErrorCmdFinish, m_pIEEE4882, &cIEEE4882::addEventErrorWithResponse);
+    connect(scpiOperStatus, &cSCPIStatus::sigEventErrorCmdFinish, m_pIEEE4882, &cIEEE4882::addEventErrorWithResponse);
+    connect(scpiOperMeasStatus, &cSCPIStatus::sigEventErrorCmdFinish, m_pIEEE4882, &cIEEE4882::addEventErrorWithResponse);
 
     const EntityHash entitiesWithScpi = getEntitiesWithScpi();
     setSignalConnections(scpiQuestStatus, m_ConfigData.m_QuestionableStatDescriptorList, entitiesWithScpi);
@@ -160,9 +160,9 @@ void cSCPIClient::execCmd()
         // This message is checked as is in autobuilder-dut-testsuite!
         qInfo("Executing SCPI command : %s", qPrintable(cmd));
 
-        ScpiTransactionId scpiId = m_responseSorter.createTransaction(cmd);
-        if (!m_pSCPIInterface->executeCmd(this, cmd, scpiId))
-            m_pIEEE4882->addEventError(CommandError);
+        ScpiTransactionId scpiTransactionId = m_responseSorter.createTransaction(cmd);
+        if (!m_pSCPIInterface->executeCmd(this, cmd, scpiTransactionId))
+            m_pIEEE4882->addEventErrorWithResponse(CommandError, scpiTransactionId);
         // we leave here if there is any parameter settings pending
         if (m_scpiClientInfoHash.count() > 0)
             break;
@@ -188,21 +188,21 @@ void cSCPIClient::handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId
     switch (stat)
     {
     case ZSCPI::ack:
+        handleCmdFinish(NullableString(), scpiTransactionId);
         break;
     case ZSCPI::nak:
-        m_pIEEE4882->addEventError(CommandError);
+        m_pIEEE4882->addEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
     case ZSCPI::errval:
-        m_pIEEE4882->addEventError(NumericDataError);
+        m_pIEEE4882->addEventErrorWithResponse(NumericDataError, scpiTransactionId);
         break;
     case ZSCPI::erraut:
-        m_pIEEE4882->addEventError(CommandProtected);
+        m_pIEEE4882->addEventErrorWithResponse(CommandProtected, scpiTransactionId);
         break;
     default:
-        m_pIEEE4882->addEventError(CommandError);
+        m_pIEEE4882->addEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
     }
-    handleCmdFinish(NullableString(), scpiTransactionId);
 }
 
 cSCPIClient::EntityHash cSCPIClient::getEntitiesWithScpi() const

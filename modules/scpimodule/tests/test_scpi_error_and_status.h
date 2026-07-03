@@ -2,6 +2,7 @@
 #define TEST_SCPI_ERROR_AND_STATUS_H
 
 #include "modulemanagertestrunner.h"
+#include "scpimodule.h"
 #include <QObject>
 
 class test_scpi_error_and_status : public QObject
@@ -9,6 +10,7 @@ class test_scpi_error_and_status : public QObject
     Q_OBJECT
 private slots:
     void initTestCase();
+    void initTestCase_data();
 
     void sendBullshitQueryStb();
     void sendBullshitTwiceQueryErrorCount();
@@ -34,6 +36,7 @@ private slots:
     void sendStatusQuestionableEnableInvalidParam();
 
 private:
+    SCPIMODULE::cSCPIModule *getScpiModule();
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
 };
 

@@ -16,6 +16,7 @@ public:
 
     explicit ScpiTestSelectableClient(ClientType clientType, SCPIMODULE::cSCPIModule* scpiModule);
     QString sendReceive(const QString &scpi);
+    bool commandsPending() const;
 
 private slots:
     void onTestScpiAnswer(const QString &scpiResponse);

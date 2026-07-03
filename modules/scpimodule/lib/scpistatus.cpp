@@ -22,14 +22,15 @@ void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, const
             QString par = cmd.getParam(0);
             bool ok;
             quint16 regValue = par.toInt(&ok);
-            if (ok)
+            if (ok) {
                 status = regValue;
+                client->handleCmdFinish(NullableString(), scpiTransactionId);
+            }
             else
-                emit sigEventError(NumericDataError);
+                emit sigEventErrorCmdFinish(NumericDataError, scpiTransactionId);
         }
         else
-            emit sigEventError(CommandError);
-        client->handleCmdFinish(NullableString(), scpiTransactionId);
+            emit sigEventErrorCmdFinish(CommandError, scpiTransactionId);
     }
 }
 
@@ -38,10 +39,8 @@ void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, const QStr
     cSCPICommand cmd = input;
     if (cmd.isQuery())
         client->handleCmdFinish(QString("%1").arg(status), scpiTransactionId);
-    else {
-        emit sigEventError(CommandError);
-        client->handleCmdFinish(NullableString(), scpiTransactionId);
-    }
+    else
+        emit sigEventErrorCmdFinish(CommandError, scpiTransactionId);
 }
 
 void cSCPIStatus::executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId)

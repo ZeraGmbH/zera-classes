@@ -39,7 +39,13 @@ cIEEE4882::cIEEE4882(cSCPIClient *client, const QString &deviceFamilyFromConfig,
 
 void cIEEE4882::addEventErrorWithResponse(int error, const ScpiTransactionId &scpiTransactionId)
 {
-    addEventError(error);
+    SetSTB(m_nSTB | (1 << STBeeQueueNotEmpty)); // we have something in our output queue -> so we set status byte
+    if ( m_ErrEventQueue.count() == getErrorQueueLength() ) {
+        m_ErrEventQueue.pop_back();
+        m_ErrEventQueue.append(QueueOverflow);
+    }
+    else
+        m_ErrEventQueue.append(error);
     m_pClient->handleCmdFinish(NullableString(), scpiTransactionId);
 }
 
@@ -180,17 +186,6 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
 int cIEEE4882::getErrorQueueLength()
 {
     return 50;
-}
-
-void cIEEE4882::addEventError(int error)
-{
-    SetSTB(m_nSTB | (1 << STBeeQueueNotEmpty)); // we have something in our output queue -> so we set status byte
-    if ( m_ErrEventQueue.count() == getErrorQueueLength() ) {
-        m_ErrEventQueue.pop_back();
-        m_ErrEventQueue.append(QueueOverflow);
-    }
-    else
-        m_ErrEventQueue.append(error);
 }
 
 void cIEEE4882::setStatusByte(quint8 stb, quint8)
