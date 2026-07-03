@@ -87,15 +87,9 @@ bool ScpiGroupStatus::setupScpi()
 
 void ScpiGroupStatus::executeCmd(cSCPIClient *client, int cmdCode, int statIndex, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
 {
-    QString answer;
-    cSCPIStatus* status;
-
-    answer="";
-    status = client->getSCPIStatus(statIndex);
+    cSCPIStatus* status = client->getSCPIStatus(statIndex);
     status->executeCmd(client, cmdCode, sInput, scpiTransactionId);
 }
-
-
 
 }
 
