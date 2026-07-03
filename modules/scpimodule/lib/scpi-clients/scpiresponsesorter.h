@@ -9,6 +9,7 @@
 class ScpiResponseSorter
 {
 public:
+    virtual ~ScpiResponseSorter();
     ScpiTransactionId createTransaction(const QString &scpi);
     NullableStringList genOrDelaySortedOutput(const NullableString &scpiSingleResponse, const ScpiTransactionId &scpiTransactionId);
 

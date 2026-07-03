@@ -1,6 +1,22 @@
 #include "scpiresponsesorter.h"
 #include "scpimodulecommonstaticfunctions.h"
 
+ScpiResponseSorter::~ScpiResponseSorter()
+{
+    if (m_transactionsPending.size()) {
+        int unfinished = 0;
+        for(auto iter=m_transactionsPending.cbegin(); iter!=m_transactionsPending.cend(); ++iter) {
+            const quint64 chrono = iter.value().getChrono();
+            if (!m_transactionsFinished.contains(chrono)) {
+                qWarning("Unfinished SCPI chrono: %s (%llu)", qPrintable(iter.value().getScpi()), chrono);
+                unfinished++;
+            }
+        }
+        // TODO: Make critical
+        qWarning("SCPI transactions pending: %i", unfinished);
+    }
+}
+
 ScpiTransactionId ScpiResponseSorter::createTransaction(const QString &scpi)
 {
     // * This is about sorting order of SCPI responses (not the order scpi commands/queries
@@ -12,7 +28,7 @@ ScpiTransactionId ScpiResponseSorter::createTransaction(const QString &scpi)
     if (!bQuery)
         return ScpiTransactionId();
 
-    ScpiTransactionId id = ScpiTransactionId::createUniqueId();
+    ScpiTransactionId id = ScpiTransactionId::createUniqueId(scpi);
     m_transactionsPending.insert(id.getChrono(), id);
     return id;
 }

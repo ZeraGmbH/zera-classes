@@ -1,19 +1,23 @@
 #ifndef SCPITRANSACTIONID_H
 #define SCPITRANSACTIONID_H
 
-#include <QtGlobal>
+#include <QString>
 
 class ScpiTransactionId
 {
 public:
     ScpiTransactionId();
-    static ScpiTransactionId createUniqueId();
+    static ScpiTransactionId createUniqueId(const QString &scpi);
+
     quint64 getChrono() const;
     bool isValid() const;
+    const QString &getScpi() const;
 
 private:
-    ScpiTransactionId(quint64 id);
+    ScpiTransactionId(quint64 id, const QString &scpi);
+
     quint64 m_id;
+    QString m_scpi;
 };
 
 #endif // SCPITRANSACTIONID_H

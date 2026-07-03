@@ -74,6 +74,8 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
             m_measureScpiTransactionId = scpiTransactionId;
             m_MeasureStateMachine.start();
         }
+        else
+            qWarning("Measure state machine already running!");
         break;
 
     case ScpiModelType::configure:
@@ -81,6 +83,8 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
             m_configureScpiTransactionId = scpiTransactionId;
             m_ConfigureStateMachine.start();
         }
+        else
+            qWarning("Configure state machine already running!");
         break;
 
     case ScpiModelType::read:
@@ -88,6 +92,8 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
             m_readScpiTransactionId = scpiTransactionId;
             m_ReadStateMachine.start();
         }
+        else
+            qWarning("Model state machine already running!");
         break;
 
     case ScpiModelType::init:
@@ -95,6 +101,8 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
             m_initScpiTransactionId = scpiTransactionId;
             m_InitStateMachine.start();
         }
+        else
+            qWarning("Init state machine already running!");
         break;
 
     case ScpiModelType::fetch:
@@ -102,6 +110,8 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
             m_fetchScpiTransactionId = scpiTransactionId;
             m_FetchStateMachine.start();
         }
+        else
+            qWarning("Fetch state machine already running!");
         break;
     }
 }

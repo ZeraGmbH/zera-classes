@@ -7,14 +7,14 @@ ScpiTransactionId::ScpiTransactionId() :
 {
 }
 
-ScpiTransactionId ScpiTransactionId::createUniqueId()
+ScpiTransactionId ScpiTransactionId::createUniqueId(const QString &scpi)
 {
     static quint64 currentTransactionId = INVALID;
     currentTransactionId++;
 
     // If we assume a SCPI transaction per millisecond we can do similar assumptions as datetime
     // => No wraparound to expect in anyone's / anything's lifetime
-    return ScpiTransactionId(currentTransactionId);
+    return ScpiTransactionId(currentTransactionId, scpi);
 }
 
 quint64 ScpiTransactionId::getChrono() const
@@ -27,7 +27,13 @@ bool ScpiTransactionId::isValid() const
     return m_id != INVALID;
 }
 
-ScpiTransactionId::ScpiTransactionId(quint64 id) :
-    m_id(id)
+const QString &ScpiTransactionId::getScpi() const
+{
+    return m_scpi;
+}
+
+ScpiTransactionId::ScpiTransactionId(quint64 id, const QString &scpi) :
+    m_id(id),
+    m_scpi(scpi)
 {
 }
