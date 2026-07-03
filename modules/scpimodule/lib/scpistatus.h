@@ -47,8 +47,8 @@ public slots:
 private:
     quint8 m_n2Throw; // the bit position
 
-    void readwriteStatusReg(cSCPIClient* client, quint16 &status, QString input, const ScpiTransactionId &scpiTransactionId);
-    void readStatusReg(cSCPIClient* client, quint16 &status, QString input, const ScpiTransactionId &scpiTransactionId);
+    void readwriteStatusReg(cSCPIClient* client, quint16 &status, const QString &input, const ScpiTransactionId &scpiTransactionId);
+    void readStatusReg(cSCPIClient* client, quint16 &status, const QString &input, const ScpiTransactionId &scpiTransactionId);
 
 };
 
