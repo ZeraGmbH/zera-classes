@@ -50,14 +50,11 @@ enum scpiErrorInd
     scpiLastError
 };
 
-
 struct scpiErrorType
 {
     short ErrNum; // fehler nummer (negativ)
     char* ErrTxt; // fehler text
 };
-
-
 
 
 enum STBBits

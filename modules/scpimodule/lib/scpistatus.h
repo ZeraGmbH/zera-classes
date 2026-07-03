@@ -12,7 +12,6 @@ namespace SCPIStatusSystem {
     enum scpiStatusSystem {questionable, operation, operationmeasure}; // we have 1 basic and 1 cascaded status system
 }
 
-
 namespace SCPIStatusCmd {
     enum scpiStatusCmd {condition, ptransition, ntransition, event, enable};
 }
@@ -24,10 +23,8 @@ class cSCPIClient;
 class cSCPIStatus: public QObject
 {
     Q_OBJECT
-
 public:
-    cSCPIStatus(quint8 tothrow );
-
+    cSCPIStatus(quint8 tothrow);
     void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId);
 
     quint16 m_nCondition; // condition reg.
@@ -35,21 +32,18 @@ public:
     quint16 m_nNTransition; // neg. transition reg.
     quint16 m_nEvent; // event reg.
     quint16 m_nEnable; // enable register
-
 signals:
     void sigEvent(quint8, quint8); // status object can send an event with 16bit mask
-    void sigEventError(int);
-
+    void sigEventError(int errorNo);
 public slots:
     void setCondition(quint16 condition); // we can set our condition reg.
     void SetConditionBit(quint8 bitpos, quint8 val);
 
 private:
-    quint8 m_n2Throw; // the bit position
-
     void readwriteStatusReg(cSCPIClient* client, quint16 &status, const QString &input, const ScpiTransactionId &scpiTransactionId);
     void readStatusReg(cSCPIClient* client, quint16 &status, const QString &input, const ScpiTransactionId &scpiTransactionId);
 
+    quint8 m_n2Throw; // the bit position
 };
 
 }
