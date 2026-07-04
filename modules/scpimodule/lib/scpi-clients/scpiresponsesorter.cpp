@@ -3,6 +3,7 @@
 
 ScpiResponseSorter::~ScpiResponseSorter()
 {
+#ifdef QT_DEBUG // As long as production code does not sort this polutes logs
     if (m_transactionsPending.size()) {
         int unfinished = 0;
         for(auto iter=m_transactionsPending.cbegin(); iter!=m_transactionsPending.cend(); ++iter) {
@@ -15,6 +16,7 @@ ScpiResponseSorter::~ScpiResponseSorter()
         // TODO: Make critical
         qWarning("SCPI transactions pending: %i", unfinished);
     }
+#endif
 }
 
 ScpiTransactionId ScpiResponseSorter::createTransaction(const QString &scpi)
