@@ -5,7 +5,7 @@ add_library(adjustmentmodule MODULE
 
 target_link_libraries(adjustmentmodule
     PRIVATE
-    adjustmentmodule-static
+    adjustmentmodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

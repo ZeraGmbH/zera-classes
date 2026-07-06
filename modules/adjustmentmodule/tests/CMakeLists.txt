@@ -4,7 +4,7 @@ function(SETUP_QTESTS_MODULE)
         target_link_libraries(${_testname}
             PRIVATE
             Zera::VfConvenientCode
-            adjustmentmodule-static
+            adjustmentmodule-lib
             adjmodule-testlib
             rangemodule-lib
             dftmodule-static
