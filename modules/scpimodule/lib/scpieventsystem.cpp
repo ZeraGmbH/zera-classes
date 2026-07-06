@@ -68,9 +68,9 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
         }
 
         // then it looks for measurement values
-        const QList<ScpiMeasurePerVeinComponentSequencer*> scpiMeasureList = m_pModule->m_scpiMeasureHash->values(componentName);
+        const QList<PerVeinComponentMeasureTransaction*> scpiMeasureList = m_pModule->m_moduleCommonPendingMeasureStore->values(componentName);
         for(int i = 0; i < scpiMeasureList.count(); i++) {
-            ScpiMeasurePerVeinComponentSequencer *scpiMeasure = scpiMeasureList.at(i);
+            PerVeinComponentMeasureTransaction *scpiMeasure = scpiMeasureList.at(i);
             if(scpiMeasure->entityID() == entityId)
                 scpiMeasure->receiveMeasureValue(cData->newValue());
         }

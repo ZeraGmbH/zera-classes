@@ -70,7 +70,7 @@ private:
 
     QList<cSCPIStatus*> m_SCPIStatusList;
 
-    QHash<ScpiMeasurePerVeinComponentSequencer*, ScpiMeasurePerVeinComponentSequencer*> m_SCPIMeasureTranslationHash;
+    QHash<PerVeinComponentMeasureTransaction*, PerVeinComponentMeasureTransaction*> m_SCPIMeasureTranslationHash;
     QUuid m_clientId;
 
     bool m_bAuthorisation = false;

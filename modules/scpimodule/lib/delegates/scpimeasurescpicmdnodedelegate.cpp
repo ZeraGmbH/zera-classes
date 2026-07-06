@@ -1,5 +1,5 @@
 #include "scpimeasurescpicmdnodedelegate.h"
-#include "scpimeasureperveincomponentsequencer.h"
+#include "perveincomponentmeasuretransaction.h"
 #include "scpiclient.h"
 #include <zscpi_response_definitions.h>
 
@@ -9,7 +9,7 @@ ScpiMeasureScpiCmdNodeDelegate::ScpiMeasureScpiCmdNodeDelegate(const QString &cm
                                            const QString &cmd,
                                            quint8 scpiCmdQueryFlags,
                                            ScpiModelTypes modelType,
-                                           ScpiMeasurePerVeinComponentSequencer* scpimeasureobject) :
+                                           PerVeinComponentMeasureTransaction* scpimeasureobject) :
     ScpiBaseDelegate(cmdParent, cmd, scpiCmdQueryFlags),
     m_modelType(modelType)
 {
@@ -17,18 +17,18 @@ ScpiMeasureScpiCmdNodeDelegate::ScpiMeasureScpiCmdNodeDelegate(const QString &cm
 }
 
 ScpiMeasureScpiCmdNodeDelegate::ScpiMeasureScpiCmdNodeDelegate(const ScpiMeasureScpiCmdNodeDelegate &moduleInterfaceDelegate,
-                                           QHash<ScpiMeasurePerVeinComponentSequencer*, ScpiMeasurePerVeinComponentSequencer*> &scpiMeasureTranslationHash) :
+                                           QHash<PerVeinComponentMeasureTransaction*, PerVeinComponentMeasureTransaction*> &scpiMeasureTranslationHash) :
     m_modelType(moduleInterfaceDelegate.m_modelType)
 {
     for (int i = 0; i < moduleInterfaceDelegate.m_scpimeasureObjectList.count(); i++) {
-        ScpiMeasurePerVeinComponentSequencer* scpiModuleMeasure = moduleInterfaceDelegate.m_scpimeasureObjectList.at(i);
+        PerVeinComponentMeasureTransaction* scpiModuleMeasure = moduleInterfaceDelegate.m_scpimeasureObjectList.at(i);
         if (scpiMeasureTranslationHash.contains(scpiModuleMeasure))
             m_scpimeasureObjectList.append(scpiMeasureTranslationHash[scpiModuleMeasure]);
         else {
             // Until not fixed properly: scpiMeasureTranslationHash is in cSCPIClient and
-            // that makes it the owner of the ScpiMeasurePerVeinComponentSequencer-object generated here
+            // that makes it the owner of the PerVeinComponentMeasureTransaction-object generated here
             // => no delete in here but in ~cSCPIClient
-            ScpiMeasurePerVeinComponentSequencer* scpiMeasure = new ScpiMeasurePerVeinComponentSequencer(*scpiModuleMeasure);
+            PerVeinComponentMeasureTransaction* scpiMeasure = new PerVeinComponentMeasureTransaction(*scpiModuleMeasure);
             scpiMeasureTranslationHash[scpiModuleMeasure] = scpiMeasure;
             m_scpimeasureObjectList.append(scpiMeasure);
         }
@@ -65,23 +65,23 @@ void ScpiMeasureScpiCmdNodeDelegate::executeClient(cSCPIClient *client, const Sc
         m_nPending = m_scpimeasureObjectList.count();
         m_sAnswer = "";
         for (int i = 0; i < m_scpimeasureObjectList.count(); i++) {
-            ScpiMeasurePerVeinComponentSequencer* measure = m_scpimeasureObjectList.at(i);
+            PerVeinComponentMeasureTransaction* measure = m_scpimeasureObjectList.at(i);
             switch (m_modelType)
             {
             case ScpiModelTypes::measure:
-                connect(measure, &ScpiMeasurePerVeinComponentSequencer::sigMeasDone, this, &ScpiMeasureScpiCmdNodeDelegate::onSingleScpiQueryDone);
+                connect(measure, &PerVeinComponentMeasureTransaction::sigMeasDone, this, &ScpiMeasureScpiCmdNodeDelegate::onSingleScpiQueryDone);
                 break;
             case ScpiModelTypes::configure:
-                connect(measure, &ScpiMeasurePerVeinComponentSequencer::sigConfDone, this, &ScpiMeasureScpiCmdNodeDelegate::onSingleScpiCmdDone);
+                connect(measure, &PerVeinComponentMeasureTransaction::sigConfDone, this, &ScpiMeasureScpiCmdNodeDelegate::onSingleScpiCmdDone);
                 break;
             case ScpiModelTypes::read:
-                connect(measure, &ScpiMeasurePerVeinComponentSequencer::sigReadDone, this, &ScpiMeasureScpiCmdNodeDelegate::onSingleScpiQueryDone);
+                connect(measure, &PerVeinComponentMeasureTransaction::sigReadDone, this, &ScpiMeasureScpiCmdNodeDelegate::onSingleScpiQueryDone);
                 break;
             case ScpiModelTypes::init:
-                connect(measure, &ScpiMeasurePerVeinComponentSequencer::sigInitDone, this, &ScpiMeasureScpiCmdNodeDelegate::onSingleScpiCmdDone);
+                connect(measure, &PerVeinComponentMeasureTransaction::sigInitDone, this, &ScpiMeasureScpiCmdNodeDelegate::onSingleScpiCmdDone);
                 break;
             case ScpiModelTypes::fetch:
-                connect(measure, &ScpiMeasurePerVeinComponentSequencer::sigFetchDone, this, &ScpiMeasureScpiCmdNodeDelegate::onSingleScpiQueryDone);
+                connect(measure, &PerVeinComponentMeasureTransaction::sigFetchDone, this, &ScpiMeasureScpiCmdNodeDelegate::onSingleScpiQueryDone);
                 break;
             }
             measure->execute(m_modelType, scpiTransactionId);
@@ -91,12 +91,12 @@ void ScpiMeasureScpiCmdNodeDelegate::executeClient(cSCPIClient *client, const Sc
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
-void ScpiMeasureScpiCmdNodeDelegate::addScpiMeasureObject(ScpiMeasurePerVeinComponentSequencer *measureobject)
+void ScpiMeasureScpiCmdNodeDelegate::addScpiMeasureObject(PerVeinComponentMeasureTransaction *measureobject)
 {
     m_scpimeasureObjectList.append(measureobject);
 }
 
-void ScpiMeasureScpiCmdNodeDelegate::onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const ScpiMeasurePerVeinComponentSequencer *sender)
+void ScpiMeasureScpiCmdNodeDelegate::onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const PerVeinComponentMeasureTransaction *sender)
 {
     disconnect(sender, 0, this, 0);
 
@@ -107,7 +107,7 @@ void ScpiMeasureScpiCmdNodeDelegate::onSingleScpiCmdDone(const ScpiTransactionId
         qCritical("cSCPIMeasureDelegate::onSingleScpiCmdDone: m_nPending < 0");
 }
 
-void ScpiMeasureScpiCmdNodeDelegate::onSingleScpiQueryDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const ScpiMeasurePerVeinComponentSequencer *sender)
+void ScpiMeasureScpiCmdNodeDelegate::onSingleScpiQueryDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const PerVeinComponentMeasureTransaction *sender)
 {
     disconnect(sender, 0, this, 0);
 

@@ -15,7 +15,7 @@ void test_scpi_learn_measure_objects_and_relations::countMeasureRelatedObjectsCr
     SCPIMODULE::cSCPIModule* scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(testRunner.getModule(9999));
 
     constexpr int osciComponentCount = 8; // ACT_OSCI1..ACT_OSCI18
-    QCOMPARE(SCPIMODULE::ScpiMeasurePerVeinComponentSequencer::getInstanceCount(), osciComponentCount);
+    QCOMPARE(SCPIMODULE::PerVeinComponentMeasureTransaction::getInstanceCount(), osciComponentCount);
     int noClientDelegateInstanceCount = SCPIMODULE::ScpiBaseDelegate::getInstanceCount();
 
 
@@ -24,8 +24,8 @@ void test_scpi_learn_measure_objects_and_relations::countMeasureRelatedObjectsCr
     client.sendScpiCmds("dev:iface?");
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(SCPIMODULE::ScpiMeasurePerVeinComponentSequencer::getInstanceCount(), 2 * osciComponentCount); // module + client
-    // => ScpiMeasurePerVeinComponentSequencer are copied for client
+    QCOMPARE(SCPIMODULE::PerVeinComponentMeasureTransaction::getInstanceCount(), 2 * osciComponentCount); // module + client
+    // => PerVeinComponentMeasureTransaction are copied for client
 
     const QString xmlResponse = client.getLastResponse().getStr();
     XmlDocument xmlDoc;

@@ -2,7 +2,7 @@
 #define SCPIMEASUREDELEGATE_H
 
 #include "scpibasedelegate.h"
-#include "scpimeasureperveincomponentsequencer.h"
+#include "perveincomponentmeasuretransaction.h"
 #include <QList>
 
 namespace SCPIMODULE {
@@ -16,24 +16,24 @@ public:
                          const QString &cmd,
                          quint8 scpiCmdQueryFlags,
                          ScpiModelTypes modelType,
-                         ScpiMeasurePerVeinComponentSequencer* scpimeasureobject);
+                         PerVeinComponentMeasureTransaction* scpimeasureobject);
     // Scpi interface copies
     ScpiMeasureScpiCmdNodeDelegate(const ScpiMeasureScpiCmdNodeDelegate& moduleInterfaceDelegate,
-                         QHash<ScpiMeasurePerVeinComponentSequencer*, ScpiMeasurePerVeinComponentSequencer*> &scpiMeasureTranslationHash);
+                         QHash<PerVeinComponentMeasureTransaction*, PerVeinComponentMeasureTransaction*> &scpiMeasureTranslationHash);
     void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
     void executeClient(cSCPIClient *client, const ScpiTransactionId &scpiTransactionId);
-    void addScpiMeasureObject(ScpiMeasurePerVeinComponentSequencer* measureobject);
+    void addScpiMeasureObject(PerVeinComponentMeasureTransaction* measureobject);
 
 private slots:
-    void onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiMeasurePerVeinComponentSequencer* sender);
-    void onSingleScpiQueryDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiMeasurePerVeinComponentSequencer* sender);
+    void onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::PerVeinComponentMeasureTransaction* sender);
+    void onSingleScpiQueryDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::PerVeinComponentMeasureTransaction* sender);
 
 private:
     ScpiModelTypes m_modelType;
     int m_nPending = 0;
     QString m_sAnswer;
     cSCPIClient *m_pClient = nullptr;
-    QList<ScpiMeasurePerVeinComponentSequencer*> m_scpimeasureObjectList;
+    QList<PerVeinComponentMeasureTransaction*> m_scpimeasureObjectList;
 };
 
 typedef std::shared_ptr<ScpiMeasureScpiCmdNodeDelegate> ScpiMeasureScpiCmdNodeDelegatePtr;
