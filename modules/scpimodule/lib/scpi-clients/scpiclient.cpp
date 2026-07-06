@@ -199,6 +199,9 @@ void cSCPIClient::handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId
     case ZSCPI::erraut:
         m_pIEEE4882->addEventErrorWithResponse(CommandProtected, scpiTransactionId);
         break;
+    case ZSCPI::errexec: // e.g. RPC
+        m_pIEEE4882->addEventErrorWithResponse(ExecutionError, scpiTransactionId);
+        break;
     default:
         m_pIEEE4882->addEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
