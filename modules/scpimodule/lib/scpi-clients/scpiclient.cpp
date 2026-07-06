@@ -190,19 +190,19 @@ void cSCPIClient::handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId
     case ZSCPI::ack:
         handleCmdFinish(NullableString(), scpiTransactionId);
         break;
-    case ZSCPI::nak:
+    case ZSCPI::nak: // e.g SCPI command improper terminated / RPC too many params
         m_pIEEE4882->addEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
-    case ZSCPI::errval:
+    case ZSCPI::errval: // standard vein component error
         m_pIEEE4882->addEventErrorWithResponse(NumericDataError, scpiTransactionId);
         break;
-    case ZSCPI::erraut:
+    case ZSCPI::erraut: // unused?
         m_pIEEE4882->addEventErrorWithResponse(CommandProtected, scpiTransactionId);
         break;
     case ZSCPI::errexec: // e.g. RPC
         m_pIEEE4882->addEventErrorWithResponse(ExecutionError, scpiTransactionId);
         break;
-    default:
+    default: // unused?
         m_pIEEE4882->addEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
     }
