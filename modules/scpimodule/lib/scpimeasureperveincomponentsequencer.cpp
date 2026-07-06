@@ -1,5 +1,4 @@
 #include "scpimeasureperveincomponentsequencer.h"
-#include "scpimeasurescpicmdnodedelegate.h"
 #include "scpicmdinfo.h"
 #include <scpi.h>
 #include <ve_commandevent.h>
@@ -12,7 +11,8 @@ namespace SCPIMODULE
 
 int ScpiMeasurePerVeinComponentSequencer::m_instanceCount = 0;
 
-ScpiMeasurePerVeinComponentSequencer::ScpiMeasurePerVeinComponentSequencer(const std::shared_ptr<QMultiHash<QString, ScpiMeasurePerVeinComponentSequencer *>> &scpiMeasureHash, const cSCPICmdInfoPtr &scpicmdinfo) :
+ScpiMeasurePerVeinComponentSequencer::ScpiMeasurePerVeinComponentSequencer(const std::shared_ptr<QMultiHash<QString, ScpiMeasurePerVeinComponentSequencer *>> &scpiMeasureHash,
+                                                                           const cSCPICmdInfoPtr &scpicmdinfo) :
     m_scpiMeasureHash(scpiMeasureHash),
     m_pSCPICmdInfo(scpicmdinfo)
 {
