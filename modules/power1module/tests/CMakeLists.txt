@@ -3,7 +3,7 @@ function(SETUP_QTESTS_MODULE)
     foreach(_testname ${ARGN})
         target_link_libraries(${_testname}
             PRIVATE
-            power1module-static
+            power1module-lib
             scpimodule-testlib
             zera-modulemanager-testlib
             Zera::xml-compare-testlib
