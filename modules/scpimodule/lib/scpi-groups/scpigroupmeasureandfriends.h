@@ -4,7 +4,7 @@
 #include "scpigroupbase.h"
 #include "scpiinterface.h"
 #include "scpibasedelegate.h"
-#include "scpimeasuredelegate.h"
+#include "scpimeasurescpicmdnodedelegate.h"
 #include "scpicmdinfo.h"
 #include <QHash>
 #include <QJsonObject>
@@ -27,11 +27,11 @@ public:
     bool setupScpi();
     virtual void actualizeInterface(QVariant modInterface);
 
-    QHash<QString, cSCPIMeasureDelegatePtr>* getSCPIMeasDelegateHash();
+    QHash<QString, ScpiMeasureScpiCmdNodeDelegatePtr>* getSCPIMeasDelegateHash();
 
 private:
     cSCPIModule* m_pModule = nullptr;
-    QHash<QString, cSCPIMeasureDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
+    QHash<QString, ScpiMeasureScpiCmdNodeDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
     QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
     void addSCPICommand(const cSCPICmdInfoPtr &scpiCmdInfo);

@@ -1,5 +1,5 @@
 #include "scpimeasureperveincomponentsequencer.h"
-#include "scpimeasuredelegate.h"
+#include "scpimeasurescpicmdnodedelegate.h"
 #include "scpicmdinfo.h"
 #include <scpi.h>
 #include <ve_commandevent.h>

@@ -268,11 +268,11 @@ void cSCPIClient::generateSCPIMeasureSystem()
     // client so that they can work independantly when querying measuring values
     // we ask the moduleinterface for the "base" cSCPIMeasureDelegate hash, that is once built up
     // on module instanciation and that are connected to the scpi interface
-    QHash<QString, cSCPIMeasureDelegatePtr> *pSCPIMeasDelegateHash = m_pModule->getSCPIServer()->getModuleInterface()->getSCPIMeasDelegateHash();
+    QHash<QString, ScpiMeasureScpiCmdNodeDelegatePtr> *pSCPIMeasDelegateHash = m_pModule->getSCPIServer()->getModuleInterface()->getSCPIMeasDelegateHash();
     QList<QString> keylist = pSCPIMeasDelegateHash->keys();
     for (int i = 0; i < keylist.count(); i++) {
-        cSCPIMeasureDelegatePtr measDelegate = (*pSCPIMeasDelegateHash)[keylist.at(i)];
-        m_SCPIMeasureDelegateHash[measDelegate.get()] = std::make_shared<cSCPIMeasureDelegate>(*measDelegate, m_SCPIMeasureTranslationHash);
+        ScpiMeasureScpiCmdNodeDelegatePtr measDelegate = (*pSCPIMeasDelegateHash)[keylist.at(i)];
+        m_SCPIMeasureDelegateHash[measDelegate.get()] = std::make_shared<ScpiMeasureScpiCmdNodeDelegate>(*measDelegate, m_SCPIMeasureTranslationHash);
     }
 }
 

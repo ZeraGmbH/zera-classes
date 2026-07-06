@@ -7,18 +7,18 @@
 
 namespace SCPIMODULE {
 
-class cSCPIMeasureDelegate: public ScpiBaseDelegate
+class ScpiMeasureScpiCmdNodeDelegate: public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
     // Moduleinterface initials
-    cSCPIMeasureDelegate(const QString &cmdParent,
+    ScpiMeasureScpiCmdNodeDelegate(const QString &cmdParent,
                          const QString &cmd,
                          quint8 scpiCmdQueryFlags,
                          ScpiModelTypes modelType,
                          ScpiMeasurePerVeinComponentSequencer* scpimeasureobject);
     // Scpi interface copies
-    cSCPIMeasureDelegate(const cSCPIMeasureDelegate& moduleInterfaceDelegate,
+    ScpiMeasureScpiCmdNodeDelegate(const ScpiMeasureScpiCmdNodeDelegate& moduleInterfaceDelegate,
                          QHash<ScpiMeasurePerVeinComponentSequencer*, ScpiMeasurePerVeinComponentSequencer*> &scpiMeasureTranslationHash);
     void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
     void executeClient(cSCPIClient *client, const ScpiTransactionId &scpiTransactionId);
@@ -36,7 +36,7 @@ private:
     QList<ScpiMeasurePerVeinComponentSequencer*> m_scpimeasureObjectList;
 };
 
-typedef std::shared_ptr<cSCPIMeasureDelegate> cSCPIMeasureDelegatePtr;
+typedef std::shared_ptr<ScpiMeasureScpiCmdNodeDelegate> ScpiMeasureScpiCmdNodeDelegatePtr;
 
 }
 
