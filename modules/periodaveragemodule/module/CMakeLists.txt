@@ -5,7 +5,7 @@ add_library(periodaveragemodule MODULE
 
 target_link_libraries(periodaveragemodule
     PRIVATE
-    periodaveragemodule-static
+    periodaveragemodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

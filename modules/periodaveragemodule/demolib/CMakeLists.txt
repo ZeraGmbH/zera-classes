@@ -19,7 +19,7 @@ target_include_directories(periodaveragemodule-demolib
 
 target_link_libraries(periodaveragemodule-demolib
     PUBLIC
-    periodaveragemodule-static
+    periodaveragemodule-lib
     module-service-interfaces-demolib
     Zera::zera-timers
 )

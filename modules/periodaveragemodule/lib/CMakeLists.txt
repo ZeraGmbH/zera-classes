@@ -6,19 +6,17 @@ file(GLOB HEADER
     *.h
     )
 
-add_library(periodaveragemodule-static STATIC
+add_library(periodaveragemodule-lib SHARED
     ${SOURCES}
     ${HEADER}
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-target_include_directories(periodaveragemodule-static
+target_include_directories(periodaveragemodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-target_link_libraries(periodaveragemodule-static
+target_link_libraries(periodaveragemodule-lib
     PUBLIC
     zera-basemodule
     service-common
@@ -27,13 +25,11 @@ target_link_libraries(periodaveragemodule-static
     "-Wl,--no-undefined"
     )
 
-export(TARGETS periodaveragemodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
-install(TARGETS periodaveragemodule-static
+set_target_properties(periodaveragemodule-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(periodaveragemodule-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS periodaveragemodule-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS periodaveragemodule-lib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/periodaveragemodule-static
     )
