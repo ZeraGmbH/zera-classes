@@ -28,6 +28,64 @@ cSCPIMeasure::cSCPIMeasure(const cSCPIMeasure &obj) :
     m_instanceCount++;
 }
 
+void cSCPIMeasure::initialize()
+{
+    m_bInitPending = false;
+
+    m_measureState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureConfigureState);
+    m_measureConfigureState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureInitState);
+    m_measureInitState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureFetchState);
+    m_measureFetchState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureDoneState);
+    m_MeasureStateMachine.addState(&m_measureState);
+    m_MeasureStateMachine.addState(&m_measureConfigureState);
+    m_MeasureStateMachine.addState(&m_measureInitState);
+    m_MeasureStateMachine.addState(&m_measureFetchState);
+    m_MeasureStateMachine.addState(&m_measureDoneState);
+    connect(&m_measureState, &QState::entered, this, &cSCPIMeasure::measure);
+    connect(&m_measureConfigureState, &QState::entered, this, &cSCPIMeasure::measureConfigure);
+    connect(&m_measureInitState, &QState::entered, this, &cSCPIMeasure::measureInit);
+    connect(&m_measureFetchState, &QState::entered, this, &cSCPIMeasure::measureFetch);
+    m_MeasureStateMachine.setInitialState(&m_measureState);
+
+    m_confConfigureState.addTransition(this, &cSCPIMeasure::confContinue, &m_confConfigureDoneState);
+    m_ConfigureStateMachine.addState(&m_confConfigureState);
+    m_ConfigureStateMachine.addState(&m_confConfigureDoneState);
+    connect(&m_confConfigureState, &QState::entered, this, &cSCPIMeasure::configure);
+    connect(&m_confConfigureDoneState, &QState::entered, this, &cSCPIMeasure::configureDone);
+    m_ConfigureStateMachine.setInitialState(&m_confConfigureState);
+
+    m_readState.addTransition(this, &cSCPIMeasure::readContinue, &m_readInitState);
+    m_readInitState.addTransition(this, &cSCPIMeasure::readContinue, &m_readFetchState);
+    m_readFetchState.addTransition(this, &cSCPIMeasure::readContinue, &m_readDoneState);
+    m_ReadStateMachine.addState(&m_readState);
+    m_ReadStateMachine.addState(&m_readInitState);
+    m_ReadStateMachine.addState(&m_readFetchState);
+    m_ReadStateMachine.addState(&m_readDoneState);
+    connect(&m_readState, &QState::entered, this, &cSCPIMeasure::read);
+    connect(&m_readInitState, &QState::entered, this, &cSCPIMeasure::readInit);
+    connect(&m_readFetchState, &QState::entered, this, &cSCPIMeasure::readFetch);
+    m_ReadStateMachine.setInitialState(&m_readState);
+
+    m_initInitState.addTransition(this, &cSCPIMeasure::initContinue, &m_initDoneState);
+    m_InitStateMachine.addState(&m_initInitState);
+    m_InitStateMachine.addState(&m_initDoneState);
+    connect(&m_initInitState, &QState::entered, this, &cSCPIMeasure::init);
+    connect(&m_initDoneState, &QState::entered, this, &cSCPIMeasure::initDone);
+    m_InitStateMachine.setInitialState(&m_initInitState);
+
+    m_fetchState.addTransition(this, &cSCPIMeasure::fetchContinue, &m_fetchSyncState);
+    m_fetchSyncState.addTransition(this, &cSCPIMeasure::fetchContinue, &m_fetchFetchState);
+    m_fetchFetchState.addTransition(this, &cSCPIMeasure::fetchContinue, &m_fetchDoneState);
+    m_FetchStateMachine.addState(&m_fetchState);
+    m_FetchStateMachine.addState(&m_fetchSyncState);
+    m_FetchStateMachine.addState(&m_fetchFetchState);
+    m_FetchStateMachine.addState(&m_fetchDoneState);
+    connect(&m_fetchState, &QState::entered, this, &cSCPIMeasure::fetch);
+    connect(&m_fetchSyncState, &QState::entered, this, &cSCPIMeasure::fetchSync);
+    connect(&m_fetchFetchState, &QState::entered, this, &cSCPIMeasure::fetchFetch);
+    m_FetchStateMachine.setInitialState(&m_fetchState);
+}
+
 cSCPIMeasure::~cSCPIMeasure()
 {
     m_instanceCount--;
@@ -116,7 +174,6 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
     }
 }
 
-
 int cSCPIMeasure::entityID()
 {
     return m_pSCPICmdInfo->entityId;
@@ -161,14 +218,12 @@ void cSCPIMeasure::measure()
     emit measContinue();
 }
 
-
 void cSCPIMeasure::measureConfigure()
 {
     // for scpi compliance we have a configue but for the moment
     // we have noting to do here ... perhaps later
     emit measContinue();
 }
-
 
 void cSCPIMeasure::measureInit()
 {
@@ -182,14 +237,12 @@ void cSCPIMeasure::measureInit()
     signalList.append(measCont); // measure statemachine waits for measure value
 }
 
-
 void cSCPIMeasure::measureFetch()
 {
     emit sigMeasDone(m_sAnswer, m_measureScpiTransactionId, this);
     m_measureScpiTransactionId = ScpiTransactionId();
     emit measContinue();
 }
-
 
 void cSCPIMeasure::configure()
 {
@@ -198,19 +251,16 @@ void cSCPIMeasure::configure()
     emit confContinue();
 }
 
-
 void cSCPIMeasure::configureDone()
 {
     emit sigConfDone(m_configureScpiTransactionId, this);
 }
-
 
 void cSCPIMeasure::read()
 {
     // this is our starting point ...nothing to do but better readable code
     emit readContinue();
 }
-
 
 void cSCPIMeasure::readInit()
 {
@@ -231,7 +281,6 @@ void cSCPIMeasure::readFetch()
     emit readContinue();
 }
 
-
 void cSCPIMeasure::init()
 {
     // we insert this object into the list of pending measurement values
@@ -244,20 +293,17 @@ void cSCPIMeasure::init()
     signalList.append(initCont); // init statemachine waits for measure value
 }
 
-
 void cSCPIMeasure::initDone()
 {
     m_bInitPending = false;
     emit sigInitDone(m_initScpiTransactionId, this);
 }
 
-
 void cSCPIMeasure::fetch()
 {
     // this is our starting point ...nothing to do but better readable code
     emit fetchContinue();
 }
-
 
 void cSCPIMeasure::fetchSync()
 {
@@ -267,71 +313,11 @@ void cSCPIMeasure::fetchSync()
         signalList.append(fetchCont); // fetch statemachine waits for measure value
 }
 
-
 void cSCPIMeasure::fetchFetch()
 {
     emit sigFetchDone(m_sAnswer, m_fetchScpiTransactionId, this);
     m_fetchScpiTransactionId = ScpiTransactionId();
     emit fetchContinue();
-}
-
-
-void cSCPIMeasure::initialize()
-{
-    m_bInitPending = false;
-
-    m_measureState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureConfigureState);
-    m_measureConfigureState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureInitState);
-    m_measureInitState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureFetchState);
-    m_measureFetchState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureDoneState);
-    m_MeasureStateMachine.addState(&m_measureState);
-    m_MeasureStateMachine.addState(&m_measureConfigureState);
-    m_MeasureStateMachine.addState(&m_measureInitState);
-    m_MeasureStateMachine.addState(&m_measureFetchState);
-    m_MeasureStateMachine.addState(&m_measureDoneState);
-    connect(&m_measureState, &QState::entered, this, &cSCPIMeasure::measure);
-    connect(&m_measureConfigureState, &QState::entered, this, &cSCPIMeasure::measureConfigure);
-    connect(&m_measureInitState, &QState::entered, this, &cSCPIMeasure::measureInit);
-    connect(&m_measureFetchState, &QState::entered, this, &cSCPIMeasure::measureFetch);
-    m_MeasureStateMachine.setInitialState(&m_measureState);
-
-    m_confConfigureState.addTransition(this, &cSCPIMeasure::confContinue, &m_confConfigureDoneState);
-    m_ConfigureStateMachine.addState(&m_confConfigureState);
-    m_ConfigureStateMachine.addState(&m_confConfigureDoneState);
-    connect(&m_confConfigureState, &QState::entered, this, &cSCPIMeasure::configure);
-    connect(&m_confConfigureDoneState, &QState::entered, this, &cSCPIMeasure::configureDone);
-    m_ConfigureStateMachine.setInitialState(&m_confConfigureState);
-
-    m_readState.addTransition(this, &cSCPIMeasure::readContinue, &m_readInitState);
-    m_readInitState.addTransition(this, &cSCPIMeasure::readContinue, &m_readFetchState);
-    m_readFetchState.addTransition(this, &cSCPIMeasure::readContinue, &m_readDoneState);
-    m_ReadStateMachine.addState(&m_readState);
-    m_ReadStateMachine.addState(&m_readInitState);
-    m_ReadStateMachine.addState(&m_readFetchState);
-    m_ReadStateMachine.addState(&m_readDoneState);
-    connect(&m_readState, &QState::entered, this, &cSCPIMeasure::read);
-    connect(&m_readInitState, &QState::entered, this, &cSCPIMeasure::readInit);
-    connect(&m_readFetchState, &QState::entered, this, &cSCPIMeasure::readFetch);
-    m_ReadStateMachine.setInitialState(&m_readState);
-
-    m_initInitState.addTransition(this, &cSCPIMeasure::initContinue, &m_initDoneState);
-    m_InitStateMachine.addState(&m_initInitState);
-    m_InitStateMachine.addState(&m_initDoneState);
-    connect(&m_initInitState, &QState::entered, this, &cSCPIMeasure::init);
-    connect(&m_initDoneState, &QState::entered, this, &cSCPIMeasure::initDone);
-    m_InitStateMachine.setInitialState(&m_initInitState);
-
-    m_fetchState.addTransition(this, &cSCPIMeasure::fetchContinue, &m_fetchSyncState);
-    m_fetchSyncState.addTransition(this, &cSCPIMeasure::fetchContinue, &m_fetchFetchState);
-    m_fetchFetchState.addTransition(this, &cSCPIMeasure::fetchContinue, &m_fetchDoneState);
-    m_FetchStateMachine.addState(&m_fetchState);
-    m_FetchStateMachine.addState(&m_fetchSyncState);
-    m_FetchStateMachine.addState(&m_fetchFetchState);
-    m_FetchStateMachine.addState(&m_fetchDoneState);
-    connect(&m_fetchState, &QState::entered, this, &cSCPIMeasure::fetch);
-    connect(&m_fetchSyncState, &QState::entered, this, &cSCPIMeasure::fetchSync);
-    connect(&m_fetchFetchState, &QState::entered, this, &cSCPIMeasure::fetchFetch);
-    m_FetchStateMachine.setInitialState(&m_fetchState);
 }
 
 }

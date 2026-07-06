@@ -46,11 +46,11 @@ signals:
     void sigFetchDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
 
 private:
+    void initialize();
     static QString convertVariantToString(const QVariant &value);
+
     std::shared_ptr<QMultiHash<QString, cSCPIMeasure*>> m_scpiMeasureHash;
     cSCPICmdInfoPtr m_pSCPICmdInfo;
-
-    void initialize();
 
     QStateMachine m_MeasureStateMachine;
     QStateMachine m_ConfigureStateMachine;
