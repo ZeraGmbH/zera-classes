@@ -107,7 +107,7 @@ void cSCPIMeasureDelegate::onSingleScpiCmdDone(const ScpiTransactionId &scpiTran
         qCritical("cSCPIMeasureDelegate::onSingleScpiCmdDone: m_nPending < 0");
 }
 
-void cSCPIMeasureDelegate::onSingleScpiQueryDone(const QString scpiResponse, const ScpiTransactionId &scpiTransactionId, const cSCPIMeasure *sender)
+void cSCPIMeasureDelegate::onSingleScpiQueryDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const cSCPIMeasure *sender)
 {
     disconnect(sender, 0, this, 0);
 

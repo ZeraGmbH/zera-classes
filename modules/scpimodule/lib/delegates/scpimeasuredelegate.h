@@ -26,7 +26,7 @@ public:
 
 private slots:
     void onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
-    void onSingleScpiQueryDone(const QString scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
+    void onSingleScpiQueryDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
 
 private:
     ScpiModelTypes m_modelType;
