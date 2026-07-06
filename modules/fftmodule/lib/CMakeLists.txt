@@ -6,19 +6,17 @@ file(GLOB HEADER
     *.h
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-add_library(fftmodule-static STATIC
+add_library(fftmodule-lib SHARED
     ${SOURCES}
     ${HEADER}
     )
 
-target_include_directories(fftmodule-static
+target_include_directories(fftmodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-target_link_libraries(fftmodule-static
+target_link_libraries(fftmodule-lib
     PUBLIC
     zera-basemodule
     service-common
@@ -28,13 +26,11 @@ target_link_libraries(fftmodule-static
     "-Wl,--no-undefined"
     )
 
-export(TARGETS fftmodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
-install(TARGETS fftmodule-static
+set_target_properties(fftmodule-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(fftmodule-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS fftmodule-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS fftmodule-lib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fftmodule-static
     )

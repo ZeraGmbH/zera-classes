@@ -8,7 +8,7 @@ function(SETUP_QTESTS_MODULE)
             adjmodule-testlib
             rangemodule-lib
             dftmodule-lib
-            fftmodule-static
+            fftmodule-lib
             rmsmodule-static
             zera-modulemanager-testlib
             dsp-support-testlib
