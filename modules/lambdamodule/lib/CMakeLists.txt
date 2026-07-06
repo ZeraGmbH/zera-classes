@@ -6,19 +6,17 @@ file(GLOB HEADER
     *.h
     )
 
-add_library(lambdamodule-static STATIC
+add_library(lambdamodule-lib SHARED
     ${SOURCES}
     ${HEADER}
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-target_include_directories(lambdamodule-static
+target_include_directories(lambdamodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-target_link_libraries(lambdamodule-static
+target_link_libraries(lambdamodule-lib
     PUBLIC
     zera-basemodule
     zera-meas-mode-management
@@ -27,3 +25,11 @@ target_link_libraries(lambdamodule-static
     "-Wl,--no-undefined"
     )
 
+set_target_properties(lambdamodule-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(lambdamodule-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS lambdamodule-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS lambdamodule-lib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )

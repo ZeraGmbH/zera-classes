@@ -3,7 +3,7 @@ function(SETUP_QTESTS_MODULE)
     foreach(_testname ${ARGN})
         target_link_libraries(${_testname}
             PRIVATE
-            lambdamodule-static
+            lambdamodule-lib
         )
     endforeach()
 endfunction()
