@@ -2,7 +2,7 @@
 #define SCPICLIENT_H
 
 #include "scpiinterface.h"
-#include "scpimeasurescpicmdnodedelegate.h"
+#include "measurescpinodedelegate.h"
 #include "signalconnectiondelegate.h"
 #include "scpiveintransactioninfo.h"
 #include "ieee488-2.h"
@@ -30,7 +30,7 @@ public:
     QUuid getClientId();
     void addSCPITransactionInfo(const QString &key, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
 
-    QHash<ScpiMeasureScpiCmdNodeDelegate*, ScpiMeasureScpiCmdNodeDelegatePtr> m_SCPIMeasureDelegateHash;
+    QHash<MeasureScpiNodeDelegate*, ScpiMeasureScpiCmdNodeDelegatePtr> m_SCPIMeasureDelegateHash;
     enum FinishLogTypes {
         LOG_FULL,
         LOG_SKIP
@@ -70,7 +70,7 @@ private:
 
     QList<cSCPIStatus*> m_SCPIStatusList;
 
-    QHash<PerVeinComponentMeasureTransaction*, PerVeinComponentMeasureTransaction*> m_SCPIMeasureTranslationHash;
+    QHash<VeinComponentScpiMeasureSequence*, VeinComponentScpiMeasureSequence*> m_SCPIMeasureTranslationHash;
     QUuid m_clientId;
 
     bool m_bAuthorisation = false;

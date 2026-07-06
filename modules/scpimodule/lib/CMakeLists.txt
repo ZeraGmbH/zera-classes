@@ -1,6 +1,7 @@
 file(GLOB SOURCES 
     *.cpp
     delegates/*.cpp
+    delegates-measure/*.cpp
     scpi-clients/*.cpp
     scpi-groups/*.cpp
     )
@@ -8,6 +9,7 @@ file(GLOB SOURCES
 file(GLOB HEADER
     *.h
     delegates/*.h
+    delegates-measure/*.h
     scpi-clients/*.h
     scpi-groups/*.h
     )
@@ -23,6 +25,7 @@ target_include_directories(scpimodule-static
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/delegates>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/delegates-measure>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-clients>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-groups>
     )

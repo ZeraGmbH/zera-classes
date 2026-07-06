@@ -1,4 +1,4 @@
-#include "perveincomponentmeasuretransaction.h"
+#include "veincomponentscpimeasuresequence.h"
 #include "scpicmdinfo.h"
 #include <scpi.h>
 #include <ve_commandevent.h>
@@ -9,9 +9,9 @@
 namespace SCPIMODULE
 {
 
-int PerVeinComponentMeasureTransaction::m_instanceCount = 0;
+int VeinComponentScpiMeasureSequence::m_instanceCount = 0;
 
-PerVeinComponentMeasureTransaction::PerVeinComponentMeasureTransaction(const std::shared_ptr<QMultiHash<QString, PerVeinComponentMeasureTransaction *>> &moduleCommonPendingMeasureStore,
+VeinComponentScpiMeasureSequence::VeinComponentScpiMeasureSequence(const std::shared_ptr<QMultiHash<QString, VeinComponentScpiMeasureSequence *>> &moduleCommonPendingMeasureStore,
                                                                            const cSCPICmdInfoPtr &scpicmdinfo) :
     m_moduleCommonPendingMeasureStore(moduleCommonPendingMeasureStore),
     m_pSCPICmdInfo(scpicmdinfo)
@@ -20,7 +20,7 @@ PerVeinComponentMeasureTransaction::PerVeinComponentMeasureTransaction(const std
     m_instanceCount++;
 }
 
-PerVeinComponentMeasureTransaction::PerVeinComponentMeasureTransaction(const PerVeinComponentMeasureTransaction &obj) :
+VeinComponentScpiMeasureSequence::VeinComponentScpiMeasureSequence(const VeinComponentScpiMeasureSequence &obj) :
     m_moduleCommonPendingMeasureStore(obj.m_moduleCommonPendingMeasureStore),
     m_pSCPICmdInfo(std::make_shared<cSCPICmdInfo>(*obj.m_pSCPICmdInfo))
 {
@@ -28,65 +28,65 @@ PerVeinComponentMeasureTransaction::PerVeinComponentMeasureTransaction(const Per
     m_instanceCount++;
 }
 
-void PerVeinComponentMeasureTransaction::initialize()
+void VeinComponentScpiMeasureSequence::initialize()
 {
     m_bInitPending = false;
 
-    m_measureState.addTransition(this, &PerVeinComponentMeasureTransaction::measContinue, &m_measureConfigureState);
-    m_measureConfigureState.addTransition(this, &PerVeinComponentMeasureTransaction::measContinue, &m_measureInitState);
-    m_measureInitState.addTransition(this, &PerVeinComponentMeasureTransaction::measContinue, &m_measureFetchState);
-    m_measureFetchState.addTransition(this, &PerVeinComponentMeasureTransaction::measContinue, &m_measureDoneState);
+    m_measureState.addTransition(this, &VeinComponentScpiMeasureSequence::measContinue, &m_measureConfigureState);
+    m_measureConfigureState.addTransition(this, &VeinComponentScpiMeasureSequence::measContinue, &m_measureInitState);
+    m_measureInitState.addTransition(this, &VeinComponentScpiMeasureSequence::measContinue, &m_measureFetchState);
+    m_measureFetchState.addTransition(this, &VeinComponentScpiMeasureSequence::measContinue, &m_measureDoneState);
     m_MeasureStateMachine.addState(&m_measureState);
     m_MeasureStateMachine.addState(&m_measureConfigureState);
     m_MeasureStateMachine.addState(&m_measureInitState);
     m_MeasureStateMachine.addState(&m_measureFetchState);
     m_MeasureStateMachine.addState(&m_measureDoneState);
-    connect(&m_measureState, &QState::entered, this, &PerVeinComponentMeasureTransaction::measure);
-    connect(&m_measureConfigureState, &QState::entered, this, &PerVeinComponentMeasureTransaction::measureConfigure);
-    connect(&m_measureInitState, &QState::entered, this, &PerVeinComponentMeasureTransaction::measureInit);
-    connect(&m_measureFetchState, &QState::entered, this, &PerVeinComponentMeasureTransaction::measureFetch);
+    connect(&m_measureState, &QState::entered, this, &VeinComponentScpiMeasureSequence::measure);
+    connect(&m_measureConfigureState, &QState::entered, this, &VeinComponentScpiMeasureSequence::measureConfigure);
+    connect(&m_measureInitState, &QState::entered, this, &VeinComponentScpiMeasureSequence::measureInit);
+    connect(&m_measureFetchState, &QState::entered, this, &VeinComponentScpiMeasureSequence::measureFetch);
     m_MeasureStateMachine.setInitialState(&m_measureState);
 
-    m_confConfigureState.addTransition(this, &PerVeinComponentMeasureTransaction::confContinue, &m_confConfigureDoneState);
+    m_confConfigureState.addTransition(this, &VeinComponentScpiMeasureSequence::confContinue, &m_confConfigureDoneState);
     m_ConfigureStateMachine.addState(&m_confConfigureState);
     m_ConfigureStateMachine.addState(&m_confConfigureDoneState);
-    connect(&m_confConfigureState, &QState::entered, this, &PerVeinComponentMeasureTransaction::configure);
-    connect(&m_confConfigureDoneState, &QState::entered, this, &PerVeinComponentMeasureTransaction::configureDone);
+    connect(&m_confConfigureState, &QState::entered, this, &VeinComponentScpiMeasureSequence::configure);
+    connect(&m_confConfigureDoneState, &QState::entered, this, &VeinComponentScpiMeasureSequence::configureDone);
     m_ConfigureStateMachine.setInitialState(&m_confConfigureState);
 
-    m_readState.addTransition(this, &PerVeinComponentMeasureTransaction::readContinue, &m_readInitState);
-    m_readInitState.addTransition(this, &PerVeinComponentMeasureTransaction::readContinue, &m_readFetchState);
-    m_readFetchState.addTransition(this, &PerVeinComponentMeasureTransaction::readContinue, &m_readDoneState);
+    m_readState.addTransition(this, &VeinComponentScpiMeasureSequence::readContinue, &m_readInitState);
+    m_readInitState.addTransition(this, &VeinComponentScpiMeasureSequence::readContinue, &m_readFetchState);
+    m_readFetchState.addTransition(this, &VeinComponentScpiMeasureSequence::readContinue, &m_readDoneState);
     m_ReadStateMachine.addState(&m_readState);
     m_ReadStateMachine.addState(&m_readInitState);
     m_ReadStateMachine.addState(&m_readFetchState);
     m_ReadStateMachine.addState(&m_readDoneState);
-    connect(&m_readState, &QState::entered, this, &PerVeinComponentMeasureTransaction::read);
-    connect(&m_readInitState, &QState::entered, this, &PerVeinComponentMeasureTransaction::readInit);
-    connect(&m_readFetchState, &QState::entered, this, &PerVeinComponentMeasureTransaction::readFetch);
+    connect(&m_readState, &QState::entered, this, &VeinComponentScpiMeasureSequence::read);
+    connect(&m_readInitState, &QState::entered, this, &VeinComponentScpiMeasureSequence::readInit);
+    connect(&m_readFetchState, &QState::entered, this, &VeinComponentScpiMeasureSequence::readFetch);
     m_ReadStateMachine.setInitialState(&m_readState);
 
-    m_initInitState.addTransition(this, &PerVeinComponentMeasureTransaction::initContinue, &m_initDoneState);
+    m_initInitState.addTransition(this, &VeinComponentScpiMeasureSequence::initContinue, &m_initDoneState);
     m_InitStateMachine.addState(&m_initInitState);
     m_InitStateMachine.addState(&m_initDoneState);
-    connect(&m_initInitState, &QState::entered, this, &PerVeinComponentMeasureTransaction::init);
-    connect(&m_initDoneState, &QState::entered, this, &PerVeinComponentMeasureTransaction::initDone);
+    connect(&m_initInitState, &QState::entered, this, &VeinComponentScpiMeasureSequence::init);
+    connect(&m_initDoneState, &QState::entered, this, &VeinComponentScpiMeasureSequence::initDone);
     m_InitStateMachine.setInitialState(&m_initInitState);
 
-    m_fetchState.addTransition(this, &PerVeinComponentMeasureTransaction::fetchContinue, &m_fetchSyncState);
-    m_fetchSyncState.addTransition(this, &PerVeinComponentMeasureTransaction::fetchContinue, &m_fetchFetchState);
-    m_fetchFetchState.addTransition(this, &PerVeinComponentMeasureTransaction::fetchContinue, &m_fetchDoneState);
+    m_fetchState.addTransition(this, &VeinComponentScpiMeasureSequence::fetchContinue, &m_fetchSyncState);
+    m_fetchSyncState.addTransition(this, &VeinComponentScpiMeasureSequence::fetchContinue, &m_fetchFetchState);
+    m_fetchFetchState.addTransition(this, &VeinComponentScpiMeasureSequence::fetchContinue, &m_fetchDoneState);
     m_FetchStateMachine.addState(&m_fetchState);
     m_FetchStateMachine.addState(&m_fetchSyncState);
     m_FetchStateMachine.addState(&m_fetchFetchState);
     m_FetchStateMachine.addState(&m_fetchDoneState);
-    connect(&m_fetchState, &QState::entered, this, &PerVeinComponentMeasureTransaction::fetch);
-    connect(&m_fetchSyncState, &QState::entered, this, &PerVeinComponentMeasureTransaction::fetchSync);
-    connect(&m_fetchFetchState, &QState::entered, this, &PerVeinComponentMeasureTransaction::fetchFetch);
+    connect(&m_fetchState, &QState::entered, this, &VeinComponentScpiMeasureSequence::fetch);
+    connect(&m_fetchSyncState, &QState::entered, this, &VeinComponentScpiMeasureSequence::fetchSync);
+    connect(&m_fetchFetchState, &QState::entered, this, &VeinComponentScpiMeasureSequence::fetchFetch);
     m_FetchStateMachine.setInitialState(&m_fetchState);
 }
 
-PerVeinComponentMeasureTransaction::~PerVeinComponentMeasureTransaction()
+VeinComponentScpiMeasureSequence::~VeinComponentScpiMeasureSequence()
 {
     m_instanceCount--;
     m_moduleCommonPendingMeasureStore->remove(m_pSCPICmdInfo->componentOrRpcName, this);
@@ -94,7 +94,7 @@ PerVeinComponentMeasureTransaction::~PerVeinComponentMeasureTransaction()
 
 enum signalCode {measCont, readCont, initCont, fetchCont};
 
-void PerVeinComponentMeasureTransaction::receiveMeasureValue(const QVariant &value)
+void VeinComponentScpiMeasureSequence::receiveMeasureValue(const QVariant &value)
 {
     m_moduleCommonPendingMeasureStore->remove(m_pSCPICmdInfo->componentOrRpcName, this);
     m_sAnswer = setAnswer(value);
@@ -125,7 +125,7 @@ void PerVeinComponentMeasureTransaction::receiveMeasureValue(const QVariant &val
 }
 
 
-void PerVeinComponentMeasureTransaction::execute(ScpiModelTypes modelType, const ScpiTransactionId &scpiTransactionId)
+void VeinComponentScpiMeasureSequence::execute(ScpiModelTypes modelType, const ScpiTransactionId &scpiTransactionId)
 {
     switch (modelType)
     {
@@ -176,24 +176,24 @@ void PerVeinComponentMeasureTransaction::execute(ScpiModelTypes modelType, const
     }
 }
 
-int PerVeinComponentMeasureTransaction::entityID()
+int VeinComponentScpiMeasureSequence::entityID()
 {
     return m_pSCPICmdInfo->entityId;
 }
 
-int PerVeinComponentMeasureTransaction::getInstanceCount()
+int VeinComponentScpiMeasureSequence::getInstanceCount()
 {
     return m_instanceCount;
 }
 
-QString PerVeinComponentMeasureTransaction::convertVariantToString(const QVariant &value)
+QString VeinComponentScpiMeasureSequence::convertVariantToString(const QVariant &value)
 {
     if (value.canConvert<int>() || value.canConvert<double>())
         return QString("%1").arg(value.toDouble(), 0, 'g', 8);
     return value.toString();
 }
 
-QString PerVeinComponentMeasureTransaction::setAnswer(const QVariant &qvar)
+QString VeinComponentScpiMeasureSequence::setAnswer(const QVariant &qvar)
 {
     QString s;
     const QString unit = m_pSCPICmdInfo->veinComponentInfo["Unit"].toString();
@@ -214,20 +214,20 @@ QString PerVeinComponentMeasureTransaction::setAnswer(const QVariant &qvar)
     return s;
 }
 
-void PerVeinComponentMeasureTransaction::measure()
+void VeinComponentScpiMeasureSequence::measure()
 {
     // this is our starting point ...nothing to do but better readable code
     emit measContinue();
 }
 
-void PerVeinComponentMeasureTransaction::measureConfigure()
+void VeinComponentScpiMeasureSequence::measureConfigure()
 {
     // for scpi compliance we have a configue but for the moment
     // we have noting to do here ... perhaps later
     emit measContinue();
 }
 
-void PerVeinComponentMeasureTransaction::measureInit()
+void VeinComponentScpiMeasureSequence::measureInit()
 {
     // if not an init is still pending then
     // we insert this object into the list of pending measurement values
@@ -239,32 +239,32 @@ void PerVeinComponentMeasureTransaction::measureInit()
     signalList.append(measCont); // measure statemachine waits for measure value
 }
 
-void PerVeinComponentMeasureTransaction::measureFetch()
+void VeinComponentScpiMeasureSequence::measureFetch()
 {
     emit sigMeasDone(m_sAnswer, m_measureScpiTransactionId, this);
     m_measureScpiTransactionId = ScpiTransactionId();
     emit measContinue();
 }
 
-void PerVeinComponentMeasureTransaction::configure()
+void VeinComponentScpiMeasureSequence::configure()
 {
     // for scpi compliance we have a configue but for the moment
     // we have noting to do here ... perhaps later
     emit confContinue();
 }
 
-void PerVeinComponentMeasureTransaction::configureDone()
+void VeinComponentScpiMeasureSequence::configureDone()
 {
     emit sigConfDone(m_configureScpiTransactionId, this);
 }
 
-void PerVeinComponentMeasureTransaction::read()
+void VeinComponentScpiMeasureSequence::read()
 {
     // this is our starting point ...nothing to do but better readable code
     emit readContinue();
 }
 
-void PerVeinComponentMeasureTransaction::readInit()
+void VeinComponentScpiMeasureSequence::readInit()
 {
     // if not an init is still pending then
     // we insert this object into the list of pending measurement values
@@ -276,14 +276,14 @@ void PerVeinComponentMeasureTransaction::readInit()
     signalList.append(readCont); // read statemachine waits for measure value
 }
 
-void PerVeinComponentMeasureTransaction::readFetch()
+void VeinComponentScpiMeasureSequence::readFetch()
 {
     emit sigReadDone(m_sAnswer, m_readScpiTransactionId, this);
     m_readScpiTransactionId = ScpiTransactionId();
     emit readContinue();
 }
 
-void PerVeinComponentMeasureTransaction::init()
+void VeinComponentScpiMeasureSequence::init()
 {
     // we insert this object into the list of pending measurement values
     // the module's eventsystem will look for notifications on this and will
@@ -295,19 +295,19 @@ void PerVeinComponentMeasureTransaction::init()
     signalList.append(initCont); // init statemachine waits for measure value
 }
 
-void PerVeinComponentMeasureTransaction::initDone()
+void VeinComponentScpiMeasureSequence::initDone()
 {
     m_bInitPending = false;
     emit sigInitDone(m_initScpiTransactionId, this);
 }
 
-void PerVeinComponentMeasureTransaction::fetch()
+void VeinComponentScpiMeasureSequence::fetch()
 {
     // this is our starting point ...nothing to do but better readable code
     emit fetchContinue();
 }
 
-void PerVeinComponentMeasureTransaction::fetchSync()
+void VeinComponentScpiMeasureSequence::fetchSync()
 {
     if (!m_bInitPending)
         emit fetchContinue();
@@ -315,7 +315,7 @@ void PerVeinComponentMeasureTransaction::fetchSync()
         signalList.append(fetchCont); // fetch statemachine waits for measure value
 }
 
-void PerVeinComponentMeasureTransaction::fetchFetch()
+void VeinComponentScpiMeasureSequence::fetchFetch()
 {
     emit sigFetchDone(m_sAnswer, m_fetchScpiTransactionId, this);
     m_fetchScpiTransactionId = ScpiTransactionId();

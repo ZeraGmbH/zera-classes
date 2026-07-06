@@ -62,7 +62,7 @@ cSCPIClient::~cSCPIClient()
         delete m_SCPIStatusList.at(i);
     delete m_pIEEE4882;
 
-    QList<PerVeinComponentMeasureTransaction*> keylist;
+    QList<VeinComponentScpiMeasureSequence*> keylist;
     keylist = m_SCPIMeasureTranslationHash.keys();
     for (int i = 0; i < keylist.count(); i++)
         delete m_SCPIMeasureTranslationHash[keylist.at(i)];
@@ -272,7 +272,7 @@ void cSCPIClient::generateSCPIMeasureSystem()
     QList<QString> keylist = pSCPIMeasDelegateHash->keys();
     for (int i = 0; i < keylist.count(); i++) {
         ScpiMeasureScpiCmdNodeDelegatePtr measDelegate = (*pSCPIMeasDelegateHash)[keylist.at(i)];
-        m_SCPIMeasureDelegateHash[measDelegate.get()] = std::make_shared<ScpiMeasureScpiCmdNodeDelegate>(*measDelegate, m_SCPIMeasureTranslationHash);
+        m_SCPIMeasureDelegateHash[measDelegate.get()] = std::make_shared<MeasureScpiNodeDelegate>(*measDelegate, m_SCPIMeasureTranslationHash);
     }
 }
 

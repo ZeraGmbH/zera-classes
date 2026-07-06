@@ -13,16 +13,16 @@
 namespace SCPIMODULE
 {
 
-class PerVeinComponentMeasureTransaction : public QObject
+class VeinComponentScpiMeasureSequence : public QObject
 {
     Q_OBJECT
 public:
     // Moduleinterface initials
-    PerVeinComponentMeasureTransaction(const std::shared_ptr<QMultiHash<QString, PerVeinComponentMeasureTransaction*>> &moduleCommonPendingMeasureStore,
+    VeinComponentScpiMeasureSequence(const std::shared_ptr<QMultiHash<QString, VeinComponentScpiMeasureSequence*>> &moduleCommonPendingMeasureStore,
                  const cSCPICmdInfoPtr &scpicmdinfo);
     // Scpi interface copies
-    PerVeinComponentMeasureTransaction(const PerVeinComponentMeasureTransaction &obj);
-    virtual ~PerVeinComponentMeasureTransaction();
+    VeinComponentScpiMeasureSequence(const VeinComponentScpiMeasureSequence &obj);
+    virtual ~VeinComponentScpiMeasureSequence();
 
     void receiveMeasureValue(const QVariant &value);
     void execute(ScpiModelTypes modelType, const ScpiTransactionId &scpiTransactionId);
@@ -37,18 +37,18 @@ signals:
     void initContinue();
     void fetchContinue();
 
-    void sigMeasDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::PerVeinComponentMeasureTransaction* sender);
-    void sigConfDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::PerVeinComponentMeasureTransaction* sender);
-    void sigReadDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::PerVeinComponentMeasureTransaction* sender);
-    void sigInitDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::PerVeinComponentMeasureTransaction* sender);
-    void sigFetchDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::PerVeinComponentMeasureTransaction* sender);
+    void sigMeasDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
+    void sigConfDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
+    void sigReadDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
+    void sigInitDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
+    void sigFetchDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
 
 private:
     void initialize();
     static QString convertVariantToString(const QVariant &value);
 
     std::shared_ptr<QMultiHash<QString /* vein component or Rpc name */,
-                               PerVeinComponentMeasureTransaction*>> m_moduleCommonPendingMeasureStore;
+                               VeinComponentScpiMeasureSequence*>> m_moduleCommonPendingMeasureStore;
     cSCPICmdInfoPtr m_pSCPICmdInfo;
 
     QStateMachine m_MeasureStateMachine;

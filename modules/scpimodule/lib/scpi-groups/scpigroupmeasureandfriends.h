@@ -4,7 +4,7 @@
 #include "scpigroupbase.h"
 #include "scpiinterface.h"
 #include "scpibasedelegate.h"
-#include "scpimeasurescpicmdnodedelegate.h"
+#include "measurescpinodedelegate.h"
 #include "scpicmdinfo.h"
 #include <QHash>
 #include <QJsonObject>
@@ -40,13 +40,13 @@ private:
                                const QString &cmd,
                                quint8 scpiCmdQueryFlags,
                                ScpiModelTypes modelType,
-                               PerVeinComponentMeasureTransaction* measureObject,
+                               VeinComponentScpiMeasureSequence* measureObject,
                                QJsonObject veinComponentInfo = QJsonObject());
     void setXmlComponentInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);
     void setXmlComponentValidatorInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);
     QJsonArray getValidatorEntries(QJsonObject validator);
 
-    QList<PerVeinComponentMeasureTransaction*> m_measureObjectsToDelete;
+    QList<VeinComponentScpiMeasureSequence*> m_measureObjectsToDelete;
 };
 
 }

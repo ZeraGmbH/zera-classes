@@ -7,7 +7,7 @@ namespace SCPIMODULE
 
 cSCPIModule::cSCPIModule(const ModuleFactoryParam &moduleParam) :
     BaseModule(moduleParam),
-    m_moduleCommonPendingMeasureStore(std::make_shared<QMultiHash<QString, PerVeinComponentMeasureTransaction*>>()),
+    m_moduleCommonPendingMeasureStore(std::make_shared<QMultiHash<QString, VeinComponentScpiMeasureSequence*>>()),
     m_pSCPIEventSystem(new SCPIEventSystem(this)),
     m_configuration(moduleParam.m_configXmlData),
     m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem))

@@ -109,7 +109,7 @@ void ScpiGroupMeasureAndFriends::addSCPICommand(const cSCPICmdInfoPtr &scpiCmdIn
 {
     if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
-        PerVeinComponentMeasureTransaction* measureObject = new PerVeinComponentMeasureTransaction(m_pModule->m_moduleCommonPendingMeasureStore, scpiCmdInfo);
+        VeinComponentScpiMeasureSequence* measureObject = new VeinComponentScpiMeasureSequence(m_pModule->m_moduleCommonPendingMeasureStore, scpiCmdInfo);
         m_measureObjectsToDelete.append(measureObject);
 
         addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, ScpiModelTypes::measure, measureObject);
@@ -164,7 +164,7 @@ void ScpiGroupMeasureAndFriends::addSCPIMeasureCommand(const QString &cmdparent,
                                              const QString &cmd,
                                              quint8 scpiCmdQueryFlags,
                                              ScpiModelTypes modelType,
-                                             PerVeinComponentMeasureTransaction *measureObject,
+                                             VeinComponentScpiMeasureSequence *measureObject,
                                              QJsonObject veinComponentInfo)
 {
     QString cmdcomplete = QString("%1:%2").arg(cmdparent, cmd);
@@ -174,7 +174,7 @@ void ScpiGroupMeasureAndFriends::addSCPIMeasureCommand(const QString &cmdparent,
         delegate->addScpiMeasureObject(measureObject);
     }
     else {
-        delegate = std::make_shared<ScpiMeasureScpiCmdNodeDelegate>(cmdparent, cmd, scpiCmdQueryFlags, modelType, measureObject);
+        delegate = std::make_shared<MeasureScpiNodeDelegate>(cmdparent, cmd, scpiCmdQueryFlags, modelType, measureObject);
         m_scpiMeasureDelegateHash[cmdcomplete] = delegate;
         m_pSCPIInterface->addSCPICommand(delegate);
     }
