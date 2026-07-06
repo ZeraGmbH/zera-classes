@@ -6,7 +6,7 @@ function(SETUP_QTESTS_MODULE)
             Zera::VfConvenientCode
             adjustmentmodule-static
             adjmodule-testlib
-            rangemodule-static
+            rangemodule-lib
             dftmodule-static
             fftmodule-static
             rmsmodule-static

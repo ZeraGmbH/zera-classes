@@ -8,7 +8,7 @@ function(SETUP_QTESTS_MODULE)
         target_link_libraries(${_testname}
             PRIVATE
             statusmodule-static
-            rangemodule-static
+            rangemodule-lib
             scpimodule-testlib
             zera-modulemanager-testlib
             Zera::xml-compare-testlib

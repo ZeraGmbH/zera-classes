@@ -5,7 +5,7 @@ function(SETUP_QTESTS_CHANNEL_RANGE_OBSERVER)
             PUBLIC
             channel-range-observer
             zera-modulemanager-testlib
-            rangemodule-static
+            rangemodule-lib
             Zera::zenuxservicecommon-testlib
             Zera::vf-tcp-mock-networklib
             Zera::mt310s2d-testlib

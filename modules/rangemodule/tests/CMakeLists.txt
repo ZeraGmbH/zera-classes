@@ -3,7 +3,7 @@ function(SETUP_QTESTS_MODULE)
     foreach(_testname ${ARGN})
         target_link_libraries(${_testname}
             PRIVATE
-            rangemodule-static
+            rangemodule-lib
             zera-modulemanager-testlib
             Zera::zdsp1d-testlib
             Zera::mt310s2d-testlib
