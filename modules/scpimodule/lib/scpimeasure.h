@@ -13,8 +13,6 @@
 namespace SCPIMODULE
 {
 
-enum signalCode {measCont, readCont, initCont, fetchCont};
-
 class cSCPIMeasure : public QObject
 {
     Q_OBJECT

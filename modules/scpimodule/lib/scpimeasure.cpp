@@ -92,6 +92,8 @@ cSCPIMeasure::~cSCPIMeasure()
     m_scpiMeasureHash->remove(m_pSCPICmdInfo->componentOrRpcName, this);
 }
 
+enum signalCode {measCont, readCont, initCont, fetchCont};
+
 void cSCPIMeasure::receiveMeasureValue(const QVariant &value)
 {
     m_scpiMeasureHash->remove(m_pSCPICmdInfo->componentOrRpcName, this);
