@@ -5,7 +5,7 @@ add_library(blemodule MODULE
 
 target_link_libraries(blemodule
     PRIVATE
-    blemodule-static
+    blemodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

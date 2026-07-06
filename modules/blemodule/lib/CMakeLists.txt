@@ -6,19 +6,17 @@ file(GLOB HEADER
     *.h
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-add_library(blemodule-static STATIC
+add_library(blemodule-lib SHARED
     ${SOURCES}
     ${HEADER}
     )
 
-target_include_directories(blemodule-static
+target_include_directories(blemodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-target_link_libraries(blemodule-static
+target_link_libraries(blemodule-lib
     PUBLIC
     zera-basemodule
     zera-meas-mode-management
@@ -28,3 +26,11 @@ target_link_libraries(blemodule-static
     "-Wl,--no-undefined"
     )
 
+set_target_properties(blemodule-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(blemodule-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS blemodule-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS blemodule-lib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
