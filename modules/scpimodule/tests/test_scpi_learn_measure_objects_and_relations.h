@@ -7,7 +7,7 @@ class test_scpi_learn_measure_objects_and_relations : public QObject
 {
     Q_OBJECT
 private slots:
-    void queryMeasure();
+    void countMeasureRelatedObjectsCreated();
 };
 
 #endif // TEST_SCPI_LEARN_MEASURE_OBJECTS_AND_RELATIONS_H
