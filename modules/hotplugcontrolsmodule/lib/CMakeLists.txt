@@ -8,23 +8,31 @@ file(GLOB HEADER
     rpc/*.h
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-add_library(hotplugcontrolsmodule-static STATIC
+add_library(hotplugcontrolsmodule-lib SHARED
     ${SOURCES}
     ${HEADER}
 )
 
-target_include_directories(hotplugcontrolsmodule-static
+target_include_directories(hotplugcontrolsmodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/rpc>
     )
 
-target_link_libraries(hotplugcontrolsmodule-static
+target_link_libraries(hotplugcontrolsmodule-lib
     zera-basemodule
     service-common
     vf-cpp-module-wrappers
     Zera::zenuxservicecommon
-)
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
+    )
 
+set_target_properties(hotplugcontrolsmodule-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(hotplugcontrolsmodule-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS hotplugcontrolsmodule-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS hotplugcontrolsmodule-lib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )

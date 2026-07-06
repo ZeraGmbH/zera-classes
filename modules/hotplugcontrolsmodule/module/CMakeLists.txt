@@ -6,7 +6,7 @@ add_library(hotplugcontrolsmodule MODULE
 
 target_link_libraries(hotplugcontrolsmodule
     PRIVATE
-    hotplugcontrolsmodule-static
+    hotplugcontrolsmodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
