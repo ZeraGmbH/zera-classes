@@ -18,7 +18,7 @@ target_include_directories(scpimodule-testlib
 
 target_link_libraries(scpimodule-testlib
     PUBLIC
-    scpimodule-static
+    scpimodule-lib
     Zera::testlib-common
     Zera::zera-timers-testlib
     Zera::VfStorage

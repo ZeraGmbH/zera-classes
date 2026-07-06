@@ -14,14 +14,12 @@ file(GLOB HEADER
     scpi-groups/*.h
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-add_library(scpimodule-static STATIC
+add_library(scpimodule-lib SHARED
     ${SOURCES}
     ${HEADER}
     )
 
-target_include_directories(scpimodule-static
+target_include_directories(scpimodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/delegates>
@@ -30,7 +28,7 @@ target_include_directories(scpimodule-static
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-groups>
     )
 
-target_link_libraries(scpimodule-static
+target_link_libraries(scpimodule-lib
     PUBLIC
     ${QTX}::SerialPort
     zera-basemodule
@@ -41,16 +39,11 @@ target_link_libraries(scpimodule-static
     "-Wl,--no-undefined"
     )
 
-set_target_properties(scpimodule-static PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(scpimodule-static PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+set_target_properties(scpimodule-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(scpimodule-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-export(TARGETS scpimodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
-install(TARGETS scpimodule-static
+export(TARGETS scpimodule-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS scpimodule-lib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/scpimodule-static
     )

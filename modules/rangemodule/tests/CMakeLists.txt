@@ -35,6 +35,6 @@ target_sources(test_range_scpi
 
 target_link_libraries(test_range_scpi
   PRIVATE
-    scpimodule-static
+    scpimodule-lib
     scpimodule-testlib
 )

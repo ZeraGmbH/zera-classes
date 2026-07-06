@@ -25,7 +25,7 @@ target_link_libraries(zera-modulemanager-testlib
     Zera::zera-timers-testlib
     Zera::zenuxservicecommon-testlib
     zera-modulemanager-lib
-    scpimodule-static
+    scpimodule-lib
     scpimodule-testlib
     module-service-interfaces-demolib
     module-service-interfaces-testlib

@@ -5,7 +5,7 @@ add_library(scpimodule MODULE
 
 target_link_libraries(scpimodule
     PRIVATE
-    scpimodule-static
+    scpimodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

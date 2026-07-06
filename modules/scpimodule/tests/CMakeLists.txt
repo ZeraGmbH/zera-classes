@@ -7,7 +7,6 @@ function(SETUP_QTESTS_MODULE)
         )
         target_link_libraries(${_testname}
             PRIVATE
-            scpimodule-static
             statusmodule-static
             rangemodule-static
             scpimodule-testlib
