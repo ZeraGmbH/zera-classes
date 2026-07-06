@@ -2,8 +2,8 @@
 #define SCPIMEASURE_H
 
 #include "scpicmdinfo.h"
+#include "scpimodeltypes.h"
 #include "scpitransactionid.h"
-#include <QObject>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -25,7 +25,7 @@ public:
     virtual ~cSCPIMeasure();
 
     void receiveMeasureValue(const QVariant &value);
-    void execute(quint8 cmd, const ScpiTransactionId &scpiTransactionId);
+    void execute(ScpiModelTypes modelType, const ScpiTransactionId &scpiTransactionId);
     int entityID();
 
     static int getInstanceCount();

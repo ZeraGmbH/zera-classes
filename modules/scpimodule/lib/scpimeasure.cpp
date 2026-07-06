@@ -125,11 +125,11 @@ void cSCPIMeasure::receiveMeasureValue(const QVariant &value)
 }
 
 
-void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionId)
+void cSCPIMeasure::execute(ScpiModelTypes modelType, const ScpiTransactionId &scpiTransactionId)
 {
-    switch (cmd)
+    switch (modelType)
     {
-    case ScpiModelType::measure:
+    case ScpiModelTypes::measure:
         if (!m_MeasureStateMachine.isRunning()) {
             m_measureScpiTransactionId = scpiTransactionId;
             m_MeasureStateMachine.start();
@@ -138,7 +138,7 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
             qWarning("Measure state machine already running!");
         break;
 
-    case ScpiModelType::configure:
+    case ScpiModelTypes::configure:
         if (!m_ConfigureStateMachine.isRunning()) {
             m_configureScpiTransactionId = scpiTransactionId;
             m_ConfigureStateMachine.start();
@@ -147,7 +147,7 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
             qWarning("Configure state machine already running!");
         break;
 
-    case ScpiModelType::read:
+    case ScpiModelTypes::read:
         if (!m_ReadStateMachine.isRunning()) {
             m_readScpiTransactionId = scpiTransactionId;
             m_ReadStateMachine.start();
@@ -156,7 +156,7 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
             qWarning("Model state machine already running!");
         break;
 
-    case ScpiModelType::init:
+    case ScpiModelTypes::init:
         if (!m_InitStateMachine.isRunning()) {
             m_initScpiTransactionId = scpiTransactionId;
             m_InitStateMachine.start();
@@ -165,7 +165,7 @@ void cSCPIMeasure::execute(quint8 cmd, const ScpiTransactionId &scpiTransactionI
             qWarning("Init state machine already running!");
         break;
 
-    case ScpiModelType::fetch:
+    case ScpiModelTypes::fetch:
         if (!m_FetchStateMachine.isRunning()) {
             m_fetchScpiTransactionId = scpiTransactionId;
             m_FetchStateMachine.start();

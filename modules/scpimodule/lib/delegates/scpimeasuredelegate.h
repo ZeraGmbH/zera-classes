@@ -7,14 +7,6 @@
 
 namespace SCPIMODULE {
 
-enum ScpiModelType {
-    measure,
-    configure,
-    read,
-    init,
-    fetch
-};
-
 class cSCPIMeasureDelegate: public ScpiBaseDelegate
 {
     Q_OBJECT
@@ -23,7 +15,7 @@ public:
     cSCPIMeasureDelegate(const QString &cmdParent,
                          const QString &cmd,
                          quint8 scpiCmdQueryFlags,
-                         ScpiModelType modelType,
+                         ScpiModelTypes modelType,
                          cSCPIMeasure* scpimeasureobject);
     // Scpi interface copies
     cSCPIMeasureDelegate(const cSCPIMeasureDelegate& moduleInterfaceDelegate,
@@ -37,7 +29,7 @@ private slots:
     void onSingleScpiQueryDone(const QString scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::cSCPIMeasure* sender);
 
 private:
-    ScpiModelType m_modelType;
+    ScpiModelTypes m_modelType;
     int m_nPending = 0;
     QString m_sAnswer;
     cSCPIClient *m_pClient = nullptr;

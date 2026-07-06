@@ -39,7 +39,7 @@ private:
     void addSCPIMeasureCommand(const QString &cmdparent,
                                const QString &cmd,
                                quint8 scpiCmdQueryFlags,
-                               ScpiModelType modelType,
+                               ScpiModelTypes modelType,
                                cSCPIMeasure* measureObject,
                                QJsonObject veinComponentInfo = QJsonObject());
     void setXmlComponentInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);

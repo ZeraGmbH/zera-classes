@@ -8,7 +8,7 @@ namespace SCPIMODULE {
 cSCPIMeasureDelegate::cSCPIMeasureDelegate(const QString &cmdParent,
                                            const QString &cmd,
                                            quint8 scpiCmdQueryFlags,
-                                           ScpiModelType modelType,
+                                           ScpiModelTypes modelType,
                                            cSCPIMeasure* scpimeasureobject) :
     ScpiBaseDelegate(cmdParent, cmd, scpiCmdQueryFlags),
     m_modelType(modelType)
@@ -53,8 +53,8 @@ void cSCPIMeasureDelegate::executeClient(cSCPIClient *client, const ScpiTransact
     bool reentryPossible;
     switch (m_modelType)
     {
-    case ScpiModelType::init:
-    case ScpiModelType::configure:
+    case ScpiModelTypes::init:
+    case ScpiModelTypes::configure:
         reentryPossible = true;
         break;
     default:
@@ -68,19 +68,19 @@ void cSCPIMeasureDelegate::executeClient(cSCPIClient *client, const ScpiTransact
             cSCPIMeasure* measure = m_scpimeasureObjectList.at(i);
             switch (m_modelType)
             {
-            case ScpiModelType::measure:
+            case ScpiModelTypes::measure:
                 connect(measure, &cSCPIMeasure::sigMeasDone, this, &cSCPIMeasureDelegate::onSingleScpiQueryDone);
                 break;
-            case ScpiModelType::configure:
+            case ScpiModelTypes::configure:
                 connect(measure, &cSCPIMeasure::sigConfDone, this, &cSCPIMeasureDelegate::onSingleScpiCmdDone);
                 break;
-            case ScpiModelType::read:
+            case ScpiModelTypes::read:
                 connect(measure, &cSCPIMeasure::sigReadDone, this, &cSCPIMeasureDelegate::onSingleScpiQueryDone);
                 break;
-            case ScpiModelType::init:
+            case ScpiModelTypes::init:
                 connect(measure, &cSCPIMeasure::sigInitDone, this, &cSCPIMeasureDelegate::onSingleScpiCmdDone);
                 break;
-            case ScpiModelType::fetch:
+            case ScpiModelTypes::fetch:
                 connect(measure, &cSCPIMeasure::sigFetchDone, this, &cSCPIMeasureDelegate::onSingleScpiQueryDone);
                 break;
             }
