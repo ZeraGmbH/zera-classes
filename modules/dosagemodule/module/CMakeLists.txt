@@ -6,7 +6,7 @@ add_library(dosagemodule MODULE
 
 target_link_libraries(dosagemodule
     PRIVATE
-    dosagemodule-static
+    dosagemodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

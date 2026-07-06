@@ -1,25 +1,23 @@
 file(GLOB SOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    *.cpp
     )
 
 file(GLOB HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    *.h
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-add_library(dosagemodule-static STATIC
+add_library(dosagemodule-lib SHARED
     dosagemodulexmlschema.qrc
     ${SOURCES}
     ${HEADER}
     )
 
-target_include_directories(dosagemodule-static
+target_include_directories(dosagemodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-target_link_libraries(dosagemodule-static
+target_link_libraries(dosagemodule-lib
     PUBLIC
     zera-basemodule
     zera-meas-mode-management
@@ -28,3 +26,11 @@ target_link_libraries(dosagemodule-static
     "-Wl,--no-undefined"
     )
 
+set_target_properties(dosagemodule-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(dosagemodule-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS dosagemodule-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS dosagemodule-lib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
