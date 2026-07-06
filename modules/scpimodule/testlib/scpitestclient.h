@@ -17,6 +17,7 @@ public:
 
     void sendScpiCmds(QString cmds);
     const NullableString &getLastResponse() const;
+    int getHandledResponses() const;
     int getUnhandledResponses() const;
     bool getAtLeastOneResponse() const;
 signals:
@@ -27,8 +28,8 @@ private slots:
 
 private:
     NullableString m_lastResponse;
+    int m_handledResponses = 0;
     int m_unhandledResponses = 0;
-    bool m_atLeastOneResponse = false;
 };
 
 }

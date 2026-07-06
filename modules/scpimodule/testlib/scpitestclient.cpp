@@ -29,6 +29,11 @@ const NullableString &ScpiTestClient::getLastResponse() const
     return m_lastResponse;
 }
 
+int ScpiTestClient::getHandledResponses() const
+{
+    return m_handledResponses;
+}
+
 int ScpiTestClient::getUnhandledResponses() const
 {
     return m_unhandledResponses;
@@ -36,15 +41,15 @@ int ScpiTestClient::getUnhandledResponses() const
 
 bool ScpiTestClient::getAtLeastOneResponse() const
 {
-    return m_atLeastOneResponse;
+    return m_handledResponses > 0;
 }
 
 void ScpiTestClient::handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
 {
     Q_UNUSED(logType)
 
-    m_atLeastOneResponse = true;
     m_lastResponse = scpiResponse;
+    m_handledResponses++;
     m_unhandledResponses--;
 
     const NullableStringList sortedResponses = m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId);
