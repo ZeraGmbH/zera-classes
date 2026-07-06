@@ -3,7 +3,7 @@ function(SETUP_QTESTS_MODULE)
     foreach(_testname ${ARGN})
         target_link_libraries(${_testname}
             PRIVATE
-            burden1module-static
+            burden1module-lib
             zera-modulemanager-testlib
         )
     endforeach()

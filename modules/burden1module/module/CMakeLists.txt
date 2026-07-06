@@ -5,7 +5,7 @@ add_library(burden1module MODULE
 
 target_link_libraries(burden1module
     PRIVATE
-    burden1module-static
+    burden1module-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
