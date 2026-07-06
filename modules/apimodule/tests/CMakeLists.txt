@@ -4,7 +4,7 @@ function(SETUP_QTESTS_MODULE)
         target_link_libraries(${_testname}
             PRIVATE
             zera-modulemanager-testlib
-            apimodule-static
+            apimodule-lib
         )
     endforeach()
 endfunction()

@@ -6,7 +6,7 @@ add_library(apimodule MODULE
 
 target_link_libraries(apimodule
     PRIVATE
-    apimodule-static
+    apimodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
