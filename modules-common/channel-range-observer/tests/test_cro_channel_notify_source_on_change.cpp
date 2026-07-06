@@ -32,7 +32,7 @@ void test_cro_channel_notify_source_on_change::mt581s2NotifyManyChannels()
     ModuleManagerTestRunner testRunner(":/def-session-minimal.json", false, "mt581s2");
     createClient();
 
-    RANGEMODULE::cRangeModule *rangeModule = static_cast<RANGEMODULE::cRangeModule*>(testRunner.getModule(rangemoduleEntityId));
+    RANGEMODULE::cRangeModule *rangeModule = qobject_cast<RANGEMODULE::cRangeModule*>(testRunner.getModule(rangemoduleEntityId));
     ChannelRangeObserver::SystemObserverPtr observer = rangeModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channelUL1 = observer->getChannel("m0");
     QSignalSpy spylUL1(channelUL1.get(), &ChannelRangeObserver::Channel::sigSourceModeOnChanged);
@@ -91,7 +91,7 @@ void test_cro_channel_notify_source_on_change::mt310s2s2Startup()
     ModuleManagerTestRunner testRunner(":/def-session-minimal.json", false, "mt310s2");
     createClient();
 
-    RANGEMODULE::cRangeModule *rangeModule = static_cast<RANGEMODULE::cRangeModule*>(testRunner.getModule(rangemoduleEntityId));
+    RANGEMODULE::cRangeModule *rangeModule = qobject_cast<RANGEMODULE::cRangeModule*>(testRunner.getModule(rangemoduleEntityId));
     ChannelRangeObserver::SystemObserverPtr observer = rangeModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channelUL1 = observer->getChannel("m0");
     QSignalSpy spylUL1(channelUL1.get(), &ChannelRangeObserver::Channel::sigSourceModeOnChanged);
@@ -108,7 +108,7 @@ void test_cro_channel_notify_source_on_change::com5003Startup()
     ModuleManagerTestRunner testRunner(":/def-session-minimal.json", false, "com5003");
     createClient();
 
-    RANGEMODULE::cRangeModule *rangeModule = static_cast<RANGEMODULE::cRangeModule*>(testRunner.getModule(rangemoduleEntityId));
+    RANGEMODULE::cRangeModule *rangeModule = qobject_cast<RANGEMODULE::cRangeModule*>(testRunner.getModule(rangemoduleEntityId));
     ChannelRangeObserver::SystemObserverPtr observer = rangeModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channelUL1 = observer->getChannel("m0");
     QSignalSpy spylUL1(channelUL1.get(), &ChannelRangeObserver::Channel::sigSourceModeOnChanged);
