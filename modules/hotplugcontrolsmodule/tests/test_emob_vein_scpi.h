@@ -25,7 +25,7 @@ private slots:
     void activateEmobPushButtonWithParamScpi();
     void activateEmobPushNoParamMutipleHotplug();
     void activateEmobPushInvalidParam();
-    void activateEmobPushIncorrectParam();
+    void activateEmobPushChannelWithoutEmob();
     void activateEmobPushValidParamMutipleHotplug();
     void activateEmobPushButtonVein();
 

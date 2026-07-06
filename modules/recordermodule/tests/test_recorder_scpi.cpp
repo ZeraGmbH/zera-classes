@@ -45,6 +45,8 @@ void test_recorder_scpi::scpiWriteCountIgnored()
 {
     ScpiModuleNetClientBlocked client;
     QCOMPARE(client.sendReceive("*cls|RECORDER:REC1:COUNT 1;|*stb?"), "+4");
+    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
+    QCOMPARE(client.sendReceive("*stb?"), "+0"); // just one error
     QCOMPARE(client.sendReceive("*cls|RECORDER:REC1:COUNT?"), "0");
 }
 

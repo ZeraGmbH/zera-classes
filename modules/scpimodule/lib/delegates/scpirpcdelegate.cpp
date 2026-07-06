@@ -62,7 +62,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QSt
             if(rpcSuccessful)
                 client->handleCmdFinishStatusOnly(ZSCPI::ack, scpiTransactionId);
             else
-                client->handleCmdFinishStatusOnly(ZSCPI::errval, scpiTransactionId);
+                client->handleCmdFinishStatusOnly(ZSCPI::errexec, scpiTransactionId);
         }
     });
     m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);

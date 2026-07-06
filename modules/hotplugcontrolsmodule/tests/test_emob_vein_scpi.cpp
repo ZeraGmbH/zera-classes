@@ -72,8 +72,10 @@ void test_emob_vein_scpi::invokeInvalidRpcNameScpi()
 
 void test_emob_vein_scpi::activateEmobPushButtonNoEmobNoParamScpi()
 {
-    QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS;|*stb?");
-    QCOMPARE(status, "+4"); // no emob
+    QCOMPARE(m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS;|*stb?"), "+4"); // no emob
+    // for now execution error (would be cool to return HardwareMissing...)
+    QCOMPARE(m_scpiClient->sendReceive("SYSTEM:ERROR?"), "-200,Execution error");
+    QCOMPARE(m_scpiClient->sendReceive("*stb?"), "+0"); // just one error
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpActivateEmobPushButtonNoParamScpi.json", jsonDumped));
@@ -109,14 +111,19 @@ void test_emob_vein_scpi::activateEmobPushInvalidParam()
     m_testRunner->addStandardEmobControllers(QStringList() << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS FOO;|*stb?");
     QCOMPARE(status, "+4");
+    // this is the standard vein error value - TODO give vein hints on error
+    QCOMPARE(m_scpiClient->sendReceive("SYSTEM:ERROR?"), "-120,Numeric data error");
+    QCOMPARE(m_scpiClient->sendReceive("*stb?"), "+0"); // just one error
 }
 
-void test_emob_vein_scpi::activateEmobPushIncorrectParam()
+void test_emob_vein_scpi::activateEmobPushChannelWithoutEmob()
 {
     //valid but incorrect param
     m_testRunner->addStandardEmobControllers(QStringList() << "IL3" << "IAUX");
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:PBPRESS IL1;|*stb?");
     QCOMPARE(status, "+4");
+    QCOMPARE(m_scpiClient->sendReceive("SYSTEM:ERROR?"), "-200,Execution error");
+    QCOMPARE(m_scpiClient->sendReceive("*stb?"), "+0"); // just one error
 }
 
 void test_emob_vein_scpi::activateEmobPushValidParamMutipleHotplug()
