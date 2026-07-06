@@ -53,7 +53,6 @@ void test_scpi_cmds_in_session::initialTestClient()
 
 void test_scpi_cmds_in_session::minScpiDevIface()
 {
-    ModulemanagerConfig::setDemoDevice("mt310s2");
     startModmanWithSession(":/session-scpi-only.json");
     QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
     ScpiTestSelectableClient client(clientType, getScpiModule());
