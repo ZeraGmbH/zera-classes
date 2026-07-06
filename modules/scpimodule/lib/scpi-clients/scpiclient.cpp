@@ -62,7 +62,7 @@ cSCPIClient::~cSCPIClient()
         delete m_SCPIStatusList.at(i);
     delete m_pIEEE4882;
 
-    QList<cSCPIMeasure*> keylist;
+    QList<ScpiMeasurePerVeinComponentSequencer*> keylist;
     keylist = m_SCPIMeasureTranslationHash.keys();
     for (int i = 0; i < keylist.count(); i++)
         delete m_SCPIMeasureTranslationHash[keylist.at(i)];

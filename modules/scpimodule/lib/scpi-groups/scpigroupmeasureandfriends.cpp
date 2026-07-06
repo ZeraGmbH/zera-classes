@@ -109,7 +109,7 @@ void ScpiGroupMeasureAndFriends::addSCPICommand(const cSCPICmdInfoPtr &scpiCmdIn
 {
     if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
-        cSCPIMeasure* measureObject = new cSCPIMeasure(m_pModule->m_scpiMeasureHash, scpiCmdInfo);
+        ScpiMeasurePerVeinComponentSequencer* measureObject = new ScpiMeasurePerVeinComponentSequencer(m_pModule->m_scpiMeasureHash, scpiCmdInfo);
         m_measureObjectsToDelete.append(measureObject);
 
         addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, ScpiModelTypes::measure, measureObject);
@@ -164,7 +164,7 @@ void ScpiGroupMeasureAndFriends::addSCPIMeasureCommand(const QString &cmdparent,
                                              const QString &cmd,
                                              quint8 scpiCmdQueryFlags,
                                              ScpiModelTypes modelType,
-                                             cSCPIMeasure *measureObject,
+                                             ScpiMeasurePerVeinComponentSequencer *measureObject,
                                              QJsonObject veinComponentInfo)
 {
     QString cmdcomplete = QString("%1:%2").arg(cmdparent, cmd);

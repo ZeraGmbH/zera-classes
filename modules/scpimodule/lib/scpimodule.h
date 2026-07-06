@@ -5,7 +5,7 @@
 #include "scpiserver.h"
 #include "scpimoduleconfiguration.h"
 #include "signalconnectiondelegate.h"
-#include "scpimeasure.h"
+#include "scpimeasureperveincomponentsequencer.h"
 #include "basemodule.h"
 #include "vfeventsytemmoduleparam.h"
 #include <vf_cmd_event_handler_system.h>
@@ -30,7 +30,7 @@ public:
 
     QMultiHash<QString, SCPIVeinTransactionInfoPtr> scpiParameterCmdInfoHash; // a hash to memorize what was in progress for which client
     QList<cSignalConnectionDelegate*> sConnectDelegateList;
-    std::shared_ptr<QMultiHash<QString, cSCPIMeasure*>> m_scpiMeasureHash;
+    std::shared_ptr<QMultiHash<QString, ScpiMeasurePerVeinComponentSequencer*>> m_scpiMeasureHash;
 
     VfEventSytemModuleParam *getValidatorEventSystem();
     SCPIEventSystem* m_pSCPIEventSystem = nullptr;

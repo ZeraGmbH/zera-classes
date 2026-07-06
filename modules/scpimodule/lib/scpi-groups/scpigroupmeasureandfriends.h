@@ -40,13 +40,13 @@ private:
                                const QString &cmd,
                                quint8 scpiCmdQueryFlags,
                                ScpiModelTypes modelType,
-                               cSCPIMeasure* measureObject,
+                               ScpiMeasurePerVeinComponentSequencer* measureObject,
                                QJsonObject veinComponentInfo = QJsonObject());
     void setXmlComponentInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);
     void setXmlComponentValidatorInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);
     QJsonArray getValidatorEntries(QJsonObject validator);
 
-    QList<cSCPIMeasure*> m_measureObjectsToDelete;
+    QList<ScpiMeasurePerVeinComponentSequencer*> m_measureObjectsToDelete;
 };
 
 }
