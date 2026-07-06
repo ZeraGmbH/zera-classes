@@ -5,7 +5,7 @@ add_library(dftmodule MODULE
 
 target_link_libraries(dftmodule
     PRIVATE
-    dftmodule-static
+    dftmodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

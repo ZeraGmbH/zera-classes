@@ -19,7 +19,7 @@ target_include_directories(dftmodule-demolib
 
 target_link_libraries(dftmodule-demolib
     PUBLIC
-    dftmodule-static
+    dftmodule-lib
     module-service-interfaces-demolib
     Zera::zera-timers
 )

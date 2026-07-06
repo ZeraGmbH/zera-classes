@@ -6,19 +6,17 @@ file(GLOB HEADER
     *.h
     )
 
-add_library(dftmodule-static STATIC
+add_library(dftmodule-lib SHARED
     ${SOURCES}
     ${HEADER}
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-target_include_directories(dftmodule-static
+target_include_directories(dftmodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-target_link_libraries(dftmodule-static
+target_link_libraries(dftmodule-lib
     PUBLIC
     zera-basemodule
     service-common
@@ -28,13 +26,11 @@ target_link_libraries(dftmodule-static
     "-Wl,--no-undefined"
     )
 
-export(TARGETS dftmodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
-install(TARGETS dftmodule-static
+set_target_properties(dftmodule-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(dftmodule-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS dftmodule-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS dftmodule-lib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dftmodule-static
     )
