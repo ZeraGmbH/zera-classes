@@ -19,8 +19,10 @@ class cSCPIMeasure : public QObject
 {
     Q_OBJECT
 public:
+    // Moduleinterface initials
     cSCPIMeasure(const std::shared_ptr<QMultiHash<QString, cSCPIMeasure*>> &scpiMeasureHash,
                  const cSCPICmdInfoPtr &scpicmdinfo);
+    // Scpi interface copies
     cSCPIMeasure(const cSCPIMeasure &obj);
     virtual ~cSCPIMeasure();
 
