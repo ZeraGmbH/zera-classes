@@ -6,19 +6,17 @@ file(GLOB HEADER
     *.h
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-add_library(oscimodule-static STATIC
+add_library(oscimodule-lib SHARED
     ${SOURCES}
     ${HEADER}
     )
 
-target_include_directories(oscimodule-static
+target_include_directories(oscimodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-target_link_libraries(oscimodule-static
+target_link_libraries(oscimodule-lib
     PUBLIC
     zera-basemodule
     service-common
@@ -28,13 +26,11 @@ target_link_libraries(oscimodule-static
     "-Wl,--no-undefined"
     )
 
-export(TARGETS oscimodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
-install(TARGETS oscimodule-static
+set_target_properties(oscimodule-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(oscimodule-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS oscimodule-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS oscimodule-lib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/oscimodule-static
     )

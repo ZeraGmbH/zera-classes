@@ -5,7 +5,7 @@ add_library(oscimodule MODULE
 
 target_link_libraries(oscimodule
     PRIVATE
-    oscimodule-static
+    oscimodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
