@@ -5,7 +5,7 @@ add_library(dspsupermodule MODULE
 
 target_link_libraries(dspsupermodule
     PRIVATE
-    dspsupermodule-static
+    dspsupermodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

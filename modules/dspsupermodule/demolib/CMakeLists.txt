@@ -19,7 +19,7 @@ target_include_directories(dspsupermodule-demolib
 
 target_link_libraries(dspsupermodule-demolib
     PUBLIC
-    dspsupermodule-static
+    dspsupermodule-lib
     module-service-interfaces-demolib
     Zera::zera-timers
 )

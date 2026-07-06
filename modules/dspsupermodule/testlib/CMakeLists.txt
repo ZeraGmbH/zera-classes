@@ -19,7 +19,7 @@ target_include_directories(dspsupermodule-testlib
 
 target_link_libraries(dspsupermodule-testlib
     PUBLIC
-    dspsupermodule-static
+    dspsupermodule-lib
     module-service-interfaces-testlib
 )
 
