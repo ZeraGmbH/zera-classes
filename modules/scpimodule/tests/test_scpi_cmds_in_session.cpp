@@ -1,10 +1,9 @@
 #include "test_scpi_cmds_in_session.h"
-#include "modulemanagertestrunner.h"
 #include "modulemanagerconfig.h"
-#include "scpimodulenetclientblocked.h"
+#include "scpitestselectableclient.h"
 #include <timemachineobject.h>
+#include <timerfactoryqtfortest.h>
 #include <scpimodule.h>
-#include <scpitestclient.h>
 #include <scpiserver.h>
 #include <statusmodule.h>
 #include <rangemodule.h>
@@ -15,10 +14,23 @@
 
 QTEST_MAIN(test_scpi_cmds_in_session)
 
+void test_scpi_cmds_in_session::initTestCase()
+{
+    qputenv("QT_FATAL_CRITICALS", "1");
+    TimerFactoryQtForTest::enableTest();
+}
+
+void test_scpi_cmds_in_session::initTestCase_data()
+{
+    QTest::addColumn<ScpiTestSelectableClient::ClientType>("clientType");
+    QTest::newRow("Test") << ScpiTestSelectableClient::TEST;
+    QTest::newRow("Net") << ScpiTestSelectableClient::NET;
+}
+
 void test_scpi_cmds_in_session::initialSession()
 {
-    ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
-    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
+    startModmanWithSession(":/session-scpi-only.json");
+    VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
     QList<int> entityList = veinStorageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
 
@@ -28,9 +40,10 @@ void test_scpi_cmds_in_session::initialSession()
 
 void test_scpi_cmds_in_session::initialTestClient()
 {
-    ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
+    startModmanWithSession(":/session-scpi-only.json");
+    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
+    ScpiTestSelectableClient client(clientType, getScpiModule());
 
-    ScpiModuleNetClientBlocked client;
     QString receive1 = client.sendReceive("*STB?");
     QString receive2 = client.sendReceive("*STB?");
 
@@ -41,9 +54,10 @@ void test_scpi_cmds_in_session::initialTestClient()
 void test_scpi_cmds_in_session::minScpiDevIface()
 {
     ModulemanagerConfig::setDemoDevice("mt310s2");
-    ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
+    startModmanWithSession(":/session-scpi-only.json");
+    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
+    ScpiTestSelectableClient client(clientType, getScpiModule());
 
-    ScpiModuleNetClientBlocked client;
     QString receive = client.sendReceive("dev:iface?", false);
 
     QFile ifaceBaseXmlFile("://dev-iface-basic.xml");
@@ -55,9 +69,10 @@ void test_scpi_cmds_in_session::minScpiDevIface()
 
 void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
 {
-    ModuleManagerTestRunner testRunner(":/session-two-modules.json");
+    startModmanWithSession(":/session-two-modules.json");
+    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
+    ScpiTestSelectableClient client(clientType, getScpiModule());
 
-    ScpiModuleNetClientBlocked client;
     QString receive1 = client.sendReceive("*STB?");
     QString receive2 = client.sendReceive("STATUS:DEV1:SERIAL?");
     QString receive3 = client.sendReceive("*STB?");
@@ -75,10 +90,11 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
 {
     // * double delete fixed by 3766814ec0fae75ad7f18c7f71c34a767675e6e4.
     // * tested by reverting fix -> crashed
-    ModuleManagerTestRunner testRunner(":/session-three-modules.json");
+    startModmanWithSession(":/session-three-modules.json");
+    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
+    ScpiTestSelectableClient client(clientType, getScpiModule());
 
     // multi read to cause double delete crasher
-    ScpiModuleNetClientBlocked client;
     QString receive1 = client.sendReceive("CONFIGURATION:RNG1:RNGAUTO?");
     QString receive2 = client.sendReceive("CONFIGURATION:RNG1:GROUPING?");
     client.sendReceive("SENSE:RNG1:UL1:RANGE?");
@@ -91,9 +107,10 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
 
 void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 {
-    ModuleManagerTestRunner testRunner(":/session-three-modules.json");
+    startModmanWithSession(":/session-three-modules.json");
+    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
+    ScpiTestSelectableClient client(clientType, getScpiModule());
 
-    ScpiModuleNetClientBlocked client;
     QString dumped = client.sendReceive("dev:iface?", false);
     QString expected = TestLogHelpers::loadFile(":/dev-iface-three.xml");
 
@@ -106,8 +123,10 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 
 void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()
 {
-    ModuleManagerTestRunner testRunner(":/range-min-session.json");
-    ScpiModuleNetClientBlocked client;
+    killModman(); // ensure fresh modman
+    startModmanWithSession(":/range-min-session.json");
+    ScpiModuleNetClientBlocked client; // This test is net client specific
+
     QString currRange = client.sendReceive("SENSE:RNG1:Il1:RANGE?");
     QCOMPARE(currRange, "10A");
 
@@ -122,7 +141,7 @@ void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()
 
 void test_scpi_cmds_in_session::multilineCommandsLastOpc()
 {
-    ModuleManagerTestRunner testRunner(":/range-min-session.json");
+    startModmanWithSession(":/range-min-session.json");
     ScpiModuleNetClientBlocked client;
     QByteArrayList commands = QByteArrayList() << "SENSE:RNG1:UL1:RANGE 8V;|SENSE:RNG1:UL2:RANGE 8V;|SENSE:RNG1:UL3:RANGE 8V;|SENSE:RNG1:UAUX:RANGE 8V;"
                                                << "*OPC?";
@@ -139,7 +158,7 @@ void test_scpi_cmds_in_session::multilineCommandsLastOpc()
 
 void test_scpi_cmds_in_session::catalogFormat()
 {
-    ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
+    startModmanWithSession(":/session-scpi-only.json");
     ScpiModuleNetClientBlocked client;
     QString sessionCatalog = client.sendReceive("CONFIGURATION:SYST:SESSION:CATALOG?");
     QCOMPARE(sessionCatalog, "Default;EMOB AC;EMOB DC;DC: 4*Voltage / 1*Current");
@@ -147,62 +166,86 @@ void test_scpi_cmds_in_session::catalogFormat()
 
 void test_scpi_cmds_in_session::executeRpcQueryWrongRpcName()
 {
-    ModuleManagerTestRunner testRunner(":/session-scpi-only.json");
-    ScpiModuleNetClientBlocked client;
-    QString status = client.sendReceive("CALCULATE:EM01:0001:FOO?");
-    QCOMPARE(status, "");
+    startModmanWithSession(":/session-scpi-only.json");
+    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
+    ScpiTestSelectableClient client(clientType, getScpiModule());
+
+    QCOMPARE(client.sendReceive("CALCULATE:EM01:0001:FOO?"), "");
 }
 
 void test_scpi_cmds_in_session::executeRpcReadLockStateQuery()
 {
-    ModuleManagerTestRunner testRunner(":/hotpluscontrols-min-session.json");
-    ScpiModuleNetClientBlocked client;
-    QString status = client.sendReceive("EMOB:HOTP1:EMLOCKSTATE?");
-    QCOMPARE(status, "4");
+    startModmanWithSession(":/hotpluscontrols-min-session.json");
+    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
+    ScpiTestSelectableClient client(clientType, getScpiModule());
+
+    QCOMPARE(client.sendReceive("EMOB:HOTP1:EMLOCKSTATE?"), "4");
 }
 
 void test_scpi_cmds_in_session::executeRpcQueryInvalidParams()
 {
-    ModuleManagerTestRunner testRunner("");
+    startModmanWithSession("");
     vfEntityRpcEventHandler *rpcEventHandler = new vfEntityRpcEventHandler();
-    testRunner.getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
+    m_testRunner->getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
     rpcEventHandler->initOnce();
     TimeMachineObject::feedEventLoop();
-    testRunner.start(":/session-scpi-only.json");
+    m_testRunner->start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
-    ScpiModuleNetClientBlocked client;
-    QString answer = client.sendReceive("CALCULATE:RPC1? 7;");
-    QCOMPARE(answer, "");
+    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
+    ScpiTestSelectableClient client(clientType, getScpiModule());
+
+    QCOMPARE(client.sendReceive("CALCULATE:RPC1? 7;"), "");
 }
 
 void test_scpi_cmds_in_session::executeRpcQueryOneParam()
 {
-    ModuleManagerTestRunner testRunner("");
+    startModmanWithSession("");
     vfEntityRpcEventHandler *rpcEventHandler = new vfEntityRpcEventHandler();
-    testRunner.getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
+    m_testRunner->getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
     rpcEventHandler->initOnce();
     TimeMachineObject::feedEventLoop();
-    testRunner.start(":/session-scpi-only.json");
+    m_testRunner->start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
-    ScpiModuleNetClientBlocked client;
-    QString answer = client.sendReceive("CALCULATE:RPC1? true;");
-    QCOMPARE(answer, "false");
+    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
+    ScpiTestSelectableClient client(clientType, getScpiModule());
+
+    QCOMPARE(client.sendReceive("CALCULATE:RPC1? true;"), "false");
 }
 
 void test_scpi_cmds_in_session::doNotExecuteRpcQueryMultipleParams()
 {
-    ModuleManagerTestRunner testRunner("");
+    startModmanWithSession("");
     vfEntityRpcEventHandler *rpcEventHandler = new vfEntityRpcEventHandler();
-    testRunner.getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
+    m_testRunner->getModManFacade()->addSubsystem(rpcEventHandler->getVeinEntity());
     rpcEventHandler->initOnce();
     TimeMachineObject::feedEventLoop();
-    testRunner.start(":/session-scpi-only.json");
+    m_testRunner->start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
-    ScpiModuleNetClientBlocked client;
-    QString answer = client.sendReceive("CALCULATE:RPC2? foo;true;");
-    QCOMPARE(answer, "");
+    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
+    ScpiTestSelectableClient client(clientType, getScpiModule());
+
+    QCOMPARE(client.sendReceive("CALCULATE:RPC2? foo;true;"), "");
+}
+
+void test_scpi_cmds_in_session::startModmanWithSession(const QString &sessionFile)
+{
+    if (m_testRunner == nullptr || sessionFile != m_testRunner->getSessionFileName()) {
+        killModman();
+        m_testRunner = std::make_unique<ModuleManagerTestRunner>(sessionFile);
+    }
+}
+
+void test_scpi_cmds_in_session::killModman()
+{
+    m_testRunner.reset();
+    TimeMachineObject::feedEventLoop();
+}
+
+SCPIMODULE::cSCPIModule *test_scpi_cmds_in_session::getScpiModule()
+{
+    return static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
 }
 

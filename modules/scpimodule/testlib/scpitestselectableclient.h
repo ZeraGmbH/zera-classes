@@ -15,13 +15,13 @@ public:
     Q_ENUM(ClientType)
 
     explicit ScpiTestSelectableClient(ClientType clientType, SCPIMODULE::cSCPIModule* scpiModule);
-    QString sendReceive(const QString &scpi);
+    QString sendReceive(const QString &scpi, bool removeLineFeedOnReceive = true);
     bool commandsPending() const;
 
 private slots:
     void onTestScpiAnswer(const QString &scpiResponse);
 private:
-    ClientType m_clientType;
+    ClientType m_clientType = NET;
     std::unique_ptr<ScpiModuleNetClientBlocked> m_blockedClient;
     std::unique_ptr<SCPIMODULE::ScpiTestClient> m_testClient;
     QString m_testClientResponse;

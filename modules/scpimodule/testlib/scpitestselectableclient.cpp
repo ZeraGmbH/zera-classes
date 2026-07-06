@@ -14,16 +14,18 @@ ScpiTestSelectableClient::ScpiTestSelectableClient(ClientType clientType, SCPIMO
         m_blockedClient = std::make_unique<ScpiModuleNetClientBlocked>();
 }
 
-QString ScpiTestSelectableClient::sendReceive(const QString &scpi)
+QString ScpiTestSelectableClient::sendReceive(const QString &scpi, bool removeLineFeedOnReceive)
 {
     if (m_clientType == TEST) {
         m_testClient->sendScpiCmds(scpi);
         TimeMachineObject::feedEventLoop();
-        return m_testClientResponse;
+        QString response = m_testClientResponse;
+        if (removeLineFeedOnReceive)
+            response.remove("\n");
+        return response;
     }
     else
-        return m_blockedClient->sendReceive(scpi.toLocal8Bit());
-
+        return m_blockedClient->sendReceive(scpi.toLocal8Bit(), removeLineFeedOnReceive);
 }
 
 bool ScpiTestSelectableClient::commandsPending() const
