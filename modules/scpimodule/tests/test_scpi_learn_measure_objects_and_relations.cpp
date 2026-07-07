@@ -1,6 +1,7 @@
 #include "test_scpi_learn_measure_objects_and_relations.h"
 #include "modulemanagertestrunner.h"
 #include "scpimodule.h"
+#include "scpimodulenetclientblocked.h"
 #include "scpitestclient.h"
 #include <timemachineobject.h>
 #include <xmldocument.h>
@@ -61,4 +62,17 @@ void test_scpi_learn_measure_objects_and_relations::countMeasureRelatedObjectsCr
     QCOMPARE(noClientDelegateInstanceCount, scpiPathsNonOsciMeasure.size() + scpiPathsOsciMeasure.size());
     QCOMPARE(SCPIMODULE::ScpiBaseDelegate::getInstanceCount(), scpiPathsNonOsciMeasure.size() + 2 * scpiPathsOsciMeasure.size());
     // => Only ScpiMeasureScpiCmdNodeDelegate are copied for client
+}
+
+void test_scpi_learn_measure_objects_and_relations::multipleClientsIndependentStatusbyte()
+{
+    ModuleManagerTestRunner testRunner(":/session-scpi-osci-for-min-measure.json");
+    ScpiModuleNetClientBlocked client1;
+    ScpiModuleNetClientBlocked client2;
+    QCOMPARE(client2.sendReceive("*STB?"), "+0");
+
+    QCOMPARE(client1.sendReceive("FOO:BAR?"),"");
+    QCOMPARE(client1.sendReceive("*STB?"), "+4");
+
+    QCOMPARE(client2.sendReceive("*STB?"), "+0");
 }
