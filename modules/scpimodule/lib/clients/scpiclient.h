@@ -25,8 +25,10 @@ public:
 
     void setAuthorisation(bool auth);
     cSCPIStatus* getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx);
-    quint8 operationComplete();
     cIEEE4882* getIEEE4882();
+
+    bool isOperationComplete();
+
     QUuid getClientId();
     void addSCPITransactionInfo(const QString &key, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
 

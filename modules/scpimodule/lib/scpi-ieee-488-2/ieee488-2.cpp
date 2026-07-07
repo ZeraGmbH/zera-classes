@@ -63,7 +63,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &scpi
             client->handleCmdFinish(NullableString(), scpiTransactionId);
         }
         else if (cmd.isQuery())
-            client->handleCmdFinish(stringifyRegisterForOutput(client->operationComplete()), scpiTransactionId);
+            client->handleCmdFinish(stringifyRegisterForOutput(client->isOperationComplete() ? 1 : 0), scpiTransactionId);
         else
             addEventErrorWithResponse(CommandError, scpiTransactionId);
         break;

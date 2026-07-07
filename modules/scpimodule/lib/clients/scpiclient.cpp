@@ -79,11 +79,9 @@ cSCPIStatus *cSCPIClient::getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems
     return m_SCPIStatusList.at(statusSystemIdx);
 }
 
-quint8 cSCPIClient::operationComplete()
+bool cSCPIClient::isOperationComplete()
 {
-    if (m_scpiClientInfoHash.isEmpty())
-        return 1;
-    return 0;
+    return m_scpiClientInfoHash.isEmpty();
 }
 
 cIEEE4882 *cSCPIClient::getIEEE4882()
