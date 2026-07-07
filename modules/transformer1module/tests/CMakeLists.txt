@@ -3,7 +3,7 @@ function(SETUP_QTESTS_MODULE)
     foreach(_testname ${ARGN})
         target_link_libraries(${_testname}
             PRIVATE
-            transformer1module-static
+            transformer1module-lib
         )
     endforeach()
 endfunction()
