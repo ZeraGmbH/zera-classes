@@ -1,4 +1,5 @@
 #include "ieee488-2.h"
+#include "ieee488-2-definitions.h"
 #include "scpiclient.h"
 #include <zenuxdeviceinfo.h>
 

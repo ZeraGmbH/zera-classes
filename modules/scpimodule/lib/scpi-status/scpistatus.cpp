@@ -1,5 +1,6 @@
 #include "scpistatus.h"
 #include "scpiclient.h"
+#include "ieee488-2-definitions.h"
 #include <scpi.h>
 
 namespace SCPIMODULE

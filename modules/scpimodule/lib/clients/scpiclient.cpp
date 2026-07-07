@@ -3,6 +3,7 @@
 #include "scpimoduleconfigdata.h"
 #include "statusbitdescriptor.h"
 #include "scpiserver.h"
+#include "ieee488-2-definitions.h"
 #include "scpimodelmeasureandfriends.h"
 #include <zscpi_response_definitions.h>
 #include <vs_abstracteventsystem.h>
