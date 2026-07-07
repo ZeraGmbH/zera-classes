@@ -20,9 +20,11 @@ public:
     // Scpi interface copies
     MeasureScpiNodeDelegate(const MeasureScpiNodeDelegate& moduleInterfaceDelegate,
                          QHash<VeinComponentScpiMeasureSequence*, VeinComponentScpiMeasureSequence*> &scpiMeasureTranslationHash);
+
+    void addVeinComponentScpiSequence(VeinComponentScpiMeasureSequence* measureobject);
+
     void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
     void executeClient(cSCPIClient *client, const ScpiTransactionId &scpiTransactionId);
-    void addScpiMeasureObject(VeinComponentScpiMeasureSequence* measureobject);
 
 private slots:
     void onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
@@ -33,7 +35,7 @@ private:
     int m_nPending = 0;
     QString m_sAnswer;
     cSCPIClient *m_pClient = nullptr;
-    QList<VeinComponentScpiMeasureSequence*> m_veinComponentSequences;
+    QList<VeinComponentScpiMeasureSequence*> m_veinComponentScpiSequences;
 };
 
 typedef std::shared_ptr<MeasureScpiNodeDelegate> MeasureScpiNodeDelegatePtr;

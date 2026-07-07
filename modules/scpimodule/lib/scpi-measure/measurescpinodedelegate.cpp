@@ -13,24 +13,24 @@ MeasureScpiNodeDelegate::MeasureScpiNodeDelegate(const QString &cmdParent,
     ScpiBaseDelegate(cmdParent, cmd, scpiCmdQueryFlags),
     m_modelType(modelType)
 {
-    m_veinComponentSequences.append(scpimeasureobject);
+    m_veinComponentScpiSequences.append(scpimeasureobject);
 }
 
 MeasureScpiNodeDelegate::MeasureScpiNodeDelegate(const MeasureScpiNodeDelegate &moduleInterfaceDelegate,
                                            QHash<VeinComponentScpiMeasureSequence*, VeinComponentScpiMeasureSequence*> &scpiMeasureTranslationHash) :
     m_modelType(moduleInterfaceDelegate.m_modelType)
 {
-    for (int i = 0; i < moduleInterfaceDelegate.m_veinComponentSequences.count(); i++) {
-        VeinComponentScpiMeasureSequence* scpiModuleMeasure = moduleInterfaceDelegate.m_veinComponentSequences.at(i);
+    for (int i = 0; i < moduleInterfaceDelegate.m_veinComponentScpiSequences.count(); i++) {
+        VeinComponentScpiMeasureSequence* scpiModuleMeasure = moduleInterfaceDelegate.m_veinComponentScpiSequences.at(i);
         if (scpiMeasureTranslationHash.contains(scpiModuleMeasure))
-            m_veinComponentSequences.append(scpiMeasureTranslationHash[scpiModuleMeasure]);
+            m_veinComponentScpiSequences.append(scpiMeasureTranslationHash[scpiModuleMeasure]);
         else {
             // Until not fixed properly: scpiMeasureTranslationHash is in cSCPIClient and
             // that makes it the owner of the VeinComponentScpiMeasureSequence-object generated here
             // => no delete in here but in ~cSCPIClient
             VeinComponentScpiMeasureSequence* scpiMeasure = new VeinComponentScpiMeasureSequence(*scpiModuleMeasure);
             scpiMeasureTranslationHash[scpiModuleMeasure] = scpiMeasure;
-            m_veinComponentSequences.append(scpiMeasure);
+            m_veinComponentScpiSequences.append(scpiMeasure);
         }
     }
 }
@@ -62,10 +62,10 @@ void MeasureScpiNodeDelegate::executeClient(cSCPIClient *client, const ScpiTrans
     }
     m_pClient = client;
     if (m_nPending == 0 || reentryPossible) { // not yet running or reentry
-        m_nPending = m_veinComponentSequences.count();
+        m_nPending = m_veinComponentScpiSequences.count();
         m_sAnswer = "";
-        for (int i = 0; i < m_veinComponentSequences.count(); i++) {
-            VeinComponentScpiMeasureSequence* measure = m_veinComponentSequences.at(i);
+        for (int i = 0; i < m_veinComponentScpiSequences.count(); i++) {
+            VeinComponentScpiMeasureSequence* measure = m_veinComponentScpiSequences.at(i);
             switch (m_modelType)
             {
             case ScpiModelTypes::measure:
@@ -91,9 +91,9 @@ void MeasureScpiNodeDelegate::executeClient(cSCPIClient *client, const ScpiTrans
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
-void MeasureScpiNodeDelegate::addScpiMeasureObject(VeinComponentScpiMeasureSequence *measureobject)
+void MeasureScpiNodeDelegate::addVeinComponentScpiSequence(VeinComponentScpiMeasureSequence *measureobject)
 {
-    m_veinComponentSequences.append(measureobject);
+    m_veinComponentScpiSequences.append(measureobject);
 }
 
 void MeasureScpiNodeDelegate::onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const VeinComponentScpiMeasureSequence *sender)

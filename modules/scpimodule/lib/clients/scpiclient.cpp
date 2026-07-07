@@ -89,14 +89,14 @@ cIEEE4882 *cSCPIClient::getIEEE4882()
     return m_pIEEE4882;
 }
 
-void cSCPIClient::addSCPITransactionInfo(const QString &key, const SCPIVeinTransactionInfoPtr &info)
+void cSCPIClient::addSCPITransactionInfo(const QString &veinComponentOrRpcName, const SCPIVeinTransactionInfoPtr &info)
 {
-    m_scpiClientInfoHash.insert(key, info);
+    m_scpiClientInfoHash.insert(veinComponentOrRpcName, info);
 }
 
-void cSCPIClient::removeSCPIClientInfo(const QString &key)
+void cSCPIClient::removeSCPIClientInfo(const QString &veinComponentOrRpcName)
 {
-    m_scpiClientInfoHash.remove(key);
+    m_scpiClientInfoHash.remove(veinComponentOrRpcName);
     execCmd();
 }
 

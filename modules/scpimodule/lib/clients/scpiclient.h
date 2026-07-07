@@ -24,15 +24,17 @@ public:
     virtual ~cSCPIClient();
 
     void setAuthorisation(bool auth);
+
     cSCPIStatus* getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx);
     cIEEE4882* getIEEE4882();
 
     bool isOperationComplete();
 
     QUuid getClientId();
-    void addSCPITransactionInfo(const QString &key, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
+    void addSCPITransactionInfo(const QString &veinComponentOrRpcName, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
 
     QHash<MeasureScpiNodeDelegate*, MeasureScpiNodeDelegatePtr> m_SCPIMeasureDelegateHash;
+
     enum FinishLogTypes {
         LOG_FULL,
         LOG_SKIP
@@ -40,7 +42,7 @@ public:
     virtual void handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) = 0;
     void handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId &scpiTransactionId);
 public slots:
-    void removeSCPIClientInfo(const QString &key);
+    void removeSCPIClientInfo(const QString &veinComponentOrRpcName);
 
 protected:
     cSCPIInterface* m_pSCPIInterface;

@@ -171,7 +171,7 @@ void ScpiModelMeasureAndFriends::addSCPIMeasureCommand(const QString &cmdparent,
     MeasureScpiNodeDelegatePtr delegate;
     if (m_scpiMeasureDelegateHash.contains(cmdcomplete)) {
         delegate = m_scpiMeasureDelegateHash.value(cmdcomplete);
-        delegate->addScpiMeasureObject(measureObject);
+        delegate->addVeinComponentScpiSequence(measureObject);
     }
     else {
         delegate = std::make_shared<MeasureScpiNodeDelegate>(cmdparent, cmd, scpiCmdQueryFlags, modelType, measureObject);
