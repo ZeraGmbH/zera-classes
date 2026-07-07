@@ -30,7 +30,7 @@ public:
     QUuid getClientId();
     void addSCPITransactionInfo(const QString &key, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
 
-    QHash<MeasureScpiNodeDelegate*, ScpiMeasureScpiCmdNodeDelegatePtr> m_SCPIMeasureDelegateHash;
+    QHash<MeasureScpiNodeDelegate*, MeasureScpiNodeDelegatePtr> m_SCPIMeasureDelegateHash;
     enum FinishLogTypes {
         LOG_FULL,
         LOG_SKIP

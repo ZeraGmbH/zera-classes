@@ -100,7 +100,7 @@ void ScpiGroupMeasureAndFriends::actualizeInterface(QVariant modInterface)
     }
 }
 
-QHash<QString, ScpiMeasureScpiCmdNodeDelegatePtr> *ScpiGroupMeasureAndFriends::getSCPIMeasDelegateHash()
+QHash<QString, MeasureScpiNodeDelegatePtr> *ScpiGroupMeasureAndFriends::getSCPIMeasDelegateHash()
 {
     return &m_scpiMeasureDelegateHash;
 }
@@ -168,7 +168,7 @@ void ScpiGroupMeasureAndFriends::addSCPIMeasureCommand(const QString &cmdparent,
                                              QJsonObject veinComponentInfo)
 {
     QString cmdcomplete = QString("%1:%2").arg(cmdparent, cmd);
-    ScpiMeasureScpiCmdNodeDelegatePtr delegate;
+    MeasureScpiNodeDelegatePtr delegate;
     if (m_scpiMeasureDelegateHash.contains(cmdcomplete)) {
         delegate = m_scpiMeasureDelegateHash.value(cmdcomplete);
         delegate->addScpiMeasureObject(measureObject);

@@ -27,11 +27,11 @@ public:
     bool setupScpi();
     virtual void actualizeInterface(QVariant modInterface);
 
-    QHash<QString, ScpiMeasureScpiCmdNodeDelegatePtr>* getSCPIMeasDelegateHash();
+    QHash<QString, MeasureScpiNodeDelegatePtr>* getSCPIMeasDelegateHash();
 
 private:
     cSCPIModule* m_pModule = nullptr;
-    QHash<QString, ScpiMeasureScpiCmdNodeDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
+    QHash<QString, MeasureScpiNodeDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
     QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
     void addSCPICommand(const cSCPICmdInfoPtr &scpiCmdInfo);
