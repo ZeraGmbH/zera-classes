@@ -9,7 +9,7 @@ function(SETUP_QTESTS_MODULE)
             rangemodule-lib
             dftmodule-lib
             fftmodule-lib
-            rmsmodule-static
+            rmsmodule-lib
             zera-modulemanager-testlib
             dsp-support-testlib
             scpimodule-testlib

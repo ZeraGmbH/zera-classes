@@ -19,7 +19,7 @@ target_include_directories(rmsmodule-demolib
 
 target_link_libraries(rmsmodule-demolib
     PUBLIC
-    rmsmodule-static
+    rmsmodule-lib
     module-service-interfaces-demolib
     Zera::zera-timers
 )
