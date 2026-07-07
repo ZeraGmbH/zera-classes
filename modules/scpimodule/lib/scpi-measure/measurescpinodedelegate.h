@@ -33,7 +33,7 @@ private:
     int m_nPending = 0;
     QString m_sAnswer;
     cSCPIClient *m_pClient = nullptr;
-    QList<VeinComponentScpiMeasureSequence*> m_scpimeasureObjectList;
+    QList<VeinComponentScpiMeasureSequence*> m_veinComponentSequences;
 };
 
 typedef std::shared_ptr<MeasureScpiNodeDelegate> MeasureScpiNodeDelegatePtr;
