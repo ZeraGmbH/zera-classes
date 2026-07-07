@@ -19,7 +19,7 @@ target_include_directories(power2module-demolib
 
 target_link_libraries(power2module-demolib
     PUBLIC
-    power2module-static
+    power2module-lib
     module-service-interfaces-demolib
     Zera::zera-timers
 )

@@ -6,31 +6,30 @@ file(GLOB HEADER
     *.h
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-add_library(power2module-static STATIC
+add_library(power2module-lib SHARED
     ${SOURCES}
     ${HEADER}
 )
 
-target_include_directories(power2module-static
+target_include_directories(power2module-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-target_link_libraries(power2module-static
+target_link_libraries(power2module-lib
+    PUBLIC
     zera-basemodule
     zera-meas-mode-management
     Zera::zera-timers
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
 )
 
-export(TARGETS power2module-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
-install(TARGETS power2module-static
+set_target_properties(power2module-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(power2module-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS power2module-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS power2module-lib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/power2module-static
     )

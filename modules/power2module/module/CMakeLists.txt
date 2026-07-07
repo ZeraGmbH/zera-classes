@@ -5,7 +5,7 @@ add_library(power2module MODULE
 
 target_link_libraries(power2module
     PRIVATE
-    power2module-static
+    power2module-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
