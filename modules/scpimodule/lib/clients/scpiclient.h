@@ -67,7 +67,8 @@ private:
 
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
-    QHash<QString, SCPIVeinTransactionInfoPtr> m_scpiClientInfoHash;
+    // what happens on same component names in different entities as e.g THDN module??? => TODO test
+    QHash<QString /* veinComponentOrRpcName */, SCPIVeinTransactionInfoPtr> m_scpiClientInfoHash;
     cIEEE4882* m_pIEEE4882 = nullptr;
 
     QList<cSCPIStatus*> m_SCPIStatusList;
