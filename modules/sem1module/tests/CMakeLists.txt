@@ -3,7 +3,7 @@ function(SETUP_QTESTS_MODULE)
     foreach(_testname ${ARGN})
         target_link_libraries(${_testname}
             PRIVATE
-            sem1module-static
+            sem1module-lib
             zera-modulemanager-testlib
             Zera::xml-compare-testlib
             Zera::VfFrameworkTest

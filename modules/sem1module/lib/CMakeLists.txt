@@ -6,19 +6,18 @@ file(GLOB HEADER
     *.h
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-add_library(sem1module-static STATIC
+add_library(sem1module-lib SHARED
     ${SOURCES}
     ${HEADER}
 )
 
-target_include_directories(sem1module-static
+target_include_directories(sem1module-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-target_link_libraries(sem1module-static
+target_link_libraries(sem1module-lib
+    PUBLIC
     zera-basemodule
     modules-common-sec
     Zera::zera-timers
@@ -26,3 +25,11 @@ target_link_libraries(sem1module-static
     "-Wl,--no-undefined"
 )
 
+set_target_properties(sem1module-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(sem1module-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS sem1module-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS sem1module-lib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
