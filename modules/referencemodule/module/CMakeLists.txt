@@ -5,7 +5,7 @@ add_library(referencemodule MODULE
 
 target_link_libraries(referencemodule
     PRIVATE
-    referencemodule-static
+    referencemodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

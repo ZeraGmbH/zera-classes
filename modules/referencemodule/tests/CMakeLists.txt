@@ -4,7 +4,7 @@ function(SETUP_QTESTS_MODULE)
         target_link_libraries(${_testname}
             PRIVATE
             zera-modulemanager-testlib
-            referencemodule-static
+            referencemodule-lib
         )
     endforeach()
 endfunction()
