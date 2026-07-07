@@ -91,8 +91,6 @@ ScpiModelMeasureAndFriends *cSCPIServer::getScpiGroupMeasurement()
 void cSCPIServer::appendClient(cSCPIClient* client)
 {
     m_SCPIClientList.append(client);
-    if (m_SCPIClientList.count() == 1)
-        client->setAuthorisation(true);
 }
 
 cSCPIInterface *cSCPIServer::getScpiInterface()
@@ -170,8 +168,6 @@ void cSCPIServer::deleteSCPIClient(cSCPIClient *client)
         m_SCPIClientList.removeAll(client);
         delete client;
         qInfo("Network SCPI client deleted / Active clients: %i", m_SCPIClientList.count());
-        if(m_SCPIClientList.count() > 0)
-            m_SCPIClientList.at(0)->setAuthorisation(true);
     }
 }
 

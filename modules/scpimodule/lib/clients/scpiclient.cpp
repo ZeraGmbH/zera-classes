@@ -69,11 +69,6 @@ cSCPIClient::~cSCPIClient()
         delete m_SCPIMeasureTranslationHash[keylist.at(i)];
 }
 
-void cSCPIClient::setAuthorisation(bool auth)
-{
-    m_bAuthorisation = auth;
-}
-
 cSCPIStatus *cSCPIClient::getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx)
 {
     return m_SCPIStatusList.at(statusSystemIdx);

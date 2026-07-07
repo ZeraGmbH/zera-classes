@@ -23,8 +23,6 @@ public:
     cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
     virtual ~cSCPIClient();
 
-    void setAuthorisation(bool auth);
-
     cSCPIStatus* getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx);
     cIEEE4882* getIEEE4882();
 
@@ -77,7 +75,6 @@ private:
     QHash<VeinComponentScpiMeasureSequence*, VeinComponentScpiMeasureSequence*> m_SCPIMeasureTranslationHash;
     QUuid m_clientId;
 
-    bool m_bAuthorisation = false;
     QList<cSignalConnectionDelegate*> m_connectDelegateList;
 
     QString m_activeCmd;
