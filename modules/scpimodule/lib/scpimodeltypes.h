@@ -1,8 +1,6 @@
 #ifndef SCPIMODELTYPES_H
 #define SCPIMODELTYPES_H
 
-namespace SCPIMODULE {
-
 enum ScpiModelTypes {
     measure,
     configure,
@@ -10,7 +8,5 @@ enum ScpiModelTypes {
     init,
     fetch
 };
-
-}
 
 #endif // SCPIMODELTYPES_H
