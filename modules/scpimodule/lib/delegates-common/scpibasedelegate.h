@@ -14,6 +14,9 @@ class cSCPIClient;
 class ScpiBaseDelegate;
 typedef std::shared_ptr<ScpiBaseDelegate> ScpiBaseDelegatePtr;
 
+/* Delegates are ScpiObjects - which are nodes in SCPI tree
+ * that can execute commands/queries - see executeSCPI
+ */
 class ScpiBaseDelegate : public QObject, public ScpiObject
 {
    Q_OBJECT
