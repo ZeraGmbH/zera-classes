@@ -75,4 +75,11 @@ void test_scpi_learn_measure_objects_and_relations::multipleClientsIndependentSt
     QCOMPARE(client1.sendReceive("*STB?"), "+4");
 
     QCOMPARE(client2.sendReceive("*STB?"), "+0");
+
+    QCOMPARE(client1.sendReceive("*CLS"),"");
+    QCOMPARE(client2.sendReceive("FOO:BAR?"),"");
+    QTest::qWait(300); // WTF again !!! network?
+
+    QCOMPARE(client1.sendReceive("*STB?"), "+0");
+    QCOMPARE(client2.sendReceive("*STB?"), "+4");
 }
