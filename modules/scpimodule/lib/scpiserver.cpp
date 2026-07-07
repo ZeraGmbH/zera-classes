@@ -32,10 +32,10 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     m_pModule(module),
     m_ConfigData(configData),
     m_scpiInterface(m_ConfigData.m_sDeviceName),
-    m_moduleInterface(m_pModule, &m_scpiInterface),
-    m_interfaceInterface(m_pModule, &m_scpiInterface),
-    m_statusInterface(&m_scpiInterface),
-    m_ieee488Interface(&m_scpiInterface),
+    m_scpiGroupMeasurement(m_pModule, &m_scpiInterface),
+    m_scpiGroupDevIface(m_pModule, &m_scpiInterface),
+    m_scpiGroupStatus(&m_scpiInterface),
+    m_scpiGroupIeee488(&m_scpiInterface),
     m_bSerialScpiActive(false)
 {
     m_bActive = false;
@@ -83,9 +83,9 @@ void cSCPIServer::generateVeinInterface()
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
 }
 
-ScpiGroupMeasureAndFriends *cSCPIServer::getModuleInterface()
+ScpiGroupMeasureAndFriends *cSCPIServer::getScpiGroupMeasurement()
 {
-    return &m_moduleInterface;
+    return &m_scpiGroupMeasurement;
 }
 
 void cSCPIServer::appendClient(cSCPIClient* client)
@@ -183,10 +183,10 @@ void cSCPIServer::setupTCPServer()
 {
     // before we can call listen we must set up a valid interface that clients can connect to
     QString errorMsg;
-    bool ok = m_moduleInterface.setupScpi();
-    ok = ok && m_interfaceInterface.setupScpi();
-    ok = ok && m_statusInterface.setupScpi();
-    ok = ok && m_ieee488Interface.setupScpi();
+    bool ok = m_scpiGroupMeasurement.setupScpi();
+    ok = ok && m_scpiGroupDevIface.setupScpi();
+    ok = ok && m_scpiGroupStatus.setupScpi();
+    ok = ok && m_scpiGroupIeee488.setupScpi();
     if (!ok)
         errorMsg = interfacejsonErrMsg;
 

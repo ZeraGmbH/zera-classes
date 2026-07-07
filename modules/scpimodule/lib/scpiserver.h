@@ -28,7 +28,7 @@ public:
     cSCPIServer(cSCPIModule* module, cSCPIModuleConfigData& configData);
     virtual ~cSCPIServer();
     void generateVeinInterface() override;
-    ScpiGroupMeasureAndFriends* getModuleInterface();
+    ScpiGroupMeasureAndFriends* getScpiGroupMeasurement();
     void appendClient(cSCPIClient *client);
     cSCPIInterface* getScpiInterface();
 public slots:
@@ -56,10 +56,10 @@ private:
     cSCPIInterface m_scpiInterface;
     QList<cSCPIClient*> m_SCPIClientList;
 
-    ScpiGroupMeasureAndFriends m_moduleInterface;
-    ScpiGroupDevIface m_interfaceInterface;
-    ScpiGroupStatus m_statusInterface;
-    ScpiGroupIEEE4882 m_ieee488Interface;
+    ScpiGroupMeasureAndFriends m_scpiGroupMeasurement;
+    ScpiGroupDevIface m_scpiGroupDevIface;
+    ScpiGroupStatus m_scpiGroupStatus;
+    ScpiGroupIEEE4882 m_scpiGroupIeee488;
 
     // statemachine for activating gets the following states
     QState m_setupTCPServerState;
