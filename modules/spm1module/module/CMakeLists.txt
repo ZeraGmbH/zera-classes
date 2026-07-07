@@ -5,7 +5,7 @@ add_library(spm1module MODULE
 
 target_link_libraries(spm1module
     PRIVATE
-    spm1module-static
+    spm1module-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
