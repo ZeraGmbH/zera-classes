@@ -7,7 +7,7 @@ add_library(recordermodule MODULE
 
 target_link_libraries(recordermodule
     PRIVATE
-    recordermodule-static
+    recordermodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
