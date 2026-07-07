@@ -24,15 +24,13 @@ file(GLOB HEADER
     source-device-common/*.h
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-add_library(sourcemodule-static STATIC
+add_library(sourcemodule-lib SHARED
     ${SOURCES}
     ${HEADER}
     ext-serial/source-device/source_device_info.qrc
     )
 
-target_link_libraries(sourcemodule-static
+target_link_libraries(sourcemodule-lib
     PUBLIC
     vf-cpp-module-wrappers
     zera-basemodule
@@ -43,7 +41,7 @@ target_link_libraries(sourcemodule-static
     "-Wl,--no-undefined"
     )
 
-target_include_directories(sourcemodule-static
+target_include_directories(sourcemodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/ext-serial/io-device>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/ext-serial/io-queue>
@@ -55,6 +53,15 @@ target_include_directories(sourcemodule-static
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/module-gluelogic>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source-device-internal>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source-device-common>
+    )
+
+set_target_properties(sourcemodule-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(sourcemodule-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS sourcemodule-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS sourcemodule-lib
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
 add_definitions(-DZC_DEV_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/states")

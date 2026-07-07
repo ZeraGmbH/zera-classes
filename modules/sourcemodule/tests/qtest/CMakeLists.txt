@@ -6,7 +6,7 @@ function(SETUP_QTESTS_MODULE)
         )
         target_link_libraries(${_testname}
             PRIVATE
-            sourcemodule-static
+            sourcemodule-lib
             sourcemodule-testlib
             zera-modulemanager-testlib
         )

@@ -19,7 +19,7 @@ target_include_directories(sourcemodule-testlib
 target_link_libraries(sourcemodule-testlib
     PUBLIC
     ${QTX}::Test
-    sourcemodule-static
+    sourcemodule-lib
     Zera::VfStorage
     Zera::zera-timers-testlib
     )

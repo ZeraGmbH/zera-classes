@@ -5,7 +5,7 @@ add_library(sourcemodule MODULE
 
 target_link_libraries(sourcemodule
     PUBLIC
-    sourcemodule-static
+    sourcemodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

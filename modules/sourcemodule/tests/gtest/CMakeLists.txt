@@ -20,5 +20,5 @@ target_link_libraries(sourcemodule-unittest
     PUBLIC
     gtest
     gtest_main
-    sourcemodule-static
+    sourcemodule-lib
 )
