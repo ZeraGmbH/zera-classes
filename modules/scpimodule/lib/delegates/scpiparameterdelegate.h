@@ -12,10 +12,16 @@ class cSCPIParameterDelegate: public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
-    cSCPIParameterDelegate(const QString &cmdParent, const QString &cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfoPtr scpicmdinfo);
-    void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
+    cSCPIParameterDelegate(const QString &cmdParent, const QString &cmd,
+                           quint8 scpiCmdQueryFlags,
+                           cSCPIModule* scpimodule,
+                           cSCPICmdInfoPtr scpicmdinfo);
+    void executeSCPI(cSCPIClient *client,
+                     const QString& scpi,
+                     const ScpiTransactionId &scpiTransactionId) override;
 signals:
     void clientinfoSignal(QString, SCPIMODULE::SCPIVeinTransactionInfoPtr);
+
 private:
     bool handleFutureComponent(cSCPIClient *client, bool bQuery, const ScpiTransactionId &scpiTransactionId);
 

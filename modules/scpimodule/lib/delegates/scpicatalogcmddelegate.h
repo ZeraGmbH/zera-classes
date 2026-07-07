@@ -11,9 +11,15 @@ class cSCPICatalogCmdDelegate : public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
-    cSCPICatalogCmdDelegate(const QString &cmdParent, const QString &cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfoPtr scpicmdinfo);
-    void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
+    cSCPICatalogCmdDelegate(const QString &cmdParent, const QString &cmd,
+                            quint8 scpiCmdQueryFlags,
+                            cSCPIModule* scpimodule,
+                            cSCPICmdInfoPtr scpicmdinfo);
+    void executeSCPI(cSCPIClient *client,
+                     const QString& scpi,
+                     const ScpiTransactionId &scpiTransactionId) override;
     void setOutput(const QVariant &modInterface);
+
 private:
     void setOutput(cSCPICmdInfoPtr scpicmdinfo);
     cSCPIModule* m_pModule;

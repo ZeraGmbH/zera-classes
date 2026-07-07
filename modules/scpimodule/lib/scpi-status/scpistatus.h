@@ -2,19 +2,11 @@
 #define SCPISTATUS_H
 
 #include "scpitransactionid.h"
-#include <QObject>
+#include "scpistatusdefinitions.h"
 #include <QString>
 
 namespace SCPIMODULE
 {
-
-namespace SCPIStatusSystem {
-    enum scpiStatusSystem {questionable, operation, operationmeasure}; // we have 1 basic and 1 cascaded status system
-}
-
-namespace SCPIStatusCmd {
-    enum scpiStatusCmd {condition, ptransition, ntransition, event, enable};
-}
 
 const quint8 OperationMeasureSummary = 4; // !!!! bit position
 
@@ -25,7 +17,10 @@ class cSCPIStatus: public QObject
     Q_OBJECT
 public:
     explicit cSCPIStatus(quint8 bitPositionToThrow);
-    void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId);
+    void executeCmd(cSCPIClient* client,
+                    SCPIStatusDefinitions::ScpiStatusCommands cmdCode,
+                    const QString &sInput,
+                    const ScpiTransactionId &scpiTransactionId);
 
     quint16 m_nCondition; // condition reg.
     quint16 m_nPTransition; // pos. transition reg.

@@ -24,7 +24,7 @@ public:
     virtual ~cSCPIClient();
 
     void setAuthorisation(bool auth);
-    cSCPIStatus* getSCPIStatus(quint8 index);
+    cSCPIStatus* getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx);
     quint8 operationComplete();
     cIEEE4882* getIEEE4882();
     QUuid getClientId();

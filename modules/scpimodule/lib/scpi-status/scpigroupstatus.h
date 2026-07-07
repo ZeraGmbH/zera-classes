@@ -2,6 +2,7 @@
 #define SCPIGROUPSTATUS_H
 
 #include "scpigroupbase.h"
+#include "scpistatusdefinitions.h"
 #include "scpitransactionid.h"
 
 namespace SCPIMODULE
@@ -18,7 +19,11 @@ public:
     bool setupScpi();
 
 private slots:
-    void executeCmd(SCPIMODULE::cSCPIClient *client, int cmdCode, int statIndex, const QString &sInput, const ScpiTransactionId &scpiTransactionId);
+    void executeCmd(SCPIMODULE::cSCPIClient *client,
+                    SCPIStatusDefinitions::ScpiStatusCommands cmdCode,
+                    SCPIStatusDefinitions::ScpiStatusSystems statIndex,
+                    const QString &scpi,
+                    const ScpiTransactionId &scpiTransactionId);
 
 };
 

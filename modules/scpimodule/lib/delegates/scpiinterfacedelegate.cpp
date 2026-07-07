@@ -2,8 +2,11 @@
 
 namespace SCPIMODULE {
 
-cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(const QString &cmdParent, const QString &cmd, quint8 type,  quint16 cmdCode, const QString &cmdDescription) :
-    ScpiBaseDelegate(cmdParent, cmd, type),
+cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(const QString &cmdParent, const QString &cmd,
+                                               quint8 scpiCmdQueryFlags,
+                                               quint16 cmdCode,
+                                               const QString &cmdDescription) :
+    ScpiBaseDelegate(cmdParent, cmd, scpiCmdQueryFlags),
     m_nCmdCode(cmdCode)
 {
     if(!cmdDescription.isEmpty())

@@ -14,10 +14,10 @@ namespace SCPIMODULE {
 
 cSCPIParameterDelegate::cSCPIParameterDelegate(const QString &cmdParent,
                                                const QString &cmd,
-                                               quint8 type,
+                                               quint8 scpiCmdQueryFlags,
                                                cSCPIModule *scpimodule,
                                                cSCPICmdInfoPtr scpicmdinfo) :
-    ScpiBaseDelegate(cmdParent, cmd, type),
+    ScpiBaseDelegate(cmdParent, cmd, scpiCmdQueryFlags),
     m_pModule(scpimodule),
     m_pSCPICmdInfo(scpicmdinfo)
 {

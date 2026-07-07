@@ -1,17 +1,19 @@
 file(GLOB SOURCES 
     *.cpp
+    clients/*.cpp
     delegates/*.cpp
-    delegates-measure/*.cpp
-    scpi-clients/*.cpp
+    scpi-measure/*.cpp
     scpi-groups/*.cpp
+    scpi-status/*.cpp
     )
 
 file(GLOB HEADER
     *.h
+    clients/*.h
     delegates/*.h
-    delegates-measure/*.h
-    scpi-clients/*.h
+    scpi-measure/*.h
     scpi-groups/*.h
+    scpi-status/*.h
     )
 
 add_library(scpimodule-lib SHARED
@@ -22,10 +24,11 @@ add_library(scpimodule-lib SHARED
 target_include_directories(scpimodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/clients>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/delegates>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/delegates-measure>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-clients>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-measure>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-groups>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-status>
     )
 
 target_link_libraries(scpimodule-lib

@@ -10,10 +10,18 @@ class cSCPIInterfaceDelegate : public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
-    cSCPIInterfaceDelegate(const QString &cmdParent, const QString &cmd, quint8 type, quint16 cmdCode, const QString &cmdDescription = QString());
-    void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
+    cSCPIInterfaceDelegate(const QString &cmdParent, const QString &cmd,
+                           quint8 scpiCmdQueryFlags,
+                           quint16 cmdCode,
+                           const QString &cmdDescription = QString());
+    void executeSCPI(cSCPIClient *client,
+                     const QString& scpi,
+                     const ScpiTransactionId &scpiTransactionId) override;
 signals:
-    void signalExecuteSCPI(SCPIMODULE::cSCPIClient* client, int cmdCode, const QString &scpi, const ScpiTransactionId &scpiTransactionId);
+    void signalExecuteSCPI(SCPIMODULE::cSCPIClient* client,
+                           int cmdCode,
+                           const QString &scpi,
+                           const ScpiTransactionId &scpiTransactionId);
 private:
     quint16 m_nCmdCode;
 };

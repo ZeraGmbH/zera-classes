@@ -7,8 +7,8 @@
 #include <vf-cpp-rpc-helper.h>
 #include <QRegularExpression>
 
-SCPIMODULE::cSCPIRpcDelegate::cSCPIRpcDelegate(const QString &cmdParent, const QString &cmd, quint8 type, cSCPIModule *scpimodule, cSCPICmdInfoPtr scpicmdinfo) :
-    ScpiBaseDelegate(cmdParent, cmd, type), m_pModule(scpimodule), m_scpicmdinfo(scpicmdinfo)
+SCPIMODULE::cSCPIRpcDelegate::cSCPIRpcDelegate(const QString &cmdParent, const QString &cmd, quint8 scpiCmdQueryFlags, cSCPIModule *scpimodule, cSCPICmdInfoPtr scpicmdinfo) :
+    ScpiBaseDelegate(cmdParent, cmd, scpiCmdQueryFlags), m_pModule(scpimodule), m_scpicmdinfo(scpicmdinfo)
 {
 }
 

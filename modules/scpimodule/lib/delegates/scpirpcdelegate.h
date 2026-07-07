@@ -10,8 +10,13 @@ class cSCPIRpcDelegate : public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
-    cSCPIRpcDelegate(const QString &cmdParent, const QString &cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfoPtr scpicmdinfo);
-    void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
+    cSCPIRpcDelegate(const QString &cmdParent, const QString &cmd,
+                     quint8 scpiCmdQueryFlags,
+                     cSCPIModule* scpimodule,
+                     cSCPICmdInfoPtr scpicmdinfo);
+    void executeSCPI(cSCPIClient *client,
+                     const QString& scpi,
+                     const ScpiTransactionId &scpiTransactionId) override;
 
 signals:
     void sigClientInfoSignal(QString);

@@ -73,9 +73,9 @@ void cSCPIClient::setAuthorisation(bool auth)
     m_bAuthorisation = auth;
 }
 
-cSCPIStatus *cSCPIClient::getSCPIStatus(quint8 index)
+cSCPIStatus *cSCPIClient::getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx)
 {
-    return m_SCPIStatusList.at(index);
+    return m_SCPIStatusList.at(statusSystemIdx);
 }
 
 quint8 cSCPIClient::operationComplete()
