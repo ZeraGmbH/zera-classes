@@ -21,7 +21,9 @@ public:
     ScpiBaseDelegate();
     ScpiBaseDelegate(const QString &cmdParent, const QString &cmd, quint8 scpiCmdQueryFlags);
     virtual ~ScpiBaseDelegate();
-    void setCommand(cSCPI *scpiCmdInterface, ScpiBaseDelegatePtr delegate);
+
+    static void insertScpiCmd(cSCPI *scpiCmdInterface, ScpiBaseDelegatePtr delegate);
+
     bool executeSCPI(const QString&, QString&) override { return true; } // ScpiObject requires
     virtual void executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId) = 0;
 
