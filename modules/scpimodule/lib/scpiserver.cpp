@@ -5,9 +5,9 @@
 #include "scpiethclient.h"
 #include "scpiserialclient.h"
 #include "scpiinterface.h"
-#include "scpigroupmeasureandfriends.h"
-#include "scpigroupdeviface.h"
-#include "scpigroupieee4882.h"
+#include "scpimodelmeasureandfriends.h"
+#include "scpimodeldeviface.h"
+#include "scpimodelieee4882.h"
 #include "scpimoduleconfigdata.h"
 #include <zenuxdeviceinfo.h>
 #include <vfmoduleparameter.h>
@@ -83,7 +83,7 @@ void cSCPIServer::generateVeinInterface()
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
 }
 
-ScpiGroupMeasureAndFriends *cSCPIServer::getScpiGroupMeasurement()
+ScpiModelMeasureAndFriends *cSCPIServer::getScpiGroupMeasurement()
 {
     return &m_scpiGroupMeasurement;
 }

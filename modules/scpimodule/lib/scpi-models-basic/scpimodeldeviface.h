@@ -1,17 +1,17 @@
 #ifndef INTERFACEINTERFACE_H
 #define INTERFACEINTERFACE_H
 
-#include "scpigroupbase.h"
+#include "scpimodelbase.h"
 #include "scpiclient.h"
 
 namespace SCPIMODULE
 {
 
-class ScpiGroupDevIface : public ScpiGroupBase
+class ScpiModelDevIface : public ScpiModelBase
 {
     Q_OBJECT
 public:
-    ScpiGroupDevIface(cSCPIModule* module, cSCPIInterface* iface);
+    ScpiModelDevIface(cSCPIModule* module, cSCPIInterface* iface);
     bool setupScpi();
 
 private slots:

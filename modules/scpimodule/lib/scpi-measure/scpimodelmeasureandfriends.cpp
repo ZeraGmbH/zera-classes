@@ -1,4 +1,4 @@
-#include "scpigroupmeasureandfriends.h"
+#include "scpimodelmeasureandfriends.h"
 #include "scpimodule.h"
 #include "scpiparameterdelegate.h"
 #include "scpicatalogcmddelegate.h"
@@ -13,20 +13,20 @@
 namespace SCPIMODULE
 {
 
-ScpiGroupMeasureAndFriends::ScpiGroupMeasureAndFriends(cSCPIModule* module, cSCPIInterface *iface) :
-    ScpiGroupBase(iface),
+ScpiModelMeasureAndFriends::ScpiModelMeasureAndFriends(cSCPIModule* module, cSCPIInterface *iface) :
+    ScpiModelBase(iface),
     m_pModule(module)
 {
 }
 
-ScpiGroupMeasureAndFriends::~ScpiGroupMeasureAndFriends()
+ScpiModelMeasureAndFriends::~ScpiModelMeasureAndFriends()
 {
     m_scpiMeasureDelegateHash.clear();
     for (auto measureObject: m_measureObjectsToDelete)
         delete measureObject;
 }
 
-bool ScpiGroupMeasureAndFriends::setupScpi()
+bool ScpiModelMeasureAndFriends::setupScpi()
 {
     bool ok = true;
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
@@ -80,7 +80,7 @@ bool ScpiGroupMeasureAndFriends::setupScpi()
     return ok;
 }
 
-void ScpiGroupMeasureAndFriends::actualizeInterface(QVariant modInterface)
+void ScpiModelMeasureAndFriends::actualizeInterface(QVariant modInterface)
 {
     QJsonDocument jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
     if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
@@ -100,12 +100,12 @@ void ScpiGroupMeasureAndFriends::actualizeInterface(QVariant modInterface)
     }
 }
 
-QHash<QString, MeasureScpiNodeDelegatePtr> *ScpiGroupMeasureAndFriends::getSCPIMeasDelegateHash()
+QHash<QString, MeasureScpiNodeDelegatePtr> *ScpiModelMeasureAndFriends::getSCPIMeasDelegateHash()
 {
     return &m_scpiMeasureDelegateHash;
 }
 
-void ScpiGroupMeasureAndFriends::addSCPICommand(const cSCPICmdInfoPtr &scpiCmdInfo)
+void ScpiModelMeasureAndFriends::addSCPICommand(const cSCPICmdInfoPtr &scpiCmdInfo)
 {
     if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
@@ -149,7 +149,7 @@ void ScpiGroupMeasureAndFriends::addSCPICommand(const cSCPICmdInfoPtr &scpiCmdIn
     }
 }
 
-void ScpiGroupMeasureAndFriends::addRPCCommand(const cSCPICmdInfoPtr &scpiCmdInfo)
+void ScpiModelMeasureAndFriends::addRPCCommand(const cSCPICmdInfoPtr &scpiCmdInfo)
 {
     QString cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
     QStringList nodeNames = cmdComplete.split(':');
@@ -160,7 +160,7 @@ void ScpiGroupMeasureAndFriends::addRPCCommand(const cSCPICmdInfoPtr &scpiCmdInf
     m_pSCPIInterface->addSCPICommand(delegate);
 }
 
-void ScpiGroupMeasureAndFriends::addSCPIMeasureCommand(const QString &cmdparent,
+void ScpiModelMeasureAndFriends::addSCPIMeasureCommand(const QString &cmdparent,
                                              const QString &cmd,
                                              quint8 scpiCmdQueryFlags,
                                              ScpiModelTypes modelType,
@@ -181,7 +181,7 @@ void ScpiGroupMeasureAndFriends::addSCPIMeasureCommand(const QString &cmdparent,
     setXmlComponentInfo(delegate, veinComponentInfo);
 }
 
-void ScpiGroupMeasureAndFriends::setXmlComponentInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo)
+void ScpiModelMeasureAndFriends::setXmlComponentInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo)
 {
     QString desc = componentInfo["Description"].toString();
     if(!desc.isEmpty())
@@ -192,7 +192,7 @@ void ScpiGroupMeasureAndFriends::setXmlComponentInfo(ScpiBaseDelegatePtr delegat
         delegate->setXmlAttribute("Unit", unit);
 }
 
-void ScpiGroupMeasureAndFriends::setXmlComponentValidatorInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo)
+void ScpiModelMeasureAndFriends::setXmlComponentValidatorInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo)
 {
     QJsonObject validator = componentInfo["Validation"].toObject();
     QString validatorType = validator["Type"].toString();
@@ -230,7 +230,7 @@ void ScpiGroupMeasureAndFriends::setXmlComponentValidatorInfo(ScpiBaseDelegatePt
     }
 }
 
-QJsonArray ScpiGroupMeasureAndFriends::getValidatorEntries(QJsonObject validator)
+QJsonArray ScpiModelMeasureAndFriends::getValidatorEntries(QJsonObject validator)
 {
     return validator["Data"].toArray();
 }

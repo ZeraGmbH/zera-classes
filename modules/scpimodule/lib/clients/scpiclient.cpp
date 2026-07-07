@@ -3,7 +3,7 @@
 #include "scpimoduleconfigdata.h"
 #include "statusbitdescriptor.h"
 #include "scpiserver.h"
-#include "scpigroupmeasureandfriends.h"
+#include "scpimodelmeasureandfriends.h"
 #include <zscpi_response_definitions.h>
 #include <vs_abstracteventsystem.h>
 #include <QJsonObject>

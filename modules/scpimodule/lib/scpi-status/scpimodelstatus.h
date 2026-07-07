@@ -1,7 +1,7 @@
-#ifndef SCPIGROUPSTATUS_H
-#define SCPIGROUPSTATUS_H
+#ifndef SCPIMODELSTATUS_H
+#define SCPIMODELSTATUS_H
 
-#include "scpigroupbase.h"
+#include "scpimodelbase.h"
 #include "scpistatusdefinitions.h"
 #include "scpitransactionid.h"
 
@@ -11,11 +11,11 @@ class cSCPIClient;
 
 // the class for our interface interface connections
 // means special functions belonging to the interface itself
-class ScpiGroupStatus: public ScpiGroupBase
+class ScpiModelStatus : public ScpiModelBase
 {
     Q_OBJECT
 public:
-    ScpiGroupStatus(cSCPIInterface* iface);
+    ScpiModelStatus(cSCPIInterface* iface);
     bool setupScpi();
 
 private slots:
@@ -29,4 +29,4 @@ private slots:
 
 }
 
-#endif // SCPIGROUPSTATUS_H
+#endif // SCPIMODELSTATUS_H

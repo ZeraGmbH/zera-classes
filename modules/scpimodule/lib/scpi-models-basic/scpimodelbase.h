@@ -1,17 +1,17 @@
-#ifndef SCPIGROUPBASE_H
-#define SCPIGROUPBASE_H
+#ifndef SCPIMODELBASE_H
+#define SCPIMODELBASE_H
 
 #include "scpiinterface.h"
 
 namespace SCPIMODULE
 {
 
-class ScpiGroupBase : public QObject
+class ScpiModelBase : public QObject
 {
     Q_OBJECT
 public:
-    ScpiGroupBase(cSCPIInterface* iface);
-    virtual ~ScpiGroupBase();
+    ScpiModelBase(cSCPIInterface* iface);
+    virtual ~ScpiModelBase();
 
     static int getInstanceCount();
 protected:
@@ -23,4 +23,4 @@ private:
 
 }
 
-#endif // SCPIGROUPBASE_H
+#endif // SCPIMODELBASE_H

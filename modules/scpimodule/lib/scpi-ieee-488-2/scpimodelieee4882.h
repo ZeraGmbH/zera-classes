@@ -1,17 +1,17 @@
-#ifndef SCPIGROUPIEEE4882_H
-#define SCPIGROUPIEEE4882_H
+#ifndef SCPIMODELIEEE4882_H
+#define SCPIMODELIEEE4882_H
 
-#include "scpigroupbase.h"
+#include "scpimodelbase.h"
 #include "scpitransactionid.h"
 
 namespace SCPIMODULE
 {
 
-class ScpiGroupIEEE4882: public ScpiGroupBase
+class ScpiModelIEEE4882 : public ScpiModelBase
 {
     Q_OBJECT
 public:
-    ScpiGroupIEEE4882(cSCPIInterface* iface);
+    ScpiModelIEEE4882(cSCPIInterface* iface);
     bool setupScpi();
 
 private slots:
@@ -23,4 +23,4 @@ private slots:
 
 }
 
-#endif // SCPIGROUPIEEE4882_H
+#endif // SCPIMODELIEEE4882_H

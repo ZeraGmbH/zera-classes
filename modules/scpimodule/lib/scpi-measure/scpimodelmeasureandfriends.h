@@ -1,7 +1,7 @@
 #ifndef SCPIMODULEINTERFACE_H
 #define SCPIMODULEINTERFACE_H
 
-#include "scpigroupbase.h"
+#include "scpimodelbase.h"
 #include "scpiinterface.h"
 #include "scpibasedelegate.h"
 #include "measurescpinodedelegate.h"
@@ -17,12 +17,12 @@ class cSCPIModule;
 class cSCPICatalogCmdDelegate;
 
 // the class for our module interface connections
-class ScpiGroupMeasureAndFriends : public ScpiGroupBase
+class ScpiModelMeasureAndFriends : public ScpiModelBase
 {
     Q_OBJECT
 public:
-    ScpiGroupMeasureAndFriends(cSCPIModule* module, cSCPIInterface* iface);
-    ~ScpiGroupMeasureAndFriends() override;
+    ScpiModelMeasureAndFriends(cSCPIModule* module, cSCPIInterface* iface);
+    ~ScpiModelMeasureAndFriends() override;
 
     bool setupScpi();
     virtual void actualizeInterface(QVariant modInterface);

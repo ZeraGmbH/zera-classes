@@ -2,7 +2,7 @@ file(GLOB SOURCES
     *.cpp
     clients/*.cpp
     delegates-common/*.cpp
-    scpi-cmd-groups-basic/*.cpp
+    scpi-models-basic/*.cpp
     scpi-ieee-488-2/*.cpp
     scpi-measure/*.cpp
     scpi-status/*.cpp
@@ -12,7 +12,7 @@ file(GLOB HEADER
     *.h
     clients/*.h
     delegates-common/*.h
-    scpi-cmd-groups-basic/*.h
+    scpi-models-basic/*.h
     scpi-ieee-488-2/*.h
     scpi-measure/*.h
     scpi-status/*.h
@@ -28,7 +28,7 @@ target_include_directories(scpimodule-lib
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/clients>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/delegates-common>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-cmd-groups-basic>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-models-basic>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-ieee-488-2>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-measure>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-status>
