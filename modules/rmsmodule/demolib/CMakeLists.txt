@@ -14,7 +14,6 @@ add_library(rmsmodule-demolib STATIC
 target_include_directories(rmsmodule-demolib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/rmsmodule-demolib>
     )
 
 target_link_libraries(rmsmodule-demolib
@@ -31,9 +30,4 @@ export(TARGETS rmsmodule-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
 install(TARGETS rmsmodule-demolib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rmsmodule-demolib
     )

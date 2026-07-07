@@ -34,8 +34,3 @@ install(TARGETS scpimodule-testlib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/scpimodule-testlib
-    )

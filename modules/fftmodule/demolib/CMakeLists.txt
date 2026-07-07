@@ -14,7 +14,6 @@ add_library(fftmodule-demolib STATIC
 target_include_directories(fftmodule-demolib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/fftmodule-demolib>
     )
 
 target_link_libraries(fftmodule-demolib
@@ -31,9 +30,4 @@ export(TARGETS fftmodule-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
 install(TARGETS fftmodule-demolib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/fftmodule-demolib
     )

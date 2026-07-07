@@ -14,7 +14,6 @@ add_library(dspsupermodule-demolib STATIC
 target_include_directories(dspsupermodule-demolib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/dspsupermodule-demolib>
     )
 
 target_link_libraries(dspsupermodule-demolib
@@ -31,9 +30,4 @@ export(TARGETS dspsupermodule-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.c
 install(TARGETS dspsupermodule-demolib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dspsupermodule-demolib
     )

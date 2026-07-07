@@ -14,7 +14,6 @@ add_library(periodaveragemodule-demolib STATIC
 target_include_directories(periodaveragemodule-demolib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/periodaveragemodule-demolib>
     )
 
 target_link_libraries(periodaveragemodule-demolib
@@ -31,9 +30,4 @@ export(TARGETS periodaveragemodule-demolib NAMESPACE Zera:: FILE ZeraClassesTarg
 install(TARGETS periodaveragemodule-demolib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/periodaveragemodule-demolib
     )

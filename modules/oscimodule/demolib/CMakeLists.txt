@@ -14,7 +14,6 @@ add_library(oscimodule-demolib STATIC
 target_include_directories(oscimodule-demolib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/oscimodule-demolib>
     )
 
 target_link_libraries(oscimodule-demolib
@@ -31,9 +30,4 @@ export(TARGETS oscimodule-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake
 install(TARGETS oscimodule-demolib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/oscimodule-demolib
     )

@@ -31,7 +31,6 @@ target_link_libraries(zera-basemodule
 
 target_include_directories(zera-basemodule
     PUBLIC
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/basemodule>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/declare-only>
@@ -51,9 +50,4 @@ export(TARGETS zera-basemodule NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
 install(TARGETS zera-basemodule
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/basemodule
     )

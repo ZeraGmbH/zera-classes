@@ -14,7 +14,6 @@ add_library(power1module-demolib STATIC
 target_include_directories(power1module-demolib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/power1module-demolib>
     )
 
 target_link_libraries(power1module-demolib
@@ -31,9 +30,4 @@ export(TARGETS power1module-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cma
 install(TARGETS power1module-demolib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/power1module-demolib
     )

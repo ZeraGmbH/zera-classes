@@ -14,7 +14,6 @@ add_library(rangemodule-demolib STATIC
 target_include_directories(rangemodule-demolib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/rangemodule-demolib>
     )
 
 target_link_libraries(rangemodule-demolib
@@ -31,9 +30,4 @@ export(TARGETS rangemodule-demolib NAMESPACE Zera:: FILE ZeraClassesTargets.cmak
 install(TARGETS rangemodule-demolib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/rangemodule-demolib
     )
