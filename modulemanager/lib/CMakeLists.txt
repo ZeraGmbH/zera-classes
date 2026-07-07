@@ -7,7 +7,7 @@ file(GLOB HEADER
     *.h
     )
 
-add_library(zera-modulemanager-lib STATIC
+add_library(zera-modulemanager-lib SHARED
     ${SOURCES}
     ${HEADER}
     )
@@ -17,6 +17,9 @@ target_include_directories(zera-modulemanager-lib
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-modulemanager-lib>
     )
+
+set_target_properties(zera-modulemanager-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(zera-modulemanager-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
 target_link_libraries(zera-modulemanager-lib
     PUBLIC
