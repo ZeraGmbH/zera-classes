@@ -6,19 +6,17 @@ file(GLOB HEADER
     *.h
     )
 
-add_library(thdnmodule-static STATIC
+add_library(thdnmodule-lib SHARED
     ${SOURCES}
     ${HEADER}
     )
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC" )
-
-target_include_directories(thdnmodule-static
+target_include_directories(thdnmodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-target_link_libraries(thdnmodule-static
+target_link_libraries(thdnmodule-lib
     PUBLIC
     zera-basemodule
     service-common
@@ -28,13 +26,11 @@ target_link_libraries(thdnmodule-static
     "-Wl,--no-undefined"
     )
 
-export(TARGETS thdnmodule-static NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
-install(TARGETS thdnmodule-static
+set_target_properties(thdnmodule-lib PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(thdnmodule-lib PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+export(TARGETS thdnmodule-lib NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS thdnmodule-lib
     EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-install(
-    FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/thdnmodule-static
     )

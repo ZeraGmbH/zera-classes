@@ -5,7 +5,7 @@ add_library(thdnmodule MODULE
 
 target_link_libraries(thdnmodule
     PRIVATE
-    thdnmodule-static
+    thdnmodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
