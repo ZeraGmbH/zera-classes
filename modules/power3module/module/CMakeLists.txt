@@ -5,7 +5,7 @@ add_library(power3module MODULE
 
 target_link_libraries(power3module
     PRIVATE
-    power3module-static
+    power3module-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
