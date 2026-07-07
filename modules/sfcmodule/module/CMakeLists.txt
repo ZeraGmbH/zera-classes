@@ -6,7 +6,7 @@ add_library(sfcmodule MODULE
 
 target_link_libraries(sfcmodule
     PRIVATE
-    sfcmodule-static
+    sfcmodule-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
