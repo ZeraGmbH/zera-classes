@@ -19,7 +19,7 @@ public:
     explicit cSCPIStatus(quint8 bitPositionToThrow);
     void executeCmd(cSCPIClient* client,
                     SCPIStatusDefinitions::ScpiStatusCommands cmdCode,
-                    const QString &sInput,
+                    const QString &scpi,
                     const ScpiTransactionId &scpiTransactionId);
 
     quint16 m_nCondition; // condition reg.

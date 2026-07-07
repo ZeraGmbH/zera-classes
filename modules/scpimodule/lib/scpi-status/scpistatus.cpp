@@ -45,29 +45,29 @@ void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, const QStr
 
 void cSCPIStatus::executeCmd(cSCPIClient* client,
                              SCPIStatusDefinitions::ScpiStatusCommands cmdCode,
-                             const QString &sInput,
+                             const QString &scpi,
                              const ScpiTransactionId &scpiTransactionId)
 {
     switch (cmdCode)
     {
     case SCPIStatusDefinitions::condition:
-        readStatusReg(client, m_nCondition, sInput, scpiTransactionId);
+        readStatusReg(client, m_nCondition, scpi, scpiTransactionId);
         break;
 
     case SCPIStatusDefinitions::ptransition:
-        readwriteStatusReg(client, m_nPTransition, sInput, scpiTransactionId);
+        readwriteStatusReg(client, m_nPTransition, scpi, scpiTransactionId);
         break;
 
     case SCPIStatusDefinitions::ntransition:
-        readwriteStatusReg(client, m_nNTransition, sInput, scpiTransactionId);
+        readwriteStatusReg(client, m_nNTransition, scpi, scpiTransactionId);
         break;
 
     case SCPIStatusDefinitions::event:
-        readStatusReg(client, m_nEvent, sInput, scpiTransactionId);
+        readStatusReg(client, m_nEvent, scpi, scpiTransactionId);
         break;
 
     case SCPIStatusDefinitions::enable:
-        readwriteStatusReg(client, m_nEnable, sInput, scpiTransactionId);
+        readwriteStatusReg(client, m_nEnable, scpi, scpiTransactionId);
         break;
     }
 }

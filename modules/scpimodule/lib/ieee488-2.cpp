@@ -49,9 +49,9 @@ void cIEEE4882::addEventErrorWithResponse(int error, const ScpiTransactionId &sc
     m_pClient->handleCmdFinish(NullableString(), scpiTransactionId);
 }
 
-void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
+void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
-    cSCPICommand cmd = sInput;
+    cSCPICommand cmd = scpi;
     switch (cmdCode)
     {
     case operationComplete:

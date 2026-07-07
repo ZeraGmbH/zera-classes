@@ -17,35 +17,35 @@ bool ScpiGroupStatus::setupScpi()
     cSCPIStatusDelegatePtr delegate;
 
     // our questionable status interface
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:QUESTIONABLE"), QString("CONDITION"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:QUESTIONABLE", "CONDITION",
                                                      SCPI::isQuery,
                                                      SCPIStatusDefinitions::condition,
                                                      SCPIStatusDefinitions::questionable);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:QUESTIONABLE"), QString("PTRANSITION"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:QUESTIONABLE", "PTRANSITION",
                                                      SCPI::isQuery | SCPI::isCmdwP,
                                                      SCPIStatusDefinitions::ptransition,
                                                      SCPIStatusDefinitions::questionable);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:QUESTIONABLE"), QString("NTRANSITION"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:QUESTIONABLE", "NTRANSITION",
                                                      SCPI::isQuery | SCPI::isCmdwP,
                                                      SCPIStatusDefinitions::ntransition,
                                                      SCPIStatusDefinitions::questionable);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:QUESTIONABLE"), QString("EVENT"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:QUESTIONABLE", "EVENT",
                                                      SCPI::isQuery,
                                                      SCPIStatusDefinitions::event,
                                                      SCPIStatusDefinitions::questionable);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:QUESTIONABLE"), QString("ENABLE"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:QUESTIONABLE", "ENABLE",
                                                      SCPI::isQuery | SCPI::isCmdwP,
                                                      SCPIStatusDefinitions::enable,
                                                      SCPIStatusDefinitions::questionable);
@@ -54,35 +54,35 @@ bool ScpiGroupStatus::setupScpi()
 
     // our operation status interface
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:OPERATION"), QString("CONDITION"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:OPERATION", "CONDITION",
                                                      SCPI::isQuery,
                                                      SCPIStatusDefinitions::condition,
                                                      SCPIStatusDefinitions::operation);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:OPERATION"), QString("PTRANSITION"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:OPERATION", "PTRANSITION",
                                                      SCPI::isQuery | SCPI::isCmdwP,
                                                      SCPIStatusDefinitions::ptransition,
                                                      SCPIStatusDefinitions::operation);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:OPERATION"), QString("NTRANSITION"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:OPERATION", "NTRANSITION",
                                                      SCPI::isQuery | SCPI::isCmdwP,
                                                      SCPIStatusDefinitions::ntransition,
                                                      SCPIStatusDefinitions::operation);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:OPERATION"), QString("EVENT"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:OPERATION", "EVENT",
                                                      SCPI::isQuery,
                                                      SCPIStatusDefinitions::event,
                                                      SCPIStatusDefinitions::operation);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:OPERATION"), QString("ENABLE"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:OPERATION", "ENABLE",
                                                      SCPI::isQuery | SCPI::isCmdwP,
                                                      SCPIStatusDefinitions::enable,
                                                      SCPIStatusDefinitions::operation);
@@ -91,34 +91,34 @@ bool ScpiGroupStatus::setupScpi()
 
     // our operation status interface
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:OPERATION:MEASURE"), QString("CONDITION"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:OPERATION:MEASURE", "CONDITION",
                                                      SCPI::isQuery,
                                                      SCPIStatusDefinitions::condition,
                                                      SCPIStatusDefinitions::operationmeasure);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:OPERATION:MEASURE"), QString("PTRANSITION"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:OPERATION:MEASURE", "PTRANSITION",
                                                      SCPI::isQuery | SCPI::isCmdwP,
                                                      SCPIStatusDefinitions::ptransition,
                                                      SCPIStatusDefinitions::operationmeasure);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:OPERATION:MEASURE"), QString("NTRANSITION"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:OPERATION:MEASURE", "NTRANSITION",
                                                      SCPI::isQuery | SCPI::isCmdwP,
                                                      SCPIStatusDefinitions::ntransition,
                                                      SCPIStatusDefinitions::operationmeasure);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:OPERATION:MEASURE"), QString("EVENT"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:OPERATION:MEASURE", "EVENT",
                                                      SCPI::isQuery, SCPIStatusDefinitions::event,
                                                      SCPIStatusDefinitions::operationmeasure);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIStatusDelegate::signalExecuteSCPI, this, &ScpiGroupStatus::executeCmd);
 
-    delegate = std::make_shared<cSCPIStatusDelegate>(QString("STATUS:OPERATION:MEASURE"), QString("ENABLE"),
+    delegate = std::make_shared<cSCPIStatusDelegate>("STATUS:OPERATION:MEASURE", "ENABLE",
                                                      SCPI::isQuery | SCPI::isCmdwP,
                                                      SCPIStatusDefinitions::enable,
                                                      SCPIStatusDefinitions::operationmeasure);

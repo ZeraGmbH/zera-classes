@@ -20,8 +20,7 @@ enum scpiinterfacecommands
 
 bool ScpiGroupDevIface::setupScpi()
 {
-    cSCPIInterfaceDelegatePtr delegate = std::make_shared<cSCPIInterfaceDelegate>(
-        QString("DEVICE"), QString("IFACE"), SCPI::isQuery, deviceinterfacecmd);
+    cSCPIInterfaceDelegatePtr delegate = std::make_shared<cSCPIInterfaceDelegate>("DEVICE", "IFACE", SCPI::isQuery, deviceinterfacecmd);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIInterfaceDelegate::signalExecuteSCPI, this, &ScpiGroupDevIface::executeCmd);
 
@@ -30,9 +29,12 @@ bool ScpiGroupDevIface::setupScpi()
     return true;
 }
 
-void ScpiGroupDevIface::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId)
+void ScpiGroupDevIface::executeCmd(cSCPIClient *client,
+                                   int cmdCode,
+                                   const QString &scpi,
+                                   const ScpiTransactionId &scpiTransactionId)
 {
-    cSCPICommand cmd = sInput;
+    cSCPICommand cmd = scpi;
     switch (cmdCode)
     {
     case deviceinterfacecmd: {

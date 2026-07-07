@@ -96,8 +96,13 @@ class cIEEE4882: public QObject
     Q_OBJECT
 
 public:
-    cIEEE4882(cSCPIClient* client, const QString &deviceFamilyFromConfig, VeinStorage::AbstractDatabase *storageDb);
-    void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput, const ScpiTransactionId &scpiTransactionId);
+    cIEEE4882(cSCPIClient* client,
+              const QString &deviceFamilyFromConfig,
+              VeinStorage::AbstractDatabase *storageDb);
+    void executeCmd(cSCPIClient* client,
+                    int cmdCode,
+                    const QString &scpi,
+                    const ScpiTransactionId &scpiTransactionId);
     static int getErrorQueueLength();
 signals:
     void setQuestionableCondition(quint16);

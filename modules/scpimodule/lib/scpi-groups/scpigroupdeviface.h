@@ -15,7 +15,10 @@ public:
     bool setupScpi();
 
 private slots:
-    void executeCmd(SCPIMODULE::cSCPIClient* client, int cmdCode, const QString& sInput, const ScpiTransactionId &scpiTransactionId);
+    void executeCmd(SCPIMODULE::cSCPIClient* client,
+                    int cmdCode,
+                    const QString& scpi,
+                    const ScpiTransactionId &scpiTransactionId);
 private:
     QString getDevIface();
 
