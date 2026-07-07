@@ -5,7 +5,7 @@ add_library(sec1module MODULE
 
 target_link_libraries(sec1module
     PRIVATE
-    sec1module-static
+    sec1module-lib
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
