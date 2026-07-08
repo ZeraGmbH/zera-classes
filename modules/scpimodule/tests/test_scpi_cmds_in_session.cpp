@@ -1,5 +1,4 @@
 #include "test_scpi_cmds_in_session.h"
-#include "modulemanagerconfig.h"
 #include "scpitestselectableclient.h"
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
