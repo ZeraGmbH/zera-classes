@@ -78,7 +78,7 @@ void test_range_scpi::rangeChangeWithDelay()
     scpiClient.sendScpiCmds("CONFIGURATION:RNG1:GROUPING 0;");
     TimeMachineObject::feedEventLoop();
 
-    QSignalSpy spyScpiAnswer(&scpiClient, &SCPIMODULE::ScpiTestClient::sigScpiAnswer);
+    QSignalSpy spyScpiAnswer(&scpiClient, &SCPIMODULE::ScpiTestClient::sigScpiResponseSorted);
 
     // check initial range
     spyScpiAnswer.clear();

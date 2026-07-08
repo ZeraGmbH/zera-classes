@@ -10,6 +10,9 @@ class test_scpi_all_responses : public QObject
 private slots:
     void initTestCase();
 
+    /* These tests are about checking all corners to see if a reponse is received.
+     * They are not about contents received */
+
     void checkScpiQueryResponse_data();
     void checkScpiQueryResponse();
 

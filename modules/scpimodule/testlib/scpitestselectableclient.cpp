@@ -7,7 +7,7 @@ ScpiTestSelectableClient::ScpiTestSelectableClient(ClientType clientType, SCPIMO
 {
     if (clientType == TEST) {
         m_testClient = std::make_unique<SCPIMODULE::ScpiTestClient>(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
-        connect(m_testClient.get(), &SCPIMODULE::ScpiTestClient::sigScpiAnswer,
+        connect(m_testClient.get(), &SCPIMODULE::ScpiTestClient::sigScpiResponseSorted,
                 this, &ScpiTestSelectableClient::onTestScpiAnswer);
     }
     else

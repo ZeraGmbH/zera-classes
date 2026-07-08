@@ -22,7 +22,7 @@ void test_scpi_module_sorted_responses::paramQuerySequence()
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
 
     QStringList scpiResponses;
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, this, [&](const QString &scpiResponse) {
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseSorted, this, [&](const QString &scpiResponse) {
         scpiResponses.append(scpiResponse);
     });
     client.sendScpiCmds("CONF:RNG1:GROUPING?\n"
@@ -42,7 +42,7 @@ void test_scpi_module_sorted_responses::paramQuerySequenceWithIntermediateServer
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
 
     QStringList scpiResponses;
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, this, [&](const QString &scpiResponse) {
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseSorted, this, [&](const QString &scpiResponse) {
         scpiResponses.append(scpiResponse);
     });
     client.sendScpiCmds("CONF:RNG1:GROUPING?\n"

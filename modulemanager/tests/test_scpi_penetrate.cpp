@@ -49,11 +49,6 @@ void test_scpi_penetrate::init()
     }
 }
 
-void test_scpi_penetrate::cleanup()
-{
-    m_scpiResponses.clear();
-}
-
 void test_scpi_penetrate::penetrateRangeSet_data()
 {
     QTest::addColumn<QString>("sessionFile");
@@ -96,9 +91,6 @@ void test_scpi_penetrate::createScpiClient()
                                                   *m_scpiModule->getConfigData(),
                                                   m_scpiModule->getSCPIServer()->getScpiInterface());
     m_scpiModule->getSCPIServer()->appendClient(m_scpiclient);
-    connect(m_scpiclient, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, m_scpiclient, [&] (const QString &response) {
-        m_scpiResponses.append(formatForDump(response));
-    });
 }
 
 QString test_scpi_penetrate::deduceDevice(const QString &sessionFileName)

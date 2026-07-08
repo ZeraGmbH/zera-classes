@@ -38,11 +38,12 @@ void test_scpi_all_responses::checkScpiQueryResponse()
     client.sendScpiCmds(scpiQuery);
     TimeMachineObject::feedEventLoop();
 
-    qInfo("Response: %s", qPrintable(client.getLastResponse().getStr()));
+    qInfo("Response: %s", qPrintable(client.getResponsesNotSorted()[0].getStr()));
     QCOMPARE(client.getAtLeastOneResponse(), true);
     QCOMPARE(client.getUnhandledResponses(), 0);
-    bool nullExpected = scpiQuery == "CALCULATE:ADJ1:SEND?"; // Transparent send (without command) is a super nasty/special exception - let's make it a test case
-    QCOMPARE(client.getLastResponse().isNull(), nullExpected);
+    // Transparent send to service (without command) is a super nasty/special exception - let's make it a test case
+    bool nullExpected = scpiQuery == "CALCULATE:ADJ1:SEND?";
+    QCOMPARE(client.getResponsesNotSorted()[0].isNull(), nullExpected);
 }
 
 void test_scpi_all_responses::checkScpiQueryEmptyResponse()
@@ -55,8 +56,8 @@ void test_scpi_all_responses::checkScpiQueryEmptyResponse()
 
     QCOMPARE(client.getAtLeastOneResponse(), true);
     QCOMPARE(client.getUnhandledResponses(), 0);
-    QCOMPARE(client.getLastResponse().isNull(), false);
-    QCOMPARE(client.getLastResponse().getStr(), "");
+    QCOMPARE(client.getResponsesNotSorted()[0].isNull(), false);
+    QCOMPARE(client.getResponsesNotSorted()[0].getStr(), "");
 }
 
 void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse_data()
@@ -88,7 +89,7 @@ void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse()
     if (scpiQuery.contains("MEASURE") || scpiQuery.contains("READ"))
         m_testRunner->fireActualValues();
 
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, this, [](const QString &scpiResponse) {
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseNotSorted, this, [](const QString &scpiResponse) {
         qInfo("Response: %s", qPrintable(scpiResponse));
     });
     client.sendScpiCmds(scpiQuery);
@@ -125,8 +126,8 @@ void test_scpi_all_responses::checkScpiCmdResponse()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(client.getAtLeastOneResponse(), true);
-    QCOMPARE(client.getLastResponse().isNull(), true);
-    QCOMPARE(client.getLastResponse().getStr(), "");
+    QCOMPARE(client.getResponsesNotSorted()[0].isNull(), true);
+    QCOMPARE(client.getResponsesNotSorted()[0].getStr(), "");
 }
 
 void test_scpi_all_responses::checkScpiMulipleTransactionCmdResponse_data()
@@ -165,8 +166,8 @@ void test_scpi_all_responses::checkScpiMulipleTransactionCmdResponse()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(client.getAtLeastOneResponse(), true);
-    QCOMPARE(client.getLastResponse().isNull(), true);
-    QCOMPARE(client.getLastResponse().getStr(), "");
+    QCOMPARE(client.getResponsesNotSorted()[0].isNull(), true);
+    QCOMPARE(client.getResponsesNotSorted()[0].getStr(), "");
 }
 
 QStringList test_scpi_all_responses::getAllScpiQueriesFromDevIface()
@@ -175,7 +176,7 @@ QStringList test_scpi_all_responses::getAllScpiQueriesFromDevIface()
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
     client.sendScpiCmds("dev:iface?");
     TimeMachineObject::feedEventLoop();
-    const QString &devIface = client.getLastResponse().getStr();
+    const QString &devIface = client.getResponsesNotSorted()[0].getStr();
 
     XmlDocument xml;
     xml.loadXml(devIface, true);
@@ -199,7 +200,7 @@ QStringList test_scpi_all_responses::getAllScpiCommandsWithParamFromDevIface()
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
     client.sendScpiCmds("dev:iface?");
     TimeMachineObject::feedEventLoop();
-    const QString &devIface = client.getLastResponse().getStr();
+    const QString &devIface = client.getResponsesNotSorted()[0].getStr();
 
     XmlDocument xml;
     xml.loadXml(devIface, true);

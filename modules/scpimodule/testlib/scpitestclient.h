@@ -16,18 +16,23 @@ public:
     cSCPIInterface* getScpiInterface();
 
     void sendScpiCmds(QString cmds);
-    const NullableString &getLastResponse() const;
+
+    const NullableStringList &getResponsesNotSorted() const;
+    const NullableStringList &getResponsesSorted() const;
+
     int getHandledResponses() const;
     int getUnhandledResponses() const;
     bool getAtLeastOneResponse() const;
 signals:
-    void sigScpiAnswer(const QString &scpiResponse, bool isNull);
+    void sigScpiResponseNotSorted(const QString &scpiResponse, bool isNull);
+    void sigScpiResponseSorted(const QString &scpiResponse, bool isNull);
 
 private slots:
     void cmdInput() override;
 
 private:
-    NullableString m_lastResponse;
+    NullableStringList m_responseNotSorted;
+    NullableStringList m_responsesSorted;
     int m_handledResponses = 0;
     int m_unhandledResponses = 0;
 };

@@ -14,7 +14,6 @@ class test_scpi_penetrate : public QObject
 private slots:
     void initTestCase();
     void init();
-    void cleanup();
 
     void penetrateRangeSet_data();
     void penetrateRangeSet();
@@ -32,7 +31,6 @@ private:
     std::unique_ptr<TestModuleManager> m_modMan;
     SCPIMODULE::cSCPIModule *m_scpiModule = nullptr;
     SCPIMODULE::ScpiTestClient *m_scpiclient = nullptr;
-    QStringList m_scpiResponses;
     QString m_lastSessionFile;
 };
 

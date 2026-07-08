@@ -47,7 +47,7 @@ void test_modman_regression_all_sessions_scpi::init()
                                                       *m_scpiModule->getConfigData(),
                                                       m_scpiModule->getSCPIServer()->getScpiInterface());
         m_scpiModule->getSCPIServer()->appendClient(m_scpiclient); // deletes client
-        connect(m_scpiclient, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, m_scpiclient, [&] (const QString &response) {
+        connect(m_scpiclient, &SCPIMODULE::ScpiTestClient::sigScpiResponseSorted, m_scpiclient, [&] (const QString &response) {
             m_scpiResponses.append(formatForDump(response));
         });
     }

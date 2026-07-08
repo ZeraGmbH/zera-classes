@@ -28,7 +28,7 @@ void test_scpi_learn_measure_objects_and_relations::countMeasureRelatedObjectsCr
     QCOMPARE(SCPIMODULE::VeinComponentScpiMeasureSequence::getInstanceCount(), 2 * osciComponentCount); // module + client
     // => PerVeinComponentMeasureTransaction are copied for client
 
-    const QString xmlResponse = client.getLastResponse().getStr();
+    const QString xmlResponse = client.getResponsesNotSorted()[0].getStr();
     XmlDocument xmlDoc;
     xmlDoc.loadXml(xmlResponse, true);
     XmlElemIter iter = xmlDoc.root(std::make_unique<XmlElemIterStrategyTree>());
