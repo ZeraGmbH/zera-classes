@@ -29,7 +29,7 @@ void test_scpi_all_responses::checkScpiQueryResponse_data()
 
 void test_scpi_all_responses::checkScpiQueryResponse()
 {
-    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
 
     QFETCH(QString, scpiQuery);
@@ -48,7 +48,7 @@ void test_scpi_all_responses::checkScpiQueryResponse()
 
 void test_scpi_all_responses::checkScpiQueryEmptyResponse()
 {
-    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
 
     client.sendScpiCmds("STATUS:DEV1:CPUINFO?"); // We can rely this reponds empty on all non-target environments - until...
@@ -82,7 +82,7 @@ void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse_data()
 
 void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse()
 {
-    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
 
     QFETCH(QString, scpiQuery);
@@ -115,7 +115,7 @@ void test_scpi_all_responses::checkScpiCmdResponse_data()
 
 void test_scpi_all_responses::checkScpiCmdResponse()
 {
-    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
 
     QFETCH(QString, scpiCommand);
@@ -155,7 +155,7 @@ void test_scpi_all_responses::checkScpiMulipleTransactionCmdResponse_data()
 
 void test_scpi_all_responses::checkScpiMulipleTransactionCmdResponse()
 {
-    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
 
     QFETCH(QString, scpiCommand);
@@ -172,7 +172,7 @@ void test_scpi_all_responses::checkScpiMulipleTransactionCmdResponse()
 
 QStringList test_scpi_all_responses::getAllScpiQueriesFromDevIface()
 {
-    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
     client.sendScpiCmds("dev:iface?");
     TimeMachineObject::feedEventLoop();
@@ -196,7 +196,7 @@ QStringList test_scpi_all_responses::getAllScpiQueriesFromDevIface()
 
 QStringList test_scpi_all_responses::getAllScpiCommandsWithParamFromDevIface()
 {
-    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
     client.sendScpiCmds("dev:iface?");
     TimeMachineObject::feedEventLoop();

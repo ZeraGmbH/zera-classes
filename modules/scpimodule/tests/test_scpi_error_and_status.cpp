@@ -252,5 +252,5 @@ void test_scpi_error_and_status::sendStatusQuestionableEnableInvalidParam()
 
 SCPIMODULE::cSCPIModule *test_scpi_error_and_status::getScpiModule()
 {
-    return static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    return qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
 }

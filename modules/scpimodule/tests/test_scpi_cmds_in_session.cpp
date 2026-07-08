@@ -244,6 +244,6 @@ void test_scpi_cmds_in_session::killModman()
 
 SCPIMODULE::cSCPIModule *test_scpi_cmds_in_session::getScpiModule()
 {
-    return static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    return qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
 }
 
