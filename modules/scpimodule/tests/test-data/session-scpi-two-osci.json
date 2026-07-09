@@ -1,0 +1,19 @@
+{
+    "modules" : [
+        {
+          "name" : "oscimodule",
+          "configFile" : "mt310s2-oscimodule.xml",
+          "id": 1120
+        },
+        {
+          "name" : "oscimodule",
+          "configFile" : "mt310s2-oscimodule.xml",
+          "id": 1121
+        },
+        {
+            "name" : "scpimodule",
+            "configFile" : "demo-scpimodule.xml",
+            "id": 9999
+        }
+    ]
+}

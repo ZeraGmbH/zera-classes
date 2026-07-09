@@ -2,11 +2,13 @@
     <qresource prefix="/">
         <file>dev-iface-basic.xml</file>
         <file>dev-iface-three.xml</file>
+        <file>dev-iface-two-osci.xml</file>
         <file>mt310s2-meas-session.json</file>
         <file>range-min-session.json</file>
         <file>session-scpi-and-range.json</file>
         <file>session-scpi-only.json</file>
         <file>session-scpi-osci-for-min-measure.json</file>
+        <file>session-scpi-two-osci.json</file>
         <file>session-three-modules.json</file>
         <file>session-two-modules.json</file>
         <file>hotpluscontrols-min-session.json</file>

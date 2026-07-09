@@ -9,6 +9,9 @@ class test_scpi_learn_measure_objects_and_relations : public QObject
 private slots:
     void countMeasureRelatedObjectsCreated();
     void multipleClientsIndependentStatusbyte();
+
+    void devIfaceTwoOsci();
+    void sortingChangesBehaviourOnQueries();
 };
 
 #endif // TEST_SCPI_LEARN_MEASURE_OBJECTS_AND_RELATIONS_H
