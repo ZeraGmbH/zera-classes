@@ -42,7 +42,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QSt
         Q_UNUSED(ok)
 
         QMetaObject::Connection myConn = connect(this, &cSCPIRpcDelegate::sigClientInfoSignal,
-                                                 transactionInfo->getClient(), &cSCPIClient::removeSCPIClientInfo, Qt::QueuedConnection);
+                                                 transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
         emit sigClientInfoSignal(m_scpicmdinfo->componentOrRpcName);
         disconnect(myConn);
 
@@ -87,7 +87,7 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QSt
         }
 
         m_pModule->scpiParameterCmdInfoHash.insert(m_scpicmdinfo->componentOrRpcName, transactionInfo);
-        client->addSCPITransactionInfo(m_scpicmdinfo->componentOrRpcName, transactionInfo);
+        client->addVeinParamRpcTransactionInfo(m_scpicmdinfo->componentOrRpcName, transactionInfo);
         rpcInvoker->invokeRPC(rpcName, params);
     }
 }

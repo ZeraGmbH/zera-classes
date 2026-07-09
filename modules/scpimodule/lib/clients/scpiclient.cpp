@@ -76,7 +76,7 @@ cSCPIStatus *cSCPIClient::getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems
 
 bool cSCPIClient::isOperationComplete()
 {
-    return m_scpiClientInfoHash.isEmpty();
+    return m_veinParamRpcTransactionHash.isEmpty();
 }
 
 cIEEE4882 *cSCPIClient::getIEEE4882()
@@ -84,14 +84,14 @@ cIEEE4882 *cSCPIClient::getIEEE4882()
     return m_pIEEE4882;
 }
 
-void cSCPIClient::addSCPITransactionInfo(const QString &veinComponentOrRpcName, const SCPIVeinTransactionInfoPtr &info)
+void cSCPIClient::addVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName, const SCPIVeinTransactionInfoPtr &info)
 {
-    m_scpiClientInfoHash.insert(veinComponentOrRpcName, info);
+    m_veinParamRpcTransactionHash.insert(veinComponentOrRpcName, info);
 }
 
-void cSCPIClient::removeSCPIClientInfo(const QString &veinComponentOrRpcName)
+void cSCPIClient::removeVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName)
 {
-    m_scpiClientInfoHash.remove(veinComponentOrRpcName);
+    m_veinParamRpcTransactionHash.remove(veinComponentOrRpcName);
     execCmd();
 }
 
@@ -158,7 +158,7 @@ void cSCPIClient::execCmd()
         if (!m_pSCPIInterface->executeCmd(this, cmd, scpiTransactionId))
             m_pIEEE4882->addEventErrorWithResponse(CommandError, scpiTransactionId);
         // we leave here if there is any parameter settings pending
-        if (m_scpiClientInfoHash.count() > 0)
+        if (m_veinParamRpcTransactionHash.count() > 0)
             break;
     }
 }

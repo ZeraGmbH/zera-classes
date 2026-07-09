@@ -50,7 +50,7 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
                     if(transactionInfo->entityId() == entityId) {
                         m_pModule->scpiParameterCmdInfoHash.remove(componentName, transactionInfo);
                         QMetaObject::Connection myConn = connect(this, &SCPIEventSystem::sigClientInfoSignal,
-                                                                 transactionInfo->getClient(), &cSCPIClient::removeSCPIClientInfo, Qt::QueuedConnection);
+                                                                 transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
                         emit sigClientInfoSignal(componentName);
                         disconnect(myConn);
                         if(transactionInfo->parCmdType() == parcmd) {
@@ -100,7 +100,7 @@ void SCPIEventSystem::handleErrorData(VeinEvent::CommandEvent *commandEvent)
                     commandEvent->accept();  // we caused the error event due to wrong parameter
                     m_pModule->scpiParameterCmdInfoHash.remove(errorComponentName, transactionInfo);
                     QMetaObject::Connection myConn = connect(this, &SCPIEventSystem::sigClientInfoSignal,
-                                                             transactionInfo->getClient(), &cSCPIClient::removeSCPIClientInfo, Qt::QueuedConnection);
+                                                             transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
                     emit sigClientInfoSignal(errorComponentName);
                     disconnect(myConn);
                     cSCPIClient* client = transactionInfo->getClient();

@@ -29,7 +29,7 @@ public:
     bool isOperationComplete();
 
     QUuid getClientId();
-    void addSCPITransactionInfo(const QString &veinComponentOrRpcName, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
+    void addVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
 
     QHash<MeasureScpiNodeDelegate*, MeasureScpiNodeDelegatePtr> m_SCPIMeasureDelegateHash;
 
@@ -40,7 +40,7 @@ public:
     virtual void handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) = 0;
     void handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId &scpiTransactionId);
 public slots:
-    void removeSCPIClientInfo(const QString &veinComponentOrRpcName);
+    void removeVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName);
 
 protected:
     cSCPIInterface* m_pSCPIInterface;
@@ -68,7 +68,7 @@ private:
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
     // what happens on same component names in different entities as e.g THDN module??? => TODO test
-    QHash<QString /* veinComponentOrRpcName */, SCPIVeinTransactionInfoPtr> m_scpiClientInfoHash;
+    QHash<QString /* veinComponentOrRpcName */, SCPIVeinTransactionInfoPtr> m_veinParamRpcTransactionHash;
     cIEEE4882* m_pIEEE4882 = nullptr;
 
     QList<cSCPIStatus*> m_SCPIStatusList;
