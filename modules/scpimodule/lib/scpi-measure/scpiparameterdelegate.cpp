@@ -69,7 +69,7 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
         m_pModule->insertScpiVeinParamRpcTransaction(componentOrRpcName, transactionInfo);
         client->addVeinParamRpcTransactionInfo(componentOrRpcName, transactionInfo);
 
-       emit m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
+       m_pModule->emitSigSendEvent(event);
     }
     else
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);

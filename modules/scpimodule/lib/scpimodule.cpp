@@ -95,6 +95,11 @@ VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()
     return m_pModuleValidator;
 }
 
+void cSCPIModule::emitSigSendEvent(QEvent *event)
+{
+    emit m_pSCPIEventSystem->sigSendEvent(event);
+}
+
 VfCmdEventHandlerSystemPtr cSCPIModule::getCmdEventHandlerSystem()
 {
     return m_cmdEventHandlerSystem;

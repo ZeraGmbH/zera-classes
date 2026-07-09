@@ -46,7 +46,7 @@ public:
                                VeinComponentScpiMeasureSequence*>> m_moduleCommonPendingMeasureStore;
 
     VfEventSytemModuleParam *getValidatorEventSystem();
-    SCPIEventSystem* m_pSCPIEventSystem = nullptr;
+    void emitSigSendEvent(QEvent *event);
     VfCmdEventHandlerSystemPtr getCmdEventHandlerSystem();
 
 private slots:
@@ -56,6 +56,7 @@ private:
     void startMeas() override; // we make the measuring program start here
     void stopMeas() override;
 
+    SCPIEventSystem* m_pSCPIEventSystem = nullptr;
     cSCPIModuleConfiguration m_configuration;
     cSCPIServer *m_pSCPIServer = nullptr;
     VfEventSytemModuleParam* m_pModuleValidator = nullptr;
