@@ -56,7 +56,7 @@ cSCPIClient::~cSCPIClient()
 {
     for (int i = 0; i < m_connectDelegateList.count(); i++) {
         cSignalConnectionDelegate* sCD = m_connectDelegateList.at(i);
-        m_pModule->sConnectDelegateList.removeAll(sCD);
+        m_pModule->removeSignalConnectionDelegates(sCD);
         delete sCD;
     }
     for (int i = 0; i < m_SCPIStatusList.count(); i++)
@@ -245,12 +245,12 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus,
                 // if we found the searched component, we generate a signal connection delegate
                 // we need an eventsystem to look for notifications with these components
                 // that lets the signal connection delegate  do his job
-                cSignalConnectionDelegate* sConnectDelegate = new cSignalConnectionDelegate(scpiStatus,
-                                                                                            statusBitDescriptor.m_nBitNr,
-                                                                                            entityId, statusBitDescriptor.m_sComponentName);
+                cSignalConnectionDelegate* delegate = new cSignalConnectionDelegate(scpiStatus,
+                                                                                    statusBitDescriptor.m_nBitNr,
+                                                                                    entityId, statusBitDescriptor.m_sComponentName);
                 // as we only want a single eventsystem the module itself holds the list of delegates
-                m_pModule->sConnectDelegateList.append(sConnectDelegate);
-                m_connectDelegateList.append(sConnectDelegate); // our own list so we can clean up if client dies
+                m_pModule->insertSignalConnectionDelegate(delegate);
+                m_connectDelegateList.append(delegate); // our own list so we can clean up if client dies
             }
         }
     }

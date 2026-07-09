@@ -38,7 +38,10 @@ public:
     const QList<SCPIVeinTransactionInfoPtr> getAllScpiVeinParamRpcTransactions();
     const QList<SCPIVeinTransactionInfoPtr> getScpiVeinParamRpcTransactions(const QString &componentOrRpcName);
 
-    QList<cSignalConnectionDelegate*> sConnectDelegateList;
+    void insertSignalConnectionDelegate(cSignalConnectionDelegate* delegate);
+    void removeSignalConnectionDelegates(cSignalConnectionDelegate *delegate);
+    void updateSignalConnection(int entityId, const QString &componentName, const QVariant &newValue);
+
     std::shared_ptr<QMultiHash<QString /* vein component or Rpc name */,
                                VeinComponentScpiMeasureSequence*>> m_moduleCommonPendingMeasureStore;
 
@@ -57,7 +60,9 @@ private:
     cSCPIServer *m_pSCPIServer = nullptr;
     VfEventSytemModuleParam* m_pModuleValidator = nullptr;
     VfCmdEventHandlerSystemPtr m_cmdEventHandlerSystem;
+
     QMultiHash<QString /*componentOrRpcName*/, SCPIVeinTransactionInfoPtr> m_scpiVeinParamOrRpcTransactions;
+    QList<cSignalConnectionDelegate*> m_signalConnectionDelegates;
 };
 
 }

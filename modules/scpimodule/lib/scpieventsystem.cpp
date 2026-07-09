@@ -33,11 +33,7 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
         const QString componentName = cData->componentName();
 
         // handle configured signal connections
-        for(int i = 0; i < m_pModule->sConnectDelegateList.count(); i++) {
-            cSignalConnectionDelegate* delegate = m_pModule->sConnectDelegateList.at(i);
-            if(delegate->EntityId() == entityId && delegate->ComponentName() == componentName)
-                delegate->setStatus(cData->newValue());
-        }
+        m_pModule->updateSignalConnection(entityId, componentName, cData->newValue());
 
         // then it looks for parameter values
         const QList<SCPIVeinTransactionInfoPtr> transactionInfoList = m_pModule->getScpiVeinParamRpcTransactions(componentName);
