@@ -29,7 +29,7 @@ public:
     cSCPIModuleConfigData *getConfigData();
     QByteArray getConfigXml() const override;
 
-    void removeClient(cSCPIClient *client);
+    void removeClientParamOrRpcTransactions(cSCPIClient *client);
 
     void insertScpiVeinParamRpcTransaction(const QString &componentOrRpcName,
                                            const SCPIVeinTransactionInfoPtr &transactionInfo);

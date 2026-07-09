@@ -39,7 +39,7 @@ QByteArray cSCPIModule::getConfigXml() const
     return m_configuration.exportConfiguration();
 }
 
-void cSCPIModule::removeClient(cSCPIClient *client)
+void cSCPIModule::removeClientParamOrRpcTransactions(cSCPIClient *client)
 {
     for(auto iter = m_scpiVeinParamOrRpcTransactions.begin(); iter != m_scpiVeinParamOrRpcTransactions.end(); ) {
         if(iter.value()->getClient() == client)
