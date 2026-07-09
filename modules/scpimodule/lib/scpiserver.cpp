@@ -28,7 +28,7 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     m_bActive = false;
 
     m_pTcpServer = new TcpServerLimitedConn(m_ConfigData, m_SCPIClientList);
-    connect(m_pTcpServer, &QTcpServer::newConnection, this, &cSCPIServer::addSCPIClient);
+    connect(m_pTcpServer, &QTcpServer::newConnection, this, &cSCPIServer::addNetClient);
     connect(m_pTcpServer, &QTcpServer::acceptError, this, &cSCPIServer::TCPError);
 
     m_setupTCPServerState.addTransition(this, &cSCPIServer::activationContinue, &m_activationDoneState);
@@ -75,9 +75,23 @@ ScpiModelMeasureAndFriends *cSCPIServer::getScpiGroupMeasurement()
     return &m_scpiGroupMeasurement;
 }
 
-void cSCPIServer::appendClient(cSCPIClient* client)
+void cSCPIServer::addScpiClient(cSCPIClient* client)
 {
-    m_SCPIClientList.append(client);
+    if (!m_SCPIClientList.contains(client))
+        m_SCPIClientList.append(client);
+}
+
+void cSCPIServer::removeScpiClient(cSCPIClient *client)
+{
+    if(m_SCPIClientList.contains(client)) {
+        m_pModule->removeClientParamOrRpcTransactions(client);
+        m_SCPIClientList.removeAll(client);
+    }
+}
+
+const QList<cSCPIClient*> &cSCPIServer::getClients() const
+{
+    return m_SCPIClientList;
 }
 
 cSCPIInterface *cSCPIServer::getScpiInterface()
@@ -98,7 +112,7 @@ void cSCPIServer::createSerialScpi()
             m_pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
 
             m_pSerialClient = new cSCPISerialClient(m_pSerialPort, m_pModule, m_ConfigData, &m_scpiInterface);
-            appendClient(m_pSerialClient);
+            addScpiClient(m_pSerialClient);
             qInfo("Serial SCPI client connected / Active clients: %i", m_SCPIClientList.count());
             m_bSerialScpiActive = true;
         }
@@ -112,7 +126,7 @@ void cSCPIServer::destroySerialScpi()
 {
     if (m_bSerialScpiActive) {
         m_bSerialScpiActive = false;
-        deleteSCPIClient(m_pSerialClient);
+        deleteNetClient(m_pSerialClient);
         m_pSerialPort->close();
         deleteSerialPort();
         m_pSerialClient = nullptr;
@@ -129,20 +143,20 @@ void cSCPIServer::deleteSerialPort()
     }
 }
 
-void cSCPIServer::addSCPIClient()
+void cSCPIServer::addNetClient()
 {
     if(m_pTcpServer->hasPendingConnections()) {
         QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
         cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, &m_scpiInterface); // each client our interface;
-        appendClient(client);
+        addScpiClient(client);
         qInfo("Network SCPI client (%s) connected / Active clients: %i", qPrintable(client->getPeerAddress()), m_SCPIClientList.count());
         connect(socket, &QTcpSocket::disconnected, this, [=]() {
-            deleteSCPIClient(client);
+            deleteNetClient(client);
         });
      }
 }
 
-void cSCPIServer::deleteSCPIClient(cSCPIClient *client)
+void cSCPIServer::deleteNetClient(cSCPIClient *client)
 {
     // don't use for other than remove from list - it is destroyed and not usable
     if(m_SCPIClientList.contains(client)) {
@@ -195,7 +209,7 @@ void cSCPIServer::shutdownTCPServer()
     if (m_bSerialScpiActive)
         destroySerialScpi();
     for(auto client : qAsConst(m_SCPIClientList))
-        deleteSCPIClient(client);
+        deleteNetClient(client);
     m_SCPIClientList.clear();
     m_pTcpServer->close();
     emit deactivationContinue();

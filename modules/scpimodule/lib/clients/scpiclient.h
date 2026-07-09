@@ -44,6 +44,7 @@ public slots:
     void removeVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName);
 
 protected:
+    cSCPIModule* m_pModule;
     cSCPIInterface* m_pSCPIInterface;
     ScpiResponseSorter m_responseSorter;
 
@@ -66,7 +67,6 @@ private:
     EntityHash getEntitiesWithScpi() const;
     void generateSCPIMeasureSystem();
 
-    cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
     // what happens on same component names in different entities as e.g THDN module??? => TODO test
     QHash<QString /* veinComponentOrRpcName */, SCPIVeinTransactionInfoPtr> m_veinParamRpcTransactionHash;

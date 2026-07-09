@@ -70,7 +70,7 @@ void test_scpi_penetrate::penetrateRangeSet()
     QFETCH(QStringList, scpiCmds);
     for (const QString &scpiCmd : scpiCmds)
         m_scpiclient->sendScpiCmds(scpiCmd);
-    m_scpiModule->getSCPIServer()->deleteSCPIClient(m_scpiclient);
+    delete m_scpiclient;
     TimeMachineObject::feedEventLoop();
 
     createScpiClient();
@@ -90,7 +90,6 @@ void test_scpi_penetrate::createScpiClient()
     m_scpiclient = new SCPIMODULE::ScpiTestClient(m_scpiModule,
                                                   *m_scpiModule->getConfigData(),
                                                   m_scpiModule->getSCPIServer()->getScpiInterface());
-    m_scpiModule->getSCPIServer()->appendClient(m_scpiclient);
 }
 
 QString test_scpi_penetrate::deduceDevice(const QString &sessionFileName)

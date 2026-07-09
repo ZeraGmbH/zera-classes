@@ -29,12 +29,14 @@ public:
     virtual ~cSCPIServer();
     void generateVeinInterface() override;
     ScpiModelMeasureAndFriends* getScpiGroupMeasurement();
-    void appendClient(cSCPIClient *client);
+    void addScpiClient(cSCPIClient *client);
+    void removeScpiClient(cSCPIClient *client);
+    const QList<cSCPIClient*> &getClients() const;
     cSCPIInterface* getScpiInterface();
 public slots:
-    void deleteSCPIClient(SCPIMODULE::cSCPIClient *client);
+    void deleteNetClient(SCPIMODULE::cSCPIClient *client);
 private slots:
-    void addSCPIClient();
+    void addNetClient();
     void TCPError(QAbstractSocket::SocketError);
 
     void setupTCPServer();

@@ -1,10 +1,17 @@
 #include "scpitestclient.h"
+#include "scpimodule.h"
 
 namespace SCPIMODULE {
 
-ScpiTestClient::ScpiTestClient(cSCPIModule *module, cSCPIModuleConfigData &configdata, cSCPIInterface *iface) :
+ScpiTestClient::ScpiTestClient(cSCPIModule *module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface) :
     cSCPIClient(module, configdata, iface)
 {
+    module->getSCPIServer()->addScpiClient(this);
+}
+
+ScpiTestClient::~ScpiTestClient()
+{
+    m_pModule->getSCPIServer()->removeScpiClient(this);
 }
 
 void ScpiTestClient::sendScpiCmds(QString cmds)

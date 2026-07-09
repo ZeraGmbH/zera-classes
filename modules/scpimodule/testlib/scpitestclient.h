@@ -11,6 +11,7 @@ class ScpiTestClient : public cSCPIClient
     Q_OBJECT
 public:
     ScpiTestClient(cSCPIModule* module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface);
+    ~ScpiTestClient() override;
 
     void handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) override;
     cSCPIInterface* getScpiInterface();
