@@ -23,9 +23,9 @@ ScpiBaseDelegate::~ScpiBaseDelegate()
     m_instanceCount--;
 }
 
-void ScpiBaseDelegate::insertScpiCmd(cSCPI *scpiCmdInterface, ScpiBaseDelegatePtr delegate)
+const QString &ScpiBaseDelegate::getCmdParent() const
 {
-    scpiCmdInterface->insertScpiCmd(delegate->m_sCmdParent.split(":", Qt::SkipEmptyParts), delegate);
+    return m_sCmdParent;
 }
 
 int ScpiBaseDelegate::getInstanceCount()
