@@ -7,8 +7,7 @@
 namespace SCPIMODULE
 {
 
-ScpiModelDevIface::ScpiModelDevIface(cSCPIModule *module, cSCPIInterface *iface) :
-    ScpiModelBase(iface),
+ScpiModelDevIface::ScpiModelDevIface(cSCPIModule *module) :
     m_pModule(module)
 {
 }
@@ -18,10 +17,10 @@ enum scpiinterfacecommands
     deviceinterfacecmd
 };
 
-bool ScpiModelDevIface::setupScpi()
+bool ScpiModelDevIface::setupScpi(cSCPIInterface *scpiInterface)
 {
     cSCPIInterfaceDelegatePtr delegate = std::make_shared<cSCPIInterfaceDelegate>("DEVICE", "IFACE", SCPI::isQuery, deviceinterfacecmd);
-    m_pSCPIInterface->addSCPICommand(delegate);
+    scpiInterface->addSCPICommand(delegate);
     connect(delegate.get(), &cSCPIInterfaceDelegate::signalExecuteSCPI, this, &ScpiModelDevIface::executeCmd);
 
     // for module integrity we also have to add this command to the scpi command list (exported at INF_ModuleInterface)
@@ -39,7 +38,7 @@ void ScpiModelDevIface::executeCmd(cSCPIClient *client,
     {
     case deviceinterfacecmd: {
         if (cmd.isQuery())
-            client->handleCmdFinish(getDevIface(), scpiTransactionId, cSCPIClient::LOG_SKIP /* dev:iface is huge */);
+            client->handleCmdFinish(getDevIface(client), scpiTransactionId, cSCPIClient::LOG_SKIP /* dev:iface is huge */);
         else
             client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
         break;
@@ -48,11 +47,11 @@ void ScpiModelDevIface::executeCmd(cSCPIClient *client,
     }
 }
 
-QString ScpiModelDevIface::getDevIface()
+QString ScpiModelDevIface::getDevIface(cSCPIClient *client)
 {
     if (m_devIfaceCache.isEmpty()) {
         QMap<QString, QString> modelListBaseEntry({{"RELEASE", ZenuxDeviceInfo::getZenuxRelease()}});
-        m_pSCPIInterface->exportSCPIModelXML(m_devIfaceCache, modelListBaseEntry);
+        client->getScpiInterface()->exportSCPIModelXML(m_devIfaceCache, modelListBaseEntry);
     }
     return m_devIfaceCache;
 }

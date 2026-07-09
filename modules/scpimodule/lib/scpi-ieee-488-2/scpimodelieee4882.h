@@ -1,6 +1,7 @@
 #ifndef SCPIMODELIEEE4882_H
 #define SCPIMODELIEEE4882_H
 
+#include "scpiinterface.h"
 #include "scpimodelbase.h"
 #include "scpitransactionid.h"
 
@@ -11,8 +12,7 @@ class ScpiModelIEEE4882 : public ScpiModelBase
 {
     Q_OBJECT
 public:
-    ScpiModelIEEE4882(cSCPIInterface* iface);
-    bool setupScpi();
+    bool setupScpi(cSCPIInterface* scpiInterface);
 
 private slots:
     void executeCmd(SCPIMODULE::cSCPIClient* client,

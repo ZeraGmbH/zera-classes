@@ -5,8 +5,7 @@ namespace SCPIMODULE
 
 int ScpiModelBase::m_interfaceCount = 0;
 
-ScpiModelBase::ScpiModelBase(cSCPIInterface *iface) :
-    m_pSCPIInterface(iface)
+ScpiModelBase::ScpiModelBase()
 {
     m_interfaceCount++;
 }

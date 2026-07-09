@@ -13,8 +13,7 @@
 namespace SCPIMODULE
 {
 
-ScpiModelMeasureAndFriends::ScpiModelMeasureAndFriends(cSCPIModule* module, cSCPIInterface *iface) :
-    ScpiModelBase(iface),
+ScpiModelMeasureAndFriends::ScpiModelMeasureAndFriends(cSCPIModule* module) :
     m_pModule(module)
 {
 }
@@ -26,7 +25,7 @@ ScpiModelMeasureAndFriends::~ScpiModelMeasureAndFriends()
         delete measureObject;
 }
 
-bool ScpiModelMeasureAndFriends::setupScpi()
+bool ScpiModelMeasureAndFriends::setupScpi(cSCPIInterface *scpiInterface)
 {
     bool ok = true;
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
@@ -54,7 +53,7 @@ bool ScpiModelMeasureAndFriends::setupScpi()
                     scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentOrRpcName].toObject();
                     scpiCmdInfo->refType = jsonCmdArr[4].toString();
 
-                    addSCPICommand(scpiCmdInfo); // we add our command now
+                    addSCPICommand(scpiInterface, scpiCmdInfo); // we add our command now
                 }
 
                 const QJsonObject jsonRpcInfo = jsonObj["RpcInfo"].toObject();
@@ -70,7 +69,7 @@ bool ScpiModelMeasureAndFriends::setupScpi()
                     scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
                     scpiCmdInfo->veinComponentInfo = jsonRpcInfo[scpiCmdInfo->componentOrRpcName].toObject();
                     scpiCmdInfo->refType = jsonCmdArr[4].toString();
-                    addRPCCommand(scpiCmdInfo);
+                    addRPCCommand(scpiInterface, scpiCmdInfo);
                 }
             }
             else
@@ -115,30 +114,30 @@ void ScpiModelMeasureAndFriends::updatePendingMeasureSequences(int entityId, con
     }
 }
 
-void ScpiModelMeasureAndFriends::addSCPICommand(const cSCPICmdInfoPtr &scpiCmdInfo)
+void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo)
 {
     if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
         VeinComponentScpiMeasureSequence* measureObject = new VeinComponentScpiMeasureSequence(scpiCmdInfo);
         m_measureObjectsToDelete.append(measureObject);
 
-        addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, ScpiModelTypes::measure, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("CONFIGURE"), SCPI::isNode | SCPI::isCmd, ScpiModelTypes::configure, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("READ"), SCPI::isNode | SCPI::isQuery, ScpiModelTypes::read, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("INIT"), SCPI::isNode | SCPI::isCmd, ScpiModelTypes::init, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("FETCH"), SCPI::isNode | SCPI::isQuery, ScpiModelTypes::fetch, measureObject);
+        addSCPIMeasureCommand(scpiInterface, QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, ScpiModelTypes::measure, measureObject);
+        addSCPIMeasureCommand(scpiInterface, QString(""), QString("CONFIGURE"), SCPI::isNode | SCPI::isCmd, ScpiModelTypes::configure, measureObject);
+        addSCPIMeasureCommand(scpiInterface, QString(""), QString("READ"), SCPI::isNode | SCPI::isQuery, ScpiModelTypes::read, measureObject);
+        addSCPIMeasureCommand(scpiInterface, QString(""), QString("INIT"), SCPI::isNode | SCPI::isCmd, ScpiModelTypes::init, measureObject);
+        addSCPIMeasureCommand(scpiInterface, QString(""), QString("FETCH"), SCPI::isNode | SCPI::isQuery, ScpiModelTypes::fetch, measureObject);
 
-        addSCPIMeasureCommand(QString("MEASURE"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::measure, measureObject);
-        addSCPIMeasureCommand(QString("CONFIGURE"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, ScpiModelTypes::configure, measureObject);
-        addSCPIMeasureCommand(QString("READ"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::read, measureObject);
-        addSCPIMeasureCommand(QString("INIT"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, ScpiModelTypes::init, measureObject);
-        addSCPIMeasureCommand(QString("FETCH"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::fetch, measureObject);
+        addSCPIMeasureCommand(scpiInterface, QString("MEASURE"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::measure, measureObject);
+        addSCPIMeasureCommand(scpiInterface, QString("CONFIGURE"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, ScpiModelTypes::configure, measureObject);
+        addSCPIMeasureCommand(scpiInterface, QString("READ"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::read, measureObject);
+        addSCPIMeasureCommand(scpiInterface, QString("INIT"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, ScpiModelTypes::init, measureObject);
+        addSCPIMeasureCommand(scpiInterface, QString("FETCH"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::fetch, measureObject);
 
-        addSCPIMeasureCommand(QString("MEASURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::measure, measureObject, scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(QString("CONFIGURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, ScpiModelTypes::configure, measureObject, scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(QString("READ:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::read, measureObject, scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(QString("INIT:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, ScpiModelTypes::init, measureObject, scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::fetch, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(scpiInterface, QString("MEASURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::measure, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(scpiInterface, QString("CONFIGURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, ScpiModelTypes::configure, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(scpiInterface, QString("READ:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::read, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(scpiInterface, QString("INIT:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, ScpiModelTypes::init, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(scpiInterface, QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::fetch, measureObject, scpiCmdInfo->veinComponentInfo);
 
     }
     else {
@@ -155,11 +154,11 @@ void ScpiModelMeasureAndFriends::addSCPICommand(const cSCPICmdInfoPtr &scpiCmdIn
             delegate = std::make_shared<cSCPICatalogCmdDelegate>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
             m_scpiPropertyDelegateHash[cmdComplete] = static_cast<cSCPICatalogCmdDelegate*>(delegate.get()); // for easier access if we need to change answers of this delegate
         }
-        m_pSCPIInterface->addSCPICommand(delegate);
+        scpiInterface->addSCPICommand(delegate);
     }
 }
 
-void ScpiModelMeasureAndFriends::addRPCCommand(const cSCPICmdInfoPtr &scpiCmdInfo)
+void ScpiModelMeasureAndFriends::addRPCCommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo)
 {
     QString cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
     QStringList nodeNames = cmdComplete.split(':');
@@ -167,15 +166,16 @@ void ScpiModelMeasureAndFriends::addRPCCommand(const cSCPICmdInfoPtr &scpiCmdInf
     QString cmdParent = nodeNames.join(':');
     ScpiBaseDelegatePtr delegate = std::make_shared<cSCPIRpcDelegate>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
     setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
-    m_pSCPIInterface->addSCPICommand(delegate);
+    scpiInterface->addSCPICommand(delegate);
 }
 
-void ScpiModelMeasureAndFriends::addSCPIMeasureCommand(const QString &cmdparent,
-                                             const QString &cmd,
-                                             quint8 scpiCmdQueryFlags,
-                                             ScpiModelTypes modelType,
-                                             VeinComponentScpiMeasureSequence *measureObject,
-                                             QJsonObject veinComponentInfo)
+void ScpiModelMeasureAndFriends::addSCPIMeasureCommand(cSCPIInterface *scpiInterface,
+                                                       const QString &cmdparent,
+                                                       const QString &cmd,
+                                                       quint8 scpiCmdQueryFlags,
+                                                       ScpiModelTypes modelType,
+                                                       VeinComponentScpiMeasureSequence *measureObject,
+                                                       QJsonObject veinComponentInfo)
 {
     QString cmdcomplete = QString("%1:%2").arg(cmdparent, cmd);
     MeasureScpiNodeDelegatePtr delegate;
@@ -186,7 +186,7 @@ void ScpiModelMeasureAndFriends::addSCPIMeasureCommand(const QString &cmdparent,
     else {
         delegate = std::make_shared<MeasureScpiNodeDelegate>(cmdparent, cmd, scpiCmdQueryFlags, modelType, measureObject);
         m_scpiMeasureDelegateHash[cmdcomplete] = delegate;
-        m_pSCPIInterface->addSCPICommand(delegate);
+        scpiInterface->addSCPICommand(delegate);
     }
     setXmlComponentInfo(delegate, veinComponentInfo);
 }

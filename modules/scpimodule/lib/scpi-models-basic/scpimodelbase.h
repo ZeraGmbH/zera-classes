@@ -1,7 +1,7 @@
 #ifndef SCPIMODELBASE_H
 #define SCPIMODELBASE_H
 
-#include "scpiinterface.h"
+#include <QObject>
 
 namespace SCPIMODULE
 {
@@ -10,12 +10,10 @@ class ScpiModelBase : public QObject
 {
     Q_OBJECT
 public:
-    ScpiModelBase(cSCPIInterface* iface);
+    ScpiModelBase();
     virtual ~ScpiModelBase();
 
     static int getInstanceCount();
-protected:
-    cSCPIInterface* m_pSCPIInterface;
 
 private:
     static int m_interfaceCount;

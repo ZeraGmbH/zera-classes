@@ -11,8 +11,8 @@ class ScpiModelDevIface : public ScpiModelBase
 {
     Q_OBJECT
 public:
-    ScpiModelDevIface(cSCPIModule* module, cSCPIInterface* iface);
-    bool setupScpi();
+    ScpiModelDevIface(cSCPIModule* module);
+    bool setupScpi(cSCPIInterface *scpiInterface);
 
 private slots:
     void executeCmd(SCPIMODULE::cSCPIClient* client,
@@ -20,7 +20,7 @@ private slots:
                     const QString& scpi,
                     const ScpiTransactionId &scpiTransactionId);
 private:
-    QString getDevIface();
+    QString getDevIface(SCPIMODULE::cSCPIClient* client);
 
     cSCPIModule* m_pModule = nullptr;
     QString m_devIfaceCache;

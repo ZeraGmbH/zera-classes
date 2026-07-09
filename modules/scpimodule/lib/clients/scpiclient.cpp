@@ -69,6 +69,11 @@ cSCPIClient::~cSCPIClient()
         delete m_SCPIMeasureTranslationHash[keylist.at(i)];
 }
 
+cSCPIInterface *cSCPIClient::getScpiInterface()
+{
+    return m_pSCPIInterface;
+}
+
 cSCPIStatus *cSCPIClient::getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx)
 {
     return m_SCPIStatusList.at(statusSystemIdx);

@@ -21,10 +21,10 @@ class ScpiModelMeasureAndFriends : public ScpiModelBase
 {
     Q_OBJECT
 public:
-    ScpiModelMeasureAndFriends(cSCPIModule* module, cSCPIInterface* iface);
+    ScpiModelMeasureAndFriends(cSCPIModule* module);
     ~ScpiModelMeasureAndFriends() override;
 
-    bool setupScpi();
+    bool setupScpi(cSCPIInterface *scpiInterface);
     virtual void actualizeInterface(QVariant modInterface);
 
     QHash<QString, MeasureScpiNodeDelegatePtr>* getSCPIMeasDelegateHash();
@@ -35,9 +35,10 @@ private:
     QHash<QString, MeasureScpiNodeDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
     QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
-    void addSCPICommand(const cSCPICmdInfoPtr &scpiCmdInfo);
-    void addRPCCommand(const cSCPICmdInfoPtr &scpiCmdInfo);
-    void addSCPIMeasureCommand(const QString &cmdparent,
+    void addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
+    void addRPCCommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
+    void addSCPIMeasureCommand(cSCPIInterface *scpiInterface,
+                               const QString &cmdparent,
                                const QString &cmd,
                                quint8 scpiCmdQueryFlags,
                                ScpiModelTypes modelType,

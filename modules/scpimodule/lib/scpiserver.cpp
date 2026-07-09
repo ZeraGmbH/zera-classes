@@ -32,10 +32,8 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     m_pModule(module),
     m_ConfigData(configData),
     m_scpiInterface(m_ConfigData.m_sDeviceName),
-    m_scpiGroupMeasurement(m_pModule, &m_scpiInterface),
-    m_scpiGroupDevIface(m_pModule, &m_scpiInterface),
-    m_scpiGroupStatus(&m_scpiInterface),
-    m_scpiGroupIeee488(&m_scpiInterface),
+    m_scpiGroupMeasurement(m_pModule),
+    m_scpiGroupDevIface(m_pModule),
     m_bSerialScpiActive(false)
 {
     m_bActive = false;
@@ -174,10 +172,10 @@ void cSCPIServer::setupTCPServer()
 {
     // before we can call listen we must set up a valid interface that clients can connect to
     QString errorMsg;
-    bool ok = m_scpiGroupMeasurement.setupScpi();
-    ok = ok && m_scpiGroupDevIface.setupScpi();
-    ok = ok && m_scpiGroupStatus.setupScpi();
-    ok = ok && m_scpiGroupIeee488.setupScpi();
+    bool ok = m_scpiGroupMeasurement.setupScpi(&m_scpiInterface);
+    ok = ok && m_scpiGroupDevIface.setupScpi(&m_scpiInterface);
+    ok = ok && m_scpiGroupStatus.setupScpi(&m_scpiInterface);
+    ok = ok && m_scpiGroupIeee488.setupScpi(&m_scpiInterface);
     if (!ok)
         errorMsg = interfacejsonErrMsg;
 

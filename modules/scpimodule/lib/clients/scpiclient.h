@@ -23,6 +23,7 @@ public:
     cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
     virtual ~cSCPIClient();
 
+    cSCPIInterface* getScpiInterface();
     cSCPIStatus* getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx);
     cIEEE4882* getIEEE4882();
 

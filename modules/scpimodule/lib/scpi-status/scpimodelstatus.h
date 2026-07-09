@@ -1,6 +1,7 @@
 #ifndef SCPIMODELSTATUS_H
 #define SCPIMODELSTATUS_H
 
+#include "scpiinterface.h"
 #include "scpimodelbase.h"
 #include "scpistatusdefinitions.h"
 #include "scpitransactionid.h"
@@ -15,8 +16,7 @@ class ScpiModelStatus : public ScpiModelBase
 {
     Q_OBJECT
 public:
-    ScpiModelStatus(cSCPIInterface* iface);
-    bool setupScpi();
+    bool setupScpi(cSCPIInterface *scpiInterface);
 
 private slots:
     void executeCmd(SCPIMODULE::cSCPIClient *client,
