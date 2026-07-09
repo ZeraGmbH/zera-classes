@@ -29,6 +29,32 @@ void SCPIMODULE::cSCPIRpcDelegate::executeSCPI(cSCPIClient *client, const QStrin
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
+void SCPIMODULE::cSCPIRpcDelegate::handleRpcFinish(const QVariantMap &resultData, const SCPIVeinTransactionInfoPtr &transactionInfo, bool inputIsQuery)
+{
+    QMetaObject::Connection myConn = connect(this, &cSCPIRpcDelegate::sigClientInfoSignal,
+                                             transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
+    emit sigClientInfoSignal(m_scpicmdinfo->componentOrRpcName);
+    disconnect(myConn);
+
+    m_pModule->removeScpiVeinParamRpcTransaction(m_scpicmdinfo->componentOrRpcName, transactionInfo);
+
+    bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);
+    if(inputIsQuery) {
+        QVariant returnData;
+        if(rpcSuccessful)
+            returnData = resultData[VeinComponent::RemoteProcedureData::s_returnString];
+        else
+            returnData = resultData[VeinComponent::RemoteProcedureData::s_errorMessageString];
+        transactionInfo->getClient()->handleCmdFinish(returnData.toString(), transactionInfo->getScpiTransactionId());
+    }
+    else {//in case of command
+        if(rpcSuccessful)
+            transactionInfo->getClient()->handleCmdFinishStatusOnly(ZSCPI::ack, transactionInfo->getScpiTransactionId());
+        else
+            transactionInfo->getClient()->handleCmdFinishStatusOnly(ZSCPI::errexec, transactionInfo->getScpiTransactionId());
+    }
+}
+
 void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QString &scpi, bool inputIsQuery, const ScpiTransactionId &scpiTransactionId)
 {
     SCPIVeinTransactionInfoPtr transactionInfo;
@@ -40,34 +66,11 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QSt
     VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfClientRPCInvoker>());
     connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, const QVariantMap &resultData) {
         Q_UNUSED(ok)
-
-        QMetaObject::Connection myConn = connect(this, &cSCPIRpcDelegate::sigClientInfoSignal,
-                                                 transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
-        emit sigClientInfoSignal(m_scpicmdinfo->componentOrRpcName);
-        disconnect(myConn);
-
-        m_pModule->scpiParameterCmdInfoHash.remove(m_scpicmdinfo->componentOrRpcName, transactionInfo);
-
-        QVariant returnData;
-        bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);
-
-        if(inputIsQuery) {
-            if(rpcSuccessful)
-                returnData = resultData[VeinComponent::RemoteProcedureData::s_returnString];
-            else
-                returnData = resultData[VeinComponent::RemoteProcedureData::s_errorMessageString];
-            client->handleCmdFinish(returnData.toString(), scpiTransactionId);
-        }
-        else {//in case of command
-            if(rpcSuccessful)
-                client->handleCmdFinishStatusOnly(ZSCPI::ack, scpiTransactionId);
-            else
-                client->handleCmdFinishStatusOnly(ZSCPI::errexec, scpiTransactionId);
-        }
+        handleRpcFinish(resultData, transactionInfo, inputIsQuery);
     });
     m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);
 
-    QString rpcSignature = m_scpicmdinfo->componentOrRpcName;
+    const QString rpcSignature = m_scpicmdinfo->componentOrRpcName;
     QString rpcName = VfCppRpcHelper::getRpcName(rpcSignature);
     const QStringList paramNamesList = VfCppRpcHelper::getRpcParamNamesList(rpcSignature);
     int totalExpectedParams = paramNamesList.size();
@@ -86,8 +89,8 @@ void SCPIMODULE::cSCPIRpcDelegate::executeScpiRpc(cSCPIClient *client, const QSt
             params[paramNamesList[i]] = variantValue;
         }
 
-        m_pModule->scpiParameterCmdInfoHash.insert(m_scpicmdinfo->componentOrRpcName, transactionInfo);
-        client->addVeinParamRpcTransactionInfo(m_scpicmdinfo->componentOrRpcName, transactionInfo);
+        m_pModule->insertScpiVeinParamRpcTransaction(rpcSignature, transactionInfo);
+        client->addVeinParamRpcTransactionInfo(rpcSignature, transactionInfo);
         rpcInvoker->invokeRPC(rpcName, params);
     }
 }

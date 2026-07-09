@@ -40,14 +40,14 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
         }
 
         // then it looks for parameter values
-        const QList<SCPIVeinTransactionInfoPtr> transactionInfoList = m_pModule->scpiParameterCmdInfoHash.values(componentName);
+        const QList<SCPIVeinTransactionInfoPtr> transactionInfoList = m_pModule->getScpiVeinParamRpcTransactions(componentName);
         for (int i = 0; i < transactionInfoList.count(); i++) {
             SCPIVeinTransactionInfoPtr transactionInfo = transactionInfoList.at(i);
             QUuid clientId = commandEvent->peerId();
             // test if server notification or client in transaction matches
             if (clientId.isNull() || clientId == transactionInfo->getClient()->getClientId()) {
                 if (transactionInfo->entityId() == entityId) {
-                    m_pModule->scpiParameterCmdInfoHash.remove(componentName, transactionInfo);
+                    m_pModule->removeScpiVeinParamRpcTransaction(componentName, transactionInfo);
                     QMetaObject::Connection myConn = connect(this, &SCPIEventSystem::sigClientInfoSignal,
                                                              transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
                     emit sigClientInfoSignal(componentName);
@@ -90,12 +90,12 @@ void SCPIEventSystem::handleErrorData(VeinEvent::CommandEvent *commandEvent)
         const int errorEntityId = eData->entityId();
 
         // error notifications are sent for invalid parameters
-        QList<SCPIVeinTransactionInfoPtr> transactionInfoList = m_pModule->scpiParameterCmdInfoHash.values();
+        const QList<SCPIVeinTransactionInfoPtr> transactionInfoList = m_pModule->getAllScpiVeinParamRpcTransactions();
         for (int i = 0; i < transactionInfoList.count(); i++) {
             SCPIVeinTransactionInfoPtr transactionInfo = transactionInfoList.at(i);
             if (transactionInfo->entityId() == errorEntityId) {
                 commandEvent->accept();  // we caused the error event due to wrong parameter
-                m_pModule->scpiParameterCmdInfoHash.remove(errorComponentName, transactionInfo);
+                m_pModule->removeScpiVeinParamRpcTransaction(errorComponentName, transactionInfo);
                 QMetaObject::Connection myConn = connect(this, &SCPIEventSystem::sigClientInfoSignal,
                                                          transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
                 emit sigClientInfoSignal(errorComponentName);

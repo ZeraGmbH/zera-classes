@@ -31,7 +31,13 @@ public:
 
     void removeClient(cSCPIClient *client);
 
-    QMultiHash<QString, SCPIVeinTransactionInfoPtr> scpiParameterCmdInfoHash; // a hash to memorize what was in progress for which client
+    void insertScpiVeinParamRpcTransaction(const QString &componentOrRpcName,
+                                           const SCPIVeinTransactionInfoPtr &transactionInfo);
+    void removeScpiVeinParamRpcTransaction(const QString &componentOrRpcName,
+                                           const SCPIVeinTransactionInfoPtr &transactionInfo);
+    const QList<SCPIVeinTransactionInfoPtr> getAllScpiVeinParamRpcTransactions();
+    const QList<SCPIVeinTransactionInfoPtr> getScpiVeinParamRpcTransactions(const QString &componentOrRpcName);
+
     QList<cSignalConnectionDelegate*> sConnectDelegateList;
     std::shared_ptr<QMultiHash<QString /* vein component or Rpc name */,
                                VeinComponentScpiMeasureSequence*>> m_moduleCommonPendingMeasureStore;
@@ -51,6 +57,7 @@ private:
     cSCPIServer *m_pSCPIServer = nullptr;
     VfEventSytemModuleParam* m_pModuleValidator = nullptr;
     VfCmdEventHandlerSystemPtr m_cmdEventHandlerSystem;
+    QMultiHash<QString /*componentOrRpcName*/, SCPIVeinTransactionInfoPtr> m_scpiVeinParamOrRpcTransactions;
 };
 
 }

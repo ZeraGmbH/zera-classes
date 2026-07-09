@@ -35,12 +35,15 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
         if (handleFutureComponent(client, bQuery, scpiTransactionId))
             return;
 
+        const int entityId = m_pSCPICmdInfo->entityId;
+        const QString &componentOrRpcName = m_pSCPICmdInfo->componentOrRpcName;
+
         VeinComponent::ComponentData *cData = new VeinComponent::ComponentData();
-        cData->setEntityId(m_pSCPICmdInfo->entityId);
+        cData->setEntityId(entityId);
         cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
         cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
-        cData->setComponentName(m_pSCPICmdInfo->componentOrRpcName);
-        cData->setOldValue(m_pModule->getStorageDb()->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentOrRpcName));
+        cData->setComponentName(componentOrRpcName);
+        cData->setOldValue(m_pModule->getStorageDb()->getStoredValue(entityId, componentOrRpcName));
         if (bQuery) {
             if (cmd.isQuery(1))
                 cData->setNewValue(cmd.getParam(0));
@@ -59,12 +62,12 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
 
         SCPIVeinTransactionInfoPtr transactionInfo;
         if (bQuery)
-            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery, scpiTransactionId);
+            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, entityId, SCPIMODULE::parQuery, scpiTransactionId);
         else
-            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd, scpiTransactionId);
+            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, entityId, SCPIMODULE::parcmd, scpiTransactionId);
 
-        m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentOrRpcName, transactionInfo);
-        client->addVeinParamRpcTransactionInfo(m_pSCPICmdInfo->componentOrRpcName, transactionInfo);
+        m_pModule->insertScpiVeinParamRpcTransaction(componentOrRpcName, transactionInfo);
+        client->addVeinParamRpcTransactionInfo(componentOrRpcName, transactionInfo);
 
        emit m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
     }

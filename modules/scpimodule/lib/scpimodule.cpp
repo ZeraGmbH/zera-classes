@@ -41,12 +41,34 @@ QByteArray cSCPIModule::getConfigXml() const
 
 void cSCPIModule::removeClient(cSCPIClient *client)
 {
-    for(auto iter = scpiParameterCmdInfoHash.begin(); iter != scpiParameterCmdInfoHash.end(); ) {
+    for(auto iter = m_scpiVeinParamOrRpcTransactions.begin(); iter != m_scpiVeinParamOrRpcTransactions.end(); ) {
         if(iter.value()->getClient() == client)
-            iter = scpiParameterCmdInfoHash.erase(iter);
+            iter = m_scpiVeinParamOrRpcTransactions.erase(iter);
         else
             iter++;
     }
+}
+
+void cSCPIModule::insertScpiVeinParamRpcTransaction(const QString &componentOrRpcName,
+                                                    const SCPIVeinTransactionInfoPtr &transactionInfo)
+{
+    m_scpiVeinParamOrRpcTransactions.insert(componentOrRpcName, transactionInfo);
+}
+
+void cSCPIModule::removeScpiVeinParamRpcTransaction(const QString &componentOrRpcName,
+                                                    const SCPIVeinTransactionInfoPtr &transactionInfo)
+{
+    m_scpiVeinParamOrRpcTransactions.remove(componentOrRpcName, transactionInfo);
+}
+
+const QList<SCPIVeinTransactionInfoPtr> cSCPIModule::getAllScpiVeinParamRpcTransactions()
+{
+    return m_scpiVeinParamOrRpcTransactions.values();
+}
+
+const QList<SCPIVeinTransactionInfoPtr> cSCPIModule::getScpiVeinParamRpcTransactions(const QString &componentOrRpcName)
+{
+    return m_scpiVeinParamOrRpcTransactions.values(componentOrRpcName);
 }
 
 VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()
