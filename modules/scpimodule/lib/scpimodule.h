@@ -42,8 +42,7 @@ public:
     void removeSignalConnectionDelegates(cSignalConnectionDelegate *delegate);
     void updateSignalConnection(int entityId, const QString &componentName, const QVariant &newValue);
 
-    std::shared_ptr<QMultiHash<QString /* vein component or Rpc name */,
-                               VeinComponentScpiMeasureSequence*>> m_moduleCommonPendingMeasureStore;
+    void updatePendingMeasureSequences(int entityId, const QString &componentName, const QVariant &newValue);
 
     VfEventSytemModuleParam *getValidatorEventSystem();
     void emitSigSendEvent(QEvent *event);

@@ -18,7 +18,7 @@ class VeinComponentScpiMeasureSequence : public QObject
     Q_OBJECT
 public:
     // Moduleinterface initials
-    VeinComponentScpiMeasureSequence(const std::shared_ptr<QMultiHash<QString, VeinComponentScpiMeasureSequence*>> &moduleCommonPendingMeasureStore,
+    VeinComponentScpiMeasureSequence(const std::shared_ptr<QMultiHash<QString, VeinComponentScpiMeasureSequence*>> &moduleCommonMeasureStore,
                  const cSCPICmdInfoPtr &scpicmdinfo);
     // Scpi interface copies
     VeinComponentScpiMeasureSequence(const VeinComponentScpiMeasureSequence &obj);
@@ -47,8 +47,8 @@ private:
     void initialize();
     static QString convertVariantToString(const QVariant &value);
 
-    std::shared_ptr<QMultiHash<QString /* vein component or Rpc name */,
-                               VeinComponentScpiMeasureSequence*>> m_moduleCommonPendingMeasureStore;
+    std::shared_ptr<QMultiHash<QString /* vein component */,
+                               VeinComponentScpiMeasureSequence*>> m_veinComponentScpiMeasureSequences;
     cSCPICmdInfoPtr m_pSCPICmdInfo;
 
     QStateMachine m_MeasureStateMachine;

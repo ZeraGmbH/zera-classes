@@ -11,9 +11,9 @@ namespace SCPIMODULE
 
 int VeinComponentScpiMeasureSequence::m_instanceCount = 0;
 
-VeinComponentScpiMeasureSequence::VeinComponentScpiMeasureSequence(const std::shared_ptr<QMultiHash<QString, VeinComponentScpiMeasureSequence *>> &moduleCommonPendingMeasureStore,
-                                                                           const cSCPICmdInfoPtr &scpicmdinfo) :
-    m_moduleCommonPendingMeasureStore(moduleCommonPendingMeasureStore),
+VeinComponentScpiMeasureSequence::VeinComponentScpiMeasureSequence(const std::shared_ptr<QMultiHash<QString, VeinComponentScpiMeasureSequence *>> &moduleCommonMeasureStore,
+                                                                   const cSCPICmdInfoPtr &scpicmdinfo) :
+    m_veinComponentScpiMeasureSequences(moduleCommonMeasureStore),
     m_pSCPICmdInfo(scpicmdinfo)
 {
     initialize();
@@ -21,7 +21,7 @@ VeinComponentScpiMeasureSequence::VeinComponentScpiMeasureSequence(const std::sh
 }
 
 VeinComponentScpiMeasureSequence::VeinComponentScpiMeasureSequence(const VeinComponentScpiMeasureSequence &obj) :
-    m_moduleCommonPendingMeasureStore(obj.m_moduleCommonPendingMeasureStore),
+    m_veinComponentScpiMeasureSequences(obj.m_veinComponentScpiMeasureSequences),
     m_pSCPICmdInfo(std::make_shared<cSCPICmdInfo>(*obj.m_pSCPICmdInfo))
 {
     initialize();
@@ -89,14 +89,14 @@ void VeinComponentScpiMeasureSequence::initialize()
 VeinComponentScpiMeasureSequence::~VeinComponentScpiMeasureSequence()
 {
     m_instanceCount--;
-    m_moduleCommonPendingMeasureStore->remove(m_pSCPICmdInfo->componentOrRpcName, this);
+    m_veinComponentScpiMeasureSequences->remove(m_pSCPICmdInfo->componentOrRpcName, this);
 }
 
 enum signalCode {measCont, readCont, initCont, fetchCont};
 
 void VeinComponentScpiMeasureSequence::receiveMeasureValue(const QVariant &value)
 {
-    m_moduleCommonPendingMeasureStore->remove(m_pSCPICmdInfo->componentOrRpcName, this);
+    m_veinComponentScpiMeasureSequences->remove(m_pSCPICmdInfo->componentOrRpcName, this);
     m_sAnswer = setAnswer(value);
 
     // we emit all expected signals
@@ -234,7 +234,7 @@ void VeinComponentScpiMeasureSequence::measureInit()
     // the module's eventsystem will look for notifications on this and will
     // then call the receiveMeasureValue slot, so we synchronized on next measurement value
     if (!m_bInitPending)
-        m_moduleCommonPendingMeasureStore->insert(m_pSCPICmdInfo->componentOrRpcName, this);
+        m_veinComponentScpiMeasureSequences->insert(m_pSCPICmdInfo->componentOrRpcName, this);
 
     signalList.append(measCont); // measure statemachine waits for measure value
 }
@@ -271,7 +271,7 @@ void VeinComponentScpiMeasureSequence::readInit()
     // the module's eventsystem will look for notifications on this and will
     // then call the receiveMeasureValue slot, so we synchronized on next measurement value
     if (!m_bInitPending)
-        m_moduleCommonPendingMeasureStore->insert(m_pSCPICmdInfo->componentOrRpcName, this);
+        m_veinComponentScpiMeasureSequences->insert(m_pSCPICmdInfo->componentOrRpcName, this);
 
     signalList.append(readCont); // read statemachine waits for measure value
 }
@@ -290,7 +290,7 @@ void VeinComponentScpiMeasureSequence::init()
     // then call the initDone slot, so we synchronized on next measurement value
 
     m_bInitPending = true;
-    m_moduleCommonPendingMeasureStore->insert(m_pSCPICmdInfo->componentOrRpcName, this);
+    m_veinComponentScpiMeasureSequences->insert(m_pSCPICmdInfo->componentOrRpcName, this);
 
     signalList.append(initCont); // init statemachine waits for measure value
 }

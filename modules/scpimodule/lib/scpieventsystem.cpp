@@ -62,12 +62,7 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
         }
 
         // then it looks for measurement values
-        const QList<VeinComponentScpiMeasureSequence*> scpiMeasureList = m_pModule->m_moduleCommonPendingMeasureStore->values(componentName);
-        for(int i = 0; i < scpiMeasureList.count(); i++) {
-            VeinComponentScpiMeasureSequence *scpiMeasure = scpiMeasureList.at(i);
-            if(scpiMeasure->entityID() == entityId)
-                scpiMeasure->receiveMeasureValue(cData->newValue());
-        }
+        m_pModule->updatePendingMeasureSequences(entityId, componentName, cData->newValue());
 
         // then it looks for changes on module interface components
         if( componentName == QString("INF_ModuleInterface"))

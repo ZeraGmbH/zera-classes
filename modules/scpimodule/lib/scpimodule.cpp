@@ -7,7 +7,6 @@ namespace SCPIMODULE
 
 cSCPIModule::cSCPIModule(const ModuleFactoryParam &moduleParam) :
     BaseModule(moduleParam),
-    m_moduleCommonPendingMeasureStore(std::make_shared<QMultiHash<QString, VeinComponentScpiMeasureSequence*>>()),
     m_pSCPIEventSystem(new SCPIEventSystem(this)),
     m_configuration(moduleParam.m_configXmlData),
     m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem))
@@ -88,6 +87,11 @@ void cSCPIModule::updateSignalConnection(int entityId, const QString &componentN
         if(delegate->EntityId() == entityId && delegate->ComponentName() == componentName)
             delegate->setStatus(newValue);
     }
+}
+
+void cSCPIModule::updatePendingMeasureSequences(int entityId, const QString &componentName, const QVariant &newValue)
+{
+    m_pSCPIServer->getScpiGroupMeasurement()->updatePendingMeasureSequences(entityId, componentName, newValue);
 }
 
 VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()
