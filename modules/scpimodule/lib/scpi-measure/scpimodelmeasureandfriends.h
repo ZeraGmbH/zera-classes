@@ -32,8 +32,6 @@ public:
 
 private:
     cSCPIModule* m_pModule = nullptr;
-    std::shared_ptr<QMultiHash<QString /* vein component name */,
-                               VeinComponentScpiMeasureSequence*>> m_veinComponentScpiMeasureSequencesTemplate;
     QHash<QString, MeasureScpiNodeDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
     QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 

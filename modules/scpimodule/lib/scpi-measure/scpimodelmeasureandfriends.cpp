@@ -15,8 +15,7 @@ namespace SCPIMODULE
 
 ScpiModelMeasureAndFriends::ScpiModelMeasureAndFriends(cSCPIModule* module, cSCPIInterface *iface) :
     ScpiModelBase(iface),
-    m_pModule(module),
-    m_veinComponentScpiMeasureSequencesTemplate(std::make_shared<QMultiHash<QString, VeinComponentScpiMeasureSequence*>>())
+    m_pModule(module)
 {
 }
 
@@ -108,7 +107,7 @@ QHash<QString, MeasureScpiNodeDelegatePtr> *ScpiModelMeasureAndFriends::getSCPIM
 
 void ScpiModelMeasureAndFriends::updatePendingMeasureSequences(int entityId, const QString &componentName, const QVariant &newValue)
 {
-    const QList<VeinComponentScpiMeasureSequence*> scpiMeasureList = m_veinComponentScpiMeasureSequencesTemplate->values(componentName);
+    const QList<VeinComponentScpiMeasureSequence*> scpiMeasureList = VeinComponentScpiMeasureSequence::getVeinComponentScpiMeasureSequenceStoreSingleton()->values(componentName);
     for(int i = 0; i < scpiMeasureList.count(); i++) {
         VeinComponentScpiMeasureSequence *scpiMeasure = scpiMeasureList.at(i);
         if(scpiMeasure->entityID() == entityId)
@@ -120,7 +119,7 @@ void ScpiModelMeasureAndFriends::addSCPICommand(const cSCPICmdInfoPtr &scpiCmdIn
 {
     if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
-        VeinComponentScpiMeasureSequence* measureObject = new VeinComponentScpiMeasureSequence(m_veinComponentScpiMeasureSequencesTemplate, scpiCmdInfo);
+        VeinComponentScpiMeasureSequence* measureObject = new VeinComponentScpiMeasureSequence(scpiCmdInfo);
         m_measureObjectsToDelete.append(measureObject);
 
         addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, ScpiModelTypes::measure, measureObject);

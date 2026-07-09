@@ -8,7 +8,6 @@
 #include <QState>
 #include <QFinalState>
 #include <QList>
-#include <memory>
 
 namespace SCPIMODULE
 {
@@ -17,9 +16,9 @@ class VeinComponentScpiMeasureSequence : public QObject
 {
     Q_OBJECT
 public:
+    static QMultiHash<QString, VeinComponentScpiMeasureSequence *> *getVeinComponentScpiMeasureSequenceStoreSingleton();
     // Moduleinterface initials
-    VeinComponentScpiMeasureSequence(const std::shared_ptr<QMultiHash<QString, VeinComponentScpiMeasureSequence*>> &moduleCommonMeasureStore,
-                 const cSCPICmdInfoPtr &scpicmdinfo);
+    VeinComponentScpiMeasureSequence(const cSCPICmdInfoPtr &scpicmdinfo);
     // Scpi interface copies
     VeinComponentScpiMeasureSequence(const VeinComponentScpiMeasureSequence &obj);
     virtual ~VeinComponentScpiMeasureSequence();
@@ -47,8 +46,6 @@ private:
     void initialize();
     static QString convertVariantToString(const QVariant &value);
 
-    std::shared_ptr<QMultiHash<QString /* vein component */,
-                               VeinComponentScpiMeasureSequence*>> m_veinComponentScpiMeasureSequences;
     cSCPICmdInfoPtr m_pSCPICmdInfo;
 
     QStateMachine m_MeasureStateMachine;
