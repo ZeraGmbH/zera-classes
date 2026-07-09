@@ -25,8 +25,11 @@ public:
     explicit cSCPIModule(const ModuleFactoryParam &moduleParam);
     ~cSCPIModule();
     cSCPIServer* getSCPIServer();
+
     cSCPIModuleConfigData *getConfigData();
     QByteArray getConfigXml() const override;
+
+    void removeClient(cSCPIClient *client);
 
     QMultiHash<QString, SCPIVeinTransactionInfoPtr> scpiParameterCmdInfoHash; // a hash to memorize what was in progress for which client
     QList<cSignalConnectionDelegate*> sConnectDelegateList;

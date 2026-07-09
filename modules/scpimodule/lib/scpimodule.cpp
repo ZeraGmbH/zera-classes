@@ -39,6 +39,16 @@ QByteArray cSCPIModule::getConfigXml() const
     return m_configuration.exportConfiguration();
 }
 
+void cSCPIModule::removeClient(cSCPIClient *client)
+{
+    for(auto iter = scpiParameterCmdInfoHash.begin(); iter != scpiParameterCmdInfoHash.end(); ) {
+        if(iter.value()->getClient() == client)
+            iter = scpiParameterCmdInfoHash.erase(iter);
+        else
+            iter++;
+    }
+}
+
 VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()
 {
     return m_pModuleValidator;

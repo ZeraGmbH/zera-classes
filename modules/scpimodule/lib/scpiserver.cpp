@@ -159,12 +159,7 @@ void cSCPIServer::deleteSCPIClient(cSCPIClient *client)
 {
     // don't use for other than remove from list - it is destroyed and not usable
     if(m_SCPIClientList.contains(client)) {
-        for(auto iter=m_pModule->scpiParameterCmdInfoHash.begin(); iter!=m_pModule->scpiParameterCmdInfoHash.end(); ) {
-            if(iter.value()->getClient() == client)
-                iter = m_pModule->scpiParameterCmdInfoHash.erase(iter);
-            else
-                iter++;
-        }
+        m_pModule->removeClient(client);
         m_SCPIClientList.removeAll(client);
         delete client;
         qInfo("Network SCPI client deleted / Active clients: %i", m_SCPIClientList.count());
