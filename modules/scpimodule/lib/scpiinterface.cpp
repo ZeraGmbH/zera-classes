@@ -11,32 +11,25 @@
 namespace SCPIMODULE
 {
 
-cSCPIInterface::cSCPIInterface(const QString &name)
-    :m_sName(name)
+cSCPIInterface::cSCPIInterface(const QString &name) :
+    m_sName(name)
 {
-    m_pSCPICmdInterface = new cSCPI();
-}
-
-
-cSCPIInterface::~cSCPIInterface()
-{
-    delete m_pSCPICmdInterface;
 }
 
 void cSCPIInterface::exportSCPIModelXML(QString &xml, QMap<QString, QString> modelListBaseEntry)
 {
     modelListBaseEntry.insert(modelListBaseEntry.constBegin(), "DEVICE", m_sName);
-    m_pSCPICmdInterface->exportSCPIModelXML(xml, modelListBaseEntry);
+    m_scpiCmdInterface.exportSCPIModelXML(xml, modelListBaseEntry);
 }
 
 void cSCPIInterface::addSCPICommand(ScpiBaseDelegatePtr delegate)
 {
-    ScpiBaseDelegate::insertScpiCmd(m_pSCPICmdInterface, delegate);
+    ScpiBaseDelegate::insertScpiCmd(&m_scpiCmdInterface, delegate);
 }
 
 bool cSCPIInterface::executeCmd(cSCPIClient *client, const QString &cmd, const ScpiTransactionId &scpiTransactionId)
 {
-    ScpiObjectPtr scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd);
+    ScpiObjectPtr scpiObject = m_scpiCmdInterface.getSCPIObject(cmd);
     if (scpiObject != nullptr) {
         ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject.get());
         scpiDelegate->executeSCPI(client, cmd, scpiTransactionId);
@@ -47,7 +40,7 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, const QString &cmd, const S
 
 void cSCPIInterface::checkAmbiguousShortNames()
 {
-    ScpiAmbiguityMap ambiguityMap = m_pSCPICmdInterface->checkAmbiguousShortNames(ignoreAmbiguous);
+    ScpiAmbiguityMap ambiguityMap = m_scpiCmdInterface.checkAmbiguousShortNames(ignoreAmbiguous);
     if(!ambiguityMap.isEmpty()) {
         for(auto iter=ambiguityMap.constBegin(); iter!=ambiguityMap.constEnd(); ++iter) {
             qWarning("SCPI-module: Ambiguous short %s for %s",

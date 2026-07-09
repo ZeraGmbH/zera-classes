@@ -14,9 +14,7 @@ class cSCPIInterface: public QObject
     Q_OBJECT
 
 public:
-    cSCPIInterface(){}
-    cSCPIInterface(const QString &name);
-    virtual ~cSCPIInterface();
+    explicit cSCPIInterface(const QString &name);
 
     void exportSCPIModelXML(QString &xml, QMap<QString, QString> modelListBaseEntry);
     void addSCPICommand(ScpiBaseDelegatePtr delegate);
@@ -27,7 +25,7 @@ private:
     static ScpiAmbiguityMap ignoreAmbiguous(ScpiAmbiguityMap inMap);
 
     QString m_sName;
-    cSCPI* m_pSCPICmdInterface;
+    cSCPI m_scpiCmdInterface;
 };
 }
 
