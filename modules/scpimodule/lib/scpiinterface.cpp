@@ -24,7 +24,7 @@ void cSCPIInterface::exportSCPIModelXML(QString &xml, QMap<QString, QString> mod
 
 void cSCPIInterface::addSCPICommand(ScpiBaseDelegatePtr delegate)
 {
-    m_scpiCmdInterface.insertScpiCmd(delegate->getCmdParent().split(":", Qt::SkipEmptyParts), delegate);
+    m_scpiCmdInterface.insertScpiCmd(delegate->getCmdParent(), delegate);
 }
 
 bool cSCPIInterface::executeCmd(cSCPIClient *client, const QString &cmd, const ScpiTransactionId &scpiTransactionId)

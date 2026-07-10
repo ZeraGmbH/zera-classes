@@ -13,7 +13,7 @@ ScpiBaseDelegate::ScpiBaseDelegate() :
 
 ScpiBaseDelegate::ScpiBaseDelegate(const QString &cmdParent, const QString &cmd, quint8 scpiCmdQueryFlags) :
     ScpiObject(cmd, scpiCmdQueryFlags),
-    m_sCmdParent(cmdParent)
+    m_cmdParent(cmdParent.split(":", Qt::SkipEmptyParts))
 {
     m_instanceCount++;
 }
@@ -23,9 +23,9 @@ ScpiBaseDelegate::~ScpiBaseDelegate()
     m_instanceCount--;
 }
 
-const QString &ScpiBaseDelegate::getCmdParent() const
+const QStringList &ScpiBaseDelegate::getCmdParent() const
 {
-    return m_sCmdParent;
+    return m_cmdParent;
 }
 
 int ScpiBaseDelegate::getInstanceCount()

@@ -4,7 +4,7 @@
 #include "scpiobject.h"
 #include "scpitransactionid.h"
 #include <scpi.h>
-#include <QString>
+#include <QStringList>
 #include <memory>
 
 namespace SCPIMODULE {
@@ -25,7 +25,7 @@ public:
     ScpiBaseDelegate(const QString &cmdParent, const QString &cmd, quint8 scpiCmdQueryFlags);
     virtual ~ScpiBaseDelegate();
 
-    const QString &getCmdParent() const;
+    const QStringList &getCmdParent() const;
 
     bool executeSCPI(const QString&, QString&) override { return true; } // ScpiObject requires
     virtual void executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId) = 0;
@@ -33,7 +33,7 @@ public:
     static int getInstanceCount();
 
 protected:
-    QString m_sCmdParent;
+    QStringList m_cmdParent;
 private:
     static int m_instanceCount;
 };
