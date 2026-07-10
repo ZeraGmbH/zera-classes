@@ -16,7 +16,11 @@ namespace SCPIMODULE
 class cSCPIModule;
 class cSCPICatalogCmdDelegate;
 
-// the class for our module interface connections
+/* This class creates of SCPI tree from Vein INF_MODULEINTERFACE of:
+ * * MEASURE/CONFIGURE/READ/INIT/FETCH models (VfModuleComponent added to m_pModule->m_veinComponentsWithMetaAndScpi)
+ * * Parameters (VfModuleComponent::setScpiInfo / eSCPIEntryType::isComponent)
+ * * CATALOGS (VfModuleComponent::setScpiInfo / eSCPIEntryType::isCatalog)
+ */
 class ScpiModelMeasureAndFriends : public ScpiModelBase
 {
     Q_OBJECT
