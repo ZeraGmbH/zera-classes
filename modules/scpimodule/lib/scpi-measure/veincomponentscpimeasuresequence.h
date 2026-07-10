@@ -63,7 +63,6 @@ private:
     ScpiTransactionId m_fetchScpiTransactionId;
 
 
-    QState m_measureState;
     QState m_measureConfigureState;
     QState m_measureInitState;
     QState m_measureFetchState;
@@ -72,7 +71,6 @@ private:
     QState m_confConfigureState;
     QFinalState m_confConfigureDoneState;
 
-    QState m_readState;
     QState m_readInitState;
     QState m_readFetchState;
     QFinalState m_readDoneState;
@@ -80,7 +78,6 @@ private:
     QState m_initInitState;
     QFinalState m_initDoneState;
 
-    QState m_fetchState;
     QState m_fetchSyncState;
     QState m_fetchFetchState;
     QFinalState m_fetchDoneState;
@@ -93,7 +90,6 @@ private:
     static int m_instanceCount;
 
 private slots:
-    void measure();
     void measureConfigure();
     void measureInit();
     void measureFetch();
@@ -101,14 +97,12 @@ private slots:
     void configure();
     void configureDone();
 
-    void read();
     void readInit();
     void readFetch();
 
     void init();
     void initDone();
 
-    void fetch();
     void fetchSync();
     void fetchFetch();
 };
