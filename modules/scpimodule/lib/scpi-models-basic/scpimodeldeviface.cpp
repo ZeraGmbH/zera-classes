@@ -19,7 +19,7 @@ enum scpiinterfacecommands
 
 bool ScpiModelDevIface::setupScpi(cSCPIInterface *scpiInterface)
 {
-    cSCPIInterfaceDelegatePtr delegate = std::make_shared<ScpiDelegateInterface>("DEVICE", "IFACE", SCPI::isQuery, deviceinterfacecmd);
+    cSCPIInterfaceDelegatePtr delegate = std::make_shared<ScpiDelegateInterface>(ScpiDelegateInterface::Params{"DEVICE", "IFACE", SCPI::isQuery, deviceinterfacecmd});
     scpiInterface->addSCPICommand(delegate);
     connect(delegate.get(), &ScpiDelegateInterface::signalExecuteSCPI, this, &ScpiModelDevIface::executeCmd);
 

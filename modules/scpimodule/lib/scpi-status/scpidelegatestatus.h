@@ -10,11 +10,14 @@ class ScpiDelegateStatus : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:
-    ScpiDelegateStatus(const QString &cmdParent,
-                       const QString &cmd,
-                       quint8 scpiCmdQueryFlags,
-                       SCPIStatusDefinitions::ScpiStatusCommands cmdCode,
-                       SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx);
+    struct Params {
+        const QString cmdParent;
+        const QString cmd;
+        const quint8 scpiCmdQueryFlags = 0;
+        const SCPIStatusDefinitions::ScpiStatusCommands cmdCode;
+        const SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx;
+    };
+    ScpiDelegateStatus(const Params &params);
     void executeSCPI(cSCPIClient *client, const QString& scpi, const ScpiTransactionId &scpiTransactionId) override;
 signals:
     void signalExecuteSCPI(SCPIMODULE::cSCPIClient* client,

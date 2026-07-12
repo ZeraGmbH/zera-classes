@@ -2,16 +2,18 @@
 #define INTERFACEINTERFACE_H
 
 #include "scpimodelbase.h"
-#include "scpiclient.h"
+#include "scpiinterface.h"
 
 namespace SCPIMODULE
 {
+
+class cSCPIModule;
 
 class ScpiModelDevIface : public ScpiModelBase
 {
     Q_OBJECT
 public:
-    ScpiModelDevIface(cSCPIModule* module);
+    explicit ScpiModelDevIface(cSCPIModule* module);
     bool setupScpi(cSCPIInterface *scpiInterface);
 
 private slots:

@@ -5,15 +5,11 @@
 
 namespace SCPIMODULE {
 
-ScpiDelegateMeasure::ScpiDelegateMeasure(const QString &cmdParent,
-                                           const QString &cmd,
-                                           quint8 scpiCmdQueryFlags,
-                                           ScpiModelTypes modelType,
-                                           VeinComponentScpiMeasureSequence* scpimeasureobject) :
-    ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags),
-    m_modelType(modelType)
+ScpiDelegateMeasure::ScpiDelegateMeasure(const Params &params) :
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    m_modelType(params.modelType)
 {
-    m_veinComponentScpiSequences.append(scpimeasureobject);
+    m_veinComponentScpiSequences.append(params.scpiMeasureObject);
 }
 
 ScpiDelegateMeasure::ScpiDelegateMeasure(const ScpiDelegateMeasure &moduleInterfaceDelegate,

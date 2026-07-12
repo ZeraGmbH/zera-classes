@@ -2,15 +2,12 @@
 
 namespace SCPIMODULE {
 
-ScpiDelegateInterface::ScpiDelegateInterface(const QString &cmdParent, const QString &cmd,
-                                               quint8 scpiCmdQueryFlags,
-                                               quint16 cmdCode,
-                                               const QString &cmdDescription) :
-    ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags),
-    m_nCmdCode(cmdCode)
+ScpiDelegateInterface::ScpiDelegateInterface(const Params &params) :
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    m_nCmdCode(params.cmdCode)
 {
-    if(!cmdDescription.isEmpty())
-        setXmlAttribute("Description", cmdDescription);
+    if(!params.cmdDescription.isEmpty())
+        setXmlAttribute("Description", params.cmdDescription);
 }
 
 void ScpiDelegateInterface::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)

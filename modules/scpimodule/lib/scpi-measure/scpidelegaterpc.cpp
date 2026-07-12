@@ -7,12 +7,16 @@
 #include <vf-cpp-rpc-helper.h>
 #include <QRegularExpression>
 
-SCPIMODULE::ScpiDelegateRpc::ScpiDelegateRpc(const QString &cmdParent, const QString &cmd, quint8 scpiCmdQueryFlags, cSCPIModule *scpimodule, cSCPICmdInfoPtr scpicmdinfo) :
-    ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags), m_pModule(scpimodule), m_scpicmdinfo(scpicmdinfo)
+namespace SCPIMODULE {
+
+ScpiDelegateRpc::ScpiDelegateRpc(const Params &params) :
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    m_pModule(params.scpimodule),
+    m_scpicmdinfo(params.scpicmdinfo)
 {
 }
 
-void SCPIMODULE::ScpiDelegateRpc::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
+void ScpiDelegateRpc::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = scpi;
@@ -29,7 +33,7 @@ void SCPIMODULE::ScpiDelegateRpc::executeSCPI(cSCPIClient *client, const QString
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
-void SCPIMODULE::ScpiDelegateRpc::handleRpcFinish(const QVariantMap &resultData, const SCPIVeinTransactionInfoPtr &transactionInfo, bool inputIsQuery)
+void ScpiDelegateRpc::handleRpcFinish(const QVariantMap &resultData, const SCPIVeinTransactionInfoPtr &transactionInfo, bool inputIsQuery)
 {
     QMetaObject::Connection myConn = connect(this, &ScpiDelegateRpc::sigClientInfoSignal,
                                              transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
@@ -55,13 +59,13 @@ void SCPIMODULE::ScpiDelegateRpc::handleRpcFinish(const QVariantMap &resultData,
     }
 }
 
-void SCPIMODULE::ScpiDelegateRpc::executeScpiRpc(cSCPIClient *client, const QString &scpi, bool inputIsQuery, const ScpiTransactionId &scpiTransactionId)
+void ScpiDelegateRpc::executeScpiRpc(cSCPIClient *client, const QString &scpi, bool inputIsQuery, const ScpiTransactionId &scpiTransactionId)
 {
     SCPIVeinTransactionInfoPtr transactionInfo;
     if (inputIsQuery)
-        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parQuery, scpiTransactionId);
+        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_scpicmdinfo->entityId, parQuery, scpiTransactionId);
     else
-        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_scpicmdinfo->entityId, SCPIMODULE::parcmd, scpiTransactionId);
+        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_scpicmdinfo->entityId, parcmd, scpiTransactionId);
 
     VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfClientRPCInvoker>());
     connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, const QVariantMap &resultData) {
@@ -95,7 +99,7 @@ void SCPIMODULE::ScpiDelegateRpc::executeScpiRpc(cSCPIClient *client, const QStr
     }
 }
 
-QVariant SCPIMODULE::ScpiDelegateRpc::convertParamStrToType(const QString &parameter, const QString &type)
+QVariant ScpiDelegateRpc::convertParamStrToType(const QString &parameter, const QString &type)
 {
     if (type == "int")
         return parameter.toInt();
@@ -115,4 +119,6 @@ QVariant SCPIMODULE::ScpiDelegateRpc::convertParamStrToType(const QString &param
     else if (type == "QString")
         return parameter;
     return QVariant();
+}
+
 }

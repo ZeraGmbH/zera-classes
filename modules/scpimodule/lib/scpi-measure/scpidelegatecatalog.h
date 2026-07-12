@@ -11,10 +11,14 @@ class ScpiDelegateCatalog : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:
-    ScpiDelegateCatalog(const QString &cmdParent, const QString &cmd,
-                        quint8 scpiCmdQueryFlags,
-                        cSCPIModule* scpimodule,
-                        cSCPICmdInfoPtr scpicmdinfo);
+    struct Params {
+        const QString cmdParent;
+        const QString cmd;
+        quint8 scpiCmdQueryFlags = 0;
+        cSCPIModule* scpimodule = nullptr;
+        const cSCPICmdInfoPtr scpicmdinfo;
+    };
+    ScpiDelegateCatalog(const Params &params);
     void executeSCPI(cSCPIClient *client,
                      const QString& scpi,
                      const ScpiTransactionId &scpiTransactionId) override;

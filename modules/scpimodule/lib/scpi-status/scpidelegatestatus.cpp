@@ -2,13 +2,10 @@
 
 namespace SCPIMODULE {
 
-ScpiDelegateStatus::ScpiDelegateStatus(const QString &cmdParent, const QString &cmd,
-                                       quint8 scpiCmdQueryFlags,
-                                       SCPIStatusDefinitions::ScpiStatusCommands cmdCode,
-                                       SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx) :
-    ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags),
-    m_cmdCode(cmdCode),
-    m_statusSystemIdx(statusSystemIdx)
+ScpiDelegateStatus::ScpiDelegateStatus(const Params &params) :
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    m_cmdCode(params.cmdCode),
+    m_statusSystemIdx(params.statusSystemIdx)
 {
 }
 

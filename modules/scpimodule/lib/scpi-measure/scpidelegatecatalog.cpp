@@ -9,14 +9,10 @@
 
 namespace SCPIMODULE {
 
-ScpiDelegateCatalog::ScpiDelegateCatalog(const QString &cmdParent,
-                                         const QString &cmd,
-                                         quint8 scpiCmdQueryFlags,
-                                         cSCPIModule *scpimodule,
-                                         cSCPICmdInfoPtr scpicmdinfo) :
-    ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags),
-    m_pModule(scpimodule),
-    m_pSCPICmdInfo(scpicmdinfo)
+ScpiDelegateCatalog::ScpiDelegateCatalog(const Params &params) :
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    m_pModule(params.scpimodule),
+    m_pSCPICmdInfo(params.scpicmdinfo)
 {
     setOutput(m_pSCPICmdInfo);
 }

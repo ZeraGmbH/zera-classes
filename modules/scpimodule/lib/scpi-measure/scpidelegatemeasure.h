@@ -11,15 +11,18 @@ class ScpiDelegateMeasure : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:
+    struct Params {
+        const QString cmdParent;
+        const QString cmd;
+        const quint8 scpiCmdQueryFlags = 0;
+        const ScpiModelTypes modelType = measure;
+        VeinComponentScpiMeasureSequence* scpiMeasureObject = nullptr;
+    };
     // Moduleinterface initials
-    ScpiDelegateMeasure(const QString &cmdParent,
-                         const QString &cmd,
-                         quint8 scpiCmdQueryFlags,
-                         ScpiModelTypes modelType,
-                         VeinComponentScpiMeasureSequence* scpimeasureobject);
+    explicit ScpiDelegateMeasure(const Params &params);
     // Scpi interface copies
     ScpiDelegateMeasure(const ScpiDelegateMeasure& moduleInterfaceDelegate,
-                         QHash<VeinComponentScpiMeasureSequence*, VeinComponentScpiMeasureSequence*> &scpiMeasureTranslationHash);
+                        QHash<VeinComponentScpiMeasureSequence*, VeinComponentScpiMeasureSequence*> &scpiMeasureTranslationHash);
 
     void addVeinComponentScpiSequence(VeinComponentScpiMeasureSequence* measureobject);
 
@@ -31,7 +34,7 @@ private slots:
     void onSingleScpiQueryDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
 
 private:
-    ScpiModelTypes m_modelType;
+    const ScpiModelTypes m_modelType;
     int m_nPending = 0;
     QString m_sAnswer;
     cSCPIClient *m_pClient = nullptr;

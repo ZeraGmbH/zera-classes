@@ -10,10 +10,14 @@ class ScpiDelegateRpc : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:
-    ScpiDelegateRpc(const QString &cmdParent, const QString &cmd,
-                     quint8 scpiCmdQueryFlags,
-                     cSCPIModule* scpimodule,
-                     cSCPICmdInfoPtr scpicmdinfo);
+    struct Params {
+        const QString cmdParent;
+        const QString cmd;
+        const quint8 scpiCmdQueryFlags = 0;
+        cSCPIModule* scpimodule = nullptr;
+        const cSCPICmdInfoPtr scpicmdinfo;
+    };
+    ScpiDelegateRpc(const Params& params);
     void executeSCPI(cSCPIClient *client,
                      const QString& scpi,
                      const ScpiTransactionId &scpiTransactionId) override;

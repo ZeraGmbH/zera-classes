@@ -1,5 +1,4 @@
 #include "scpidelegateparameter.h"
-#include "scpieventsystem.h"
 #include "scpiclient.h"
 #include "scpimodulecommonstaticfunctions.h"
 #include <scpicommand.h>
@@ -12,14 +11,10 @@
 
 namespace SCPIMODULE {
 
-ScpiDelegateParameter::ScpiDelegateParameter(const QString &cmdParent,
-                                             const QString &cmd,
-                                             quint8 scpiCmdQueryFlags,
-                                             cSCPIModule *scpimodule,
-                                             cSCPICmdInfoPtr scpicmdinfo) :
-    ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags),
-    m_pModule(scpimodule),
-    m_pSCPICmdInfo(scpicmdinfo)
+ScpiDelegateParameter::ScpiDelegateParameter(const Params &params) :
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    m_pModule(params.scpimodule),
+    m_pSCPICmdInfo(params.scpicmdinfo)
 {
 }
 
