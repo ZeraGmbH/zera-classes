@@ -1,13 +1,13 @@
 #ifndef SCPIMEASUREDELEGATE_H
 #define SCPIMEASUREDELEGATE_H
 
-#include "scpibasedelegate.h"
+#include "scpidelegatetemplate.h"
 #include "veincomponentscpimeasuresequence.h"
 #include <QList>
 
 namespace SCPIMODULE {
 
-class MeasureScpiNodeDelegate: public ScpiBaseDelegate
+class MeasureScpiNodeDelegate: public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:

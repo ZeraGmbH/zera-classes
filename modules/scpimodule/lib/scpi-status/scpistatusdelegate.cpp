@@ -6,7 +6,7 @@ cSCPIStatusDelegate::cSCPIStatusDelegate(const QString &cmdParent, const QString
                                          quint8 scpiCmdQueryFlags,
                                          SCPIStatusDefinitions::ScpiStatusCommands cmdCode,
                                          SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx) :
-    ScpiBaseDelegate(cmdParent, cmd, scpiCmdQueryFlags),
+    ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags),
     m_cmdCode(cmdCode),
     m_statusSystemIdx(statusSystemIdx)
 {

@@ -1,12 +1,12 @@
 #ifndef SCPIRPCDELEGATE_H
 #define SCPIRPCDELEGATE_H
 
-#include "scpibasedelegate.h"
+#include "scpidelegatetemplate.h"
 #include "scpimodule.h"
 
 namespace SCPIMODULE {
 
-class cSCPIRpcDelegate : public ScpiBaseDelegate
+class cSCPIRpcDelegate : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:

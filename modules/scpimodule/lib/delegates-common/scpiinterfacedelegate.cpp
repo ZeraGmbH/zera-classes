@@ -6,7 +6,7 @@ cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(const QString &cmdParent, const Q
                                                quint8 scpiCmdQueryFlags,
                                                quint16 cmdCode,
                                                const QString &cmdDescription) :
-    ScpiBaseDelegate(cmdParent, cmd, scpiCmdQueryFlags),
+    ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags),
     m_nCmdCode(cmdCode)
 {
     if(!cmdDescription.isEmpty())

@@ -1,12 +1,12 @@
 #ifndef SCPIINTERFACEDELEGATE_H
 #define SCPIINTERFACEDELEGATE_H
 
-#include "scpibasedelegate.h"
+#include "scpidelegatetemplate.h"
 #include "scpiclient.h"
 
 namespace SCPIMODULE {
 
-class cSCPIInterfaceDelegate : public ScpiBaseDelegate
+class cSCPIInterfaceDelegate : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:

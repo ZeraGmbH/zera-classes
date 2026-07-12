@@ -2,7 +2,7 @@
 #define SCPIINTERFACE_H
 
 #include "scpi.h"
-#include "scpibasedelegate.h"
+#include "scpidelegatetemplate.h"
 
 namespace SCPIMODULE
 {

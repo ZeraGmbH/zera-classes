@@ -20,7 +20,7 @@ void test_scpi_learn_measure_objects_and_relations::countMeasureRelatedObjectsCr
 
     constexpr int osciComponentCount = 8; // ACT_OSCI1..ACT_OSCI18
     QCOMPARE(SCPIMODULE::VeinComponentScpiMeasureSequence::getInstanceCount(), osciComponentCount);
-    int noClientDelegateInstanceCount = SCPIMODULE::ScpiBaseDelegate::getInstanceCount();
+    int noClientDelegateInstanceCount = SCPIMODULE::ScpiDelegateTemplate::getInstanceCount();
 
 
     // Scpi interface copies
@@ -63,7 +63,7 @@ void test_scpi_learn_measure_objects_and_relations::countMeasureRelatedObjectsCr
     QCOMPARE(scpiPathsNonOsciMeasure.size(), nonOsciMeasureNodeCount);
 
     QCOMPARE(noClientDelegateInstanceCount, scpiPathsNonOsciMeasure.size() + scpiPathsOsciMeasure.size());
-    QCOMPARE(SCPIMODULE::ScpiBaseDelegate::getInstanceCount(), scpiPathsNonOsciMeasure.size() + 2 * scpiPathsOsciMeasure.size());
+    QCOMPARE(SCPIMODULE::ScpiDelegateTemplate::getInstanceCount(), scpiPathsNonOsciMeasure.size() + 2 * scpiPathsOsciMeasure.size());
     // => Only ScpiMeasureScpiCmdNodeDelegate are copied for client
 }
 

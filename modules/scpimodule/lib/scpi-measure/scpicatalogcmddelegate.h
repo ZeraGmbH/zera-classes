@@ -1,13 +1,13 @@
 #ifndef SCPICATALOGCMDDELEGATE
 #define SCPICATALOGCMDDELEGATE
 
-#include "scpibasedelegate.h"
+#include "scpidelegatetemplate.h"
 #include "scpimodule.h"
 #include "scpicmdinfo.h"
 
 namespace SCPIMODULE {
 
-class cSCPICatalogCmdDelegate : public ScpiBaseDelegate
+class cSCPICatalogCmdDelegate : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:

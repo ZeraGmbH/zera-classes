@@ -2,7 +2,7 @@
 #include "scpidocshtmlgenerator.h"
 #include "modulemanagerconfig.h"
 #include "veincomponentscpimeasuresequence.h"
-#include "scpibasedelegate.h"
+#include "scpidelegatetemplate.h"
 #include "scpimodelbase.h"
 #include "sessionexportgenerator.h"
 #include <testloghelpers.h>
@@ -185,7 +185,7 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
 
     QCOMPARE(SCPIMODULE::ScpiModelBase::getInstanceCount(), 0);
     QCOMPARE(SCPIMODULE::VeinComponentScpiMeasureSequence::getInstanceCount(), 0);
-    QCOMPARE(SCPIMODULE::ScpiBaseDelegate::getInstanceCount(), 0);
+    QCOMPARE(SCPIMODULE::ScpiDelegateTemplate::getInstanceCount(), 0);
 
     // for zenux-services
     QCOMPARE(ProtonetCommand::getInstanceCount(), 0);

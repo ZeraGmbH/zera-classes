@@ -1,5 +1,5 @@
-#ifndef SCPIBASEDELEGATE_H
-#define SCPIBASEDELEGATE_H
+#ifndef SCPIDELEGATETEMPLATE_H
+#define SCPIDELEGATETEMPLATE_H
 
 #include "scpiobject.h"
 #include "scpitransactionid.h"
@@ -11,19 +11,19 @@ namespace SCPIMODULE {
 
 class cSCPIClient;
 
-class ScpiBaseDelegate;
-typedef std::shared_ptr<ScpiBaseDelegate> ScpiBaseDelegatePtr;
+class ScpiDelegateTemplate;
+typedef std::shared_ptr<ScpiDelegateTemplate> ScpiBaseDelegatePtr;
 
 /* Delegates are ScpiObjects - which are nodes in SCPI tree
  * that can execute commands/queries - see executeSCPI
  */
-class ScpiBaseDelegate : public QObject, public ScpiObject
+class ScpiDelegateTemplate : public QObject, public ScpiObject
 {
    Q_OBJECT
 public:
-    ScpiBaseDelegate();
-    ScpiBaseDelegate(const QString &cmdParent, const QString &cmd, quint8 scpiCmdQueryFlags);
-    virtual ~ScpiBaseDelegate();
+    ScpiDelegateTemplate();
+    ScpiDelegateTemplate(const QString &cmdParent, const QString &cmd, quint8 scpiCmdQueryFlags);
+    virtual ~ScpiDelegateTemplate();
 
     const QStringList &getCmdParent() const;
 
@@ -40,4 +40,4 @@ private:
 
 
 }
-#endif // SCPIBASEDELEGATE_H
+#endif // SCPIDELEGATETEMPLATE_H

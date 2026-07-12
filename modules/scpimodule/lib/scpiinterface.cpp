@@ -5,7 +5,7 @@
 
 #include "scpiinterface.h"
 #include "scpiclient.h"
-#include "scpibasedelegate.h"
+#include "scpidelegatetemplate.h"
 
 
 namespace SCPIMODULE
@@ -31,7 +31,7 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, const QString &cmd, const S
 {
     ScpiObjectPtr scpiObject = m_scpiCmdInterface.getSCPIObject(cmd);
     if (scpiObject != nullptr) {
-        ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject.get());
+        ScpiDelegateTemplate* scpiDelegate = static_cast<ScpiDelegateTemplate*>(scpiObject.get());
         scpiDelegate->executeSCPI(client, cmd, scpiTransactionId);
         return true;
     }

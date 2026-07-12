@@ -10,7 +10,7 @@ MeasureScpiNodeDelegate::MeasureScpiNodeDelegate(const QString &cmdParent,
                                            quint8 scpiCmdQueryFlags,
                                            ScpiModelTypes modelType,
                                            VeinComponentScpiMeasureSequence* scpimeasureobject) :
-    ScpiBaseDelegate(cmdParent, cmd, scpiCmdQueryFlags),
+    ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags),
     m_modelType(modelType)
 {
     m_veinComponentScpiSequences.append(scpimeasureobject);

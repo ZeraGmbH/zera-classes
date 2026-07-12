@@ -1,14 +1,14 @@
 #ifndef SCPIPARAMETERDELEGATE_H
 #define SCPIPARAMETERDELEGATE_H
 
-#include "scpibasedelegate.h"
+#include "scpidelegatetemplate.h"
 #include "scpimodule.h"
 #include "scpicmdinfo.h"
 #include "scpiveintransactioninfo.h"
 
 namespace SCPIMODULE {
 
-class cSCPIParameterDelegate: public ScpiBaseDelegate
+class cSCPIParameterDelegate: public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:

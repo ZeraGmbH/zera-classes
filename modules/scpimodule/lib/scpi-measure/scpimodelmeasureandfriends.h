@@ -3,7 +3,7 @@
 
 #include "scpimodelbase.h"
 #include "scpiinterface.h"
-#include "scpibasedelegate.h"
+#include "scpidelegatetemplate.h"
 #include "measurescpinodedelegate.h"
 #include "scpicmdinfo.h"
 #include <QHash>

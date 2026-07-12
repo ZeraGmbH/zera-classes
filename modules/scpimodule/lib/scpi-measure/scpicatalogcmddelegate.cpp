@@ -14,7 +14,7 @@ cSCPICatalogCmdDelegate::cSCPICatalogCmdDelegate(const QString &cmdParent,
                                                  quint8 scpiCmdQueryFlags,
                                                  cSCPIModule *scpimodule,
                                                  cSCPICmdInfoPtr scpicmdinfo) :
-    ScpiBaseDelegate(cmdParent, cmd, scpiCmdQueryFlags),
+    ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags),
     m_pModule(scpimodule),
     m_pSCPICmdInfo(scpicmdinfo)
 {
