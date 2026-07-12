@@ -42,12 +42,8 @@ private:
     void addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
     void addRPCCommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
     void addSCPIMeasureCommand(cSCPIInterface *scpiInterface,
-                               const QString &cmdparent,
-                               const QString &cmd,
-                               quint8 scpiCmdQueryFlags,
-                               ScpiModelTypes modelType,
-                               VeinComponentScpiMeasureSequence* measureObject,
-                               QJsonObject veinComponentInfo = QJsonObject());
+                               const ScpiDelegateMeasure::Params &params,
+                               const QJsonObject &veinComponentInfo = QJsonObject());
     void setXmlComponentInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);
     void setXmlComponentValidatorInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);
     QJsonArray getValidatorEntries(QJsonObject validator);
