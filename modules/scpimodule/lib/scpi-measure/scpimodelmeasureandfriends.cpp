@@ -48,7 +48,7 @@ bool ScpiModelMeasureAndFriends::setupScpi(cSCPIInterface *scpiInterface)
     return true;
 }
 
-void ScpiModelMeasureAndFriends::actualizeInterface(QVariant modInterface)
+void ScpiModelMeasureAndFriends::actualizeCatalogs(const QVariant &modInterface)
 {
     QJsonDocument jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
     if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
@@ -59,10 +59,9 @@ void ScpiModelMeasureAndFriends::actualizeInterface(QVariant modInterface)
         // we iterate over all cmds
         for (int j = 0; j < jsonArr.count(); j++) {
             QJsonArray jsonCmdArr = jsonArr[j].toArray();
-            if (jsonCmdArr[4].toString() != "0") { // so it is a property delegate
-                QString cmdComplete;
-                cmdComplete = QString("%1:%2:%3").arg(jsonCmdArr[0].toString(), scpiModuleName, jsonCmdArr[1].toString());
-                m_scpiPropertyDelegateHash[cmdComplete]->setOutputFromInfModuleInterface(modInterface);
+            if (jsonCmdArr[4].toString() != "0") { // so it is a catalog delegate
+                QString scpiPath = QString("%1:%2:%3").arg(jsonCmdArr[0].toString(), scpiModuleName, jsonCmdArr[1].toString());
+                m_scpiCatalogDelegateHash[scpiPath]->setOutputFromInfModuleInterface(modInterface);
             }
         }
     }
@@ -110,8 +109,8 @@ void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, c
 
     }
     else {
-        QString cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
-        QStringList nodeNames = cmdComplete.split(':');
+        QString scpiPath = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
+        QStringList nodeNames = scpiPath.split(':');
         QString cmdNode = nodeNames.takeLast();
         QString cmdParent = nodeNames.join(':');
         ScpiBaseDelegatePtr delegate;
@@ -121,7 +120,7 @@ void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, c
         }
         else {
             delegate = std::make_shared<ScpiDelegateCatalog>(ScpiDelegateCatalog::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlagsAsString.toInt(), m_pModule, scpiCmdInfo});
-            m_scpiPropertyDelegateHash[cmdComplete] = static_cast<ScpiDelegateCatalog*>(delegate.get()); // for easier access if we need to change answers of this delegate
+            m_scpiCatalogDelegateHash[scpiPath] = static_cast<ScpiDelegateCatalog*>(delegate.get()); // for easier access if we need to change answers of this delegate
         }
         scpiInterface->addSCPICommand(delegate);
     }

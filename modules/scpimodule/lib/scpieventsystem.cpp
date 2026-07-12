@@ -66,7 +66,7 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
 
         // then it looks for changes on module interface components
         if( componentName == QString("INF_ModuleInterface"))
-            m_pModule->getSCPIServer()->getScpiGroupMeasurement()->actualizeInterface(cData->newValue());
+            m_pModule->getSCPIServer()->getScpiGroupMeasurement()->actualizeCatalogs(cData->newValue());
 
     }
 }
