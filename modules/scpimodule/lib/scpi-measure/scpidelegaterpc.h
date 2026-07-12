@@ -1,16 +1,16 @@
-#ifndef SCPIRPCDELEGATE_H
-#define SCPIRPCDELEGATE_H
+#ifndef SCPIDELEGATERPC_H
+#define SCPIDELEGATERPC_H
 
 #include "scpidelegatetemplate.h"
 #include "scpimodule.h"
 
 namespace SCPIMODULE {
 
-class cSCPIRpcDelegate : public ScpiDelegateTemplate
+class ScpiDelegateRpc : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:
-    cSCPIRpcDelegate(const QString &cmdParent, const QString &cmd,
+    ScpiDelegateRpc(const QString &cmdParent, const QString &cmd,
                      quint8 scpiCmdQueryFlags,
                      cSCPIModule* scpimodule,
                      cSCPICmdInfoPtr scpicmdinfo);
@@ -29,4 +29,4 @@ private:
     cSCPICmdInfoPtr m_scpicmdinfo;
 };
 }
-#endif // SCPIRPCDELEGATE_H
+#endif // SCPIDELEGATERPC_H

@@ -1,8 +1,8 @@
-#include "scpiinterfacedelegate.h"
+#include "scpidelegateinterface.h"
 
 namespace SCPIMODULE {
 
-cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(const QString &cmdParent, const QString &cmd,
+ScpiDelegateInterface::ScpiDelegateInterface(const QString &cmdParent, const QString &cmd,
                                                quint8 scpiCmdQueryFlags,
                                                quint16 cmdCode,
                                                const QString &cmdDescription) :
@@ -13,7 +13,7 @@ cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(const QString &cmdParent, const Q
         setXmlAttribute("Description", cmdDescription);
 }
 
-void cSCPIInterfaceDelegate::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
+void ScpiDelegateInterface::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
     emit signalExecuteSCPI(client, m_nCmdCode, scpi, scpiTransactionId);
 }

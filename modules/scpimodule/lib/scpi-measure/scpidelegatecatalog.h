@@ -1,5 +1,5 @@
-#ifndef SCPICATALOGCMDDELEGATE
-#define SCPICATALOGCMDDELEGATE
+#ifndef SCPIDELEGATECATALOG_H
+#define SCPIDELEGATECATALOG_H
 
 #include "scpidelegatetemplate.h"
 #include "scpimodule.h"
@@ -7,14 +7,14 @@
 
 namespace SCPIMODULE {
 
-class cSCPICatalogCmdDelegate : public ScpiDelegateTemplate
+class ScpiDelegateCatalog : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:
-    cSCPICatalogCmdDelegate(const QString &cmdParent, const QString &cmd,
-                            quint8 scpiCmdQueryFlags,
-                            cSCPIModule* scpimodule,
-                            cSCPICmdInfoPtr scpicmdinfo);
+    ScpiDelegateCatalog(const QString &cmdParent, const QString &cmd,
+                        quint8 scpiCmdQueryFlags,
+                        cSCPIModule* scpimodule,
+                        cSCPICmdInfoPtr scpicmdinfo);
     void executeSCPI(cSCPIClient *client,
                      const QString& scpi,
                      const ScpiTransactionId &scpiTransactionId) override;
@@ -29,5 +29,5 @@ private:
 
 }
 
-#endif // SCPICATALOGCMDDELEGATE
+#endif // SCPIDELEGATECATALOG_H
 

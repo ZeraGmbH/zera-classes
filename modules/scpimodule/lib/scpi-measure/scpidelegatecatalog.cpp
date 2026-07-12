@@ -1,4 +1,4 @@
-#include "scpicatalogcmddelegate.h"
+#include "scpidelegatecatalog.h"
 #include "scpiclient.h"
 #include <zscpi_response_definitions.h>
 #include <vcmp_componentdata.h>
@@ -9,11 +9,11 @@
 
 namespace SCPIMODULE {
 
-cSCPICatalogCmdDelegate::cSCPICatalogCmdDelegate(const QString &cmdParent,
-                                                 const QString &cmd,
-                                                 quint8 scpiCmdQueryFlags,
-                                                 cSCPIModule *scpimodule,
-                                                 cSCPICmdInfoPtr scpicmdinfo) :
+ScpiDelegateCatalog::ScpiDelegateCatalog(const QString &cmdParent,
+                                         const QString &cmd,
+                                         quint8 scpiCmdQueryFlags,
+                                         cSCPIModule *scpimodule,
+                                         cSCPICmdInfoPtr scpicmdinfo) :
     ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags),
     m_pModule(scpimodule),
     m_pSCPICmdInfo(scpicmdinfo)
@@ -21,7 +21,7 @@ cSCPICatalogCmdDelegate::cSCPICatalogCmdDelegate(const QString &cmdParent,
     setOutput(m_pSCPICmdInfo);
 }
 
-void cSCPICatalogCmdDelegate::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
+void ScpiDelegateCatalog::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = scpi;
@@ -31,7 +31,7 @@ void cSCPICatalogCmdDelegate::executeSCPI(cSCPIClient *client, const QString &sc
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
-void cSCPICatalogCmdDelegate::setOutput(const QVariant &modInterface)
+void ScpiDelegateCatalog::setOutput(const QVariant &modInterface)
 {
     QJsonDocument jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
     QJsonObject jsonObj = jsonDoc.object();
@@ -50,7 +50,7 @@ void cSCPICatalogCmdDelegate::setOutput(const QVariant &modInterface)
     }
 }
 
-void cSCPICatalogCmdDelegate::setOutput(cSCPICmdInfoPtr scpicmdinfo)
+void ScpiDelegateCatalog::setOutput(cSCPICmdInfoPtr scpicmdinfo)
 {
     QVariant ModInterface = m_pModule->getStorageDb()->getStoredValue(scpicmdinfo->entityId, QString("INF_ModuleInterface"));
     setOutput(ModInterface);

@@ -1,16 +1,16 @@
-#ifndef SCPIINTERFACEDELEGATE_H
-#define SCPIINTERFACEDELEGATE_H
+#ifndef SCPIDELEGATEINTERFACE_H
+#define SCPIDELEGATEINTERFACE_H
 
 #include "scpidelegatetemplate.h"
 #include "scpiclient.h"
 
 namespace SCPIMODULE {
 
-class cSCPIInterfaceDelegate : public ScpiDelegateTemplate
+class ScpiDelegateInterface : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:
-    cSCPIInterfaceDelegate(const QString &cmdParent, const QString &cmd,
+    ScpiDelegateInterface(const QString &cmdParent, const QString &cmd,
                            quint8 scpiCmdQueryFlags,
                            quint16 cmdCode,
                            const QString &cmdDescription = QString());
@@ -26,8 +26,8 @@ private:
     quint16 m_nCmdCode;
 };
 
-typedef std::shared_ptr<cSCPIInterfaceDelegate> cSCPIInterfaceDelegatePtr;
+typedef std::shared_ptr<ScpiDelegateInterface> cSCPIInterfaceDelegatePtr;
 
 }
 
-#endif // SCPIINTERFACEDELEGATE_H
+#endif // SCPIDELEGATEINTERFACE_H

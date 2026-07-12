@@ -4,7 +4,7 @@
 #include "scpimodelbase.h"
 #include "scpiinterface.h"
 #include "scpidelegatetemplate.h"
-#include "measurescpinodedelegate.h"
+#include "scpidelegatemeasure.h"
 #include "scpicmdinfo.h"
 #include <QHash>
 #include <QJsonObject>
@@ -14,7 +14,7 @@ namespace SCPIMODULE
 {
 
 class cSCPIModule;
-class cSCPICatalogCmdDelegate;
+class ScpiDelegateCatalog;
 
 /* This class creates of SCPI tree from Vein INF_MODULEINTERFACE of:
  * * MEASURE/CONFIGURE/READ/INIT/FETCH models (VfModuleComponent added to m_pModule->m_veinComponentsWithMetaAndScpi)
@@ -37,7 +37,7 @@ public:
 private:
     cSCPIModule* m_pModule = nullptr;
     QHash<QString, MeasureScpiNodeDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
-    QHash<QString, cSCPICatalogCmdDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
+    QHash<QString, ScpiDelegateCatalog*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
     void addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
     void addRPCCommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);

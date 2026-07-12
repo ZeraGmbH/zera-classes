@@ -249,7 +249,7 @@ void cSCPIClient::generateSCPIMeasureSystem()
     QList<QString> keylist = pSCPIMeasDelegateHash->keys();
     for (int i = 0; i < keylist.count(); i++) {
         MeasureScpiNodeDelegatePtr measDelegate = (*pSCPIMeasDelegateHash)[keylist.at(i)];
-        m_SCPIMeasureDelegateHash[measDelegate.get()] = std::make_shared<MeasureScpiNodeDelegate>(*measDelegate, m_SCPIMeasureTranslationHash);
+        m_SCPIMeasureDelegateHash[measDelegate.get()] = std::make_shared<ScpiDelegateMeasure>(*measDelegate, m_SCPIMeasureTranslationHash);
     }
 }
 

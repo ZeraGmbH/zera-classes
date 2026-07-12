@@ -1,8 +1,8 @@
 #include "scpimodelmeasureandfriends.h"
 #include "scpimodule.h"
-#include "scpiparameterdelegate.h"
-#include "scpicatalogcmddelegate.h"
-#include "scpirpcdelegate.h"
+#include "scpidelegateparameter.h"
+#include "scpidelegatecatalog.h"
+#include "scpidelegaterpc.h"
 #include <vs_abstracteventsystem.h>
 #include <ve_commandevent.h>
 #include <vcmp_componentdata.h>
@@ -116,12 +116,12 @@ void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, c
         QString cmdParent = nodeNames.join(':');
         ScpiBaseDelegatePtr delegate;
         if (scpiCmdInfo->refType == "0") {
-            delegate = std::make_shared<cSCPIParameterDelegate>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
+            delegate = std::make_shared<ScpiDelegateParameter>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
             setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
         }
         else {
-            delegate = std::make_shared<cSCPICatalogCmdDelegate>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
-            m_scpiPropertyDelegateHash[cmdComplete] = static_cast<cSCPICatalogCmdDelegate*>(delegate.get()); // for easier access if we need to change answers of this delegate
+            delegate = std::make_shared<ScpiDelegateCatalog>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
+            m_scpiPropertyDelegateHash[cmdComplete] = static_cast<ScpiDelegateCatalog*>(delegate.get()); // for easier access if we need to change answers of this delegate
         }
         scpiInterface->addSCPICommand(delegate);
     }
@@ -133,7 +133,7 @@ void ScpiModelMeasureAndFriends::addRPCCommand(cSCPIInterface *scpiInterface, co
     QStringList nodeNames = cmdComplete.split(':');
     QString cmdNode = nodeNames.takeLast();
     QString cmdParent = nodeNames.join(':');
-    ScpiBaseDelegatePtr delegate = std::make_shared<cSCPIRpcDelegate>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
+    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateRpc>(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
     setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
     scpiInterface->addSCPICommand(delegate);
 }
@@ -153,7 +153,7 @@ void ScpiModelMeasureAndFriends::addSCPIMeasureCommand(cSCPIInterface *scpiInter
         delegate->addVeinComponentScpiSequence(measureObject);
     }
     else {
-        delegate = std::make_shared<MeasureScpiNodeDelegate>(cmdparent, cmd, scpiCmdQueryFlags, modelType, measureObject);
+        delegate = std::make_shared<ScpiDelegateMeasure>(cmdparent, cmd, scpiCmdQueryFlags, modelType, measureObject);
         m_scpiMeasureDelegateHash[cmdcomplete] = delegate;
         scpiInterface->addSCPICommand(delegate);
     }

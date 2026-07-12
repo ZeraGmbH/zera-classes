@@ -1,4 +1,4 @@
-#include "scpiparameterdelegate.h"
+#include "scpidelegateparameter.h"
 #include "scpieventsystem.h"
 #include "scpiclient.h"
 #include "scpimodulecommonstaticfunctions.h"
@@ -12,25 +12,25 @@
 
 namespace SCPIMODULE {
 
-cSCPIParameterDelegate::cSCPIParameterDelegate(const QString &cmdParent,
-                                               const QString &cmd,
-                                               quint8 scpiCmdQueryFlags,
-                                               cSCPIModule *scpimodule,
-                                               cSCPICmdInfoPtr scpicmdinfo) :
+ScpiDelegateParameter::ScpiDelegateParameter(const QString &cmdParent,
+                                             const QString &cmd,
+                                             quint8 scpiCmdQueryFlags,
+                                             cSCPIModule *scpimodule,
+                                             cSCPICmdInfoPtr scpicmdinfo) :
     ScpiDelegateTemplate(cmdParent, cmd, scpiCmdQueryFlags),
     m_pModule(scpimodule),
     m_pSCPICmdInfo(scpicmdinfo)
 {
 }
 
-void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
+void ScpiDelegateParameter::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = scpi;
     bool bQuery = ScpiModuleCommonStaticFunctions::isQuery(scpi);
     if ( (bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||  // test if we got an allowed query
-         (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
-         ((scpiCmdType & SCPI::isXMLCmd) > 0) ) // test if we expext an xml command
+        (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
+        ((scpiCmdType & SCPI::isXMLCmd) > 0) ) // test if we expext an xml command
     {
         if (handleFutureComponent(client, bQuery, scpiTransactionId))
             return;
@@ -69,13 +69,13 @@ void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &scp
         m_pModule->insertScpiVeinParamRpcTransaction(componentOrRpcName, transactionInfo);
         client->addVeinParamRpcTransactionInfo(componentOrRpcName, transactionInfo);
 
-       m_pModule->emitSigSendEvent(event);
+        m_pModule->emitSigSendEvent(event);
     }
     else
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
-bool cSCPIParameterDelegate::handleFutureComponent(cSCPIClient *client, bool bQuery, const ScpiTransactionId &scpiTransactionId)
+bool ScpiDelegateParameter::handleFutureComponent(cSCPIClient *client, bool bQuery, const ScpiTransactionId &scpiTransactionId)
 {
     VeinStorage::AbstractDatabase *storrageDb = m_pModule->getStorageDb();
     const VeinStorage::AbstractComponentPtr futureComponent = storrageDb->findFutureComponent(m_pSCPICmdInfo->entityId,

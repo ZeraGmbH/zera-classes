@@ -1,5 +1,5 @@
-#ifndef SCPIPARAMETERDELEGATE_H
-#define SCPIPARAMETERDELEGATE_H
+#ifndef SCPIDELEGATEPARAMETER_H
+#define SCPIDELEGATEPARAMETER_H
 
 #include "scpidelegatetemplate.h"
 #include "scpimodule.h"
@@ -8,14 +8,14 @@
 
 namespace SCPIMODULE {
 
-class cSCPIParameterDelegate: public ScpiDelegateTemplate
+class ScpiDelegateParameter : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:
-    cSCPIParameterDelegate(const QString &cmdParent, const QString &cmd,
-                           quint8 scpiCmdQueryFlags,
-                           cSCPIModule* scpimodule,
-                           cSCPICmdInfoPtr scpicmdinfo);
+    ScpiDelegateParameter(const QString &cmdParent, const QString &cmd,
+                          quint8 scpiCmdQueryFlags,
+                          cSCPIModule* scpimodule,
+                          cSCPICmdInfoPtr scpicmdinfo);
     void executeSCPI(cSCPIClient *client,
                      const QString& scpi,
                      const ScpiTransactionId &scpiTransactionId) override;
@@ -30,4 +30,4 @@ private:
 };
 
 }
-#endif // SCPIPARAMETERDELEGATE_H
+#endif // SCPIDELEGATEPARAMETER_H

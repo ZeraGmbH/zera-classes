@@ -1,6 +1,6 @@
 #include "scpimodeldeviface.h"
 #include "scpimodule.h"
-#include "scpiinterfacedelegate.h"
+#include "scpidelegateinterface.h"
 #include <zscpi_response_definitions.h>
 #include <zenuxdeviceinfo.h>
 
@@ -19,9 +19,9 @@ enum scpiinterfacecommands
 
 bool ScpiModelDevIface::setupScpi(cSCPIInterface *scpiInterface)
 {
-    cSCPIInterfaceDelegatePtr delegate = std::make_shared<cSCPIInterfaceDelegate>("DEVICE", "IFACE", SCPI::isQuery, deviceinterfacecmd);
+    cSCPIInterfaceDelegatePtr delegate = std::make_shared<ScpiDelegateInterface>("DEVICE", "IFACE", SCPI::isQuery, deviceinterfacecmd);
     scpiInterface->addSCPICommand(delegate);
-    connect(delegate.get(), &cSCPIInterfaceDelegate::signalExecuteSCPI, this, &ScpiModelDevIface::executeCmd);
+    connect(delegate.get(), &ScpiDelegateInterface::signalExecuteSCPI, this, &ScpiModelDevIface::executeCmd);
 
     // for module integrity we also have to add this command to the scpi command list (exported at INF_ModuleInterface)
     m_pModule->scpiCommandList.append(new VfModuleMetaInfoContainer("", QString("DEVICE:IFACE"), SCPI::isQuery, ""));
