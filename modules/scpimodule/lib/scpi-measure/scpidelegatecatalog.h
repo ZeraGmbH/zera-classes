@@ -22,10 +22,12 @@ public:
     void executeSCPI(cSCPIClient *client,
                      const QString& scpi,
                      const ScpiTransactionId &scpiTransactionId) override;
-    void setOutput(const QVariant &modInterface);
+    void setOutputFromInfModuleInterface(const QVariant &modInterface);
 
 private:
-    void setOutput(cSCPICmdInfoPtr scpicmdinfo);
+    void setOutputInitial(const cSCPICmdInfoPtr &scpicmdinfo);
+    void setOutputFromComponentInfo(const QJsonObject &componentInfo);
+
     cSCPIModule* m_pModule;
     cSCPICmdInfoPtr m_pSCPICmdInfo;
     QString m_sAnswer;

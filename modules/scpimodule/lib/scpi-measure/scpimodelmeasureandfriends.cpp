@@ -62,7 +62,7 @@ void ScpiModelMeasureAndFriends::actualizeInterface(QVariant modInterface)
             if (jsonCmdArr[4].toString() != "0") { // so it is a property delegate
                 QString cmdComplete;
                 cmdComplete = QString("%1:%2:%3").arg(jsonCmdArr[0].toString(), scpiModuleName, jsonCmdArr[1].toString());
-                m_scpiPropertyDelegateHash[cmdComplete]->setOutput(modInterface);
+                m_scpiPropertyDelegateHash[cmdComplete]->setOutputFromInfModuleInterface(modInterface);
             }
         }
     }

@@ -14,7 +14,7 @@ ScpiDelegateCatalog::ScpiDelegateCatalog(const Params &params) :
     m_pModule(params.scpimodule),
     m_pSCPICmdInfo(params.scpicmdinfo)
 {
-    setOutput(m_pSCPICmdInfo);
+    setOutputInitial(m_pSCPICmdInfo);
 }
 
 void ScpiDelegateCatalog::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
@@ -27,30 +27,32 @@ void ScpiDelegateCatalog::executeSCPI(cSCPIClient *client, const QString &scpi, 
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
-void ScpiDelegateCatalog::setOutput(const QVariant &modInterface)
+void ScpiDelegateCatalog::setOutputFromInfModuleInterface(const QVariant &modInterface)
 {
     QJsonDocument jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
-    QJsonObject jsonObj = jsonDoc.object();
-    jsonObj = jsonObj["ComponentInfo"].toObject();
-    jsonObj = jsonObj[m_pSCPICmdInfo->componentOrRpcName].toObject();
-    jsonObj = jsonObj["Validation"].toObject();
-    QJsonArray jsonArr;
-    jsonArr = jsonObj["Data"].toArray();
+    const QJsonObject jsonModuleInterface = jsonDoc.object();
+    const QJsonObject componentInfos = jsonModuleInterface["ComponentInfo"].toObject();
+    const QJsonObject componentInfo = componentInfos[m_pSCPICmdInfo->componentOrRpcName].toObject();
+    setOutputFromComponentInfo(componentInfo);
+}
 
-    const QVariantList vaList = jsonArr.toVariantList();
+void ScpiDelegateCatalog::setOutputInitial(const cSCPICmdInfoPtr &scpicmdinfo)
+{
+    setOutputFromComponentInfo(scpicmdinfo->veinComponentInfo);
+}
+
+void ScpiDelegateCatalog::setOutputFromComponentInfo(const QJsonObject &componentInfo)
+{
+    const QJsonObject validation = componentInfo["Validation"].toObject();
+    const QJsonArray validatorEntries = validation["Data"].toArray();
+
+    const QVariantList validatorEntriesVariant = validatorEntries.toVariantList();
     m_sAnswer.clear();
-    for(int i=0; i<vaList.count(); ++i) {
+    for(int i=0; i<validatorEntriesVariant.count(); ++i) {
         if(i>0)
             m_sAnswer += ";";
-        m_sAnswer += vaList.at(i).toString();
+        m_sAnswer += validatorEntriesVariant.at(i).toString();
     }
 }
-
-void ScpiDelegateCatalog::setOutput(cSCPICmdInfoPtr scpicmdinfo)
-{
-    QVariant ModInterface = m_pModule->getStorageDb()->getStoredValue(scpicmdinfo->entityId, QString("INF_ModuleInterface"));
-    setOutput(ModInterface);
-}
-
 
 }
