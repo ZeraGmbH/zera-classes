@@ -3,8 +3,8 @@
 
 namespace SCPIMODULE {
 
-cSCPIEthClient::cSCPIEthClient(QTcpSocket *socket, cSCPIModule *module, cSCPIModuleConfigData &configdata, cSCPIInterface *iface) :
-    cSCPIClient(module, configdata, iface),
+cSCPIEthClient::cSCPIEthClient(QTcpSocket *socket, cSCPIModule *module) :
+    cSCPIClient(module),
     m_pSocket(socket)
 {
     connect(m_pSocket, &QTcpSocket::readyRead, this, &cSCPIEthClient::cmdInput);

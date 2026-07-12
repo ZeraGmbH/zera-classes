@@ -11,7 +11,7 @@ class cSCPISerialClient: public cSCPIClient
 {
     Q_OBJECT
 public:
-    cSCPISerialClient(QSerialPort* serial, cSCPIModule *module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
+    cSCPISerialClient(QSerialPort* serial, cSCPIModule *module);
     ~cSCPISerialClient() override;
 
     void handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) override;

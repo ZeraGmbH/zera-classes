@@ -10,8 +10,8 @@ namespace SCPIMODULE
 
 {
 
-cSCPISerialClient::cSCPISerialClient(QSerialPort* serial, cSCPIModule *module, cSCPIModuleConfigData &configdata, cSCPIInterface *iface) :
-    cSCPIClient(module, configdata, iface),
+cSCPISerialClient::cSCPISerialClient(QSerialPort* serial, cSCPIModule *module) :
+    cSCPIClient(module),
     m_pSerialPort(serial)
 {
     qInfo("Serial SCPI connection established");

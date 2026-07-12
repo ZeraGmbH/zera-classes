@@ -10,7 +10,7 @@ class cSCPIEthClient: public cSCPIClient
 {
     Q_OBJECT
 public:
-    cSCPIEthClient(QTcpSocket* socket,  cSCPIModule *module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
+    cSCPIEthClient(QTcpSocket* socket, cSCPIModule *module);
     ~cSCPIEthClient() override;
 
     void handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) override;

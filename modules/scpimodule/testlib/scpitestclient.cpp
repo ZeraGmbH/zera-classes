@@ -3,8 +3,8 @@
 
 namespace SCPIMODULE {
 
-ScpiTestClient::ScpiTestClient(cSCPIModule *module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface) :
-    cSCPIClient(module, configdata, iface)
+ScpiTestClient::ScpiTestClient(cSCPIModule *module) :
+    cSCPIClient(module)
 {
     module->getSCPIServer()->addScpiClient(this);
 }

@@ -12,10 +12,10 @@
 
 namespace SCPIMODULE
 {
-cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface) :
-    m_pSCPIInterface(iface),
+cSCPIClient::cSCPIClient(cSCPIModule* module) :
+    m_pSCPIInterface(module->getSCPIServer()->getScpiInterface()),
     m_pModule(module),
-    m_ConfigData(configdata),
+    m_ConfigData(*module->getConfigData()),
     m_clientId(QUuid::createUuid()) // we need an unique id in case we want to send deferred error notifications events
 {
     // we instantiate 3 scpi status systems per client

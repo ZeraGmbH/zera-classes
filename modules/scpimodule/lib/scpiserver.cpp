@@ -111,7 +111,7 @@ void cSCPIServer::createSerialScpi()
             m_pSerialPort->setParity(QSerialPort::NoParity);
             m_pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
 
-            m_pSerialClient = new cSCPISerialClient(m_pSerialPort, m_pModule, m_ConfigData, &m_scpiInterface);
+            m_pSerialClient = new cSCPISerialClient(m_pSerialPort, m_pModule);
             addScpiClient(m_pSerialClient);
             qInfo("Serial SCPI client connected / Active clients: %i", m_SCPIClientList.count());
             m_bSerialScpiActive = true;
@@ -147,7 +147,7 @@ void cSCPIServer::addNetClient()
 {
     if(m_pTcpServer->hasPendingConnections()) {
         QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
-        cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, &m_scpiInterface); // each client our interface;
+        cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule); // each client our interface;
         addScpiClient(client);
         qInfo("Network SCPI client (%s) connected / Active clients: %i", qPrintable(client->getPeerAddress()), m_SCPIClientList.count());
         connect(socket, &QTcpSocket::disconnected, this, [=]() {

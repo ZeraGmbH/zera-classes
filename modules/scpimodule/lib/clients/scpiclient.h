@@ -20,7 +20,7 @@ class cSCPIClient: public QObject
 {
     Q_OBJECT
 public:
-    cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
+    cSCPIClient(cSCPIModule* module);
     virtual ~cSCPIClient();
 
     cSCPIInterface* getScpiInterface();

@@ -43,9 +43,7 @@ void test_modman_regression_all_sessions_scpi::init()
         m_scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_modMan->getModule(9999));
         QVERIFY(m_scpiModule != nullptr);
 
-        m_scpiclient = new SCPIMODULE::ScpiTestClient(m_scpiModule,
-                                                      *m_scpiModule->getConfigData(),
-                                                      m_scpiModule->getSCPIServer()->getScpiInterface());
+        m_scpiclient = new SCPIMODULE::ScpiTestClient(m_scpiModule);
         connect(m_scpiclient, &SCPIMODULE::ScpiTestClient::sigScpiResponseSorted, m_scpiclient, [&] (const QString &response) {
             m_scpiResponses.append(formatForDump(response));
         });

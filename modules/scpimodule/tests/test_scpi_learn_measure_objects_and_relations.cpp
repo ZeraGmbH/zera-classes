@@ -24,7 +24,7 @@ void test_scpi_learn_measure_objects_and_relations::countMeasureRelatedObjectsCr
 
 
     // Scpi interface copies
-    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
+    SCPIMODULE::ScpiTestClient client(scpiModule);
     client.sendScpiCmds("dev:iface?");
     TimeMachineObject::feedEventLoop();
 
@@ -93,7 +93,7 @@ void test_scpi_learn_measure_objects_and_relations::devIfaceTwoOsci()
     ModuleManagerTestRunner testRunner(":/session-scpi-two-osci.json");
     SCPIMODULE::cSCPIModule* scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(testRunner.getModule(9999));
 
-    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
+    SCPIMODULE::ScpiTestClient client(scpiModule);
     client.sendScpiCmds("dev:iface?");
     TimeMachineObject::feedEventLoop();
 
@@ -110,7 +110,7 @@ void test_scpi_learn_measure_objects_and_relations::sortingChangesBehaviourOnQue
     ModuleManagerTestRunner testRunner(":/session-scpi-two-osci.json");
     SCPIMODULE::cSCPIModule* scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(testRunner.getModule(9999));
 
-    SCPIMODULE::ScpiTestClient client(scpiModule, *scpiModule->getConfigData(), scpiModule->getSCPIServer()->getScpiInterface());
+    SCPIMODULE::ScpiTestClient client(scpiModule);
 
     client.sendScpiCmds("MEASURE:OSC1?\nMEASURE:OSC2?\n*OPC?");
     TimeMachineObject::feedEventLoop();

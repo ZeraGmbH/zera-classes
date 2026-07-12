@@ -87,9 +87,7 @@ QStringList test_scpi_penetrate::getAvailableSessions()
 
 void test_scpi_penetrate::createScpiClient()
 {
-    m_scpiclient = new SCPIMODULE::ScpiTestClient(m_scpiModule,
-                                                  *m_scpiModule->getConfigData(),
-                                                  m_scpiModule->getSCPIServer()->getScpiInterface());
+    m_scpiclient = new SCPIMODULE::ScpiTestClient(m_scpiModule);
 }
 
 QString test_scpi_penetrate::deduceDevice(const QString &sessionFileName)
