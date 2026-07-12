@@ -11,6 +11,7 @@ private slots:
 
     void scpiQueryAndCommand();
     void rangeChangeWithDelay();
+    void catalogChangeOnScpiByClamp();
 };
 
 #endif // TEST_RANGE_SCPI_H

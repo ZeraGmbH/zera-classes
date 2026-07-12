@@ -178,3 +178,16 @@ void test_range_scpi::rangeChangeWithDelay()
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spyScpiAnswer[0][0], "250V");
 }
+
+void test_range_scpi::catalogChangeOnScpiByClamp()
+{
+    ModuleManagerTestRunner testRunner(":/session-range-scpi.json");
+    ScpiModuleNetClientBlocked client;
+
+    QCOMPARE(client.sendReceive("SENSE:RNG1:IAUX:RANGE:CATALOG?"), "--");
+
+    QList<AbstractMockAllServices::clampParam> clampParams;
+    clampParams.append({"IAUX", cClamp::CL120A});
+    testRunner.addClamps(clampParams);
+    QCOMPARE(client.sendReceive("SENSE:RNG1:IAUX:RANGE:CATALOG?"), "C100A;C50A;C10A;C5A;C1A;C500mA;C100mA;C50mA;C10mA;--");
+}
