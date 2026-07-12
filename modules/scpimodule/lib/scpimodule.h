@@ -7,6 +7,7 @@
 #include "signalconnectiondelegate.h"
 #include "veincomponentscpimeasuresequence.h"
 #include "basemodule.h"
+#include "veinscpimoduleinterfaceparser.h"
 #include "vfeventsytemmoduleparam.h"
 #include <vf_cmd_event_handler_system.h>
 #include <memory>
@@ -48,6 +49,8 @@ public:
     void emitSigSendEvent(QEvent *event);
     VfCmdEventHandlerSystemPtr getCmdEventHandlerSystem();
 
+    const VeinScpiModuleInterfaceParser &getScpiModuleInterfaceParser() const;
+
 private slots:
     void activationFinished() override;
 private:
@@ -60,6 +63,7 @@ private:
     cSCPIServer *m_pSCPIServer = nullptr;
     VfEventSytemModuleParam* m_pModuleValidator = nullptr;
     VfCmdEventHandlerSystemPtr m_cmdEventHandlerSystem;
+    VeinScpiModuleInterfaceParser m_moduleInterfaceParser;
 
     QMultiHash<QString /*componentOrRpcName*/, SCPIVeinTransactionInfoPtr> m_scpiVeinParamOrRpcTransactions;
     QList<cSignalConnectionDelegate*> m_signalConnectionDelegates;

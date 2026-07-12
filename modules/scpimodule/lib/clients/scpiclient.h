@@ -8,6 +8,7 @@
 #include "ieee488-2.h"
 #include "scpimoduleconfigdata.h"
 #include "scpiresponsesorter.h"
+#include "veinscpimoduleinterfaceparser.h"
 #include <QUuid>
 #include <QHash>
 
@@ -60,11 +61,9 @@ protected:
 private slots:
     virtual void cmdInput() = 0;
 private:
-    typedef QHash<QString /*entityName*/, int /*entityId*/> EntityHash;
     void setSignalConnections(cSCPIStatus* scpiStatus,
                               const QList<cStatusBitDescriptor> &statusBitDescriptorList,
-                              const EntityHash &entitiesWithScpi);
-    EntityHash getEntitiesWithScpi() const;
+                              const VeinScpiModuleInterfaceParser::ScpiEntityHash &entitiesWithScpi);
     void generateSCPIMeasureSystem();
 
     cSCPIModuleConfigData& m_ConfigData;

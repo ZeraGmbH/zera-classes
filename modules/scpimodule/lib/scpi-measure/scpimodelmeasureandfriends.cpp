@@ -27,56 +27,25 @@ ScpiModelMeasureAndFriends::~ScpiModelMeasureAndFriends()
 
 bool ScpiModelMeasureAndFriends::setupScpi(cSCPIInterface *scpiInterface)
 {
-    bool ok = true;
+    const VeinScpiModuleInterfaceParser moduleInterfaces = m_pModule->getScpiModuleInterfaceParser();
+    const VeinScpiModuleInterfaceParser::ScpiParseInfo allComponentInfos = moduleInterfaces.getComponentInfo();
+    const VeinScpiModuleInterfaceParser::ScpiParseInfo allRpcInfos = moduleInterfaces.getRpcInfo();
+
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
     const QList<int> entityIdList = storageDb->getEntityList();
     for(auto entityID : entityIdList) {
-        // we parse over all moduleinterface components
-        if (storageDb->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
-            QJsonDocument jsonDoc = QJsonDocument::fromJson(storageDb->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
-            if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
-                const QJsonObject jsonObj = jsonDoc.object();
-                const QJsonObject jsonScpiInfo = jsonObj["SCPIInfo"].toObject();
-                const QJsonObject jsonComponentInfo = jsonObj["ComponentInfo"].toObject();
-                QString scpiModuleName = jsonScpiInfo["Name"].toString();
-
-                QJsonArray jsonScpiCmdArr = jsonScpiInfo["Cmd"].toArray();
-                for (int j = 0; j < jsonScpiCmdArr.count(); j++) {
-                    cSCPICmdInfoPtr scpiCmdInfo = std::make_shared<cSCPICmdInfo>();
-                    scpiCmdInfo->scpiModuleName = scpiModuleName;
-                    scpiCmdInfo->entityId = entityID;
-                    QJsonArray jsonCmdArr = jsonScpiCmdArr[j].toArray();
-                    scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
-                    scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
-                    scpiCmdInfo->scpiCommandType = jsonCmdArr[2].toString();
-                    scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
-                    scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentOrRpcName].toObject();
-                    scpiCmdInfo->refType = jsonCmdArr[4].toString();
-
-                    addSCPICommand(scpiInterface, scpiCmdInfo); // we add our command now
-                }
-
-                const QJsonObject jsonRpcInfo = jsonObj["RpcInfo"].toObject();
-                QJsonArray jsonRpcScpiCmdArr = jsonScpiInfo["RPC"].toArray();
-                for (int j = 0; j < jsonRpcScpiCmdArr.count(); j++) {
-                    cSCPICmdInfoPtr scpiCmdInfo = std::make_shared<cSCPICmdInfo>();
-                    scpiCmdInfo->scpiModuleName = scpiModuleName;
-                    scpiCmdInfo->entityId = entityID;
-                    QJsonArray jsonCmdArr = jsonRpcScpiCmdArr[j].toArray();
-                    scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
-                    scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
-                    scpiCmdInfo->scpiCommandType = jsonCmdArr[2].toString();
-                    scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
-                    scpiCmdInfo->veinComponentInfo = jsonRpcInfo[scpiCmdInfo->componentOrRpcName].toObject();
-                    scpiCmdInfo->refType = jsonCmdArr[4].toString();
-                    addRPCCommand(scpiInterface, scpiCmdInfo);
-                }
-            }
-            else
-                ok = false;
+        if (allComponentInfos.contains(entityID)) {
+            const QList<cSCPICmdInfoPtr> &commands = allComponentInfos[entityID];
+            for (const cSCPICmdInfoPtr &command : commands)
+                addSCPICommand(scpiInterface, command);
+        }
+        if (allRpcInfos.contains(entityID)) {
+            const QList<cSCPICmdInfoPtr> &rpcs = allRpcInfos[entityID];
+            for (const cSCPICmdInfoPtr &rpc : rpcs)
+                addRPCCommand(scpiInterface, rpc);
         }
     }
-    return ok;
+    return true;
 }
 
 void ScpiModelMeasureAndFriends::actualizeInterface(QVariant modInterface)

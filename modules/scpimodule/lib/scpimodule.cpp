@@ -15,6 +15,7 @@ cSCPIModule::cSCPIModule(const ModuleFactoryParam &moduleParam) :
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
     m_cmdEventHandlerSystem = VfCmdEventHandlerSystem::create();
+    m_moduleInterfaceParser.parseVeinStorage(moduleParam.m_moduleSharedData->m_storagesystem->getDb());
 }
 
 cSCPIModule::~cSCPIModule()
@@ -107,6 +108,11 @@ void cSCPIModule::emitSigSendEvent(QEvent *event)
 VfCmdEventHandlerSystemPtr cSCPIModule::getCmdEventHandlerSystem()
 {
     return m_cmdEventHandlerSystem;
+}
+
+const VeinScpiModuleInterfaceParser &cSCPIModule::getScpiModuleInterfaceParser() const
+{
+    return m_moduleInterfaceParser;
 }
 
 void cSCPIModule::setupModule()

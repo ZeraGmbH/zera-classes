@@ -44,7 +44,7 @@ cSCPIClient::cSCPIClient(cSCPIModule* module) :
     connect(scpiOperStatus, &cSCPIStatus::sigEventErrorCmdFinish, m_pIEEE4882, &cIEEE4882::addEventErrorWithResponse);
     connect(scpiOperMeasStatus, &cSCPIStatus::sigEventErrorCmdFinish, m_pIEEE4882, &cIEEE4882::addEventErrorWithResponse);
 
-    const EntityHash entitiesWithScpi = getEntitiesWithScpi();
+    const VeinScpiModuleInterfaceParser::ScpiEntityHash entitiesWithScpi = m_pModule->getScpiModuleInterfaceParser().getEntitiesWithScpi();
     setSignalConnections(scpiQuestStatus, m_ConfigData.m_QuestionableStatDescriptorList, entitiesWithScpi);
     setSignalConnections(scpiOperStatus, m_ConfigData.m_OperationStatDescriptorList, entitiesWithScpi);
     setSignalConnections(scpiOperMeasStatus, m_ConfigData.m_OperationMeasureStatDescriptorList, entitiesWithScpi);
@@ -207,31 +207,9 @@ void cSCPIClient::handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId
     }
 }
 
-cSCPIClient::EntityHash cSCPIClient::getEntitiesWithScpi() const
-{
-    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
-    QList<int> entityIdList = storageDb->getEntityList();
-    int entityIdCount = entityIdList.count();
-
-    EntityHash entitiesWithScpi;
-    for (int entityIdx = 0; entityIdx < entityIdCount; entityIdx++) {
-        int entityId = entityIdList.at(entityIdx);
-        if (storageDb->hasStoredValue(entityId, QString("INF_ModuleInterface"))) {
-            QJsonDocument jsonDoc = QJsonDocument::fromJson(storageDb->getStoredValue(entityId, QString("INF_ModuleInterface")).toByteArray());
-            if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
-                const QJsonObject jsonInfModuleInterface = jsonDoc.object();
-                const QJsonObject jsonScpiInfo = jsonInfModuleInterface["SCPIInfo"].toObject();
-                QString scpiModuleName = jsonScpiInfo["Name"].toString();
-                entitiesWithScpi[scpiModuleName] = entityId;
-            }
-        }
-    }
-    return entitiesWithScpi;
-}
-
 void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus,
                                        const QList<cStatusBitDescriptor> &statusBitDescriptorList,
-                                       const EntityHash &entitiesWithScpi)
+                                       const VeinScpiModuleInterfaceParser::ScpiEntityHash &entitiesWithScpi)
 {
     if (entitiesWithScpi.isEmpty())
         return;
