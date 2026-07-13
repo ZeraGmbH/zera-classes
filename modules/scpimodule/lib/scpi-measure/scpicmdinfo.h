@@ -15,7 +15,7 @@ public:
     QString scpiModuleName;
     QString scpiModel;
     QString scpiCommand;
-    QString scpiCmdQueryFlagsAsString; // TODO quint8
+    quint8 scpiCmdQueryFlags;
     int entityId;
     QString componentOrRpcName;
     QString refType; // 0 means component itself otherwise the component's validation data

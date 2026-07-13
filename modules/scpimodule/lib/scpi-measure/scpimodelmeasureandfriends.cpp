@@ -120,11 +120,11 @@ void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, c
         QString cmdParent = nodeNames.join(':');
         ScpiBaseDelegatePtr delegate;
         if (scpiCmdInfo->refType == "0") {
-            delegate = std::make_shared<ScpiDelegateParameter>(ScpiDelegateParameter::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlagsAsString.toInt(), m_pModule, scpiCmdInfo});
+            delegate = std::make_shared<ScpiDelegateParameter>(ScpiDelegateParameter::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_pModule, scpiCmdInfo});
             setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
         }
         else {
-            delegate = std::make_shared<ScpiDelegateCatalog>(ScpiDelegateCatalog::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlagsAsString.toInt(), m_pModule, scpiCmdInfo});
+            delegate = std::make_shared<ScpiDelegateCatalog>(ScpiDelegateCatalog::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_pModule, scpiCmdInfo});
             m_scpiCatalogDelegateHash[scpiPath] = static_cast<ScpiDelegateCatalog*>(delegate.get()); // for easier access if we need to change answers of this delegate
         }
         scpiInterface->addSCPICommand(delegate);
@@ -137,7 +137,7 @@ void ScpiModelMeasureAndFriends::addRPCCommand(cSCPIInterface *scpiInterface, co
     QStringList nodeNames = cmdComplete.split(':');
     QString cmdNode = nodeNames.takeLast();
     QString cmdParent = nodeNames.join(':');
-    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateRpc>(ScpiDelegateRpc::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlagsAsString.toInt(), m_pModule, scpiCmdInfo});
+    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateRpc>(ScpiDelegateRpc::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_pModule, scpiCmdInfo});
     setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
     scpiInterface->addSCPICommand(delegate);
 }
