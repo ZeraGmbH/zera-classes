@@ -16,14 +16,9 @@ ScpiTestSelectableClient::ScpiTestSelectableClient(ClientType clientType, SCPIMO
 
 QString ScpiTestSelectableClient::sendReceive(const QString &scpi, bool removeLineFeedOnReceive)
 {
-    if (m_clientType == TEST) {
-        m_testClient->sendScpiCmds(scpi);
-        TimeMachineObject::feedEventLoop();
-        QString response = m_testClientResponse;
-        if (removeLineFeedOnReceive)
-            response.remove("\n");
-        return response;
-    }
+    if (m_clientType == TEST)
+        // As long as NET / production do not sort -> return sorted
+        return m_testClient->sendReceiveSorted(scpi, removeLineFeedOnReceive);
     else
         return m_blockedClient->sendReceive(scpi.toLocal8Bit(), removeLineFeedOnReceive);
 }
