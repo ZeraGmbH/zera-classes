@@ -1,5 +1,4 @@
 #include "test_scpi_error_and_status.h"
-#include "scpitestselectableclient.h"
 #include "ieee488-2.h"
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
@@ -16,241 +15,297 @@ void test_scpi_error_and_status::initTestCase()
 
 void test_scpi_error_and_status::initTestCase_data()
 {
-    QTest::addColumn<ScpiTestSelectableClient::ClientType>("clientType");
-    QTest::newRow("Test") << ScpiTestSelectableClient::TEST;
-    QTest::newRow("Net") << ScpiTestSelectableClient::NET;
+    QTest::addColumn<SortTypes>("sortType");
+    QTest::newRow("Sorted") << SORTED;
+    QTest::newRow("Not-Sorted") << NOT_SORTED;
 }
 
 void test_scpi_error_and_status::sendBullshitQueryStb()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("FOO:BAR?"),"");
-    QCOMPARE(client.sendReceive("*STB?"), "+4");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "FOO:BAR?"), "");
+    QCOMPARE(sendReceive(client, "*STB?"), "+4");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::sendBullshitTwiceQueryErrorCount()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("FOO:BAR?"),"");
-    QCOMPARE(client.sendReceive("STATUS:QUESTIONABLE:ENABLE FOO;"),"");
+    QCOMPARE(sendReceive(client, "FOO:BAR?"),"");
+    QCOMPARE(sendReceive(client, "STATUS:QUESTIONABLE:ENABLE FOO;"),"");
 
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR:COUNT?"), "2");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR:ALL?"), "-100,Command error;-120,Numeric data error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR:COUNT?"), "2");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR:ALL?"), "-100,Command error;-120,Numeric data error");
+
+    QCOMPARE(client.getHandledResponses(), 4);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::sendValidCommandWithoutSemicolonQueryStb()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("CONFIGURATION:RNG1:GROUPING 1"), "");
+    QCOMPARE(sendReceive(client, "CONFIGURATION:RNG1:GROUPING 1"), "");
+    QCOMPARE(sendReceive(client, "*STB?"), "+4"); // 1<<STBeeQueueNotEmpty
+    QCOMPARE(sendReceive(client, "*ESR?"), "+0");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR:COUNT?"), "1");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+    QCOMPARE(sendReceive(client, "*STB?"), "+0");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR:COUNT?"), "0");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "+0,No error");
 
-    QCOMPARE(client.sendReceive("*STB?"), "+4"); // 1<<STBeeQueueNotEmpty
-    QCOMPARE(client.sendReceive("*ESR?"), "+0");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR:COUNT?"), "1");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QCOMPARE(client.sendReceive("*STB?"), "+0");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR:COUNT?"), "0");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "+0,No error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(client.getHandledResponses(), 8);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::overflowErrorQueue()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
     const int errorQueueLen = SCPIMODULE::cIEEE4882::getErrorQueueLength();
     for (int i=0; i<SCPIMODULE::cIEEE4882::getErrorQueueLength(); ++i)
-        client.sendReceive("FOO:BAR?");
+        sendReceive(client, "FOO:BAR?");
 
     const QString expected = QString("%1").arg(errorQueueLen);
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR:COUNT?"), expected);
-    client.sendReceive("FOO:BAR?");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR:COUNT?"), expected);
+    sendReceive(client, "FOO:BAR?");
     QTest::qWait(200); // WTF???
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR:COUNT?"), expected);
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR:COUNT?"), expected);
     for (int i=0; i<SCPIMODULE::cIEEE4882::getErrorQueueLength()-1; ++i)
-        QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-350,Queue overflow");
-    QVERIFY(!client.commandsPending());
+        QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-350,Queue overflow");
+
+    QCOMPARE(client.getHandledResponses(), 2*SCPIMODULE::cIEEE4882::getErrorQueueLength() + 3);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeErrorAndClearIt()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("FOO:BAR?"),"");
+    QCOMPARE(sendReceive(client, "FOO:BAR?"),"");
 
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR:COUNT?"), "1");
-    QCOMPARE(client.sendReceive("*CLS"),"");
-    QTest::qWait(200); // WTF???
-    QCOMPARE(client.sendReceive("*STB?"), "+0");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "+0,No error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR:COUNT?"), "1");
+    QCOMPARE(sendReceive(client, "*CLS"),"");
+    QCOMPARE(sendReceive(client, "*STB?"), "+0");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "+0,No error");
+
+    QCOMPARE(client.getHandledResponses(), 5);
+    QCOMPARE(client.getUnhandledResponses(), 0);
+}
+
+void test_scpi_error_and_status::noErrorCrossTalkOnMultipleClients()
+{
+    SCPIMODULE::ScpiTestClient client1(getScpiModule());
+    SCPIMODULE::ScpiTestClient client2(getScpiModule());
+
+    QCOMPARE(sendReceive(client1, "FOO:BAR?"),"");
+    QCOMPARE(sendReceive(client1, "SYSTEM:ERROR:COUNT?"), "1");
+    QCOMPARE(sendReceive(client2, "SYSTEM:ERROR:COUNT?"), "0");
+}
+
+void test_scpi_error_and_status::noQuestionableEnableCrossTalkOnMultipleClients()
+{
+    SCPIMODULE::ScpiTestClient client1(getScpiModule());
+    SCPIMODULE::ScpiTestClient client2(getScpiModule());
+
+    QCOMPARE(sendReceive(client1, "STATUS:QUESTIONABLE:ENABLE?"), "0");
+    QCOMPARE(sendReceive(client2, "STATUS:QUESTIONABLE:ENABLE?"), "0");
+    QCOMPARE(sendReceive(client1, "SYSTEM:ERROR:COUNT?"), "0");
+    QCOMPARE(sendReceive(client2, "SYSTEM:ERROR:COUNT?"), "0");
+
+    QCOMPARE(sendReceive(client1, "STATUS:QUESTIONABLE:ENABLE 1;"), "");
+    QCOMPARE(sendReceive(client1, "SYSTEM:ERROR:COUNT?"), "0");
+
+    QCOMPARE(sendReceive(client1, "STATUS:QUESTIONABLE:ENABLE?"), "1");
+    QCOMPARE(sendReceive(client2, "STATUS:QUESTIONABLE:ENABLE?"), "0");
 }
 
 void test_scpi_error_and_status::causeCommandErrorOpc()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("*OPC 1;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*OPC 1;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeCommandErrorEse()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("*ESE 1;2;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*ESE 1;2;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeCommandErrorSre()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("*SRE 1;2;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*SRE 1;2;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeCommandErrorCls()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("*CLS 1;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*CLS 1;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeQueryErrorCls()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("*CLS?"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-400,Query error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*CLS?"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-400,Query error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeCommandErrorRst()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("*RST 1;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*RST 1;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeQueryErrorRst()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("*RST?"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-400,Query error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*RST?"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-400,Query error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeCommandErrorIdn()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("*IDN;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*IDN;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeCommandErrorEsr()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("*ESR;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*ESR;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeCommandErrorStb()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("*STB;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*STB;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeCommandErrorTst()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("*TST;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*TST;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeCommandErrorReadError()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeCommandErrorReadErrorCount()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR:COUNT;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR:COUNT;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::causeCommandErrorReadAllErrors()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR:ALL;"),"");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-100,Command error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR:ALL;"),"");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
+
+    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 void test_scpi_error_and_status::sendStatusQuestionableEnableInvalidParam()
 {
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("STATUS:QUESTIONABLE:ENABLE FOO;"), "");
+    QCOMPARE(sendReceive(client, "STATUS:QUESTIONABLE:ENABLE FOO;"), "");
 
-    QCOMPARE(client.sendReceive("*STB?"), "+4"); // 1<<STBeeQueueNotEmpty
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "-120,Numeric data error");
-    QCOMPARE(client.sendReceive("*STB?"), "+0");
-    QCOMPARE(client.sendReceive("SYSTEM:ERROR?"), "+0,No error");
-    QVERIFY(!client.commandsPending());
+    QCOMPARE(sendReceive(client, "*STB?"), "+4"); // 1<<STBeeQueueNotEmpty
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-120,Numeric data error");
+    QCOMPARE(sendReceive(client, "*STB?"), "+0");
+    QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "+0,No error");
+
+    QCOMPARE(client.getHandledResponses(), 5);
+    QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
 SCPIMODULE::cSCPIModule *test_scpi_error_and_status::getScpiModule()
 {
     return qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+}
+
+QString test_scpi_error_and_status::sendReceive(SCPIMODULE::ScpiTestClient &client, const QString &scpi)
+{
+    QFETCH_GLOBAL(SortTypes, sortType);
+    switch (sortType) {
+    case SORTED:
+        return client.sendReceiveSorted(scpi, true);
+    case NOT_SORTED:
+        return client.sendReceiveNotSorted(scpi, true);
+    }
 }
