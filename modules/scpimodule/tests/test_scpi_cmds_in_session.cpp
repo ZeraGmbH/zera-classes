@@ -1,5 +1,5 @@
 #include "test_scpi_cmds_in_session.h"
-#include "scpitestselectableclient.h"
+#include "scpimodulenetclientblocked.h"
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
 #include <scpimodule.h>
@@ -21,9 +21,9 @@ void test_scpi_cmds_in_session::initTestCase()
 
 void test_scpi_cmds_in_session::initTestCase_data()
 {
-    QTest::addColumn<ScpiTestSelectableClient::ClientType>("clientType");
-    QTest::newRow("Test") << ScpiTestSelectableClient::TEST;
-    QTest::newRow("Net") << ScpiTestSelectableClient::NET;
+    QTest::addColumn<SortTypes>("sortType");
+    QTest::newRow("Sorted") << SORTED;
+    QTest::newRow("Not-Sorted") << NOT_SORTED;
 }
 
 void test_scpi_cmds_in_session::initialSession()
@@ -40,11 +40,10 @@ void test_scpi_cmds_in_session::initialSession()
 void test_scpi_cmds_in_session::initialTestClient()
 {
     startModmanWithSession(":/session-scpi-only.json");
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QString receive1 = client.sendReceive("*STB?");
-    QString receive2 = client.sendReceive("*STB?");
+    QString receive1 = sendReceive(client, "*STB?");
+    QString receive2 = sendReceive(client, "*STB?");
 
     QCOMPARE(receive1, "+0");
     QCOMPARE(receive2, "+0");
@@ -53,10 +52,9 @@ void test_scpi_cmds_in_session::initialTestClient()
 void test_scpi_cmds_in_session::minScpiDevIface()
 {
     startModmanWithSession(":/session-scpi-only.json");
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QString receive = client.sendReceive("dev:iface?", false);
+    QString receive = sendReceive(client, "dev:iface?", false);
 
     QFile ifaceBaseXmlFile("://dev-iface-basic.xml");
     QVERIFY(ifaceBaseXmlFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
@@ -68,14 +66,13 @@ void test_scpi_cmds_in_session::minScpiDevIface()
 void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
 {
     startModmanWithSession(":/session-two-modules.json");
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QString receive1 = client.sendReceive("*STB?");
-    QString receive2 = client.sendReceive("STATUS:DEV1:SERIAL?");
-    QString receive3 = client.sendReceive("*STB?");
-    QString receive4 = client.sendReceive("STATUS:DEV1:SERIAL?");
-    QString receive5 = client.sendReceive("*STB?");
+    QString receive1 = sendReceive(client, "*STB?");
+    QString receive2 = sendReceive(client, "STATUS:DEV1:SERIAL?");
+    QString receive3 = sendReceive(client, "*STB?");
+    QString receive4 = sendReceive(client, "STATUS:DEV1:SERIAL?");
+    QString receive5 = sendReceive(client, "*STB?");
 
     QCOMPARE(receive1, "+0");
     QCOMPARE(receive2, "Unknown");
@@ -89,15 +86,14 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
     // * double delete fixed by 3766814ec0fae75ad7f18c7f71c34a767675e6e4.
     // * tested by reverting fix -> crashed
     startModmanWithSession(":/session-three-modules.json");
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
     // multi read to cause double delete crasher
-    QString receive1 = client.sendReceive("CONFIGURATION:RNG1:RNGAUTO?");
-    QString receive2 = client.sendReceive("CONFIGURATION:RNG1:GROUPING?");
-    client.sendReceive("SENSE:RNG1:UL1:RANGE?");
-    client.sendReceive("SENSE:RNG1:UL2:RANGE?");
-    client.sendReceive("SENSE:RNG1:UL3:RANGE?");
+    QString receive1 = sendReceive(client, "CONFIGURATION:RNG1:RNGAUTO?");
+    QString receive2 = sendReceive(client, "CONFIGURATION:RNG1:GROUPING?");
+    sendReceive(client, "SENSE:RNG1:UL1:RANGE?");
+    sendReceive(client, "SENSE:RNG1:UL2:RANGE?");
+    sendReceive(client, "SENSE:RNG1:UL3:RANGE?");
 
     QCOMPARE(receive1, "0");
     QCOMPARE(receive2, "1");
@@ -106,10 +102,9 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
 void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 {
     startModmanWithSession(":/session-three-modules.json");
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QString dumped = client.sendReceive("dev:iface?", false);
+    QString dumped = sendReceive(client, "dev:iface?", false);
     QString expected = TestLogHelpers::loadFile(":/dev-iface-three.xml");
 
     XmlDocumentCompare compare;
@@ -157,27 +152,26 @@ void test_scpi_cmds_in_session::multilineCommandsLastOpc()
 void test_scpi_cmds_in_session::catalogFormat()
 {
     startModmanWithSession(":/session-scpi-only.json");
-    ScpiModuleNetClientBlocked client;
-    QString sessionCatalog = client.sendReceive("CONFIGURATION:SYST:SESSION:CATALOG?");
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
+
+    QString sessionCatalog = sendReceive(client, "CONFIGURATION:SYST:SESSION:CATALOG?");
     QCOMPARE(sessionCatalog, "Default;EMOB AC;EMOB DC;DC: 4*Voltage / 1*Current");
 }
 
 void test_scpi_cmds_in_session::executeRpcQueryWrongRpcName()
 {
     startModmanWithSession(":/session-scpi-only.json");
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("CALCULATE:EM01:0001:FOO?"), "");
+    QCOMPARE(sendReceive(client, "CALCULATE:EM01:0001:FOO?"), "");
 }
 
 void test_scpi_cmds_in_session::executeRpcReadLockStateQuery()
 {
     startModmanWithSession(":/hotpluscontrols-min-session.json");
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("EMOB:HOTP1:EMLOCKSTATE?"), "4");
+    QCOMPARE(sendReceive(client, "EMOB:HOTP1:EMLOCKSTATE?"), "4");
 }
 
 void test_scpi_cmds_in_session::executeRpcQueryInvalidParams()
@@ -190,10 +184,9 @@ void test_scpi_cmds_in_session::executeRpcQueryInvalidParams()
     m_testRunner->start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("CALCULATE:RPC1? 7;"), "");
+    QCOMPARE(sendReceive(client, "CALCULATE:RPC1? 7;"), "");
 }
 
 void test_scpi_cmds_in_session::executeRpcQueryOneParam()
@@ -206,10 +199,9 @@ void test_scpi_cmds_in_session::executeRpcQueryOneParam()
     m_testRunner->start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("CALCULATE:RPC1? true;"), "false");
+    QCOMPARE(sendReceive(client, "CALCULATE:RPC1? true;"), "false");
 }
 
 void test_scpi_cmds_in_session::doNotExecuteRpcQueryMultipleParams()
@@ -222,10 +214,9 @@ void test_scpi_cmds_in_session::doNotExecuteRpcQueryMultipleParams()
     m_testRunner->start(":/session-scpi-only.json");
     TimeMachineObject::feedEventLoop();
 
-    QFETCH_GLOBAL(ScpiTestSelectableClient::ClientType, clientType);
-    ScpiTestSelectableClient client(clientType, getScpiModule());
+    SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(client.sendReceive("CALCULATE:RPC2? foo;true;"), "");
+    QCOMPARE(sendReceive(client, "CALCULATE:RPC2? foo;true;"), "");
 }
 
 void test_scpi_cmds_in_session::startModmanWithSession(const QString &sessionFile)
@@ -245,5 +236,16 @@ void test_scpi_cmds_in_session::killModman()
 SCPIMODULE::cSCPIModule *test_scpi_cmds_in_session::getScpiModule()
 {
     return qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+}
+
+QString test_scpi_cmds_in_session::sendReceive(SCPIMODULE::ScpiTestClient &client, const QString &scpi, bool removeLineFeedOnReceive)
+{
+    QFETCH_GLOBAL(SortTypes, sortType);
+    switch (sortType) {
+    case SORTED:
+        return client.sendReceiveSorted(scpi, removeLineFeedOnReceive);
+    case NOT_SORTED:
+        return client.sendReceiveNotSorted(scpi, removeLineFeedOnReceive);
+    }
 }
 

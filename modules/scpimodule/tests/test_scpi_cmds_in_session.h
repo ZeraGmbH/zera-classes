@@ -3,10 +3,17 @@
 
 #include "modulemanagertestrunner.h"
 #include "scpimodule.h"
+#include "scpitestclient.h"
 
 class test_scpi_cmds_in_session : public QObject
 {
     Q_OBJECT
+public: // public for moc
+    enum SortTypes {
+        SORTED,
+        NOT_SORTED
+    };
+    Q_ENUM(SortTypes)
 private slots:
     void initTestCase();
     void initTestCase_data();
@@ -31,6 +38,8 @@ private:
     void startModmanWithSession(const QString &sessionFile);
     void killModman();
     SCPIMODULE::cSCPIModule *getScpiModule();
+    QString sendReceive(SCPIMODULE::ScpiTestClient &client, const QString &scpi, bool removeLineFeedOnReceive = true);
+
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
 };
 
