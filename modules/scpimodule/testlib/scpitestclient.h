@@ -14,8 +14,11 @@ public:
     ~ScpiTestClient() override;
 
     void handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) override;
-    cSCPIInterface* getScpiInterface();
 
+    // Convenience blocked one transaction
+    QString sendReceiveNotSorted(const QString &scpi, bool removeLineFeedOnReceive);
+    QString sendReceiveSorted(const QString &scpi, bool removeLineFeedOnReceive);
+    // Enhanced unblocked any number of transactions
     void sendScpiCmds(QString cmds);
 
     const NullableStringList &getResponsesNotSorted() const;
@@ -24,14 +27,17 @@ public:
     int getHandledResponses() const;
     int getUnhandledResponses() const;
     bool getAtLeastOneResponse() const;
+
+    void clearResponses();
 signals:
     void sigScpiResponseNotSorted(const QString &scpiResponse, bool isNull);
     void sigScpiResponseSorted(const QString &scpiResponse, bool isNull);
 
 private slots:
     void cmdInput() override;
-
 private:
+    QString responseToStr(const NullableString &response, bool removeLineFeedOnReceive);
+
     NullableStringList m_responseNotSorted;
     NullableStringList m_responsesSorted;
     int m_handledResponses = 0;

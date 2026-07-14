@@ -1,5 +1,6 @@
 #include "scpitestclient.h"
 #include "scpimodule.h"
+#include <timemachineobject.h>
 
 namespace SCPIMODULE {
 
@@ -26,14 +27,31 @@ void ScpiTestClient::sendScpiCmds(QString cmds)
     m_unhandledResponses += execPendingCmds();
 }
 
+QString ScpiTestClient::sendReceiveNotSorted(const QString &scpi, bool removeLineFeedOnReceive)
+{
+    clearResponses();
+    sendScpiCmds(scpi);
+    TimeMachineObject::feedEventLoop();
+    QString strResponses;
+    for (const NullableString &response : getResponsesNotSorted())
+        strResponses.append(responseToStr(response, removeLineFeedOnReceive));
+    return strResponses;
+}
+
+QString ScpiTestClient::sendReceiveSorted(const QString &scpi, bool removeLineFeedOnReceive)
+{
+    clearResponses();
+    sendScpiCmds(scpi);
+    TimeMachineObject::feedEventLoop();
+    QString strResponses;
+    for (const NullableString &response : getResponsesSorted())
+        strResponses.append(responseToStr(response, removeLineFeedOnReceive));
+    return strResponses;
+}
+
 const NullableStringList &ScpiTestClient::getResponsesNotSorted() const
 {
     return m_responseNotSorted;
-}
-
-cSCPIInterface* ScpiTestClient::getScpiInterface()
-{
-    return m_pSCPIInterface;
 }
 
 const NullableStringList &ScpiTestClient::getResponsesSorted() const
@@ -56,6 +74,12 @@ bool ScpiTestClient::getAtLeastOneResponse() const
     return m_handledResponses > 0;
 }
 
+void ScpiTestClient::clearResponses()
+{
+    m_responseNotSorted.clear();
+    m_responsesSorted.clear();
+}
+
 void ScpiTestClient::handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
 {
     Q_UNUSED(logType)
@@ -75,6 +99,17 @@ void ScpiTestClient::handleCmdFinish(const NullableString &scpiResponse, const S
 void ScpiTestClient::cmdInput()
 {
     // unused - does not match use case....
+}
+
+QString ScpiTestClient::responseToStr(const NullableString &response, bool removeLineFeedOnReceive)
+{
+    if (response.isNull())
+        return QString();
+
+    QString strResponse = response.getStr();
+    if (removeLineFeedOnReceive)
+        strResponse.remove("\n");
+    return strResponse;
 }
 
 }
