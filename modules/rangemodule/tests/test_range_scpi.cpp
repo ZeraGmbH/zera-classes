@@ -1,8 +1,6 @@
 #include "test_range_scpi.h"
-#include "modulemanagertestrunner.h"
 #include "scpimodulenetclientblocked.h"
 #include "scpimodule.h"
-#include "scpitestclient.h"
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
 #include <timemachinefortest.h>
@@ -190,4 +188,39 @@ void test_range_scpi::catalogChangeOnScpiByClamp()
     clampParams.append({"IAUX", cClamp::CL120A});
     testRunner.addClamps(clampParams);
     QCOMPARE(client.sendReceive("SENSE:RNG1:IAUX:RANGE:CATALOG?"), "C100A;C50A;C10A;C5A;C1A;C500mA;C100mA;C50mA;C10mA;--");
+    testRunner.removeAllHotplugDevices();
+}
+
+void test_range_scpi::catalogChangeOnScpiByClampMultipleClients()
+{
+    ModuleManagerTestRunner testRunner(":/session-range-scpi.json");
+    SCPIMODULE::ScpiTestClient client1(getScpiModule(testRunner));
+    SCPIMODULE::ScpiTestClient client2(getScpiModule(testRunner));
+
+    QCOMPARE(sendReceive(client1, "SENSE:RNG1:IAUX:RANGE:CATALOG?"), "--");
+    QCOMPARE(sendReceive(client2, "SENSE:RNG1:UAUX:RANGE:CATALOG?"), "250V;8V;100mV");
+    QCOMPARE(sendReceive(client2, "SENSE:RNG1:IAUX:RANGE:CATALOG?"), "--");
+
+    QList<AbstractMockAllServices::clampParam> clampParams;
+    clampParams.append({"IAUX", cClamp::CL120A});
+    testRunner.addClamps(clampParams);
+    QCOMPARE(sendReceive(client1, "SENSE:RNG1:IAUX:RANGE:CATALOG?"), "C100A;C50A;C10A;C5A;C1A;C500mA;C100mA;C50mA;C10mA;--");
+    QCOMPARE(sendReceive(client2, "SENSE:RNG1:UAUX:RANGE:CATALOG?"), "250V;8V;100mV");
+    QCOMPARE(sendReceive(client2, "SENSE:RNG1:IAUX:RANGE:CATALOG?"), "C100A;C50A;C10A;C5A;C1A;C500mA;C100mA;C50mA;C10mA;--");
+
+    QCOMPARE(client1.getUnhandledResponses(), 0);
+    QCOMPARE(client2.getUnhandledResponses(), 0);
+    QCOMPARE(client1.getHandledResponses(), 2);
+    QCOMPARE(client2.getHandledResponses(), 4);
+    testRunner.removeAllHotplugDevices();
+}
+
+SCPIMODULE::cSCPIModule *test_range_scpi::getScpiModule(ModuleManagerTestRunner &testRunner)
+{
+    return qobject_cast<SCPIMODULE::cSCPIModule*>(testRunner.getModule(9999));
+}
+
+QString test_range_scpi::sendReceive(SCPIMODULE::ScpiTestClient &client, const QString &scpi, bool removeLineFeedOnReceive)
+{
+    return client.sendReceiveNotSorted(scpi, removeLineFeedOnReceive);
 }
