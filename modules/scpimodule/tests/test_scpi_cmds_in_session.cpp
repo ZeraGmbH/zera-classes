@@ -81,6 +81,21 @@ void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
     QCOMPARE(receive5, "+0");
 }
 
+void test_scpi_cmds_in_session::initialScpiCommandsMultipleClients()
+{
+    startModmanWithSession(":/session-three-modules.json");
+    SCPIMODULE::ScpiTestClient client1(getScpiModule());
+    SCPIMODULE::ScpiTestClient client2(getScpiModule());
+
+    QCOMPARE(sendReceive(client1, "STATUS:DEV1:SERIAL?"), "Unknown");
+    QCOMPARE(sendReceive(client2, "SENSE:RNG1:UL1:RANGE?"), "250V");
+
+    QCOMPARE(client1.getHandledResponses(), 1);
+    QCOMPARE(client2.getHandledResponses(), 1);
+    QCOMPARE(client1.getUnhandledResponses(), 0);
+    QCOMPARE(client2.getUnhandledResponses(), 0);
+}
+
 void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
 {
     // * double delete fixed by 3766814ec0fae75ad7f18c7f71c34a767675e6e4.

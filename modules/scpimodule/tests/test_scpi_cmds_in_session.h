@@ -22,6 +22,7 @@ private slots:
     void initialTestClient();
     void minScpiDevIface();
     void initialScpiCommandsOnOtherModules();
+    void initialScpiCommandsMultipleClients();
     void multiReadDoubleDeleteCrasher();
     void devIfaceVeinComponentMultipleEntities();
     void closeSocketOnPendingWriteStbQueryNoCrasher();
