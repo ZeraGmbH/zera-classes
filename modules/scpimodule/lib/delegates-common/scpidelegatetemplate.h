@@ -33,7 +33,7 @@ public:
     static int getInstanceCount();
 
 protected:
-    QStringList m_cmdParent;
+    const QStringList m_cmdParent;
 private:
     static int m_instanceCount;
 };

@@ -27,7 +27,7 @@ signals:
                            const QString &scpi,
                            const ScpiTransactionId &scpiTransactionId);
 private:
-    quint16 m_nCmdCode;
+    const quint16 m_nCmdCode;
 };
 
 typedef std::shared_ptr<ScpiDelegateInterface> cSCPIInterfaceDelegatePtr;
