@@ -3,7 +3,6 @@
 #include "scpimodule.h"
 #include "scpimodulenetclientblocked.h"
 #include "scpitestclient.h"
-#include "testdspvalues.h"
 #include <timemachineobject.h>
 #include <testloghelpers.h>
 #include <xmldocument.h>
@@ -119,4 +118,3 @@ void test_scpi_learn_measure_objects_and_relations::sortingChangesBehaviourOnQue
     QCOMPARE(client.getResponsesSorted().size(), 0);
     QCOMPARE(client.getResponsesNotSorted().size(), 1);
 }
-
