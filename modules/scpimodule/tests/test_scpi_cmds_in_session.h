@@ -29,7 +29,9 @@ private slots:
     void catalogFormat();
 
     void executeRpcQueryWrongRpcName();
+    void executeRpcQueryWrongRpcNameTwoClients();
     void executeRpcReadLockStateQuery();
+    void executeRpcReadLockStateQueryTwoClients();
     void executeRpcQueryInvalidParams();
     void executeRpcQueryOneParam();
     void doNotExecuteRpcQueryMultipleParams();

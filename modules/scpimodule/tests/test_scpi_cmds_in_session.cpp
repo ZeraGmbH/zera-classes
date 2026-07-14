@@ -166,12 +166,42 @@ void test_scpi_cmds_in_session::executeRpcQueryWrongRpcName()
     QCOMPARE(sendReceive(client, "CALCULATE:EM01:0001:FOO?"), "");
 }
 
+void test_scpi_cmds_in_session::executeRpcQueryWrongRpcNameTwoClients()
+{
+    startModmanWithSession(":/session-scpi-only.json");
+    SCPIMODULE::ScpiTestClient client1(getScpiModule());
+    SCPIMODULE::ScpiTestClient client2(getScpiModule());
+
+    QCOMPARE(sendReceive(client1, "CALCULATE:EM01:0001:FOO?"), "");
+    QCOMPARE(sendReceive(client2, "CALCULATE:EM01:0001:FOO?"), "");
+
+    QCOMPARE(client1.getHandledResponses(), 1);
+    QCOMPARE(client2.getHandledResponses(), 1);
+    QCOMPARE(client1.getUnhandledResponses(), 0);
+    QCOMPARE(client2.getUnhandledResponses(), 0);
+}
+
 void test_scpi_cmds_in_session::executeRpcReadLockStateQuery()
 {
     startModmanWithSession(":/hotpluscontrols-min-session.json");
     SCPIMODULE::ScpiTestClient client(getScpiModule());
 
     QCOMPARE(sendReceive(client, "EMOB:HOTP1:EMLOCKSTATE?"), "4");
+}
+
+void test_scpi_cmds_in_session::executeRpcReadLockStateQueryTwoClients()
+{
+    startModmanWithSession(":/hotpluscontrols-min-session.json");
+    SCPIMODULE::ScpiTestClient client1(getScpiModule());
+    SCPIMODULE::ScpiTestClient client2(getScpiModule());
+
+    QCOMPARE(sendReceive(client1, "EMOB:HOTP1:EMLOCKSTATE?"), "4");
+    QCOMPARE(sendReceive(client2, "EMOB:HOTP1:EMLOCKSTATE?"), "4");
+
+    QCOMPARE(client1.getHandledResponses(), 1);
+    QCOMPARE(client2.getHandledResponses(), 1);
+    QCOMPARE(client1.getUnhandledResponses(), 0);
+    QCOMPARE(client2.getUnhandledResponses(), 0);
 }
 
 void test_scpi_cmds_in_session::executeRpcQueryInvalidParams()
