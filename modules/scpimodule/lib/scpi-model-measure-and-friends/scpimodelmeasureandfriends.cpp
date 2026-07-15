@@ -78,8 +78,6 @@ void ScpiModelMeasureAndFriends::updatePendingMeasureSequences(int entityId, con
 
 void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo)
 {
-    const int entityId = scpiCmdInfo->entityId;
-    const QString &componentName = scpiCmdInfo->componentOrRpcName;
     if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
         VeinComponentScpiMeasureSequence* measureObject = new VeinComponentScpiMeasureSequence(scpiCmdInfo);
@@ -115,15 +113,11 @@ void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, c
         QString cmdNode = nodeNames.takeLast();
         QString cmdParent = nodeNames.join(':');
         ScpiBaseDelegatePtr delegate;
-        if (scpiCmdInfo->refType == "0") {
-            delegate = std::make_shared<ScpiDelegateParameter>(ScpiDelegateParameter::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, entityId, componentName, m_pModule});
-            ScpiDelegateXmlExportGenerator::setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
-        }
-        else {
+        if (scpiCmdInfo->refType != "0") {
             delegate = std::make_shared<ScpiDelegateCatalog>(ScpiDelegateCatalog::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_pModule, scpiCmdInfo});
             m_scpiCatalogDelegateHash[scpiPath] = static_cast<ScpiDelegateCatalog*>(delegate.get()); // for easier access if we need to change answers of this delegate
+            scpiInterface->addSCPICommand(delegate);
         }
-        scpiInterface->addSCPICommand(delegate);
     }
 }
 

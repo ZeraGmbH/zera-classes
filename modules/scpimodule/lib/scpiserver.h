@@ -2,6 +2,7 @@
 #define SCPISERVER_H
 
 #include "scpimodelmeasureandfriends.h"
+#include "scpimodelparameters.h"
 #include "scpimoduleconfigdata.h"
 #include "scpiclient.h"
 #include "scpimodeldeviface.h"
@@ -60,6 +61,7 @@ private:
     QList<cSCPIClient*> m_SCPIClientList;
 
     ScpiModelMeasureAndFriends m_scpiGroupMeasurement;
+    ScpiModelParameters m_scpiGroupParameters;
     ScpiModelRpcs m_scpiGroupRpcs;
     ScpiModelDevIface m_scpiGroupDevIface;
     ScpiModelStatus m_scpiGroupStatus;
