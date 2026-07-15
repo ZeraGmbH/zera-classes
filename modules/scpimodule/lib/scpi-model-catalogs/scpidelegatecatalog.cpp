@@ -1,7 +1,5 @@
 #include "scpidelegatecatalog.h"
-#include "scpiclient.h"
 #include <zscpi_response_definitions.h>
-#include <vcmp_componentdata.h>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>

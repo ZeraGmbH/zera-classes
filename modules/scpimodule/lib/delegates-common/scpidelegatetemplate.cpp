@@ -1,5 +1,4 @@
 #include "scpidelegatetemplate.h"
-#include <scpi.h>
 
 namespace SCPIMODULE {
 

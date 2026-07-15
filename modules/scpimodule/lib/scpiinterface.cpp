@@ -1,12 +1,4 @@
-#include <scpi.h>
-#include <scpiobject.h>
-#include <scpicommand.h>
-#include <QString>
-
 #include "scpiinterface.h"
-#include "scpiclient.h"
-#include "scpidelegatetemplate.h"
-
 
 namespace SCPIMODULE
 {
