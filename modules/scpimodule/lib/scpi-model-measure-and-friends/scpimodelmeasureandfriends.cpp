@@ -139,7 +139,7 @@ void ScpiModelMeasureAndFriends::addRPCCommand(cSCPIInterface *scpiInterface, co
     QStringList nodeNames = cmdComplete.split(':');
     QString cmdNode = nodeNames.takeLast();
     QString cmdParent = nodeNames.join(':');
-    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateRpc>(ScpiDelegateRpc::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_pModule, scpiCmdInfo});
+    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateRpc>(ScpiDelegateRpc::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, scpiCmdInfo->entityId, scpiCmdInfo->componentOrRpcName, scpiCmdInfo->veinComponentInfo, m_pModule});
     setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
     scpiInterface->addSCPICommand(delegate);
 }

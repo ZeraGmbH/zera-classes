@@ -12,7 +12,9 @@ namespace SCPIMODULE {
 ScpiDelegateRpc::ScpiDelegateRpc(const Params &params) :
     ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
     m_pModule(params.scpimodule),
-    m_scpicmdinfo(params.scpicmdinfo)
+    m_entityId(params.entityId),
+    m_rpcSignature(params.rpcSignature),
+    m_veinComponentInfo(params.veinComponentInfo)
 {
 }
 
@@ -23,7 +25,7 @@ void ScpiDelegateRpc::executeSCPI(cSCPIClient *client, const QString &scpi, cons
 
     bool bQuery = ScpiModuleCommonStaticFunctions::isQuery(scpi);
     bool bCmd = cmd.isCommand();
-    bool bCmdwP = cmd.isCommand(1) || m_scpicmdinfo->veinComponentInfo.contains("Optional parameter");
+    bool bCmdwP = cmd.isCommand(1) || m_veinComponentInfo.contains("Optional parameter");
 
     if ((bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||
         (bCmd && ((scpiCmdType & SCPI::isCmd) >  0)) ||
@@ -37,10 +39,10 @@ void ScpiDelegateRpc::handleRpcFinish(const QVariantMap &resultData, const SCPIV
 {
     QMetaObject::Connection myConn = connect(this, &ScpiDelegateRpc::sigClientInfoSignal,
                                              transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
-    emit sigClientInfoSignal(m_scpicmdinfo->componentOrRpcName);
+    emit sigClientInfoSignal(m_rpcSignature);
     disconnect(myConn);
 
-    m_pModule->removeScpiVeinParamRpcTransaction(m_scpicmdinfo->componentOrRpcName, transactionInfo);
+    m_pModule->removeScpiVeinParamRpcTransaction(m_rpcSignature, transactionInfo);
 
     bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);
     if(inputIsQuery) {
@@ -63,18 +65,18 @@ void ScpiDelegateRpc::executeScpiRpc(cSCPIClient *client, const QString &scpi, b
 {
     SCPIVeinTransactionInfoPtr transactionInfo;
     if (inputIsQuery)
-        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_scpicmdinfo->entityId, parQuery, scpiTransactionId);
+        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, parQuery, scpiTransactionId);
     else
-        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_scpicmdinfo->entityId, parcmd, scpiTransactionId);
+        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, parcmd, scpiTransactionId);
 
-    VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_scpicmdinfo->entityId, std::make_unique<VfClientRPCInvoker>());
+    VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_entityId, std::make_unique<VfClientRPCInvoker>());
     connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, const QVariantMap &resultData) {
         Q_UNUSED(ok)
         handleRpcFinish(resultData, transactionInfo, inputIsQuery);
     });
     m_pModule->getCmdEventHandlerSystem()->addItem(rpcInvoker);
 
-    const QString rpcSignature = m_scpicmdinfo->componentOrRpcName;
+    const QString rpcSignature = m_rpcSignature;
     QString rpcName = VfCppRpcHelper::getRpcName(rpcSignature);
     const QStringList paramNamesList = VfCppRpcHelper::getRpcParamNamesList(rpcSignature);
     int totalExpectedParams = paramNamesList.size();
@@ -83,7 +85,7 @@ void ScpiDelegateRpc::executeScpiRpc(cSCPIClient *client, const QString &scpi, b
     cSCPICommand cmd = scpi;
     QStringList scpiCmdParams = cmd.getParamList();
 
-    if((totalExpectedParams > scpiCmdParams.size()) && (m_scpicmdinfo->veinComponentInfo.contains("Optional parameter")))
+    if((totalExpectedParams > scpiCmdParams.size()) && (m_veinComponentInfo.contains("Optional parameter")))
         scpiCmdParams.append("");
 
     if(totalExpectedParams == scpiCmdParams.size()) {

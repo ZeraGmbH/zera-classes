@@ -3,6 +3,7 @@
 
 #include "scpidelegatetemplate.h"
 #include "scpimodule.h"
+#include <QJsonObject>
 
 namespace SCPIMODULE {
 
@@ -14,8 +15,10 @@ public:
         const QString cmdParent;
         const QString cmd;
         const quint8 scpiCmdQueryFlags = 0;
+        const int entityId = 0;
+        const QString rpcSignature;
+        const QJsonObject veinComponentInfo;
         cSCPIModule* scpimodule = nullptr;
-        const cSCPICmdInfoPtr scpicmdinfo;
     };
     ScpiDelegateRpc(const Params& params);
     void executeSCPI(cSCPIClient *client,
@@ -30,7 +33,9 @@ private:
     QVariant convertParamStrToType(const QString &parameter, const QString &type);
 
     cSCPIModule* m_pModule;
-    cSCPICmdInfoPtr m_scpicmdinfo;
+    const int m_entityId = 0;
+    const QString m_rpcSignature;
+    const QJsonObject m_veinComponentInfo;
 };
 }
 #endif // SCPIDELEGATERPC_H
