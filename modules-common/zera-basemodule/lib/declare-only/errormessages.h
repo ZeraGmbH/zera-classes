@@ -4,15 +4,11 @@
 #define rmidentErrMSG "RESMAN ident error"
 #define resourcetypeErrMsg "RESMAN resourcetype not avail"
 #define resourceErrMsg "RESMAN resource not avail"
-#define resourceInfoErrMsg "RESMAN resource Info error"
 #define claimresourceErrMsg "RESMAN set resource failed"
-#define setresourceErrMsg "RESMAN set resource failed"
 #define freeresourceErrMsg "RESMAN free resource failed"
 
 #define readdspchannelErrMsg "PCB dsp channel read failed"
 #define readaliasErrMsg "PCB alias read failed"
-#define readsamplerateErrMsg "PCB sample rate read failed"
-#define readunitErrMsg "PCB unit read failed"
 #define readrangelistErrMsg "PCB range list read failed"
 #define readrangealiasErrMsg "PCB range alias read failed"
 #define readrangetypeErrMsg "PCB range type read failed"
@@ -22,7 +18,6 @@
 #define readrangeadcrejectionErrMsg "PCB range adc rejection failed"
 #define readrangeavailErrMsg "PCB range avail info read failed"
 #define setRangeErrMsg "PCB set range failed"
-#define getRangeErrMsg "PCB get range failed"
 #define setMeasModeErrMsg "PCB set measuring mode failed"
 #define readGainCorrErrMsg "PCB read gain correction failed"
 #define setGainNodeErrMsg "PCB set gain node failed"
@@ -35,8 +30,6 @@
 #define readFormFactorErrMsg "PCB formfactor read failed"
 #define registerpcbnotifierErrMsg "PCB register notifier failed"
 #define unregisterpcbnotifierErrMsg "PCB unregister notifier failed"
-#define setPllErrMsg "PCB set pll failed"
-#define readrefconstantErrMsg "PCB reference constant read failed"
 #define readadjstatusErrMsg "PCB adjustment status read failed"
 #define readschnubbelstatusErrMsg "PCB authorization status read failed"
 #define readaccumulatorstatusErrMsg "PCB accumulator status read failed"
@@ -88,10 +81,7 @@
 #define startmeasErrMsg "SEC stop measure failed"
 #define stopmeasErrMsg "SEC stop measure failed"
 
-#define interfacejsonErrMsg "Interface JSON Document strange"
 #define interfaceETHErrMsg "Ethernet interface listen failed"
-
-#define releaseNumberErrMsg "Release number not found"
 
 #define pushbuttonErrMsg "Pushbutton activate failed"
 #endif // ERRORMESSAGES_H
