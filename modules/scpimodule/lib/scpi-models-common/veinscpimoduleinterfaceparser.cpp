@@ -37,8 +37,10 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
                     scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
                     scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentOrRpcName].toObject();
                     scpiCmdInfo->refType = jsonCmdArr[4].toString();
-
-                    m_componentInfo[entityID].append(scpiCmdInfo);
+                    if (scpiCmdInfo->scpiModel != "MEASURE" && scpiCmdInfo->refType == "0")
+                        m_paramInfo[entityID].append(scpiCmdInfo);
+                    else
+                        m_componentInfo[entityID].append(scpiCmdInfo);
                 }
 
                 const QJsonObject jsonRpcInfo = jsonObj["RpcInfo"].toObject();
@@ -63,6 +65,11 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
         }
     }
     return ok;
+}
+
+const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParser::getParamInfo() const
+{
+    return m_paramInfo;
 }
 
 const VeinScpiModuleInterfaceParser::ScpiEntityHash &VeinScpiModuleInterfaceParser::getEntitiesWithScpi() const

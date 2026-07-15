@@ -17,12 +17,14 @@ public:
     typedef QHash<int /*entityId*/, QList<cSCPICmdInfoPtr>>ScpiParseInfo;
 
     const ScpiEntityHash &getEntitiesWithScpi() const;
+    const ScpiParseInfo &getParamInfo() const;
     const ScpiParseInfo &getComponentInfo() const;
     const ScpiParseInfo &getRpcInfo() const;
 
 private:
     ScpiEntityHash m_entitiesWithScpi;
     ScpiParseInfo m_componentInfo;
+    ScpiParseInfo m_paramInfo;
     ScpiParseInfo m_rpcInfo;
 };
 

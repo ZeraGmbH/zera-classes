@@ -12,13 +12,13 @@ ScpiModelParameters::ScpiModelParameters(cSCPIModule* scpiModule) :
 bool ScpiModelParameters::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
-    const VeinScpiModuleInterfaceParser::ScpiParseInfo allComponentInfos = moduleInterfaces.getComponentInfo();
+    const VeinScpiModuleInterfaceParser::ScpiParseInfo allParamInfos = moduleInterfaces.getParamInfo();
     const VeinStorage::AbstractDatabase* storageDb = m_scpiModule->getStorageDb();
 
     const QList<int> entityIdList = storageDb->getEntityList();
     for(auto entityID : entityIdList) {
-        if (allComponentInfos.contains(entityID)) {
-            const QList<cSCPICmdInfoPtr> &commands = allComponentInfos[entityID];
+        if (allParamInfos.contains(entityID)) {
+            const QList<cSCPICmdInfoPtr> &commands = allParamInfos[entityID];
             for (const cSCPICmdInfoPtr &command : commands)
                 addSCPICommand(scpiInterface, command);
         }
