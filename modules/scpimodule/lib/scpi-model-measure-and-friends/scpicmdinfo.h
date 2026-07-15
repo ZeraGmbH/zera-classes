@@ -1,7 +1,7 @@
 #ifndef SCPICMDINFO_H
 #define SCPICMDINFO_H
 
-#include <QString>
+#include <QStringList>
 #include <QJsonObject>
 #include <memory>
 
@@ -11,11 +11,14 @@ namespace SCPIMODULE
 class cSCPICmdInfo
 {
 public:
-    cSCPICmdInfo(){}
+    QString scpiFullPath() const { return QString("%1:%2:%3").arg(scpiModel, scpiModuleName, scpiCommand); }
+    QStringList scpiFullPathList() const { return scpiFullPath().split(":"); }
     QString scpiModuleName;
     QString scpiModel;
     QString scpiCommand;
+
     quint8 scpiCmdQueryFlags;
+
     int entityId;
     QString componentOrRpcName;
 

@@ -26,10 +26,10 @@ void ScpiModelParameters::addSCPICommand(cSCPIInterface *scpiInterface, const cS
 {
     const int entityId = scpiCmdInfo->entityId;
     const QString &componentName = scpiCmdInfo->componentOrRpcName;
-    QString scpiPath = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
-    QStringList nodeNames = scpiPath.split(':');
-    QString cmdNode = nodeNames.takeLast();
-    QString cmdParent = nodeNames.join(':');
+
+    QStringList scpiFullPathList = scpiCmdInfo->scpiFullPathList();
+    QString cmdNode = scpiFullPathList.takeLast();
+    QString cmdParent = scpiFullPathList.join(':');
 
     ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateParameter>(ScpiDelegateParameter::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, entityId, componentName, m_scpiModule});
     ScpiDelegateXmlExportGenerator::setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
