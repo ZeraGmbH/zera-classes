@@ -2,20 +2,20 @@ file(GLOB SOURCES
     *.cpp
     clients/*.cpp
     delegates-common/*.cpp
-    scpi-models-basic/*.cpp
-    scpi-ieee-488-2/*.cpp
-    scpi-measure/*.cpp
-    scpi-status/*.cpp
+    scpi-model-ieee-488-2/*.cpp
+    scpi-model-measure-and-friends/*.cpp
+    scpi-model-status/*.cpp
+    scpi-models-common/*.cpp
     )
 
 file(GLOB HEADER
     *.h
     clients/*.h
     delegates-common/*.h
-    scpi-models-basic/*.h
-    scpi-ieee-488-2/*.h
-    scpi-measure/*.h
-    scpi-status/*.h
+    scpi-model-ieee-488-2/*.h
+    scpi-model-measure-and-friends/*.h
+    scpi-model-status/*.h
+    scpi-models-common/*.h
     )
 
 add_library(scpimodule-lib SHARED
@@ -28,10 +28,10 @@ target_include_directories(scpimodule-lib
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/clients>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/delegates-common>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-models-basic>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-ieee-488-2>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-measure>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-status>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-ieee-488-2>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-measure-and-friends>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-status>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-models-common>
     )
 
 target_link_libraries(scpimodule-lib
