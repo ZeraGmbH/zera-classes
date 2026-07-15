@@ -105,19 +105,15 @@ void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, c
                               scpiCmdInfo->veinComponentInfo);
         addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::fetch, measureObject},
                               scpiCmdInfo->veinComponentInfo);
-
     }
-    else {
+    else if (scpiCmdInfo->refType != "0") {
         QString scpiPath = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
         QStringList nodeNames = scpiPath.split(':');
         QString cmdNode = nodeNames.takeLast();
         QString cmdParent = nodeNames.join(':');
-        ScpiBaseDelegatePtr delegate;
-        if (scpiCmdInfo->refType != "0") {
-            delegate = std::make_shared<ScpiDelegateCatalog>(ScpiDelegateCatalog::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_pModule, scpiCmdInfo});
-            m_scpiCatalogDelegateHash[scpiPath] = static_cast<ScpiDelegateCatalog*>(delegate.get()); // for easier access if we need to change answers of this delegate
-            scpiInterface->addSCPICommand(delegate);
-        }
+        ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateCatalog>(ScpiDelegateCatalog::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_pModule, scpiCmdInfo});
+        m_scpiCatalogDelegateHash[scpiPath] = static_cast<ScpiDelegateCatalog*>(delegate.get()); // for easier access if we need to change answers of this delegate
+        scpiInterface->addSCPICommand(delegate);
     }
 }
 
