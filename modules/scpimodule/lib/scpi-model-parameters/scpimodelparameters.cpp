@@ -13,15 +13,11 @@ bool ScpiModelParameters::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
     const VeinScpiModuleInterfaceParser::ScpiParseInfo allParamInfos = moduleInterfaces.getParamInfo();
-    const VeinStorage::AbstractDatabase* storageDb = m_scpiModule->getStorageDb();
 
-    const QList<int> entityIdList = storageDb->getEntityList();
-    for(auto entityID : entityIdList) {
-        if (allParamInfos.contains(entityID)) {
-            const QList<cSCPICmdInfoPtr> &commands = allParamInfos[entityID];
-            for (const cSCPICmdInfoPtr &command : commands)
-                addSCPICommand(scpiInterface, command);
-        }
+    for (auto iter = allParamInfos.constBegin(); iter != allParamInfos.constEnd(); ++iter) {
+        const QList<cSCPICmdInfoPtr> &params = iter.value();
+        for (const cSCPICmdInfoPtr &param : params)
+            addSCPICommand(scpiInterface, param);
     }
     return true;
 }
@@ -30,18 +26,14 @@ void ScpiModelParameters::addSCPICommand(cSCPIInterface *scpiInterface, const cS
 {
     const int entityId = scpiCmdInfo->entityId;
     const QString &componentName = scpiCmdInfo->componentOrRpcName;
-    if (scpiCmdInfo->scpiModel != "MEASURE") {
-        QString scpiPath = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
-        QStringList nodeNames = scpiPath.split(':');
-        QString cmdNode = nodeNames.takeLast();
-        QString cmdParent = nodeNames.join(':');
-        ScpiBaseDelegatePtr delegate;
-        if (scpiCmdInfo->refType == "0") {
-            delegate = std::make_shared<ScpiDelegateParameter>(ScpiDelegateParameter::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, entityId, componentName, m_scpiModule});
-            ScpiDelegateXmlExportGenerator::setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
-            scpiInterface->addSCPICommand(delegate);
-        }
-    }
+    QString scpiPath = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
+    QStringList nodeNames = scpiPath.split(':');
+    QString cmdNode = nodeNames.takeLast();
+    QString cmdParent = nodeNames.join(':');
+
+    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateParameter>(ScpiDelegateParameter::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, entityId, componentName, m_scpiModule});
+    ScpiDelegateXmlExportGenerator::setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
+    scpiInterface->addSCPICommand(delegate);
 }
 
 }
