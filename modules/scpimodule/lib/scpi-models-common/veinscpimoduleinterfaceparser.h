@@ -23,6 +23,8 @@ public:
     const ScpiParseInfo &getRpcInfo() const;
 
 private:
+    void clear();
+
     ScpiEntityHash m_entitiesWithScpi;
     ScpiParseInfo m_measureInfo;
     ScpiParseInfo m_paramInfo;

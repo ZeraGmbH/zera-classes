@@ -8,11 +8,7 @@ namespace SCPIMODULE
 
 bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::AbstractDatabase *storageDb)
 {
-    m_entitiesWithScpi.clear();
-    m_measureInfo.clear();
-    m_paramInfo.clear();
-    m_catalogInfo.clear();
-    m_rpcInfo.clear();
+    clear();
 
     bool ok = true;
     const QList<int> entityIdList = storageDb->getEntityList();
@@ -71,6 +67,15 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
         }
     }
     return ok;
+}
+
+void VeinScpiModuleInterfaceParser::clear()
+{
+    m_entitiesWithScpi.clear();
+    m_measureInfo.clear();
+    m_paramInfo.clear();
+    m_catalogInfo.clear();
+    m_rpcInfo.clear();
 }
 
 const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParser::getMeasureInfo() const
