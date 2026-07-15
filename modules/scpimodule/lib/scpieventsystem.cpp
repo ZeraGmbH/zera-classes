@@ -65,8 +65,8 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
         m_pModule->updatePendingMeasureSequences(entityId, componentName, cData->newValue());
 
         // then it looks for changes on module interface components
-        if( componentName == QString("INF_ModuleInterface"))
-            m_pModule->getSCPIServer()->getScpiModelCatalogs()->actualizeCatalogs(cData->newValue());
+        if (componentName == QString("INF_ModuleInterface"))
+            m_pModule->getScpiModelCatalogs()->actualizeCatalogs(cData->newValue());
 
     }
 }

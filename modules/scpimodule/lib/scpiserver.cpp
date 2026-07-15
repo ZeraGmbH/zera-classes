@@ -20,12 +20,6 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     cModuleActivist(module->getVeinModuleName()),
     m_pModule(module),
     m_ConfigData(configData),
-    m_scpiInterface(m_ConfigData.m_sDeviceName),
-    m_scpiGroupMeasurement(m_pModule),
-    m_scpiGroupParameters(m_pModule),
-    m_scpiGroupCatalogs(m_pModule),
-    m_scpiGroupRpcs(m_pModule),
-    m_scpiGroupDevIface(m_pModule),
     m_bSerialScpiActive(false)
 {
     m_bActive = false;
@@ -73,15 +67,6 @@ void cSCPIServer::generateVeinInterface()
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
 }
 
-ScpiModelMeasureAndFriends *cSCPIServer::getScpiGroupMeasurement()
-{
-    return &m_scpiGroupMeasurement;
-}
-
-ScpiModelCatalogs *cSCPIServer::getScpiModelCatalogs()
-{
-    return &m_scpiGroupCatalogs;
-}
 
 void cSCPIServer::addScpiClient(cSCPIClient* client)
 {
@@ -100,11 +85,6 @@ void cSCPIServer::removeScpiClient(cSCPIClient *client)
 const QList<cSCPIClient*> &cSCPIServer::getClients() const
 {
     return m_SCPIClientList;
-}
-
-cSCPIInterface *cSCPIServer::getScpiInterface()
-{
-    return &m_scpiInterface;
 }
 
 void cSCPIServer::createSerialScpi()
@@ -181,14 +161,6 @@ void cSCPIServer::TCPError(QAbstractSocket::SocketError)
 
 void cSCPIServer::setupTCPServer()
 {
-    m_scpiGroupMeasurement.setupScpi(&m_scpiInterface);
-    m_scpiGroupParameters.setupScpi((&m_scpiInterface));
-    m_scpiGroupCatalogs.setupScpi((&m_scpiInterface));
-    m_scpiGroupRpcs.setupScpi((&m_scpiInterface));
-    m_scpiGroupDevIface.setupScpi(&m_scpiInterface);
-    m_scpiGroupStatus.setupScpi(&m_scpiInterface);
-    m_scpiGroupIeee488.setupScpi(&m_scpiInterface);
-
     QString errorMsg;
     bool ok = m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
     if(!ok)
@@ -206,8 +178,6 @@ void cSCPIServer::setupTCPServer()
 
 void cSCPIServer::activationDone()
 {
-    m_scpiInterface.checkAmbiguousShortNames();
-
     m_bActive = true;
     emit activated();
 }

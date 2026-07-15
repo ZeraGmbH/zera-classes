@@ -9,19 +9,38 @@ cSCPIModule::cSCPIModule(const ModuleFactoryParam &moduleParam) :
     BaseModule(moduleParam),
     m_pSCPIEventSystem(new SCPIEventSystem(this)),
     m_configuration(moduleParam.m_configXmlData),
-    m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem))
+    m_pModuleValidator(new VfEventSytemModuleParam(moduleParam.m_entityId, moduleParam.m_moduleSharedData->m_storagesystem)),
+    m_scpiInterface(getConfigData()->m_sDeviceName),
+    m_scpiModelMeasurement(this),
+    m_scpiModelParameters(this),
+    m_scpiModelCatalogs(this),
+    m_scpiModelRpcs(this),
+    m_scpiModelDevIface(this)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
     m_cmdEventHandlerSystem = VfCmdEventHandlerSystem::create();
     m_moduleInterfaceParser.parseVeinStorage(moduleParam.m_moduleSharedData->m_storagesystem->getDb());
+
+    m_scpiModelMeasurement.setupScpi(&m_scpiInterface);
+    m_scpiModelParameters.setupScpi(&m_scpiInterface);
+    m_scpiModelCatalogs.setupScpi(&m_scpiInterface);
+    m_scpiModelRpcs.setupScpi(&m_scpiInterface);
+    m_scpiModelDevIface.setupScpi(&m_scpiInterface);
+    m_scpiModelStatus.setupScpi(&m_scpiInterface);
+    m_scpiModelIeee488.setupScpi(&m_scpiInterface);
 }
 
 cSCPIModule::~cSCPIModule()
 {
     delete m_pModuleValidator;
     emit removeEventSubSystem(m_cmdEventHandlerSystem.get());
+}
+
+cSCPIInterface *cSCPIModule::getScpiInterface()
+{
+    return &m_scpiInterface;
 }
 
 cSCPIServer *cSCPIModule::getSCPIServer()
@@ -37,6 +56,16 @@ cSCPIModuleConfigData *cSCPIModule::getConfigData()
 QByteArray cSCPIModule::getConfigXml() const
 {
     return m_configuration.exportConfiguration();
+}
+
+ScpiModelMeasureAndFriends *cSCPIModule::getScpiModelMeasurement()
+{
+    return &m_scpiModelMeasurement;
+}
+
+ScpiModelCatalogs *cSCPIModule::getScpiModelCatalogs()
+{
+    return &m_scpiModelCatalogs;
 }
 
 void cSCPIModule::removeClientParamOrRpcTransactions(cSCPIClient *client)
@@ -92,7 +121,7 @@ void cSCPIModule::updateSignalConnection(int entityId, const QString &componentN
 
 void cSCPIModule::updatePendingMeasureSequences(int entityId, const QString &componentName, const QVariant &newValue)
 {
-    m_pSCPIServer->getScpiGroupMeasurement()->updatePendingMeasureSequences(entityId, componentName, newValue);
+    m_scpiModelMeasurement.updatePendingMeasureSequences(entityId, componentName, newValue);
 }
 
 VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()

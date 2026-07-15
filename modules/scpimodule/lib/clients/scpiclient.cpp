@@ -13,8 +13,8 @@
 namespace SCPIMODULE
 {
 cSCPIClient::cSCPIClient(cSCPIModule* module) :
-    m_pSCPIInterface(module->getSCPIServer()->getScpiInterface()),
     m_pModule(module),
+    m_pSCPIInterface(module->getScpiInterface()),
     m_ConfigData(*module->getConfigData()),
     m_clientId(QUuid::createUuid()) // we need an unique id in case we want to send deferred error notifications events
 {
@@ -245,7 +245,7 @@ void cSCPIClient::generateSCPIMeasureSystem()
     // client so that they can work independantly when querying measuring values
     // we ask the moduleinterface for the "base" cSCPIMeasureDelegate hash, that is once built up
     // on module instanciation and that are connected to the scpi interface
-    QHash<QString, MeasureScpiNodeDelegatePtr> *pSCPIMeasDelegateHash = m_pModule->getSCPIServer()->getScpiGroupMeasurement()->getSCPIMeasDelegateHash();
+    QHash<QString, MeasureScpiNodeDelegatePtr> *pSCPIMeasDelegateHash = m_pModule->getScpiModelMeasurement()->getSCPIMeasDelegateHash();
     QList<QString> keylist = pSCPIMeasDelegateHash->keys();
     for (int i = 0; i < keylist.count(); i++) {
         MeasureScpiNodeDelegatePtr measDelegate = (*pSCPIMeasDelegateHash)[keylist.at(i)];

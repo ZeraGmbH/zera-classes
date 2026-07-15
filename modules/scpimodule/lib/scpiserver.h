@@ -5,11 +5,6 @@
 #include "scpimodelparameters.h"
 #include "scpimoduleconfigdata.h"
 #include "scpiclient.h"
-#include "scpimodeldeviface.h"
-#include "scpimodelstatus.h"
-#include "scpimodelieee4882.h"
-#include "scpimodelrpcs.h"
-#include "scpimodelcatalogs.h"
 #include "scpiserialclient.h"
 #include "tcpserverlimitedconn.h"
 #include <vfmoduleparameter.h>
@@ -32,13 +27,9 @@ public:
     virtual ~cSCPIServer();
     void generateVeinInterface() override;
 
-    ScpiModelMeasureAndFriends *getScpiGroupMeasurement();
-    ScpiModelCatalogs* getScpiModelCatalogs();
-
     void addScpiClient(cSCPIClient *client);
     void removeScpiClient(cSCPIClient *client);
     const QList<cSCPIClient*> &getClients() const;
-    cSCPIInterface* getScpiInterface();
 public slots:
     void deleteNetClient(SCPIMODULE::cSCPIClient *client);
 private slots:
@@ -61,16 +52,7 @@ private:
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
     TcpServerLimitedConn* m_pTcpServer;
-    cSCPIInterface m_scpiInterface;
     QList<cSCPIClient*> m_SCPIClientList;
-
-    ScpiModelMeasureAndFriends m_scpiGroupMeasurement;
-    ScpiModelParameters m_scpiGroupParameters;
-    ScpiModelCatalogs m_scpiGroupCatalogs;
-    ScpiModelRpcs m_scpiGroupRpcs;
-    ScpiModelDevIface m_scpiGroupDevIface;
-    ScpiModelStatus m_scpiGroupStatus;
-    ScpiModelIEEE4882 m_scpiGroupIeee488;
 
     // statemachine for activating gets the following states
     QState m_setupTCPServerState;

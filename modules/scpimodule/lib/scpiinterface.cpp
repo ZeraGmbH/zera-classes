@@ -38,7 +38,7 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, const QString &cmd, const S
     return false;
 }
 
-void cSCPIInterface::checkAmbiguousShortNames()
+bool cSCPIInterface::hasAmbiguousShortNames()
 {
     ScpiAmbiguityMap ambiguityMap = m_scpiCmdInterface.checkAmbiguousShortNames(ignoreAmbiguous);
     if(!ambiguityMap.isEmpty()) {
@@ -47,8 +47,9 @@ void cSCPIInterface::checkAmbiguousShortNames()
                      qPrintable(iter.key()),
                      qPrintable(iter.value().join(" / ")));
         }
-        Q_ASSERT(false);
+        return true;
     }
+    return false;
 }
 
 ScpiAmbiguityMap cSCPIInterface::ignoreAmbiguous(ScpiAmbiguityMap inMap)

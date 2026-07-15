@@ -87,6 +87,10 @@ void test_modman_regression_all_sessions_scpi::testScpi()
     QFETCH(QString, scpiCmd);
     if(scpiCmd == noTest)
         return;
+    SCPIMODULE::cSCPIInterface *scpiInterface = m_scpiModule->getScpiInterface();
+    QVERIFY(scpiInterface != nullptr);
+    QVERIFY(!scpiInterface->hasAmbiguousShortNames());
+
     m_scpiclient->sendScpiCmds(scpiCmd);
     TimeMachineForTest::getInstance()->processTimers(valueWaitTime);
 

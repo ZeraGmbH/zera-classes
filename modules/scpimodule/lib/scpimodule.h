@@ -2,10 +2,15 @@
 #define SCPIMODULE_H
 
 #include "scpiveintransactioninfo.h"
+#include "basemodule.h"
 #include "scpiserver.h"
 #include "scpimoduleconfiguration.h"
+#include "scpimodeldeviface.h"
+#include "scpimodelstatus.h"
+#include "scpimodelieee4882.h"
+#include "scpimodelrpcs.h"
+#include "scpimodelcatalogs.h"
 #include "signalconnectiondelegate.h"
-#include "basemodule.h"
 #include "veinscpimoduleinterfaceparser.h"
 #include "vfeventsytemmoduleparam.h"
 #include <vf_cmd_event_handler_system.h>
@@ -23,10 +28,14 @@ public:
 
     explicit cSCPIModule(const ModuleFactoryParam &moduleParam);
     ~cSCPIModule();
+    cSCPIInterface* getScpiInterface();
     cSCPIServer* getSCPIServer();
 
     cSCPIModuleConfigData *getConfigData();
     QByteArray getConfigXml() const override;
+
+    ScpiModelMeasureAndFriends *getScpiModelMeasurement();
+    ScpiModelCatalogs* getScpiModelCatalogs();
 
     void removeClientParamOrRpcTransactions(cSCPIClient *client);
 
@@ -62,6 +71,15 @@ private:
     VfEventSytemModuleParam* m_pModuleValidator = nullptr;
     VfCmdEventHandlerSystemPtr m_cmdEventHandlerSystem;
     VeinScpiModuleInterfaceParser m_moduleInterfaceParser;
+
+    cSCPIInterface m_scpiInterface;
+    ScpiModelMeasureAndFriends m_scpiModelMeasurement;
+    ScpiModelParameters m_scpiModelParameters;
+    ScpiModelCatalogs m_scpiModelCatalogs;
+    ScpiModelRpcs m_scpiModelRpcs;
+    ScpiModelDevIface m_scpiModelDevIface;
+    ScpiModelStatus m_scpiModelStatus;
+    ScpiModelIEEE4882 m_scpiModelIeee488;
 
     QMultiHash<QString /*componentOrRpcName*/, SCPIVeinTransactionInfoPtr> m_scpiVeinParamOrRpcTransactions;
     QList<cSignalConnectionDelegate*> m_signalConnectionDelegates;
