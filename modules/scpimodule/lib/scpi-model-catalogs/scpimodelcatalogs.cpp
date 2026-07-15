@@ -13,16 +13,12 @@ ScpiModelCatalogs::ScpiModelCatalogs(cSCPIModule *scpiModule) :
 bool ScpiModelCatalogs::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
-    const VeinScpiModuleInterfaceParser::ScpiParseInfo allComponentInfos = moduleInterfaces.getCatalogInfo();
-    const VeinStorage::AbstractDatabase* storageDb = m_scpiModule->getStorageDb();
+    const VeinScpiModuleInterfaceParser::ScpiParseInfo allCatalogInfos = moduleInterfaces.getCatalogInfo();
 
-    const QList<int> entityIdList = storageDb->getEntityList();
-    for(auto entityID : entityIdList) {
-        if (allComponentInfos.contains(entityID)) {
-            const QList<cSCPICmdInfoPtr> &commands = allComponentInfos[entityID];
-            for (const cSCPICmdInfoPtr &command : commands)
-                addSCPICommand(scpiInterface, command);
-        }
+    for (auto iter = allCatalogInfos.constBegin(); iter != allCatalogInfos.constEnd(); ++iter) {
+        const QList<cSCPICmdInfoPtr> &catalogs = iter.value();
+        for (const cSCPICmdInfoPtr &command : catalogs)
+            addSCPICommand(scpiInterface, command);
     }
     return true;
 }
@@ -48,17 +44,13 @@ void ScpiModelCatalogs::actualizeCatalogs(const QVariant &modInterface)
 
 void ScpiModelCatalogs::addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo)
 {
-    if (scpiCmdInfo->scpiModel == "MEASURE") {
-    }
-    else if (scpiCmdInfo->refType != "0") {
-        QString scpiPath = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
-        QStringList nodeNames = scpiPath.split(':');
-        QString cmdNode = nodeNames.takeLast();
-        QString cmdParent = nodeNames.join(':');
-        ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateCatalog>(ScpiDelegateCatalog::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_scpiModule, scpiCmdInfo});
-        m_scpiCatalogDelegateHash[scpiPath] = static_cast<ScpiDelegateCatalog*>(delegate.get()); // for easier access if we need to change answers of this delegate
-        scpiInterface->addSCPICommand(delegate);
-    }
+    QString scpiPath = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
+    QStringList nodeNames = scpiPath.split(':');
+    QString cmdNode = nodeNames.takeLast();
+    QString cmdParent = nodeNames.join(':');
+    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateCatalog>(ScpiDelegateCatalog::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_scpiModule, scpiCmdInfo});
+    m_scpiCatalogDelegateHash[scpiPath] = static_cast<ScpiDelegateCatalog*>(delegate.get()); // for easier access if we need to change answers of this delegate
+    scpiInterface->addSCPICommand(delegate);
 }
 
 }
