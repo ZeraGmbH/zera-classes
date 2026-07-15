@@ -17,7 +17,7 @@ typedef std::shared_ptr<ScpiDelegateTemplate> ScpiBaseDelegatePtr;
 /* Delegates are ScpiObjects - which are nodes in SCPI tree
  * that can execute commands/queries - see executeSCPI
  */
-class ScpiDelegateTemplate : public QObject, public ScpiObject
+class ScpiDelegateTemplate : public ScpiObject
 {
    Q_OBJECT
 public:
