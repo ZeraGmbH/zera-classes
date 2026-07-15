@@ -5,6 +5,7 @@ file(GLOB SOURCES
     scpi-model-dev-iface/*.cpp
     scpi-model-ieee-488-2/*.cpp
     scpi-model-measure-and-friends/*.cpp
+    scpi-model-parameters/*.cpp
     scpi-model-status/*.cpp
     scpi-models-common/*.cpp
     )
@@ -16,6 +17,7 @@ file(GLOB HEADER
     scpi-model-dev-iface/*.h
     scpi-model-ieee-488-2/*.h
     scpi-model-measure-and-friends/*.h
+    scpi-model-parameters/*.h
     scpi-model-status/*.h
     scpi-models-common/*.h
     )
@@ -33,6 +35,7 @@ target_include_directories(scpimodule-lib
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/delegates-common>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-ieee-488-2>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-measure-and-friends>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-parameters>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-status>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-models-common>
     )

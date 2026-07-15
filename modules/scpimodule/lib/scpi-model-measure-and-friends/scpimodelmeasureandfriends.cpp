@@ -84,6 +84,8 @@ void ScpiModelMeasureAndFriends::updatePendingMeasureSequences(int entityId, con
 
 void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo)
 {
+    const int entityId = scpiCmdInfo->entityId;
+    const QString &componentOrRpcName = scpiCmdInfo->componentOrRpcName;
     if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
         VeinComponentScpiMeasureSequence* measureObject = new VeinComponentScpiMeasureSequence(scpiCmdInfo);
@@ -120,7 +122,7 @@ void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, c
         QString cmdParent = nodeNames.join(':');
         ScpiBaseDelegatePtr delegate;
         if (scpiCmdInfo->refType == "0") {
-            delegate = std::make_shared<ScpiDelegateParameter>(ScpiDelegateParameter::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_pModule, scpiCmdInfo});
+            delegate = std::make_shared<ScpiDelegateParameter>(ScpiDelegateParameter::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, entityId, componentOrRpcName, m_pModule});
             setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
         }
         else {

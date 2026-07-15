@@ -14,7 +14,8 @@ namespace SCPIMODULE {
 ScpiDelegateParameter::ScpiDelegateParameter(const Params &params) :
     ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
     m_pModule(params.scpimodule),
-    m_pSCPICmdInfo(params.scpicmdinfo)
+    m_entityId(params.entityId),
+    m_componentName(params.componentName)
 {
 }
 
@@ -30,15 +31,12 @@ void ScpiDelegateParameter::executeSCPI(cSCPIClient *client, const QString &scpi
         if (handleFutureComponent(client, bQuery, scpiTransactionId))
             return;
 
-        const int entityId = m_pSCPICmdInfo->entityId;
-        const QString &componentOrRpcName = m_pSCPICmdInfo->componentOrRpcName;
-
         VeinComponent::ComponentData *cData = new VeinComponent::ComponentData();
-        cData->setEntityId(entityId);
+        cData->setEntityId(m_entityId);
         cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
         cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
-        cData->setComponentName(componentOrRpcName);
-        cData->setOldValue(m_pModule->getStorageDb()->getStoredValue(entityId, componentOrRpcName));
+        cData->setComponentName(m_componentName);
+        cData->setOldValue(m_pModule->getStorageDb()->getStoredValue(m_entityId, m_componentName));
         if (bQuery) {
             if (cmd.isQuery(1))
                 cData->setNewValue(cmd.getParam(0));
@@ -57,12 +55,12 @@ void ScpiDelegateParameter::executeSCPI(cSCPIClient *client, const QString &scpi
 
         SCPIVeinTransactionInfoPtr transactionInfo;
         if (bQuery)
-            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, entityId, SCPIMODULE::parQuery, scpiTransactionId);
+            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, SCPIMODULE::parQuery, scpiTransactionId);
         else
-            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, entityId, SCPIMODULE::parcmd, scpiTransactionId);
+            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, SCPIMODULE::parcmd, scpiTransactionId);
 
-        m_pModule->insertScpiVeinParamRpcTransaction(componentOrRpcName, transactionInfo);
-        client->addVeinParamRpcTransactionInfo(componentOrRpcName, transactionInfo);
+        m_pModule->insertScpiVeinParamRpcTransaction(m_componentName, transactionInfo);
+        client->addVeinParamRpcTransactionInfo(m_componentName, transactionInfo);
 
         m_pModule->emitSigSendEvent(event);
     }
@@ -73,8 +71,8 @@ void ScpiDelegateParameter::executeSCPI(cSCPIClient *client, const QString &scpi
 bool ScpiDelegateParameter::handleFutureComponent(cSCPIClient *client, bool bQuery, const ScpiTransactionId &scpiTransactionId)
 {
     VeinStorage::AbstractDatabase *storrageDb = m_pModule->getStorageDb();
-    const VeinStorage::AbstractComponentPtr futureComponent = storrageDb->findFutureComponent(m_pSCPICmdInfo->entityId,
-                                                                                              m_pSCPICmdInfo->componentOrRpcName);
+    const VeinStorage::AbstractComponentPtr futureComponent = storrageDb->findFutureComponent(m_entityId,
+                                                                                              m_componentName);
     if (futureComponent) {
         if (bQuery)
             client->handleCmdFinish(futureComponent->getValue().toString(), scpiTransactionId);

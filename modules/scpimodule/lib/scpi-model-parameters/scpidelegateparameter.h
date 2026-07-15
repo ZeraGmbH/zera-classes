@@ -3,7 +3,6 @@
 
 #include "scpidelegatetemplate.h"
 #include "scpimodule.h"
-#include "scpicmdinfo.h"
 #include "scpiveintransactioninfo.h"
 
 namespace SCPIMODULE {
@@ -16,8 +15,9 @@ public:
         const QString cmdParent;
         const QString cmd;
         const quint8 scpiCmdQueryFlags = 0;
+        const int entityId = 0;
+        const QString componentName;
         cSCPIModule* scpimodule = nullptr;
-        const cSCPICmdInfoPtr scpicmdinfo;
     };
     ScpiDelegateParameter(const Params &params);
     void executeSCPI(cSCPIClient *client,
@@ -29,8 +29,9 @@ signals:
 private:
     bool handleFutureComponent(cSCPIClient *client, bool bQuery, const ScpiTransactionId &scpiTransactionId);
 
-    cSCPIModule* m_pModule;
-    cSCPICmdInfoPtr m_pSCPICmdInfo;
+    cSCPIModule* m_pModule = nullptr;
+    const int m_entityId;
+    const QString m_componentName;
 };
 
 }
