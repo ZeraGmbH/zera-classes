@@ -3,6 +3,7 @@
 #include "scpidelegateparameter.h"
 #include "scpidelegatecatalog.h"
 #include "scpidelegaterpc.h"
+#include "scpidelegatexmlexportgenerator.h"
 #include <vs_abstracteventsystem.h>
 #include <ve_commandevent.h>
 #include <vcmp_componentdata.h>
@@ -123,7 +124,7 @@ void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, c
         ScpiBaseDelegatePtr delegate;
         if (scpiCmdInfo->refType == "0") {
             delegate = std::make_shared<ScpiDelegateParameter>(ScpiDelegateParameter::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, entityId, componentOrRpcName, m_pModule});
-            setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
+            ScpiDelegateXmlExportGenerator::setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
         }
         else {
             delegate = std::make_shared<ScpiDelegateCatalog>(ScpiDelegateCatalog::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_pModule, scpiCmdInfo});
@@ -140,7 +141,7 @@ void ScpiModelMeasureAndFriends::addRPCCommand(cSCPIInterface *scpiInterface, co
     QString cmdNode = nodeNames.takeLast();
     QString cmdParent = nodeNames.join(':');
     ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateRpc>(ScpiDelegateRpc::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, scpiCmdInfo->entityId, scpiCmdInfo->componentOrRpcName, scpiCmdInfo->veinComponentInfo, m_pModule});
-    setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
+    ScpiDelegateXmlExportGenerator::setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
     scpiInterface->addSCPICommand(delegate);
 }
 
@@ -159,61 +160,7 @@ void ScpiModelMeasureAndFriends::addSCPIMeasureCommand(cSCPIInterface *scpiInter
         m_scpiMeasureDelegateHash[cmdcomplete] = delegate;
         scpiInterface->addSCPICommand(delegate);
     }
-    setXmlComponentInfo(delegate, veinComponentInfo);
-}
-
-void ScpiModelMeasureAndFriends::setXmlComponentInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo)
-{
-    QString desc = componentInfo["Description"].toString();
-    if(!desc.isEmpty())
-        delegate->setXmlAttribute("Description", desc);
-    setXmlComponentValidatorInfo(delegate, componentInfo);
-    QString unit = componentInfo["Unit"].toString();
-    if(!unit.isEmpty())
-        delegate->setXmlAttribute("Unit", unit);
-}
-
-void ScpiModelMeasureAndFriends::setXmlComponentValidatorInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo)
-{
-    QJsonObject validator = componentInfo["Validation"].toObject();
-    QString validatorType = validator["Type"].toString();
-    if(!validatorType.isEmpty()) {
-        if(validatorType == "STRING") {
-            delegate->setXmlAttribute("DataType", validatorType);
-            QJsonArray validatorEntryArray = getValidatorEntries(validator);
-            QStringList validStrings;
-            for(const auto &entry : qAsConst(validatorEntryArray)) {
-                validStrings.append(entry.toString());
-            }
-            if(!validStrings.isEmpty())
-                delegate->setXmlAttribute("ValidPar", validStrings.join(","));
-        }
-        else if(validatorType == "BOOL") {
-            delegate->setXmlAttribute("DataType", validatorType);
-            delegate->setXmlAttribute("Min", QString("0"));
-            delegate->setXmlAttribute("Max", QString("1"));
-        }
-        else if(validatorType == "INTEGER" || validatorType == "DOUBLE") {
-            delegate->setXmlAttribute("DataType", validatorType);
-            QJsonArray validatorEntryArray = getValidatorEntries(validator);
-            QString minVal = validatorEntryArray[0].toVariant().toString();
-            QString maxVal = validatorEntryArray[1].toVariant().toString();
-            if(!minVal.isEmpty() && !maxVal.isEmpty()) {
-                delegate->setXmlAttribute("Min", minVal);
-                delegate->setXmlAttribute("Max", maxVal);
-            }
-        }
-        else if(validatorType == "REGEX") {
-            delegate->setXmlAttribute("DataType", "STRING");
-            QString regEx = validator["Data"].toString();
-            delegate->setXmlAttribute("RegEx", regEx);
-        }
-    }
-}
-
-QJsonArray ScpiModelMeasureAndFriends::getValidatorEntries(QJsonObject validator)
-{
-    return validator["Data"].toArray();
+    ScpiDelegateXmlExportGenerator::setXmlComponentInfo(delegate, veinComponentInfo);
 }
 
 }

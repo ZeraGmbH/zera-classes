@@ -3,12 +3,9 @@
 
 #include "scpimodelbase.h"
 #include "scpiinterface.h"
-#include "scpidelegatetemplate.h"
 #include "scpidelegatemeasure.h"
 #include "scpicmdinfo.h"
 #include <QHash>
-#include <QJsonObject>
-#include <QJsonArray>
 
 namespace SCPIMODULE
 {
@@ -44,10 +41,6 @@ private:
     void addSCPIMeasureCommand(cSCPIInterface *scpiInterface,
                                const ScpiDelegateMeasure::Params &params,
                                const QJsonObject &veinComponentInfo = QJsonObject());
-    void setXmlComponentInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);
-    void setXmlComponentValidatorInfo(ScpiBaseDelegatePtr delegate, const QJsonObject &componentInfo);
-    QJsonArray getValidatorEntries(QJsonObject validator);
-
     QList<VeinComponentScpiMeasureSequence*> m_measureObjectsToDelete;
 };
 
