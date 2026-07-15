@@ -18,7 +18,6 @@ public:
     quint8 scpiCmdQueryFlags;
     int entityId;
     QString componentOrRpcName;
-    QString refType; // 0 means component itself otherwise the component's validation data
 
     QJsonObject veinComponentInfo;
 };
