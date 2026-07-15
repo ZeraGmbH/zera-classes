@@ -2,7 +2,6 @@
 #include "scpimodule.h"
 #include "scpidelegateparameter.h"
 #include "scpidelegatecatalog.h"
-#include "scpidelegaterpc.h"
 #include "scpidelegatexmlexportgenerator.h"
 #include <vs_abstracteventsystem.h>
 #include <ve_commandevent.h>
@@ -30,20 +29,14 @@ bool ScpiModelMeasureAndFriends::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_pModule->getScpiModuleInterfaceParser();
     const VeinScpiModuleInterfaceParser::ScpiParseInfo allComponentInfos = moduleInterfaces.getComponentInfo();
-    const VeinScpiModuleInterfaceParser::ScpiParseInfo allRpcInfos = moduleInterfaces.getRpcInfo();
-
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
+
     const QList<int> entityIdList = storageDb->getEntityList();
     for(auto entityID : entityIdList) {
         if (allComponentInfos.contains(entityID)) {
             const QList<cSCPICmdInfoPtr> &commands = allComponentInfos[entityID];
             for (const cSCPICmdInfoPtr &command : commands)
                 addSCPICommand(scpiInterface, command);
-        }
-        if (allRpcInfos.contains(entityID)) {
-            const QList<cSCPICmdInfoPtr> &rpcs = allRpcInfos[entityID];
-            for (const cSCPICmdInfoPtr &rpc : rpcs)
-                addRPCCommand(scpiInterface, rpc);
         }
     }
     return true;
@@ -86,7 +79,7 @@ void ScpiModelMeasureAndFriends::updatePendingMeasureSequences(int entityId, con
 void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo)
 {
     const int entityId = scpiCmdInfo->entityId;
-    const QString &componentOrRpcName = scpiCmdInfo->componentOrRpcName;
+    const QString &componentName = scpiCmdInfo->componentOrRpcName;
     if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
         VeinComponentScpiMeasureSequence* measureObject = new VeinComponentScpiMeasureSequence(scpiCmdInfo);
@@ -123,7 +116,7 @@ void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, c
         QString cmdParent = nodeNames.join(':');
         ScpiBaseDelegatePtr delegate;
         if (scpiCmdInfo->refType == "0") {
-            delegate = std::make_shared<ScpiDelegateParameter>(ScpiDelegateParameter::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, entityId, componentOrRpcName, m_pModule});
+            delegate = std::make_shared<ScpiDelegateParameter>(ScpiDelegateParameter::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, entityId, componentName, m_pModule});
             ScpiDelegateXmlExportGenerator::setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
         }
         else {
@@ -132,17 +125,6 @@ void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, c
         }
         scpiInterface->addSCPICommand(delegate);
     }
-}
-
-void ScpiModelMeasureAndFriends::addRPCCommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo)
-{
-    QString cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
-    QStringList nodeNames = cmdComplete.split(':');
-    QString cmdNode = nodeNames.takeLast();
-    QString cmdParent = nodeNames.join(':');
-    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateRpc>(ScpiDelegateRpc::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, scpiCmdInfo->entityId, scpiCmdInfo->componentOrRpcName, scpiCmdInfo->veinComponentInfo, m_pModule});
-    ScpiDelegateXmlExportGenerator::setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
-    scpiInterface->addSCPICommand(delegate);
 }
 
 void ScpiModelMeasureAndFriends::addSCPIMeasureCommand(cSCPIInterface *scpiInterface,

@@ -5,12 +5,10 @@
 #include "scpiserver.h"
 #include "scpimoduleconfiguration.h"
 #include "signalconnectiondelegate.h"
-#include "veincomponentscpimeasuresequence.h"
 #include "basemodule.h"
 #include "veinscpimoduleinterfaceparser.h"
 #include "vfeventsytemmoduleparam.h"
 #include <vf_cmd_event_handler_system.h>
-#include <memory>
 
 namespace SCPIMODULE {
 

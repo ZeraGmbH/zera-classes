@@ -37,7 +37,6 @@ private:
     QHash<QString, ScpiDelegateCatalog*> m_scpiCatalogDelegateHash; // a hash with catalog delegates that might need actualization when something changes
 
     void addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
-    void addRPCCommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
     void addSCPIMeasureCommand(cSCPIInterface *scpiInterface,
                                const ScpiDelegateMeasure::Params &params,
                                const QJsonObject &veinComponentInfo = QJsonObject());

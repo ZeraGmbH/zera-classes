@@ -7,6 +7,7 @@
 #include "scpimodeldeviface.h"
 #include "scpimodelstatus.h"
 #include "scpimodelieee4882.h"
+#include "scpimodelrpcs.h"
 #include "scpiserialclient.h"
 #include "tcpserverlimitedconn.h"
 #include <vfmoduleparameter.h>
@@ -59,6 +60,7 @@ private:
     QList<cSCPIClient*> m_SCPIClientList;
 
     ScpiModelMeasureAndFriends m_scpiGroupMeasurement;
+    ScpiModelRpcs m_scpiGroupRpcs;
     ScpiModelDevIface m_scpiGroupDevIface;
     ScpiModelStatus m_scpiGroupStatus;
     ScpiModelIEEE4882 m_scpiGroupIeee488;
