@@ -18,7 +18,7 @@ class ScpiModelCatalogs : public ScpiModelBase
 public:
     ScpiModelCatalogs(cSCPIModule* scpiModule);
 
-    bool setupScpi(cSCPIInterface *scpiInterface);
+    void setupScpi(cSCPIInterface *scpiInterface);
     void actualizeCatalogs(const QVariant &modInterface);
 
 private:

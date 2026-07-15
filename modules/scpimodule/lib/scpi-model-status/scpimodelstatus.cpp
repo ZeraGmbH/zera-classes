@@ -7,7 +7,7 @@
 namespace SCPIMODULE
 {
 
-bool ScpiModelStatus::setupScpi(cSCPIInterface *scpiInterface)
+void ScpiModelStatus::setupScpi(cSCPIInterface *scpiInterface)
 {
     cSCPIStatusDelegatePtr delegate;
 
@@ -119,8 +119,6 @@ bool ScpiModelStatus::setupScpi(cSCPIInterface *scpiInterface)
                                                                                SCPIStatusDefinitions::operationmeasure});
     scpiInterface->addSCPICommand(delegate);
     connect(delegate.get(), &ScpiDelegateStatus::signalExecuteSCPI, this, &ScpiModelStatus::executeCmd);
-
-    return true;
 }
 
 

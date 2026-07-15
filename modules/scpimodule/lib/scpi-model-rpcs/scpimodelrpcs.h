@@ -14,7 +14,7 @@ class ScpiModelRpcs : public ScpiModelBase
     Q_OBJECT
 public:
     ScpiModelRpcs(cSCPIModule* scpiModule);
-    bool setupScpi(cSCPIInterface *scpiInterface);
+    void setupScpi(cSCPIInterface *scpiInterface);
 
 private:
     void addRPCCommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);

@@ -9,7 +9,7 @@ ScpiModelRpcs::ScpiModelRpcs(cSCPIModule* scpiModule) :
 {
 }
 
-bool ScpiModelRpcs::setupScpi(cSCPIInterface *scpiInterface)
+void ScpiModelRpcs::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
     const VeinScpiModuleInterfaceParser::ScpiParseInfo allRpcInfos = moduleInterfaces.getRpcInfo();
@@ -19,8 +19,6 @@ bool ScpiModelRpcs::setupScpi(cSCPIInterface *scpiInterface)
         for (const cSCPICmdInfoPtr &rpc : rpcs)
             addRPCCommand(scpiInterface, rpc);
     }
-
-    return true;
 }
 
 void ScpiModelRpcs::addRPCCommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo)

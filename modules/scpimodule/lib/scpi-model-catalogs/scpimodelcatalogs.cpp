@@ -10,7 +10,7 @@ ScpiModelCatalogs::ScpiModelCatalogs(cSCPIModule *scpiModule) :
 {
 }
 
-bool ScpiModelCatalogs::setupScpi(cSCPIInterface *scpiInterface)
+void ScpiModelCatalogs::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
     const VeinScpiModuleInterfaceParser::ScpiParseInfo allCatalogInfos = moduleInterfaces.getCatalogInfo();
@@ -20,7 +20,6 @@ bool ScpiModelCatalogs::setupScpi(cSCPIInterface *scpiInterface)
         for (const cSCPICmdInfoPtr &command : catalogs)
             addSCPICommand(scpiInterface, command);
     }
-    return true;
 }
 
 void ScpiModelCatalogs::actualizeCatalogs(const QVariant &modInterface)

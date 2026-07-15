@@ -7,7 +7,7 @@
 namespace SCPIMODULE
 {
 
-bool ScpiModelIEEE4882::setupScpi(cSCPIInterface *scpiInterface)
+void ScpiModelIEEE4882::setupScpi(cSCPIInterface *scpiInterface)
 {
     cSCPIInterfaceDelegatePtr delegate;
 
@@ -95,8 +95,6 @@ bool ScpiModelIEEE4882::setupScpi(cSCPIInterface *scpiInterface)
                                                                                      "Queries all error stored in internal error list"});
     scpiInterface->addSCPICommand(delegate);
     connect(delegate.get(), &ScpiDelegateInterface::signalExecuteSCPI, this, &ScpiModelIEEE4882::executeCmd);
-
-    return true;
 }
 
 

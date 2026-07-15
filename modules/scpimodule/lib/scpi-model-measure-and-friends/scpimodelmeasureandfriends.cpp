@@ -18,7 +18,7 @@ ScpiModelMeasureAndFriends::~ScpiModelMeasureAndFriends()
         delete measureObject;
 }
 
-bool ScpiModelMeasureAndFriends::setupScpi(cSCPIInterface *scpiInterface)
+void ScpiModelMeasureAndFriends::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_pModule->getScpiModuleInterfaceParser();
     const VeinScpiModuleInterfaceParser::ScpiParseInfo measureInfo = moduleInterfaces.getMeasureInfo();
@@ -28,7 +28,6 @@ bool ScpiModelMeasureAndFriends::setupScpi(cSCPIInterface *scpiInterface)
         for (const cSCPICmdInfoPtr &measure : measures)
             addSCPICommand(scpiInterface, measure);
     }
-    return true;
 }
 
 QHash<QString, MeasureScpiNodeDelegatePtr> *ScpiModelMeasureAndFriends::getSCPIMeasDelegateHash()

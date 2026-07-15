@@ -9,7 +9,7 @@ ScpiModelParameters::ScpiModelParameters(cSCPIModule* scpiModule) :
 {
 }
 
-bool ScpiModelParameters::setupScpi(cSCPIInterface *scpiInterface)
+void ScpiModelParameters::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
     const VeinScpiModuleInterfaceParser::ScpiParseInfo allParamInfos = moduleInterfaces.getParamInfo();
@@ -19,7 +19,6 @@ bool ScpiModelParameters::setupScpi(cSCPIInterface *scpiInterface)
         for (const cSCPICmdInfoPtr &param : params)
             addSCPICommand(scpiInterface, param);
     }
-    return true;
 }
 
 void ScpiModelParameters::addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo)

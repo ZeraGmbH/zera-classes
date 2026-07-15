@@ -16,7 +16,7 @@ class ScpiModelStatus : public ScpiModelBase
 {
     Q_OBJECT
 public:
-    bool setupScpi(cSCPIInterface *scpiInterface);
+    void setupScpi(cSCPIInterface *scpiInterface);
 
 private slots:
     void executeCmd(SCPIMODULE::cSCPIClient *client,

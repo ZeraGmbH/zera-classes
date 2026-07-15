@@ -13,9 +13,7 @@ namespace SCPIMODULE
 class cSCPIModule;
 
 /* This class creates of SCPI tree from Vein INF_MODULEINTERFACE of:
- * * MEASURE/CONFIGURE/READ/INIT/FETCH models (VfModuleComponent added to m_pModule->m_veinComponentsWithMetaAndScpi)
- * * Parameters (VfModuleComponent::setScpiInfo / eSCPIEntryType::isComponent)
- * * CATALOGS (VfModuleComponent::setScpiInfo / eSCPIEntryType::isCatalog)
+ * MEASURE/CONFIGURE/READ/INIT/FETCH models (VfModuleComponent added to m_pModule->m_veinComponentsWithMetaAndScpi)
  */
 class ScpiModelMeasureAndFriends : public ScpiModelBase
 {
@@ -24,7 +22,7 @@ public:
     explicit ScpiModelMeasureAndFriends(cSCPIModule* module);
     ~ScpiModelMeasureAndFriends() override;
 
-    bool setupScpi(cSCPIInterface *scpiInterface);
+    void setupScpi(cSCPIInterface *scpiInterface);
 
     QHash<QString, MeasureScpiNodeDelegatePtr>* getSCPIMeasDelegateHash();
     void updatePendingMeasureSequences(int entityId, const QString &componentName, const QVariant &newValue);

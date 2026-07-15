@@ -14,7 +14,7 @@ class ScpiModelDevIface : public ScpiModelBase
     Q_OBJECT
 public:
     explicit ScpiModelDevIface(cSCPIModule* module);
-    bool setupScpi(cSCPIInterface *scpiInterface);
+    void setupScpi(cSCPIInterface *scpiInterface);
 
 private slots:
     void executeCmd(SCPIMODULE::cSCPIClient* client,

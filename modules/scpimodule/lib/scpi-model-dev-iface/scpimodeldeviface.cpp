@@ -17,7 +17,7 @@ enum scpiinterfacecommands
     deviceinterfacecmd
 };
 
-bool ScpiModelDevIface::setupScpi(cSCPIInterface *scpiInterface)
+void ScpiModelDevIface::setupScpi(cSCPIInterface *scpiInterface)
 {
     cSCPIInterfaceDelegatePtr delegate = std::make_shared<ScpiDelegateInterface>(ScpiDelegateInterface::Params{"DEVICE", "IFACE", SCPI::isQuery, deviceinterfacecmd});
     scpiInterface->addSCPICommand(delegate);
@@ -25,7 +25,6 @@ bool ScpiModelDevIface::setupScpi(cSCPIInterface *scpiInterface)
 
     // for module integrity we also have to add this command to the scpi command list (exported at INF_ModuleInterface)
     m_pModule->scpiCommandList.append(new VfModuleMetaInfoContainer("", QString("DEVICE:IFACE"), SCPI::isQuery, ""));
-    return true;
 }
 
 void ScpiModelDevIface::executeCmd(cSCPIClient *client,

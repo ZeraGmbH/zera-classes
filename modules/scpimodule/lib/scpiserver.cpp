@@ -181,19 +181,16 @@ void cSCPIServer::TCPError(QAbstractSocket::SocketError)
 
 void cSCPIServer::setupTCPServer()
 {
-    // before we can call listen we must set up a valid interface that clients can connect to
-    QString errorMsg;
-    bool ok = m_scpiGroupMeasurement.setupScpi(&m_scpiInterface);
-    ok = ok && m_scpiGroupParameters.setupScpi((&m_scpiInterface));
-    ok = ok && m_scpiGroupCatalogs.setupScpi((&m_scpiInterface));
-    ok = ok && m_scpiGroupRpcs.setupScpi((&m_scpiInterface));
-    ok = ok && m_scpiGroupDevIface.setupScpi(&m_scpiInterface);
-    ok = ok && m_scpiGroupStatus.setupScpi(&m_scpiInterface);
-    ok = ok && m_scpiGroupIeee488.setupScpi(&m_scpiInterface);
-    if (!ok)
-        errorMsg = interfacejsonErrMsg;
+    m_scpiGroupMeasurement.setupScpi(&m_scpiInterface);
+    m_scpiGroupParameters.setupScpi((&m_scpiInterface));
+    m_scpiGroupCatalogs.setupScpi((&m_scpiInterface));
+    m_scpiGroupRpcs.setupScpi((&m_scpiInterface));
+    m_scpiGroupDevIface.setupScpi(&m_scpiInterface);
+    m_scpiGroupStatus.setupScpi(&m_scpiInterface);
+    m_scpiGroupIeee488.setupScpi(&m_scpiInterface);
 
-    ok = ok && m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
+    QString errorMsg;
+    bool ok = m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
     if(!ok)
         errorMsg = interfaceETHErrMsg;
 

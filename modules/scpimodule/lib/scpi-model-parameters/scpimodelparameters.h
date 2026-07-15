@@ -15,7 +15,7 @@ class ScpiModelParameters : public ScpiModelBase
 public:
     explicit ScpiModelParameters(cSCPIModule* scpiModule);
 
-    bool setupScpi(cSCPIInterface *scpiInterface);
+    void setupScpi(cSCPIInterface *scpiInterface);
 
 private:
     void addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
