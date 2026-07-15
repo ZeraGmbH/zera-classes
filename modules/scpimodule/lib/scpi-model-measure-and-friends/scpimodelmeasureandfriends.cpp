@@ -22,15 +22,11 @@ bool ScpiModelMeasureAndFriends::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_pModule->getScpiModuleInterfaceParser();
     const VeinScpiModuleInterfaceParser::ScpiParseInfo measureInfo = moduleInterfaces.getMeasureInfo();
-    const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
 
-    const QList<int> entityIdList = storageDb->getEntityList();
-    for(auto entityID : entityIdList) {
-        if (measureInfo.contains(entityID)) {
-            const QList<cSCPICmdInfoPtr> &commands = measureInfo[entityID];
-            for (const cSCPICmdInfoPtr &command : commands)
-                addSCPICommand(scpiInterface, command);
-        }
+    for (auto iter = measureInfo.constBegin(); iter != measureInfo.constEnd(); ++iter) {
+        const QList<cSCPICmdInfoPtr> &measures = iter.value();
+        for (const cSCPICmdInfoPtr &measure : measures)
+            addSCPICommand(scpiInterface, measure);
     }
     return true;
 }
@@ -52,34 +48,32 @@ void ScpiModelMeasureAndFriends::updatePendingMeasureSequences(int entityId, con
 
 void ScpiModelMeasureAndFriends::addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo)
 {
-    if (scpiCmdInfo->scpiModel == "MEASURE") {
-        // in case of measure model we have to add several commands for each value
-        VeinComponentScpiMeasureSequence* measureObject = new VeinComponentScpiMeasureSequence(scpiCmdInfo);
-        m_measureObjectsToDelete.append(measureObject);
+    // in case of measure model we have to add several commands for each value
+    VeinComponentScpiMeasureSequence* measureObject = new VeinComponentScpiMeasureSequence(scpiCmdInfo);
+    m_measureObjectsToDelete.append(measureObject);
 
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"", "MEASURE", SCPI::isNode | SCPI::isQuery, ScpiModelTypes::measure, measureObject});
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"", "CONFIGURE", SCPI::isNode | SCPI::isCmd, ScpiModelTypes::configure, measureObject});
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"", "READ", SCPI::isNode | SCPI::isQuery, ScpiModelTypes::read, measureObject});
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"", "INIT", SCPI::isNode | SCPI::isCmd, ScpiModelTypes::init, measureObject});
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"", "FETCH", SCPI::isNode | SCPI::isQuery, ScpiModelTypes::fetch, measureObject});
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"", "MEASURE", SCPI::isNode | SCPI::isQuery, ScpiModelTypes::measure, measureObject});
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"", "CONFIGURE", SCPI::isNode | SCPI::isCmd, ScpiModelTypes::configure, measureObject});
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"", "READ", SCPI::isNode | SCPI::isQuery, ScpiModelTypes::read, measureObject});
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"", "INIT", SCPI::isNode | SCPI::isCmd, ScpiModelTypes::init, measureObject});
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"", "FETCH", SCPI::isNode | SCPI::isQuery, ScpiModelTypes::fetch, measureObject});
 
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"MEASURE", scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::measure, measureObject});
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"CONFIGURE", scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, ScpiModelTypes::configure, measureObject});
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"READ", scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::read, measureObject});
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"INIT", scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, ScpiModelTypes::init, measureObject});
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"FETCH", scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::fetch, measureObject});
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"MEASURE", scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::measure, measureObject});
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"CONFIGURE", scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, ScpiModelTypes::configure, measureObject});
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"READ", scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::read, measureObject});
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"INIT", scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, ScpiModelTypes::init, measureObject});
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{"FETCH", scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, ScpiModelTypes::fetch, measureObject});
 
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{QString("MEASURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::measure, measureObject},
-                              scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{QString("CONFIGURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, ScpiModelTypes::configure, measureObject},
-                              scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{QString("READ:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::read, measureObject},
-                              scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{QString("INIT:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, ScpiModelTypes::init, measureObject},
-                              scpiCmdInfo->veinComponentInfo);
-        addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::fetch, measureObject},
-                              scpiCmdInfo->veinComponentInfo);
-    }
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{QString("MEASURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::measure, measureObject},
+                          scpiCmdInfo->veinComponentInfo);
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{QString("CONFIGURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, ScpiModelTypes::configure, measureObject},
+                          scpiCmdInfo->veinComponentInfo);
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{QString("READ:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::read, measureObject},
+                          scpiCmdInfo->veinComponentInfo);
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{QString("INIT:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, ScpiModelTypes::init, measureObject},
+                          scpiCmdInfo->veinComponentInfo);
+    addSCPIMeasureCommand(scpiInterface, ScpiDelegateMeasure::Params{QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, ScpiModelTypes::fetch, measureObject},
+                          scpiCmdInfo->veinComponentInfo);
 }
 
 void ScpiModelMeasureAndFriends::addSCPIMeasureCommand(cSCPIInterface *scpiInterface,
