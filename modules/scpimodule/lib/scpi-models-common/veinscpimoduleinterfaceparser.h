@@ -18,13 +18,15 @@ public:
 
     const ScpiEntityHash &getEntitiesWithScpi() const;
     const ScpiParseInfo &getParamInfo() const;
-    const ScpiParseInfo &getComponentInfo() const;
+    const ScpiParseInfo &getMeasureInfo() const;
+    const ScpiParseInfo &getCatalogInfo() const;
     const ScpiParseInfo &getRpcInfo() const;
 
 private:
     ScpiEntityHash m_entitiesWithScpi;
-    ScpiParseInfo m_componentInfo;
+    ScpiParseInfo m_measureInfo;
     ScpiParseInfo m_paramInfo;
+    ScpiParseInfo m_catalogInfo;
     ScpiParseInfo m_rpcInfo;
 };
 

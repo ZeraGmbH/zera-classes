@@ -9,7 +9,9 @@ namespace SCPIMODULE
 bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::AbstractDatabase *storageDb)
 {
     m_entitiesWithScpi.clear();
-    m_componentInfo.clear();
+    m_measureInfo.clear();
+    m_paramInfo.clear();
+    m_catalogInfo.clear();
     m_rpcInfo.clear();
 
     bool ok = true;
@@ -37,10 +39,14 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
                     scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
                     scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentOrRpcName].toObject();
                     scpiCmdInfo->refType = jsonCmdArr[4].toString();
-                    if (scpiCmdInfo->scpiModel != "MEASURE" && scpiCmdInfo->refType == "0")
-                        m_paramInfo[entityID].append(scpiCmdInfo);
+                    if (scpiCmdInfo->scpiModel != "MEASURE") {
+                        if (scpiCmdInfo->refType == "0")
+                            m_paramInfo[entityID].append(scpiCmdInfo);
+                        else
+                            m_catalogInfo[entityID].append(scpiCmdInfo);
+                    }
                     else
-                        m_componentInfo[entityID].append(scpiCmdInfo);
+                        m_measureInfo[entityID].append(scpiCmdInfo);
                 }
 
                 const QJsonObject jsonRpcInfo = jsonObj["RpcInfo"].toObject();
@@ -67,6 +73,16 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
     return ok;
 }
 
+const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParser::getMeasureInfo() const
+{
+    return m_measureInfo;
+}
+
+const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParser::getCatalogInfo() const
+{
+    return m_catalogInfo;
+}
+
 const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParser::getParamInfo() const
 {
     return m_paramInfo;
@@ -75,11 +91,6 @@ const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParse
 const VeinScpiModuleInterfaceParser::ScpiEntityHash &VeinScpiModuleInterfaceParser::getEntitiesWithScpi() const
 {
     return m_entitiesWithScpi;
-}
-
-const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParser::getComponentInfo() const
-{
-    return m_componentInfo;
 }
 
 const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParser::getRpcInfo() const

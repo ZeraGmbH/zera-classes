@@ -21,13 +21,13 @@ ScpiModelMeasureAndFriends::~ScpiModelMeasureAndFriends()
 bool ScpiModelMeasureAndFriends::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_pModule->getScpiModuleInterfaceParser();
-    const VeinScpiModuleInterfaceParser::ScpiParseInfo allComponentInfos = moduleInterfaces.getComponentInfo();
+    const VeinScpiModuleInterfaceParser::ScpiParseInfo measureInfo = moduleInterfaces.getMeasureInfo();
     const VeinStorage::AbstractDatabase* storageDb = m_pModule->getStorageDb();
 
     const QList<int> entityIdList = storageDb->getEntityList();
     for(auto entityID : entityIdList) {
-        if (allComponentInfos.contains(entityID)) {
-            const QList<cSCPICmdInfoPtr> &commands = allComponentInfos[entityID];
+        if (measureInfo.contains(entityID)) {
+            const QList<cSCPICmdInfoPtr> &commands = measureInfo[entityID];
             for (const cSCPICmdInfoPtr &command : commands)
                 addSCPICommand(scpiInterface, command);
         }

@@ -13,7 +13,7 @@ ScpiModelCatalogs::ScpiModelCatalogs(cSCPIModule *scpiModule) :
 bool ScpiModelCatalogs::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
-    const VeinScpiModuleInterfaceParser::ScpiParseInfo allComponentInfos = moduleInterfaces.getComponentInfo();
+    const VeinScpiModuleInterfaceParser::ScpiParseInfo allComponentInfos = moduleInterfaces.getCatalogInfo();
     const VeinStorage::AbstractDatabase* storageDb = m_scpiModule->getStorageDb();
 
     const QList<int> entityIdList = storageDb->getEntityList();
