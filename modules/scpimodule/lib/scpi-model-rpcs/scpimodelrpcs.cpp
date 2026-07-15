@@ -13,16 +13,13 @@ bool ScpiModelRpcs::setupScpi(cSCPIInterface *scpiInterface)
 {
     const VeinScpiModuleInterfaceParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
     const VeinScpiModuleInterfaceParser::ScpiParseInfo allRpcInfos = moduleInterfaces.getRpcInfo();
-    const VeinStorage::AbstractDatabase* storageDb = m_scpiModule->getStorageDb();
 
-    const QList<int> entityIdList = storageDb->getEntityList();
-    for(auto entityID : entityIdList) {
-        if (allRpcInfos.contains(entityID)) {
-            const QList<cSCPICmdInfoPtr> &rpcs = allRpcInfos[entityID];
-            for (const cSCPICmdInfoPtr &rpc : rpcs)
-                addRPCCommand(scpiInterface, rpc);
-        }
+    for (auto iter = allRpcInfos.constBegin(); iter != allRpcInfos.constEnd(); ++iter) {
+        const QList<cSCPICmdInfoPtr> &rpcs = iter.value();
+        for (const cSCPICmdInfoPtr &rpc : rpcs)
+            addRPCCommand(scpiInterface, rpc);
     }
+
     return true;
 }
 
