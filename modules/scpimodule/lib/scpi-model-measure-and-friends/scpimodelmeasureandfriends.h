@@ -11,7 +11,6 @@ namespace SCPIMODULE
 {
 
 class cSCPIModule;
-class ScpiDelegateCatalog;
 
 /* This class creates of SCPI tree from Vein INF_MODULEINTERFACE of:
  * * MEASURE/CONFIGURE/READ/INIT/FETCH models (VfModuleComponent added to m_pModule->m_veinComponentsWithMetaAndScpi)
@@ -26,7 +25,6 @@ public:
     ~ScpiModelMeasureAndFriends() override;
 
     bool setupScpi(cSCPIInterface *scpiInterface);
-    void actualizeCatalogs(const QVariant &modInterface);
 
     QHash<QString, MeasureScpiNodeDelegatePtr>* getSCPIMeasDelegateHash();
     void updatePendingMeasureSequences(int entityId, const QString &componentName, const QVariant &newValue);
@@ -34,7 +32,6 @@ public:
 private:
     cSCPIModule* m_pModule = nullptr;
     QHash<QString, MeasureScpiNodeDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
-    QHash<QString, ScpiDelegateCatalog*> m_scpiCatalogDelegateHash; // a hash with catalog delegates that might need actualization when something changes
 
     void addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
     void addSCPIMeasureCommand(cSCPIInterface *scpiInterface,

@@ -9,6 +9,7 @@
 #include "scpimodelstatus.h"
 #include "scpimodelieee4882.h"
 #include "scpimodelrpcs.h"
+#include "scpimodelcatalogs.h"
 #include "scpiserialclient.h"
 #include "tcpserverlimitedconn.h"
 #include <vfmoduleparameter.h>
@@ -30,7 +31,10 @@ public:
     cSCPIServer(cSCPIModule* module, cSCPIModuleConfigData& configData);
     virtual ~cSCPIServer();
     void generateVeinInterface() override;
-    ScpiModelMeasureAndFriends* getScpiGroupMeasurement();
+
+    ScpiModelMeasureAndFriends *getScpiGroupMeasurement();
+    ScpiModelCatalogs* getScpiModelCatalogs();
+
     void addScpiClient(cSCPIClient *client);
     void removeScpiClient(cSCPIClient *client);
     const QList<cSCPIClient*> &getClients() const;
@@ -62,6 +66,7 @@ private:
 
     ScpiModelMeasureAndFriends m_scpiGroupMeasurement;
     ScpiModelParameters m_scpiGroupParameters;
+    ScpiModelCatalogs m_scpiGroupCatalogs;
     ScpiModelRpcs m_scpiGroupRpcs;
     ScpiModelDevIface m_scpiGroupDevIface;
     ScpiModelStatus m_scpiGroupStatus;
