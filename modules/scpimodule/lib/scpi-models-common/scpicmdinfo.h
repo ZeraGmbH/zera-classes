@@ -17,7 +17,7 @@ public:
     QString scpiModel;
     QString scpiCommand;
 
-    quint8 scpiCmdQueryFlags;
+    quint8 scpiQueryCmdFlags;
 
     int entityId;
     QString componentOrRpcName;

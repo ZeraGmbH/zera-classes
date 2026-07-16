@@ -46,7 +46,7 @@ void ScpiModelCatalogs::addSCPICommand(cSCPIInterface *scpiInterface, const cSCP
     QStringList scpiFullPathList = scpiCmdInfo->scpiFullPathList();
     QString cmdNode = scpiFullPathList.takeLast();
     QString cmdParent = scpiFullPathList.join(':');
-    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateCatalog>(ScpiDelegateCatalog::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, m_scpiModule, scpiCmdInfo});
+    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateCatalog>(ScpiDelegateCatalog::Params{cmdParent, cmdNode, scpiCmdInfo->scpiQueryCmdFlags, m_scpiModule, scpiCmdInfo});
     m_scpiCatalogDelegateHash[scpiCmdInfo->scpiFullPath()] = static_cast<ScpiDelegateCatalog*>(delegate.get()); // for easier access if we need to change answers of this delegate
     scpiInterface->addSCPICommand(delegate);
 }

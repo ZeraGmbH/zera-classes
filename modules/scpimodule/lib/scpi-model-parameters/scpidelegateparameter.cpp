@@ -12,7 +12,7 @@
 namespace SCPIMODULE {
 
 ScpiDelegateParameter::ScpiDelegateParameter(const Params &params) :
-    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiQueryCmdFlags),
     m_pModule(params.scpimodule),
     m_entityId(params.entityId),
     m_componentName(params.componentName)
@@ -21,12 +21,12 @@ ScpiDelegateParameter::ScpiDelegateParameter(const Params &params) :
 
 void ScpiDelegateParameter::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
-    quint8 scpiCmdType = getType();
+    quint8 scpiQueryCmdFlags = getType();
     cSCPICommand cmd = scpi;
     bool bQuery = ScpiModuleCommonStaticFunctions::isQuery(scpi);
-    if ( (bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||  // test if we got an allowed query
-        (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
-        ((scpiCmdType & SCPI::isXMLCmd) > 0) ) // test if we expext an xml command
+    if ( (bQuery && ((scpiQueryCmdFlags & SCPI::isQuery) > 0)) ||  // test if we got an allowed query
+        (cmd.isCommand(1) && ((scpiQueryCmdFlags & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
+        ((scpiQueryCmdFlags & SCPI::isXMLCmd) > 0) ) // test if we expext an xml command
     {
         if (handleFutureComponent(client, bQuery, scpiTransactionId))
             return;
@@ -43,7 +43,7 @@ void ScpiDelegateParameter::executeSCPI(cSCPIClient *client, const QString &scpi
             cData->setCommand(VeinComponent::ComponentData::Command::CCMD_FETCH);
         }
         else {
-            if ((scpiCmdType & SCPI::isXMLCmd) > 0)
+            if ((scpiQueryCmdFlags & SCPI::isXMLCmd) > 0)
                 cData->setNewValue(cmd.getParam()); // if we expect an xml command we take all text behind the command
             else
                 cData->setNewValue(cmd.getParam(0));

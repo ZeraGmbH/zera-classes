@@ -14,7 +14,7 @@ public:
     struct Params {
         const QString cmdParent;
         const QString cmd;
-        const quint8 scpiCmdQueryFlags = 0;
+        const quint8 scpiQueryCmdFlags = 0;
         const ScpiModelTypes modelType = measure;
         VeinComponentScpiMeasureSequence* scpiMeasureObject = nullptr;
     };
@@ -37,7 +37,7 @@ private:
     const ScpiModelTypes m_modelType;
     int m_nPending = 0;
     QString m_sAnswer;
-    cSCPIClient *m_pClient = nullptr;
+    cSCPIClient *m_client = nullptr;
     QList<VeinComponentScpiMeasureSequence*> m_veinComponentScpiSequences;
 };
 

@@ -14,7 +14,7 @@ public:
     struct Params {
         const QString cmdParent;
         const QString cmd;
-        quint8 scpiCmdQueryFlags = 0;
+        quint8 scpiQueryCmdFlags = 0;
         cSCPIModule* scpimodule = nullptr;
         const cSCPICmdInfoPtr scpicmdinfo;
     };

@@ -22,7 +22,7 @@ class ScpiDelegateTemplate : public ScpiObject
    Q_OBJECT
 public:
     ScpiDelegateTemplate();
-    ScpiDelegateTemplate(const QString &cmdParent, const QString &cmd, quint8 scpiCmdQueryFlags);
+    ScpiDelegateTemplate(const QString &cmdParent, const QString &cmd, quint8 scpiQueryCmdFlags);
     virtual ~ScpiDelegateTemplate();
 
     const QStringList &getCmdParent() const;

@@ -8,7 +8,7 @@
 namespace SCPIMODULE {
 
 ScpiDelegateCatalog::ScpiDelegateCatalog(const Params &params) :
-    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiQueryCmdFlags),
     m_pModule(params.scpimodule),
     m_pSCPICmdInfo(params.scpicmdinfo)
 {
@@ -17,9 +17,9 @@ ScpiDelegateCatalog::ScpiDelegateCatalog(const Params &params) :
 
 void ScpiDelegateCatalog::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
-    quint8 scpiCmdType = getType();
+    quint8 scpiQueryCmdFlags = getType();
     cSCPICommand cmd = scpi;
-    if (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0))// test if we got an allowed query
+    if (cmd.isQuery() && ((scpiQueryCmdFlags & SCPI::isQuery) > 0))// test if we got an allowed query
         client->handleCmdFinish(m_sAnswer, scpiTransactionId);
     else
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);

@@ -6,7 +6,7 @@
 namespace SCPIMODULE {
 
 ScpiDelegateMeasure::ScpiDelegateMeasure(const Params &params) :
-    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiQueryCmdFlags),
     m_modelType(params.modelType)
 {
     m_veinComponentScpiSequences.append(params.scpiMeasureObject);
@@ -34,9 +34,9 @@ ScpiDelegateMeasure::ScpiDelegateMeasure(const ScpiDelegateMeasure &moduleInterf
 void ScpiDelegateMeasure::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
     cSCPICommand cmd = scpi;
-    quint8 scpiCmdType = getType();
-    if ( (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) ||
-         (cmd.isCommand(0) && ((scpiCmdType & SCPI::isCmd) > 0)) ) {
+    quint8 scpiQueryCmdFlags = getType();
+    if ( (cmd.isQuery() && ((scpiQueryCmdFlags & SCPI::isQuery) > 0)) ||
+         (cmd.isCommand(0) && ((scpiQueryCmdFlags & SCPI::isCmd) > 0)) ) {
         // allowed query or command
         client->m_SCPIMeasureDelegateHash[this]->executeClient(client, scpiTransactionId);
     }
@@ -56,7 +56,7 @@ void ScpiDelegateMeasure::executeClient(cSCPIClient *client, const ScpiTransacti
     default:
         reentryPossible = false;
     }
-    m_pClient = client;
+    m_client = client;
     if (m_nPending == 0 || reentryPossible) { // not yet running or reentry
         m_nPending = m_veinComponentScpiSequences.count();
         m_sAnswer = "";
@@ -98,7 +98,7 @@ void ScpiDelegateMeasure::onSingleScpiCmdDone(const ScpiTransactionId &scpiTrans
 
     m_nPending--;
     if (m_nPending == 0)
-        m_pClient->handleCmdFinishStatusOnly(ZSCPI::ack, scpiTransactionId);
+        m_client->handleCmdFinishStatusOnly(ZSCPI::ack, scpiTransactionId);
     else if (m_nPending < 0)
         qCritical("cSCPIMeasureDelegate::onSingleScpiCmdDone: m_nPending < 0");
 }
@@ -111,7 +111,7 @@ void ScpiDelegateMeasure::onSingleScpiQueryDone(const QString &scpiResponse, con
 
     m_nPending--;
     if (m_nPending == 0)
-        m_pClient->handleCmdFinish(m_sAnswer, scpiTransactionId);
+        m_client->handleCmdFinish(m_sAnswer, scpiTransactionId);
     else if (m_nPending < 0)
         qCritical("cSCPIMeasureDelegate::onSingleScpiQueryDone: m_nPending < 0");
 }

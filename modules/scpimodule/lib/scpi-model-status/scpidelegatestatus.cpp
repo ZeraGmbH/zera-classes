@@ -3,7 +3,7 @@
 namespace SCPIMODULE {
 
 ScpiDelegateStatus::ScpiDelegateStatus(const Params &params) :
-    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiQueryCmdFlags),
     m_cmdCode(params.cmdCode),
     m_statusSystemIdx(params.statusSystemIdx)
 {

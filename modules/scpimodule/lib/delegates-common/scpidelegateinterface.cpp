@@ -3,7 +3,7 @@
 namespace SCPIMODULE {
 
 ScpiDelegateInterface::ScpiDelegateInterface(const Params &params) :
-    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiQueryCmdFlags),
     m_nCmdCode(params.cmdCode)
 {
     if(!params.cmdDescription.isEmpty())

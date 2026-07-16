@@ -8,7 +8,7 @@ VfModuleComponentCreator::VfModuleComponentCreator(int entityId, VeinEvent::Even
 
 VfModuleComponent *VfModuleComponentCreator::createComponent(const QString &componentName, const QString &description,
                                                              const QString &channelName, const QString &unit,
-                                                             const QString &scpiModel, const QString &scpiCmd, int scpiCmdTypeMask,
+                                                             const QString &scpiModel, const QString &scpiCmd, int scpiQueryCmdFlagsMask,
                                                              const QVariant &initval) const
 {
     VfModuleComponent *component = new VfModuleComponent(m_entityId,
@@ -19,6 +19,6 @@ VfModuleComponent *VfModuleComponentCreator::createComponent(const QString &comp
     component->setChannelName(channelName);
     component->setUnit(unit);
     if (!scpiModel.isEmpty() && !scpiCmd.isEmpty())
-        component->setScpiInfo(scpiModel, scpiCmd, scpiCmdTypeMask);
+        component->setScpiInfo(scpiModel, scpiCmd, scpiQueryCmdFlagsMask);
     return component;
 }

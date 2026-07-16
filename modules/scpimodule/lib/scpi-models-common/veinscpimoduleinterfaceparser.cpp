@@ -31,7 +31,7 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
                     QJsonArray jsonCmdArr = jsonScpiCmdArr[j].toArray();
                     scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
-                    scpiCmdInfo->scpiCmdQueryFlags = jsonCmdArr[2].toString().toUShort();
+                    scpiCmdInfo->scpiQueryCmdFlags = jsonCmdArr[2].toString().toUShort();
                     scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
                     scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentOrRpcName].toObject();
                     const QString refType = jsonCmdArr[4].toString();
@@ -54,7 +54,7 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
                     QJsonArray jsonCmdArr = jsonRpcScpiCmdArr[j].toArray();
                     scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
-                    scpiCmdInfo->scpiCmdQueryFlags = jsonCmdArr[2].toString().toUShort();
+                    scpiCmdInfo->scpiQueryCmdFlags = jsonCmdArr[2].toString().toUShort();
                     scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
                     scpiCmdInfo->veinComponentInfo = jsonRpcInfo[scpiCmdInfo->componentOrRpcName].toObject();
 

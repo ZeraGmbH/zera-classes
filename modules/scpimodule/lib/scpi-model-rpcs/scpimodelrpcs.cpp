@@ -26,7 +26,7 @@ void ScpiModelRpcs::addRPCCommand(cSCPIInterface *scpiInterface, const cSCPICmdI
     QStringList scpiFullPathList = scpiCmdInfo->scpiFullPathList();
     QString cmdNode = scpiFullPathList.takeLast();
     QString cmdParent = scpiFullPathList.join(':');
-    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateRpc>(ScpiDelegateRpc::Params{cmdParent, cmdNode, scpiCmdInfo->scpiCmdQueryFlags, scpiCmdInfo->entityId, scpiCmdInfo->componentOrRpcName, scpiCmdInfo->veinComponentInfo, m_scpiModule});
+    ScpiBaseDelegatePtr delegate = std::make_shared<ScpiDelegateRpc>(ScpiDelegateRpc::Params{cmdParent, cmdNode, scpiCmdInfo->scpiQueryCmdFlags, scpiCmdInfo->entityId, scpiCmdInfo->componentOrRpcName, scpiCmdInfo->veinComponentInfo, m_scpiModule});
     ScpiDelegateXmlExportGenerator::setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
     scpiInterface->addSCPICommand(delegate);
 }

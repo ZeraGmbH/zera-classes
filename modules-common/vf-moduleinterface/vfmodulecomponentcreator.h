@@ -11,7 +11,7 @@ public:
                              VeinEvent::EventSystem *eventsystem);
     VfModuleComponent* createComponent(const QString &componentName, const QString &description,
                                        const QString &channelName = "", const QString &unit = "",
-                                       const QString &scpiModel = "", const QString &scpiCmd = "", int scpiCmdTypeMask = 0,
+                                       const QString &scpiModel = "", const QString &scpiCmd = "", int scpiQueryCmdFlagsMask = 0,
                                        const QVariant &initval = QVariant()) const;
 
 private:

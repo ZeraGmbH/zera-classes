@@ -10,7 +10,7 @@
 namespace SCPIMODULE {
 
 ScpiDelegateRpc::ScpiDelegateRpc(const Params &params) :
-    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiCmdQueryFlags),
+    ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiQueryCmdFlags),
     m_pModule(params.scpimodule),
     m_entityId(params.entityId),
     m_rpcSignature(params.rpcSignature),
@@ -20,16 +20,16 @@ ScpiDelegateRpc::ScpiDelegateRpc(const Params &params) :
 
 void ScpiDelegateRpc::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
-    quint8 scpiCmdType = getType();
+    quint8 scpiQueryCmdFlags = getType();
     cSCPICommand cmd = scpi;
 
     bool bQuery = ScpiModuleCommonStaticFunctions::isQuery(scpi);
     bool bCmd = cmd.isCommand(1) && cmd.getParamList()[0].isEmpty();
     bool bCmdwP = cmd.isCommand(1) || m_veinComponentInfo.contains("Optional parameter");
 
-    if ((bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||
-        (bCmd && ((scpiCmdType & SCPI::isCmd) >  0)) ||
-        (bCmdwP && ((scpiCmdType & SCPI::isCmdwP) >  0)))
+    if ((bQuery && ((scpiQueryCmdFlags & SCPI::isQuery) > 0)) ||
+        (bCmd && ((scpiQueryCmdFlags & SCPI::isCmd) >  0)) ||
+        (bCmdwP && ((scpiQueryCmdFlags & SCPI::isCmdwP) >  0)))
         executeScpiRpc(client, scpi, bQuery, scpiTransactionId);
     else
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);

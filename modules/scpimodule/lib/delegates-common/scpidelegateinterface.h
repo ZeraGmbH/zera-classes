@@ -13,7 +13,7 @@ public:
     struct Params {
         const QString cmdParent;
         const QString cmd;
-        const quint8 scpiCmdQueryFlags = 0;
+        const quint8 scpiQueryCmdFlags = 0;
         const quint16 cmdCode = 0;
         const QString cmdDescription; // optional
     };

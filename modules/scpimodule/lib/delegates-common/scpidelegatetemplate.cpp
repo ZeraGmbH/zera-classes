@@ -10,8 +10,8 @@ ScpiDelegateTemplate::ScpiDelegateTemplate() :
     m_instanceCount++;
 }
 
-ScpiDelegateTemplate::ScpiDelegateTemplate(const QString &cmdParent, const QString &cmd, quint8 scpiCmdQueryFlags) :
-    ScpiObject(cmd, scpiCmdQueryFlags),
+ScpiDelegateTemplate::ScpiDelegateTemplate(const QString &cmdParent, const QString &cmd, quint8 scpiQueryCmdFlags) :
+    ScpiObject(cmd, scpiQueryCmdFlags),
     m_cmdParent(cmdParent.split(":", Qt::SkipEmptyParts))
 {
     m_instanceCount++;
