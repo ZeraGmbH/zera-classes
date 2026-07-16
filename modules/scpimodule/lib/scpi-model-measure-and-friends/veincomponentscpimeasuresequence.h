@@ -62,13 +62,10 @@ private:
     ScpiTransactionId m_initScpiTransactionId;
     ScpiTransactionId m_fetchScpiTransactionId;
 
-
-    QState m_measureConfigureState;
     QState m_measureInitState;
     QState m_measureFetchState;
     QFinalState m_measureDoneState;
 
-    QState m_confConfigureState;
     QFinalState m_confConfigureDoneState;
 
     QState m_readInitState;
@@ -90,11 +87,9 @@ private:
     static int m_instanceCount;
 
 private slots:
-    void measureConfigure();
     void measureInit();
     void measureFetch();
 
-    void configure();
     void configureDone();
 
     void readInit();

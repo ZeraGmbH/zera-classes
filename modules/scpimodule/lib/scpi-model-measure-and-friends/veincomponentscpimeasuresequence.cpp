@@ -35,24 +35,19 @@ void VeinComponentScpiMeasureSequence::initialize()
 {
     m_bInitPending = false;
 
-    m_measureConfigureState.addTransition(this, &VeinComponentScpiMeasureSequence::measContinue, &m_measureInitState);
     m_measureInitState.addTransition(this, &VeinComponentScpiMeasureSequence::measContinue, &m_measureFetchState);
     m_measureFetchState.addTransition(this, &VeinComponentScpiMeasureSequence::measContinue, &m_measureDoneState);
-    m_MeasureStateMachine.addState(&m_measureConfigureState);
+    m_MeasureStateMachine.addState(&m_measureInitState);
     m_MeasureStateMachine.addState(&m_measureInitState);
     m_MeasureStateMachine.addState(&m_measureFetchState);
     m_MeasureStateMachine.addState(&m_measureDoneState);
-    connect(&m_measureConfigureState, &QState::entered, this, &VeinComponentScpiMeasureSequence::measureConfigure);
     connect(&m_measureInitState, &QState::entered, this, &VeinComponentScpiMeasureSequence::measureInit);
     connect(&m_measureFetchState, &QState::entered, this, &VeinComponentScpiMeasureSequence::measureFetch);
     m_MeasureStateMachine.setInitialState(&m_measureInitState);
 
-    m_confConfigureState.addTransition(this, &VeinComponentScpiMeasureSequence::confContinue, &m_confConfigureDoneState);
-    m_ConfigureStateMachine.addState(&m_confConfigureState);
     m_ConfigureStateMachine.addState(&m_confConfigureDoneState);
-    connect(&m_confConfigureState, &QState::entered, this, &VeinComponentScpiMeasureSequence::configure);
     connect(&m_confConfigureDoneState, &QState::entered, this, &VeinComponentScpiMeasureSequence::configureDone);
-    m_ConfigureStateMachine.setInitialState(&m_confConfigureState);
+    m_ConfigureStateMachine.setInitialState(&m_confConfigureDoneState);
 
     m_readInitState.addTransition(this, &VeinComponentScpiMeasureSequence::readContinue, &m_readFetchState);
     m_readFetchState.addTransition(this, &VeinComponentScpiMeasureSequence::readContinue, &m_readDoneState);
@@ -208,13 +203,6 @@ QString VeinComponentScpiMeasureSequence::setAnswer(const QVariant &qvar)
     return s;
 }
 
-void VeinComponentScpiMeasureSequence::measureConfigure()
-{
-    // for scpi compliance we have a configue but for the moment
-    // we have noting to do here ... perhaps later
-    emit measContinue();
-}
-
 void VeinComponentScpiMeasureSequence::measureInit()
 {
     // if not an init is still pending then
@@ -232,13 +220,6 @@ void VeinComponentScpiMeasureSequence::measureFetch()
     emit sigMeasDone(m_sAnswer, m_measureScpiTransactionId, this);
     m_measureScpiTransactionId = ScpiTransactionId();
     emit measContinue();
-}
-
-void VeinComponentScpiMeasureSequence::configure()
-{
-    // for scpi compliance we have a configue but for the moment
-    // we have noting to do here ... perhaps later
-    emit confContinue();
 }
 
 void VeinComponentScpiMeasureSequence::configureDone()
