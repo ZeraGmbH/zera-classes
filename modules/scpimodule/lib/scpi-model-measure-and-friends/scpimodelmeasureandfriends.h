@@ -24,12 +24,12 @@ public:
 
     void setupScpi(cSCPIInterface *scpiInterface);
 
-    QHash<QString, MeasureScpiNodeDelegatePtr>* getSCPIMeasDelegateHash();
+    QHash<QString, ScpiDelegateMeasurePtr>* getSCPIMeasDelegateHash();
     void updatePendingMeasureSequences(int entityId, const QString &componentName, const QVariant &newValue);
 
 private:
     cSCPIModule* m_pModule = nullptr;
-    QHash<QString, MeasureScpiNodeDelegatePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
+    QHash<QString, ScpiDelegateMeasurePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
 
     void addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
     void addSCPIMeasureCommand(cSCPIInterface *scpiInterface,

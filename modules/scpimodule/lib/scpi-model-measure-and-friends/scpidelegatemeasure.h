@@ -41,7 +41,7 @@ private:
     QList<VeinComponentScpiMeasureSequence*> m_veinComponentScpiSequences;
 };
 
-typedef std::shared_ptr<ScpiDelegateMeasure> MeasureScpiNodeDelegatePtr;
+typedef std::shared_ptr<ScpiDelegateMeasure> ScpiDelegateMeasurePtr;
 
 }
 

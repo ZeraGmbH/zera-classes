@@ -33,7 +33,7 @@ public:
     QUuid getClientId();
     void addVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
 
-    QHash<ScpiDelegateMeasure*, MeasureScpiNodeDelegatePtr> m_SCPIMeasureDelegateHash;
+    QHash<ScpiDelegateMeasure*, ScpiDelegateMeasurePtr> m_SCPIMeasureDelegateHash;
 
     enum FinishLogTypes {
         LOG_FULL,

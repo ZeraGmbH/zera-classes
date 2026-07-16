@@ -30,7 +30,7 @@ void ScpiModelMeasureAndFriends::setupScpi(cSCPIInterface *scpiInterface)
     }
 }
 
-QHash<QString, MeasureScpiNodeDelegatePtr> *ScpiModelMeasureAndFriends::getSCPIMeasDelegateHash()
+QHash<QString, ScpiDelegateMeasurePtr> *ScpiModelMeasureAndFriends::getSCPIMeasDelegateHash()
 {
     return &m_scpiMeasureDelegateHash;
 }
@@ -83,7 +83,7 @@ void ScpiModelMeasureAndFriends::addSCPIMeasureCommand(cSCPIInterface *scpiInter
                                                        const QJsonObject &veinComponentInfo)
 {
     QString cmdcomplete = QString("%1:%2").arg(params.cmdParent, params.cmd);
-    MeasureScpiNodeDelegatePtr delegate;
+    ScpiDelegateMeasurePtr delegate;
     if (m_scpiMeasureDelegateHash.contains(cmdcomplete)) {
         delegate = m_scpiMeasureDelegateHash.value(cmdcomplete);
         delegate->addVeinComponentScpiSequence(params.scpiMeasureObject);
