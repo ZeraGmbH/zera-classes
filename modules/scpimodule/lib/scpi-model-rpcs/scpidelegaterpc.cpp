@@ -24,7 +24,7 @@ void ScpiDelegateRpc::executeSCPI(cSCPIClient *client, const QString &scpi, cons
     cSCPICommand cmd = scpi;
 
     bool bQuery = ScpiModuleCommonStaticFunctions::isQuery(scpi);
-    bool bCmd = cmd.isCommand();
+    bool bCmd = cmd.isCommand(1) && cmd.getParamList()[0].isEmpty();
     bool bCmdwP = cmd.isCommand(1) || m_veinComponentInfo.contains("Optional parameter");
 
     if ((bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||
@@ -98,6 +98,10 @@ void ScpiDelegateRpc::executeScpiRpc(cSCPIClient *client, const QString &scpi, b
         m_pModule->insertScpiVeinParamRpcTransaction(rpcSignature, transactionInfo);
         client->addVeinParamRpcTransactionInfo(rpcSignature, transactionInfo);
         rpcInvoker->invokeRPC(rpcName, params);
+    }
+
+    else if(cmd.getParamList()[0].isEmpty() && totalExpectedParams == 0) {
+        rpcInvoker->invokeRPC(rpcName, QVariantMap());
     }
 }
 
