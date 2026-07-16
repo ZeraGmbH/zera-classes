@@ -17,6 +17,11 @@ QMultiHash<QString, VeinComponentScpiMeasureSequence *> *VeinComponentScpiMeasur
     return veinComponentScpiMeasureSequenceStoreSingleton;
 }
 
+VeinComponentScpiMeasureSequence::VeinComponentScpiMeasureSequence(Params params)
+{
+
+}
+
 VeinComponentScpiMeasureSequence::VeinComponentScpiMeasureSequence(const cSCPICmdInfoPtr &scpicmdinfo) :
     m_pSCPICmdInfo(scpicmdinfo)
 {

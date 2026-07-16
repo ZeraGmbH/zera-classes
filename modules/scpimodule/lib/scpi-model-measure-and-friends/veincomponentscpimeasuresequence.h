@@ -16,6 +16,10 @@ class VeinComponentScpiMeasureSequence : public QObject
 {
     Q_OBJECT
 public:
+    struct Params {
+    };
+    explicit VeinComponentScpiMeasureSequence(Params params); // not used yet
+
     static QMultiHash<QString, VeinComponentScpiMeasureSequence *> *getVeinComponentScpiMeasureSequenceStoreSingleton();
     // Moduleinterface initials
     VeinComponentScpiMeasureSequence(const cSCPICmdInfoPtr &scpicmdinfo);
@@ -101,6 +105,8 @@ private slots:
     void fetchSync();
     void fetchFetch();
 };
+
+typedef std::shared_ptr<VeinComponentScpiMeasureSequence> VeinComponentScpiMeasureSequencePtr;
 
 }
 
