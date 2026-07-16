@@ -1,5 +1,5 @@
-#ifndef SCPIDELEGATEMEASUREMODULE_H
-#define SCPIDELEGATEMEASUREMODULE_H
+#ifndef SCPICLIENTMEASUREEXECUTOR_H
+#define SCPICLIENTMEASUREEXECUTOR_H
 
 #include "scpidelegatetemplate.h"
 #include "veincomponentscpimeasuresequence.h"
@@ -7,7 +7,7 @@
 
 namespace SCPIMODULE {
 
-class ScpiDelegateMeasureModule : public ScpiDelegateTemplate
+class ScpiClientMeasureExecutor : public ScpiDelegateTemplate
 {
     Q_OBJECT
 public:
@@ -19,9 +19,9 @@ public:
         VeinComponentScpiMeasureSequence* scpiMeasureObject = nullptr;
     };
     // Moduleinterface initials
-    explicit ScpiDelegateMeasureModule(const Params &params);
+    explicit ScpiClientMeasureExecutor(const Params &params);
     // Scpi interface copies
-    ScpiDelegateMeasureModule(const ScpiDelegateMeasureModule& moduleInterfaceDelegate,
+    ScpiClientMeasureExecutor(const ScpiClientMeasureExecutor& moduleInterfaceDelegate,
                         QHash<VeinComponentScpiMeasureSequence*, VeinComponentScpiMeasureSequence*> &scpiMeasureTranslationHash);
 
     void addVeinComponentScpiSequence(VeinComponentScpiMeasureSequence* measureobject);
@@ -41,8 +41,8 @@ private:
     QList<VeinComponentScpiMeasureSequence*> m_veinComponentScpiSequences;
 };
 
-typedef std::shared_ptr<ScpiDelegateMeasureModule> ScpiDelegateMeasurePtr;
+typedef std::shared_ptr<ScpiClientMeasureExecutor> ScpiDelegateMeasurePtr;
 
 }
 
-#endif // SCPIDELEGATEMEASUREMODULE_H
+#endif // SCPICLIENTMEASUREEXECUTOR_H

@@ -3,7 +3,7 @@
 
 #include "scpimodelbase.h"
 #include "scpiinterface.h"
-#include "scpidelegatemeasuremodule.h"
+#include "scpiclientmeasureexecutor.h"
 #include "scpicmdinfo.h"
 #include <QHash>
 
@@ -33,7 +33,7 @@ private:
 
     void addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
     void addSCPIMeasureCommand(cSCPIInterface *scpiInterface,
-                               const ScpiDelegateMeasureModule::Params &params,
+                               const ScpiClientMeasureExecutor::Params &params,
                                const QJsonObject &veinComponentInfo = QJsonObject());
     QList<VeinComponentScpiMeasureSequence*> m_measureObjectsToDelete;
 };
