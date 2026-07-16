@@ -38,7 +38,6 @@ void VeinComponentScpiMeasureSequence::initialize()
     m_measureInitState.addTransition(this, &VeinComponentScpiMeasureSequence::measContinue, &m_measureFetchState);
     m_measureFetchState.addTransition(this, &VeinComponentScpiMeasureSequence::measContinue, &m_measureDoneState);
     m_MeasureStateMachine.addState(&m_measureInitState);
-    m_MeasureStateMachine.addState(&m_measureInitState);
     m_MeasureStateMachine.addState(&m_measureFetchState);
     m_MeasureStateMachine.addState(&m_measureDoneState);
     connect(&m_measureInitState, &QState::entered, this, &VeinComponentScpiMeasureSequence::measureInit);
