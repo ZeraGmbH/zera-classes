@@ -12,22 +12,22 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
 
     bool ok = true;
     const QList<int> entityIdList = storageDb->getEntityList();
-    for(auto entityID : entityIdList) {
+    for(auto entityId : entityIdList) {
         // we parse over all moduleinterface components
-        if (storageDb->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
-            QJsonDocument jsonDoc = QJsonDocument::fromJson(storageDb->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
+        if (storageDb->hasStoredValue(entityId, QString("INF_ModuleInterface"))) {
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(storageDb->getStoredValue(entityId, QString("INF_ModuleInterface")).toByteArray());
             if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
                 const QJsonObject jsonObj = jsonDoc.object();
                 const QJsonObject jsonScpiInfo = jsonObj["SCPIInfo"].toObject();
                 const QJsonObject jsonComponentInfo = jsonObj["ComponentInfo"].toObject();
                 const QString scpiModuleName = jsonScpiInfo["Name"].toString();
-                m_entitiesWithScpi[scpiModuleName] = entityID;
+                m_entitiesWithScpi[scpiModuleName] = entityId;
 
                 QJsonArray jsonScpiCmdArr = jsonScpiInfo["Cmd"].toArray();
                 for (int j = 0; j < jsonScpiCmdArr.count(); j++) {
                     cSCPICmdInfoPtr scpiCmdInfo = std::make_shared<cSCPICmdInfo>();
                     scpiCmdInfo->scpiModuleName = scpiModuleName;
-                    scpiCmdInfo->entityId = entityID;
+                    scpiCmdInfo->entityId = entityId;
                     QJsonArray jsonCmdArr = jsonScpiCmdArr[j].toArray();
                     scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
@@ -37,12 +37,12 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
                     const QString refType = jsonCmdArr[4].toString();
                     if (scpiCmdInfo->scpiModel != "MEASURE") {
                         if (refType == "0")
-                            m_paramInfo[entityID].append(scpiCmdInfo);
+                            m_paramInfo[entityId].append(scpiCmdInfo);
                         else
-                            m_catalogInfo[entityID].append(scpiCmdInfo);
+                            m_catalogInfo[entityId].append(scpiCmdInfo);
                     }
                     else
-                        m_measureInfo[entityID].append(scpiCmdInfo);
+                        m_measureInfo[entityId].append(scpiCmdInfo);
                 }
 
                 const QJsonObject jsonRpcInfo = jsonObj["RpcInfo"].toObject();
@@ -50,7 +50,7 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
                 for (int j = 0; j < jsonRpcScpiCmdArr.count(); j++) {
                     cSCPICmdInfoPtr scpiCmdInfo = std::make_shared<cSCPICmdInfo>();
                     scpiCmdInfo->scpiModuleName = scpiModuleName;
-                    scpiCmdInfo->entityId = entityID;
+                    scpiCmdInfo->entityId = entityId;
                     QJsonArray jsonCmdArr = jsonRpcScpiCmdArr[j].toArray();
                     scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
@@ -58,7 +58,7 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
                     scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
                     scpiCmdInfo->veinComponentInfo = jsonRpcInfo[scpiCmdInfo->componentOrRpcName].toObject();
 
-                    m_rpcInfo[entityID].append(scpiCmdInfo);
+                    m_rpcInfo[entityId].append(scpiCmdInfo);
                 }
             }
             else
