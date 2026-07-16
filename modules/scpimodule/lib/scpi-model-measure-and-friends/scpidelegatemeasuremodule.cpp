@@ -1,18 +1,18 @@
-#include "scpidelegatemeasure.h"
+#include "scpidelegatemeasuremodule.h"
 #include "veincomponentscpimeasuresequence.h"
 #include "scpiclient.h"
 #include <zscpi_response_definitions.h>
 
 namespace SCPIMODULE {
 
-ScpiDelegateMeasure::ScpiDelegateMeasure(const Params &params) :
+ScpiDelegateMeasureModule::ScpiDelegateMeasureModule(const Params &params) :
     ScpiDelegateTemplate(params.cmdParent, params.cmd, params.scpiQueryCmdFlags),
     m_modelType(params.modelType)
 {
     m_veinComponentScpiSequences.append(params.scpiMeasureObject);
 }
 
-ScpiDelegateMeasure::ScpiDelegateMeasure(const ScpiDelegateMeasure &moduleInterfaceDelegate,
+ScpiDelegateMeasureModule::ScpiDelegateMeasureModule(const ScpiDelegateMeasureModule &moduleInterfaceDelegate,
                                            QHash<VeinComponentScpiMeasureSequence*, VeinComponentScpiMeasureSequence*> &scpiMeasureTranslationHash) :
     m_modelType(moduleInterfaceDelegate.m_modelType)
 {
@@ -31,7 +31,7 @@ ScpiDelegateMeasure::ScpiDelegateMeasure(const ScpiDelegateMeasure &moduleInterf
     }
 }
 
-void ScpiDelegateMeasure::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
+void ScpiDelegateMeasureModule::executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId)
 {
     cSCPICommand cmd = scpi;
     quint8 scpiQueryCmdFlags = getType();
@@ -44,7 +44,7 @@ void ScpiDelegateMeasure::executeSCPI(cSCPIClient *client, const QString &scpi, 
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
-void ScpiDelegateMeasure::executeClient(cSCPIClient *client, const ScpiTransactionId &scpiTransactionId)
+void ScpiDelegateMeasureModule::executeClient(cSCPIClient *client, const ScpiTransactionId &scpiTransactionId)
 {
     bool reentryPossible;
     switch (m_modelType)
@@ -65,19 +65,19 @@ void ScpiDelegateMeasure::executeClient(cSCPIClient *client, const ScpiTransacti
             switch (m_modelType)
             {
             case ScpiModelTypes::measure:
-                connect(measure, &VeinComponentScpiMeasureSequence::sigMeasDone, this, &ScpiDelegateMeasure::onSingleScpiQueryDone);
+                connect(measure, &VeinComponentScpiMeasureSequence::sigMeasDone, this, &ScpiDelegateMeasureModule::onSingleScpiQueryDone);
                 break;
             case ScpiModelTypes::configure:
-                connect(measure, &VeinComponentScpiMeasureSequence::sigConfDone, this, &ScpiDelegateMeasure::onSingleScpiCmdDone);
+                connect(measure, &VeinComponentScpiMeasureSequence::sigConfDone, this, &ScpiDelegateMeasureModule::onSingleScpiCmdDone);
                 break;
             case ScpiModelTypes::read:
-                connect(measure, &VeinComponentScpiMeasureSequence::sigReadDone, this, &ScpiDelegateMeasure::onSingleScpiQueryDone);
+                connect(measure, &VeinComponentScpiMeasureSequence::sigReadDone, this, &ScpiDelegateMeasureModule::onSingleScpiQueryDone);
                 break;
             case ScpiModelTypes::init:
-                connect(measure, &VeinComponentScpiMeasureSequence::sigInitDone, this, &ScpiDelegateMeasure::onSingleScpiCmdDone);
+                connect(measure, &VeinComponentScpiMeasureSequence::sigInitDone, this, &ScpiDelegateMeasureModule::onSingleScpiCmdDone);
                 break;
             case ScpiModelTypes::fetch:
-                connect(measure, &VeinComponentScpiMeasureSequence::sigFetchDone, this, &ScpiDelegateMeasure::onSingleScpiQueryDone);
+                connect(measure, &VeinComponentScpiMeasureSequence::sigFetchDone, this, &ScpiDelegateMeasureModule::onSingleScpiQueryDone);
                 break;
             }
             measure->execute(m_modelType, scpiTransactionId);
@@ -87,12 +87,12 @@ void ScpiDelegateMeasure::executeClient(cSCPIClient *client, const ScpiTransacti
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
-void ScpiDelegateMeasure::addVeinComponentScpiSequence(VeinComponentScpiMeasureSequence *measureobject)
+void ScpiDelegateMeasureModule::addVeinComponentScpiSequence(VeinComponentScpiMeasureSequence *measureobject)
 {
     m_veinComponentScpiSequences.append(measureobject);
 }
 
-void ScpiDelegateMeasure::onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const VeinComponentScpiMeasureSequence *sender)
+void ScpiDelegateMeasureModule::onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const VeinComponentScpiMeasureSequence *sender)
 {
     disconnect(sender, 0, this, 0);
 
@@ -103,7 +103,7 @@ void ScpiDelegateMeasure::onSingleScpiCmdDone(const ScpiTransactionId &scpiTrans
         qCritical("cSCPIMeasureDelegate::onSingleScpiCmdDone: m_nPending < 0");
 }
 
-void ScpiDelegateMeasure::onSingleScpiQueryDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const VeinComponentScpiMeasureSequence *sender)
+void ScpiDelegateMeasureModule::onSingleScpiQueryDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const VeinComponentScpiMeasureSequence *sender)
 {
     disconnect(sender, 0, this, 0);
 

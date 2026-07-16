@@ -58,7 +58,7 @@ QByteArray cSCPIModule::getConfigXml() const
     return m_configuration.exportConfiguration();
 }
 
-ScpiModelMeasureAndFriends *cSCPIModule::getScpiModelMeasurement()
+ScpiModelMeasure *cSCPIModule::getScpiModelMeasurement()
 {
     return &m_scpiModelMeasurement;
 }

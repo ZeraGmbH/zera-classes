@@ -4,7 +4,7 @@
 #include "statusbitdescriptor.h"
 #include "scpiserver.h"
 #include "ieee488-2-definitions.h"
-#include "scpimodelmeasureandfriends.h"
+#include "scpimodelmeasure.h"
 #include <zscpi_response_definitions.h>
 #include <vs_abstracteventsystem.h>
 #include <QJsonObject>
@@ -249,7 +249,7 @@ void cSCPIClient::generateSCPIMeasureSystem()
     QList<QString> keylist = pSCPIMeasDelegateHash->keys();
     for (int i = 0; i < keylist.count(); i++) {
         ScpiDelegateMeasurePtr measDelegate = (*pSCPIMeasDelegateHash)[keylist.at(i)];
-        m_SCPIMeasureDelegateHash[measDelegate.get()] = std::make_shared<ScpiDelegateMeasure>(*measDelegate, m_SCPIMeasureTranslationHash);
+        m_SCPIMeasureDelegateHash[measDelegate.get()] = std::make_shared<ScpiDelegateMeasureModule>(*measDelegate, m_SCPIMeasureTranslationHash);
     }
 }
 

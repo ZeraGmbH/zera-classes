@@ -34,7 +34,7 @@ public:
     cSCPIModuleConfigData *getConfigData();
     QByteArray getConfigXml() const override;
 
-    ScpiModelMeasureAndFriends *getScpiModelMeasurement();
+    ScpiModelMeasure *getScpiModelMeasurement();
     ScpiModelCatalogs* getScpiModelCatalogs();
 
     void removeClientParamOrRpcTransactions(cSCPIClient *client);
@@ -73,7 +73,7 @@ private:
     VeinScpiModuleInterfaceParser m_moduleInterfaceParser;
 
     cSCPIInterface m_scpiInterface;
-    ScpiModelMeasureAndFriends m_scpiModelMeasurement;
+    ScpiModelMeasure m_scpiModelMeasurement;
     ScpiModelParameters m_scpiModelParameters;
     ScpiModelCatalogs m_scpiModelCatalogs;
     ScpiModelRpcs m_scpiModelRpcs;

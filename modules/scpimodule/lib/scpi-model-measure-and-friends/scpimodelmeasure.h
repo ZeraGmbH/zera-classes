@@ -3,7 +3,7 @@
 
 #include "scpimodelbase.h"
 #include "scpiinterface.h"
-#include "scpidelegatemeasure.h"
+#include "scpidelegatemeasuremodule.h"
 #include "scpicmdinfo.h"
 #include <QHash>
 
@@ -15,12 +15,12 @@ class cSCPIModule;
 /* This class creates of SCPI tree from Vein INF_MODULEINTERFACE of:
  * MEASURE/CONFIGURE/READ/INIT/FETCH models (VfModuleComponent added to m_pModule->m_veinComponentsWithMetaAndScpi)
  */
-class ScpiModelMeasureAndFriends : public ScpiModelBase
+class ScpiModelMeasure : public ScpiModelBase
 {
     Q_OBJECT
 public:
-    explicit ScpiModelMeasureAndFriends(cSCPIModule* module);
-    ~ScpiModelMeasureAndFriends() override;
+    explicit ScpiModelMeasure(cSCPIModule* module);
+    ~ScpiModelMeasure() override;
 
     void setupScpi(cSCPIInterface *scpiInterface);
 
@@ -33,7 +33,7 @@ private:
 
     void addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
     void addSCPIMeasureCommand(cSCPIInterface *scpiInterface,
-                               const ScpiDelegateMeasure::Params &params,
+                               const ScpiDelegateMeasureModule::Params &params,
                                const QJsonObject &veinComponentInfo = QJsonObject());
     QList<VeinComponentScpiMeasureSequence*> m_measureObjectsToDelete;
 };

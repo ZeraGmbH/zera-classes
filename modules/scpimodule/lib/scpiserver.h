@@ -1,7 +1,7 @@
 #ifndef SCPISERVER_H
 #define SCPISERVER_H
 
-#include "scpimodelmeasureandfriends.h"
+#include "scpimodelmeasure.h"
 #include "scpimodelparameters.h"
 #include "scpimoduleconfigdata.h"
 #include "scpiclient.h"
