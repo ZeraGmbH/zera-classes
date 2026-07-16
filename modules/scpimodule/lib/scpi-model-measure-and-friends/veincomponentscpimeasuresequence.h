@@ -2,7 +2,7 @@
 #define SCPIMEASURE_H
 
 #include "scpicmdinfo.h"
-#include "scpimodeltypes.h"
+#include "scpimodeldefinitions.h"
 #include "scpitransactionid.h"
 #include <QStateMachine>
 #include <QState>
