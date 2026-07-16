@@ -1,6 +1,7 @@
 #include "statusmoduleinit.h"
 #include "statusmodule.h"
 #include "rpc/rpccreateversionfile.h"
+#include "rpc/rpcresetadjdata.h"
 #include <reply.h>
 #include <proxy.h>
 #include <errormessages.h>
@@ -278,6 +279,16 @@ void cStatusModuleInit::generateVeinInterface()
                                                                              m_versionsJson);
     m_createVersionFileRpc = std::make_shared<VfModuleRpc>(rpcReadLogs, "Create version file");
     m_pModule->m_veinModuleRPCMap[rpcReadLogs->getSignature()] = m_createVersionFileRpc;
+
+    std::shared_ptr<RPCResetAdjData> rpcResetAdjData = std::make_shared<RPCResetAdjData>(m_pPCBInterface,
+                                                                             m_pModule->getRpcEventSystem(),
+                                                                             m_pModule->getEntityId());
+    m_resetAdjDataRpc = std::make_shared<VfModuleRpc>(rpcResetAdjData, "Reset adjustement data");
+    m_resetAdjDataRpc->setRPCScpiInfo("RESET",
+                                     QString("ADJUSTMENT"),
+                                     SCPI::isCmd,
+                                     rpcResetAdjData->getSignature());
+    m_pModule->m_veinModuleRPCMap[rpcResetAdjData->getSignature()] = m_resetAdjDataRpc; // for modules use
 
     m_veinUpdateTimer->start();
 }
