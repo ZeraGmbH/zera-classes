@@ -47,6 +47,7 @@ private slots:
     void registerAccumulatorSocNotifier();
     void registerCtrlVersionsChangedNotifier();
     void registerPCBVersionNotifier();
+    void registerAdjustmentStatusNotifier();
     void getSchnubbelStatus();
     void getAccumulatorStatus();
     void getAccuStateOfCharge();
@@ -81,6 +82,7 @@ private:
     QState m_pcbserverReadCtrlVersionState;
     QState m_pcbserverReadFPGAVersionState;
     QState m_pcbserverReadSerialNrState;
+    QState m_pcbserverRegisterAdjStatus;
     QState m_pcbserverReadAdjStatusState;
     QState m_pcbserverReadAdjChksumState;
     QState m_pcbserverRegisterClampCatalogNotifierState;

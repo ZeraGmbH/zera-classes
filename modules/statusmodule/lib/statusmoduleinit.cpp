@@ -29,7 +29,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module) :
     m_pcbRegisterReadVersionNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadCtrlVersionState);
     m_pcbserverReadCtrlVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadFPGAVersionState);
     m_pcbserverReadFPGAVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadSerialNrState);
-    m_pcbserverReadSerialNrState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadAdjStatusState);
+    m_pcbserverReadSerialNrState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverRegisterAdjStatus);
+    m_pcbserverRegisterAdjStatus.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadAdjStatusState);
     m_pcbserverReadAdjStatusState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadAdjChksumState);
     m_pcbserverReadAdjChksumState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverRegisterClampCatalogNotifierState);
     m_pcbserverRegisterClampCatalogNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_dspserverConnectionState);
@@ -52,6 +53,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module) :
     m_activationMachine.addState(&m_pcbserverReadCtrlVersionState);
     m_activationMachine.addState(&m_pcbserverReadFPGAVersionState);
     m_activationMachine.addState(&m_pcbserverReadSerialNrState);
+    m_activationMachine.addState(&m_pcbserverRegisterAdjStatus);
     m_activationMachine.addState(&m_pcbserverReadAdjStatusState);
     m_activationMachine.addState(&m_pcbserverReadAdjChksumState);
     m_activationMachine.addState(&m_pcbserverRegisterClampCatalogNotifierState);
@@ -75,6 +77,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module) :
     connect(&m_pcbserverReadCtrlVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadCtrlVersion);
     connect(&m_pcbserverReadFPGAVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadFPGAVersion);
     connect(&m_pcbserverReadSerialNrState, &QState::entered, this, &cStatusModuleInit::pcbserverReadSerialNr);
+    connect(&m_pcbserverRegisterAdjStatus, &QState::entered, this, &cStatusModuleInit::registerAdjustmentStatusNotifier);
     connect(&m_pcbserverReadAdjStatusState, &QState::entered, this, &cStatusModuleInit::pcbserverReadAdjStatus);
     connect(&m_pcbserverReadAdjChksumState, &QState::entered, this, &cStatusModuleInit::pcbserverReadAdjChksum);
     connect(&m_pcbserverRegisterClampCatalogNotifierState, &QState::entered, this, &cStatusModuleInit::registerClampCatalogNotifier);
@@ -287,6 +290,7 @@ enum NOTIFIER_IDS
     accumulatorSocNotifierID,
     ctrlVersionChangeID,
     pcbVersionChangeID,
+    adjustmentStatusChangeID,
 };
 
 enum statusmoduleinitCmds
@@ -313,6 +317,7 @@ enum statusmoduleinitCmds
     regPCBVersionChange,
     registerPCBChannelsChange,
     readPCBChannelsChange,
+    registerAdjStatusChange
 };
 
 void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
@@ -341,6 +346,9 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 break;
             case pcbVersionChangeID:
                 pcbReadVersion();
+                break;
+            case adjustmentStatusChangeID:
+                pcbserverReadAdjStatus();
                 break;
             }
     }
@@ -384,6 +392,12 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         case regPCBVersionChange:
             if (reply != ack) {
                 qWarning("Register notification for hotpluggable PCB versions failed!");
+            }
+            emit activationContinue();
+            break;
+        case registerAdjStatusChange:
+            if (reply != ack) {
+                qWarning("Register notification for adjustment status failed!");
             }
             emit activationContinue();
             break;
@@ -458,6 +472,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         case readPCBServerAdjStatus:
             if (reply == ack) {
                 m_sAdjStatus = answer.toString();
+                m_pAdjustmentStatus->setValue(m_sAdjStatus);
                 emit activationContinue();
             }
             else
@@ -757,6 +772,11 @@ void cStatusModuleInit::registerCtrlVersionsChangedNotifier()
 void cStatusModuleInit::registerPCBVersionNotifier()
 {
     m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:VERSION:PCB?"), pcbVersionChangeID)] = regPCBVersionChange;
+}
+
+void cStatusModuleInit::registerAdjustmentStatusNotifier()
+{
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("STATUS:PCB:ADJUSTMENT?"), adjustmentStatusChangeID)] = registerAdjStatusChange;
 }
 
 void cStatusModuleInit::activationDone()
