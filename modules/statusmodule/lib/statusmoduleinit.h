@@ -1,7 +1,6 @@
 #ifndef STATUSMODULEINIT_H
 #define STATUSMODULEINIT_H
 
-#include "statusmoduleconfigdata.h"
 #include "vfmodulerpc.h"
 #include <moduleactivist.h>
 #include <vfmoduleparameter.h>
@@ -26,7 +25,7 @@ signals:
     void activationError();
 
 private slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
     void setInterfaceComponents();
     void pcbserverConnect();
     void pcbserverReadVersion();
@@ -51,18 +50,18 @@ private slots:
     void getSchnubbelStatus();
     void getAccumulatorStatus();
     void getAccuStateOfCharge();
-    void readInstrumentConnected(QVariant value);
+    void readInstrumentConnected(const QVariant &value);
 
     void activationDone();
     void deactivationDone();
 
-    void newSerialNumber(QVariant serialNr);
+    void newSerialNumber(const QVariant &serialNr);
 
     void onVeinUpdate();
 private:
-    void notifyActivationError(QVariant value);
+    void notifyActivationError(const QVariant &value);
     void createVersionsJson();
-    QJsonObject QStringToQJsonObject(QString strJson);
+    QJsonObject QStringToQJsonObject(const QString &strJson);
     std::shared_ptr<QJsonObject> m_versionsJson;
 
     cStatusModule* m_pModule = nullptr; // the module we live in

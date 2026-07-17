@@ -320,7 +320,7 @@ enum statusmoduleinitCmds
     registerAdjStatusChange
 };
 
-void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
 {
     if (msgnr == 0) // 0 was reserved for async. messages
     {
@@ -555,7 +555,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     }
 }
 
-void cStatusModuleInit::notifyActivationError(QVariant value)
+void cStatusModuleInit::notifyActivationError(const QVariant &value)
 {
     notifyError(value);
     emit activationError();
@@ -593,7 +593,7 @@ void cStatusModuleInit::createVersionsJson()
     m_versionsJson->insert("Adjustment status", status.join(","));
 }
 
-QJsonObject cStatusModuleInit::QStringToQJsonObject(QString strJson)
+QJsonObject cStatusModuleInit::QStringToQJsonObject(const QString &strJson)
 {
     QJsonDocument doc = QJsonDocument::fromJson(strJson.toUtf8());
     if (!doc.isNull() && doc.isObject())
@@ -616,13 +616,13 @@ void cStatusModuleInit::getAccuStateOfCharge()
     m_MsgNrCmdList[m_pPCBInterface->getAccuStateOfCharge()] = readPCBServerAccumulatorSoc;
 }
 
-void cStatusModuleInit::readInstrumentConnected(QVariant value)
+void cStatusModuleInit::readInstrumentConnected(const QVariant &value)
 {
     QString channels = m_pChannels->getValue().toString();
     QJsonObject controller;
     QJsonObject pcbVersion = QJsonDocument::fromJson(value.toString().toUtf8()).object();;
-    QStringList keys = pcbVersion.keys();
-    for(QString key: keys) {
+    const QStringList keys = pcbVersion.keys();
+    for(const QString &key : keys) {
         if(channels.contains(key)) {
             QJsonObject channelVersions= pcbVersion.value(key).toObject();
             QJsonValue subType = channelVersions.value("Emob subtype");
@@ -804,7 +804,7 @@ void cStatusModuleInit::deactivationDone()
 }
 
 
-void cStatusModuleInit::newSerialNumber(QVariant serialNr)
+void cStatusModuleInit::newSerialNumber(const QVariant &serialNr)
 {
     wantedSerialNr = serialNr;
     m_MsgNrCmdList[m_pPCBInterface->writeSerialNr(serialNr.toString())] = writePCBServerSerialNumber;
