@@ -18,9 +18,9 @@ public:
     QString scpiModel;
     QString scpiCommand;
 
-    quint8 scpiQueryCmdFlags;
+    quint8 scpiQueryCmdFlags = 0;
 
-    int entityId;
+    int entityId = 0;
     QString componentOrRpcName;
     VeinComponentId componentId() const { return {entityId, componentOrRpcName}; }
 
