@@ -9,7 +9,7 @@
 #include "ieee488-2.h"
 #include "scpimoduleconfigdata.h"
 #include "scpiresponsesorter.h"
-#include "veinscpimoduleinterfaceparser.h"
+#include "scpiveinparser.h"
 #include <QUuid>
 #include <QHash>
 
@@ -63,7 +63,7 @@ private slots:
 private:
     void setSignalConnections(cSCPIStatus* scpiStatus,
                               const QList<cStatusBitDescriptor> &statusBitDescriptorList,
-                              const VeinScpiModuleInterfaceParser::ScpiEntityHash &entitiesWithScpi);
+                              const ScpiVeinParser::ScpiEntityHash &entitiesWithScpi);
 
     cSCPIModuleConfigData& m_ConfigData;
     // what happens on same component names in different entities as e.g THDN module??? => TODO test

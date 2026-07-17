@@ -2,7 +2,7 @@
 
 namespace SCPIMODULE {
 
-ScpiStoreScpiSequence::ScpiStoreScpiSequence(const VeinScpiModuleInterfaceParser::ScpiParseInfo &veinParseInfoMeasure) :
+ScpiStoreScpiSequence::ScpiStoreScpiSequence(const ScpiVeinParser::ScpiParseInfo &veinParseInfoMeasure) :
     m_veinParseInfoMeasure(veinParseInfoMeasure)
 {
 }
@@ -17,7 +17,7 @@ VeinComponentScpiMeasureSequencePtr ScpiStoreScpiSequence::getComponentSequence(
     if (entityIter == m_veinParseInfoMeasure.constEnd())
         return bailOutNotFound(componentId);
 
-    const VeinScpiModuleInterfaceParser::ScpiComponentParseInfo &components = entityIter.value();
+    const ScpiVeinParser::ScpiComponentParseInfo &components = entityIter.value();
     auto componentIter = components.find(componentId.componentName);
     if (componentIter == components.constEnd())
         return bailOutNotFound(componentId);

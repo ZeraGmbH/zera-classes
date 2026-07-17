@@ -1,4 +1,4 @@
-#include "veinscpimoduleinterfaceparser.h"
+#include "scpiveinparser.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -6,7 +6,7 @@
 namespace SCPIMODULE
 {
 
-bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::AbstractDatabase *storageDb)
+bool ScpiVeinParser::parseVeinStorage(const VeinStorage::AbstractDatabase *storageDb)
 {
     clear();
 
@@ -70,7 +70,7 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
     return ok;
 }
 
-void VeinScpiModuleInterfaceParser::clear()
+void ScpiVeinParser::clear()
 {
     m_entitiesWithScpi.clear();
     m_measureInfo.clear();
@@ -79,27 +79,27 @@ void VeinScpiModuleInterfaceParser::clear()
     m_rpcInfo.clear();
 }
 
-const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParser::getMeasureInfo() const
+const ScpiVeinParser::ScpiParseInfo &ScpiVeinParser::getMeasureInfo() const
 {
     return m_measureInfo;
 }
 
-const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParser::getCatalogInfo() const
+const ScpiVeinParser::ScpiParseInfo &ScpiVeinParser::getCatalogInfo() const
 {
     return m_catalogInfo;
 }
 
-const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParser::getParamInfo() const
+const ScpiVeinParser::ScpiParseInfo &ScpiVeinParser::getParamInfo() const
 {
     return m_paramInfo;
 }
 
-const VeinScpiModuleInterfaceParser::ScpiEntityHash &VeinScpiModuleInterfaceParser::getEntitiesWithScpi() const
+const ScpiVeinParser::ScpiEntityHash &ScpiVeinParser::getEntitiesWithScpi() const
 {
     return m_entitiesWithScpi;
 }
 
-const VeinScpiModuleInterfaceParser::ScpiParseInfo &VeinScpiModuleInterfaceParser::getRpcInfo() const
+const ScpiVeinParser::ScpiParseInfo &ScpiVeinParser::getRpcInfo() const
 {
     return m_rpcInfo;
 }

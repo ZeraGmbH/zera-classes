@@ -11,7 +11,7 @@
 #include "scpimodelcatalogs.h"
 #include "signalconnectiondelegateupdater.h"
 #include "scpirpctransactionstore.h"
-#include "veinscpimoduleinterfaceparser.h"
+#include "scpiveinparser.h"
 #include "vfeventsytemmoduleparam.h"
 #include <vf_cmd_event_handler_system.h>
 
@@ -36,7 +36,7 @@ public:
 
     void updatePendingMeasureSequences(const VeinComponentId &componentId, const QVariant &newValue);
     ScpiModelCatalogs* getScpiModelCatalogs();
-    const VeinScpiModuleInterfaceParser &getScpiModuleInterfaceParser() const;
+    const ScpiVeinParser &getScpiModuleInterfaceParser() const;
     SignalConnectionDelegateUpdater *getSignalDelegateUpdater();
     ScpiRpcTransactionStore* getRpcTransactionStore();
 
@@ -56,7 +56,7 @@ private:
     cSCPIServer *m_pSCPIServer = nullptr;
     VfEventSytemModuleParam* m_pModuleValidator = nullptr;
     VfCmdEventHandlerSystemPtr m_cmdEventHandlerSystem;
-    VeinScpiModuleInterfaceParser m_moduleInterfaceParser;
+    ScpiVeinParser m_moduleInterfaceParser;
 
     cSCPIInterface m_scpiInterface;
     ScpiModelMeasure m_scpiModelMeasurement;

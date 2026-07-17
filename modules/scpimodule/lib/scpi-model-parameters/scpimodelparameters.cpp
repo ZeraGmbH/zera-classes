@@ -11,11 +11,11 @@ ScpiModelParameters::ScpiModelParameters(cSCPIModule* scpiModule) :
 
 void ScpiModelParameters::setupScpi(cSCPIInterface *scpiInterface)
 {
-    const VeinScpiModuleInterfaceParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
-    const VeinScpiModuleInterfaceParser::ScpiParseInfo allParamInfos = moduleInterfaces.getParamInfo();
+    const ScpiVeinParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
+    const ScpiVeinParser::ScpiParseInfo allParamInfos = moduleInterfaces.getParamInfo();
 
     for (auto iter = allParamInfos.constBegin(); iter != allParamInfos.constEnd(); ++iter) {
-        const VeinScpiModuleInterfaceParser::ScpiComponentParseInfo &params = iter.value();
+        const ScpiVeinParser::ScpiComponentParseInfo &params = iter.value();
         for (const cSCPICmdInfoPtr &param : params)
             addSCPICommand(scpiInterface, param);
     }

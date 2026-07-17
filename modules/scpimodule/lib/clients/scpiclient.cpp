@@ -45,7 +45,7 @@ cSCPIClient::cSCPIClient(cSCPIModule* module) :
     connect(scpiOperStatus, &cSCPIStatus::sigEventErrorCmdFinish, m_pIEEE4882, &cIEEE4882::addEventErrorWithResponse);
     connect(scpiOperMeasStatus, &cSCPIStatus::sigEventErrorCmdFinish, m_pIEEE4882, &cIEEE4882::addEventErrorWithResponse);
 
-    const VeinScpiModuleInterfaceParser::ScpiEntityHash entitiesWithScpi = m_pModule->getScpiModuleInterfaceParser().getEntitiesWithScpi();
+    const ScpiVeinParser::ScpiEntityHash entitiesWithScpi = m_pModule->getScpiModuleInterfaceParser().getEntitiesWithScpi();
     setSignalConnections(scpiQuestStatus, m_ConfigData.m_QuestionableStatDescriptorList, entitiesWithScpi);
     setSignalConnections(scpiOperStatus, m_ConfigData.m_OperationStatDescriptorList, entitiesWithScpi);
     setSignalConnections(scpiOperMeasStatus, m_ConfigData.m_OperationMeasureStatDescriptorList, entitiesWithScpi);
@@ -208,7 +208,7 @@ void cSCPIClient::handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId
 
 void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus,
                                        const QList<cStatusBitDescriptor> &statusBitDescriptorList,
-                                       const VeinScpiModuleInterfaceParser::ScpiEntityHash &entitiesWithScpi)
+                                       const ScpiVeinParser::ScpiEntityHash &entitiesWithScpi)
 {
     if (entitiesWithScpi.isEmpty())
         return;

@@ -12,11 +12,11 @@ ScpiModelCatalogs::ScpiModelCatalogs(cSCPIModule *scpiModule) :
 
 void ScpiModelCatalogs::setupScpi(cSCPIInterface *scpiInterface)
 {
-    const VeinScpiModuleInterfaceParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
-    const VeinScpiModuleInterfaceParser::ScpiParseInfo allCatalogInfos = moduleInterfaces.getCatalogInfo();
+    const ScpiVeinParser moduleInterfaces = m_scpiModule->getScpiModuleInterfaceParser();
+    const ScpiVeinParser::ScpiParseInfo allCatalogInfos = moduleInterfaces.getCatalogInfo();
 
     for (auto iter = allCatalogInfos.constBegin(); iter != allCatalogInfos.constEnd(); ++iter) {
-        const VeinScpiModuleInterfaceParser::ScpiComponentParseInfo &catalogs = iter.value();
+        const ScpiVeinParser::ScpiComponentParseInfo &catalogs = iter.value();
         for (const cSCPICmdInfoPtr &command : catalogs)
             addSCPICommand(scpiInterface, command);
     }

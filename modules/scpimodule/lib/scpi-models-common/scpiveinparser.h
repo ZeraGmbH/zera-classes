@@ -1,5 +1,5 @@
-#ifndef VEINSCPIMODULEINTERFACEPARSER_H
-#define VEINSCPIMODULEINTERFACEPARSER_H
+#ifndef SCPIVEINPARSER_H
+#define SCPIVEINPARSER_H
 
 #include "scpicmdinfo.h"
 #include <vs_abstractdatabase.h>
@@ -8,7 +8,7 @@
 namespace SCPIMODULE
 {
 
-class VeinScpiModuleInterfaceParser
+class ScpiVeinParser
 {
 public:
     bool parseVeinStorage(const VeinStorage::AbstractDatabase* storageDb);
@@ -35,4 +35,4 @@ private:
 };
 
 }
-#endif // VEINSCPIMODULEINTERFACEPARSER_H
+#endif // SCPIVEINPARSER_H

@@ -12,12 +12,12 @@ ScpiModelMeasure::ScpiModelMeasure(cSCPIModule* module) :
 
 void ScpiModelMeasure::setupScpi(cSCPIInterface *scpiInterface)
 {
-    const VeinScpiModuleInterfaceParser moduleInterfaces = m_pModule->getScpiModuleInterfaceParser();
-    const VeinScpiModuleInterfaceParser::ScpiParseInfo measureInfo = moduleInterfaces.getMeasureInfo();
+    const ScpiVeinParser moduleInterfaces = m_pModule->getScpiModuleInterfaceParser();
+    const ScpiVeinParser::ScpiParseInfo measureInfo = moduleInterfaces.getMeasureInfo();
 
     VeinComponentByScpiPath scpiNodesAdded;
     for (auto entityIter = measureInfo.constBegin(); entityIter != measureInfo.constEnd(); ++entityIter) {
-        const VeinScpiModuleInterfaceParser::ScpiComponentParseInfo components = entityIter.value();
+        const ScpiVeinParser::ScpiComponentParseInfo components = entityIter.value();
         for (const cSCPICmdInfoPtr &component : components)
             addScpiCmdForVeinComponent(scpiInterface, scpiNodesAdded, component);
     }

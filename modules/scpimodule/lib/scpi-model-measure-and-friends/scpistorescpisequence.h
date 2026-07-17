@@ -3,7 +3,7 @@
 
 #include "scpimodeldefinitions.h"
 #include "scpiveincomponentsequencemeasure.h"
-#include "veinscpimoduleinterfaceparser.h"
+#include "scpiveinparser.h"
 #include <QHash>
 
 namespace SCPIMODULE {
@@ -11,7 +11,7 @@ namespace SCPIMODULE {
 class ScpiStoreScpiSequence
 {
 public:
-    explicit ScpiStoreScpiSequence(const VeinScpiModuleInterfaceParser::ScpiParseInfo &veinParseInfoMeasure);
+    explicit ScpiStoreScpiSequence(const ScpiVeinParser::ScpiParseInfo &veinParseInfoMeasure);
     VeinComponentScpiMeasureSequencePtr getComponentSequence(const VeinComponentId &componentId);
 
     void updatePendingMeasureSequences(const VeinComponentId &componentId, const QVariant &newValue);
@@ -20,7 +20,7 @@ private:
     static QString stringifyComponentId(const VeinComponentId &componentId);
     VeinComponentScpiMeasureSequencePtr bailOutNotFound(const VeinComponentId &componentId);
 
-    const VeinScpiModuleInterfaceParser::ScpiParseInfo m_veinParseInfoMeasure;
+    const ScpiVeinParser::ScpiParseInfo m_veinParseInfoMeasure;
     QHash<QString /*stringifiedComponentId*/, VeinComponentScpiMeasureSequencePtr> m_componentSequences;
 };
 

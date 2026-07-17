@@ -87,7 +87,7 @@ VfCmdEventHandlerSystemPtr cSCPIModule::getCmdEventHandlerSystem()
     return m_cmdEventHandlerSystem;
 }
 
-const VeinScpiModuleInterfaceParser &cSCPIModule::getScpiModuleInterfaceParser() const
+const ScpiVeinParser &cSCPIModule::getScpiModuleInterfaceParser() const
 {
     return m_moduleInterfaceParser;
 }
