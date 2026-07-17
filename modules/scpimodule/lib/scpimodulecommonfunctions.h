@@ -1,9 +1,9 @@
-#ifndef SCPIMODULECOMMONSTATICFUNCTIONS_H
-#define SCPIMODULECOMMONSTATICFUNCTIONS_H
+#ifndef SCPIMODULECOMMONFUNCTIONS_H
+#define SCPIMODULECOMMONFUNCTIONS_H
 
 #include <QString>
 
-class ScpiModuleCommonStaticFunctions
+class ScpiModuleCommonFunctions
 {
 public:
     static bool isQuery(const QString &scpi);
@@ -12,4 +12,4 @@ public:
     static QString getMeasureScpiModuleName(const QString &scpiPath);
 };
 
-#endif // SCPIMODULECOMMONSTATICFUNCTIONS_H
+#endif // SCPIMODULECOMMONFUNCTIONS_H

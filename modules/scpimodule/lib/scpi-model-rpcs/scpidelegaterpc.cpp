@@ -1,5 +1,5 @@
 #include "scpidelegaterpc.h"
-#include "scpimodulecommonstaticfunctions.h"
+#include "scpimodulecommonfunctions.h"
 #include <zscpi_response_definitions.h>
 #include <vf_client_rpc_invoker.h>
 #include <vf_rpc_invoker.h>
@@ -23,7 +23,7 @@ void ScpiDelegateRpc::executeSCPI(cSCPIClient *client, const QString &scpi, cons
     quint8 scpiQueryCmdFlags = getType();
     cSCPICommand cmd = scpi;
 
-    bool bQuery = ScpiModuleCommonStaticFunctions::isQuery(scpi);
+    bool bQuery = ScpiModuleCommonFunctions::isQuery(scpi);
     bool bCmd = cmd.isCommand(1) && cmd.getParamList()[0].isEmpty();
     bool bCmdwP = cmd.isCommand(1) || m_veinComponentInfo.contains("Optional parameter");
 

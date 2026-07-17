@@ -1,5 +1,5 @@
 #include "scpiresponsesorter.h"
-#include "scpimodulecommonstaticfunctions.h"
+#include "scpimodulecommonfunctions.h"
 
 ScpiResponseSorter::~ScpiResponseSorter()
 {
@@ -26,7 +26,7 @@ ScpiTransactionId ScpiResponseSorter::createTransaction(const QString &scpi)
     // * Since commands have no response from user perspective: just sort queries
     // * Archieve queries only by returning invalid transaction id for commands - see
     //   genOrDelaySortedOutput below
-    bool bQuery = ScpiModuleCommonStaticFunctions::isQuery(scpi);
+    bool bQuery = ScpiModuleCommonFunctions::isQuery(scpi);
     if (!bQuery)
         return ScpiTransactionId();
 
