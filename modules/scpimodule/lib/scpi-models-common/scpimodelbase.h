@@ -11,7 +11,7 @@ class ScpiModelBase : public QObject
     Q_OBJECT
 public:
     ScpiModelBase();
-    virtual ~ScpiModelBase();
+    ~ScpiModelBase() override;
 
     static int getInstanceCount();
 
