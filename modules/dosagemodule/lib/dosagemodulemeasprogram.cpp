@@ -81,11 +81,10 @@ void cDosageModuleMeasProgram::deactivateMeasDone()
 
 void cDosageModuleMeasProgram::onActualize()
 {
-    float tmpVal;
     bool exceedFlag = false;
 
     for (int i = 0; i < m_PowerToAnalyseList.size(); i++ ) {
-        tmpVal = m_PowerToAnalyseList[i].m_component->getValue().toFloat();
+        float tmpVal = m_PowerToAnalyseList[i].m_component->getValue().toFloat();
         if (tmpVal > m_PowerToAnalyseList[i].m_fUpperLimit) {
             exceedFlag = true;
             //qInfo("Entity: %i Component: %s exceeds upper limit", m_PowerToAnalyseList[i].m_nEntity, qPrintable(m_PowerToAnalyseList[i].m_ComponentName));
