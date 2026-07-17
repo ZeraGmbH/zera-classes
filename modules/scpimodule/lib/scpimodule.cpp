@@ -104,25 +104,6 @@ const QList<SCPIVeinTransactionInfoPtr> cSCPIModule::getScpiVeinParamRpcTransact
     return m_scpiVeinParamOrRpcTransactions.values(componentOrRpcName);
 }
 
-void cSCPIModule::insertSignalConnectionDelegate(cSignalConnectionDelegate *delegate)
-{
-    m_signalConnectionDelegates.append(delegate);
-}
-
-void cSCPIModule::removeSignalConnectionDelegates(cSignalConnectionDelegate *delegate)
-{
-    m_signalConnectionDelegates.removeAll(delegate);
-}
-
-void cSCPIModule::updateSignalConnection(int entityId, const QString &componentName, const QVariant &newValue)
-{
-    for(int i = 0; i < m_signalConnectionDelegates.count(); i++) {
-        cSignalConnectionDelegate* delegate = m_signalConnectionDelegates.at(i);
-        if(delegate->EntityId() == entityId && delegate->ComponentName() == componentName)
-            delegate->setStatus(newValue);
-    }
-}
-
 VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()
 {
     return m_pModuleValidator;
@@ -141,6 +122,11 @@ VfCmdEventHandlerSystemPtr cSCPIModule::getCmdEventHandlerSystem()
 const VeinScpiModuleInterfaceParser &cSCPIModule::getScpiModuleInterfaceParser() const
 {
     return m_moduleInterfaceParser;
+}
+
+SignalConnectionDelegateUpdater *cSCPIModule::getSignalDelegateUpdater()
+{
+    return &m_signalDelegateUpdater;
 }
 
 void cSCPIModule::setupModule()

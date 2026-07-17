@@ -55,7 +55,7 @@ cSCPIClient::~cSCPIClient()
 {
     for (int i = 0; i < m_connectDelegateList.count(); i++) {
         cSignalConnectionDelegate* sCD = m_connectDelegateList.at(i);
-        m_pModule->removeSignalConnectionDelegates(sCD);
+        m_pModule->getSignalDelegateUpdater()->removeDelegate(sCD);
         delete sCD;
     }
     for (int i = 0; i < m_SCPIStatusList.count(); i++)
@@ -231,7 +231,7 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus,
                                                                                     statusBitDescriptor.m_nBitNr,
                                                                                     entityId, statusBitDescriptor.m_sComponentName);
                 // as we only want a single eventsystem the module itself holds the list of delegates
-                m_pModule->insertSignalConnectionDelegate(delegate);
+                m_pModule->getSignalDelegateUpdater()->addDelegate(delegate);
                 m_connectDelegateList.append(delegate); // our own list so we can clean up if client dies
             }
         }

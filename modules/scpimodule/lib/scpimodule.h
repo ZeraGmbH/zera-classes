@@ -11,6 +11,7 @@
 #include "scpimodelrpcs.h"
 #include "scpimodelcatalogs.h"
 #include "signalconnectiondelegate.h"
+#include "signalconnectiondelegateupdater.h"
 #include "veinscpimoduleinterfaceparser.h"
 #include "vfeventsytemmoduleparam.h"
 #include <vf_cmd_event_handler_system.h>
@@ -36,6 +37,8 @@ public:
 
     ScpiModelCatalogs* getScpiModelCatalogs();
     const VeinScpiModuleInterfaceParser &getScpiModuleInterfaceParser() const;
+    SignalConnectionDelegateUpdater *getSignalDelegateUpdater();
+
     VfEventSytemModuleParam *getValidatorEventSystem();
     VfCmdEventHandlerSystemPtr getCmdEventHandlerSystem();
 
@@ -49,9 +52,6 @@ public:
     const QList<SCPIVeinTransactionInfoPtr> getAllScpiVeinParamRpcTransactions();
     const QList<SCPIVeinTransactionInfoPtr> getScpiVeinParamRpcTransactions(const QString &componentOrRpcName);
 
-    void insertSignalConnectionDelegate(cSignalConnectionDelegate* delegate);
-    void removeSignalConnectionDelegates(cSignalConnectionDelegate *delegate);
-    void updateSignalConnection(int entityId, const QString &componentName, const QVariant &newValue);
 
     void updatePendingMeasureSequences(const VeinComponentId &componentId, const QVariant &newValue);
 
@@ -81,8 +81,8 @@ private:
     ScpiModelStatus m_scpiModelStatus;
     ScpiModelIEEE4882 m_scpiModelIeee488;
 
+    SignalConnectionDelegateUpdater m_signalDelegateUpdater;
     QMultiHash<QString /*componentOrRpcName*/, SCPIVeinTransactionInfoPtr> m_scpiVeinParamOrRpcTransactions;
-    QList<cSignalConnectionDelegate*> m_signalConnectionDelegates;
 };
 
 }
