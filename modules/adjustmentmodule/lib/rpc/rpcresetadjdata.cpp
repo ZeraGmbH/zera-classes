@@ -15,8 +15,8 @@ RPCResetAdjData::RPCResetAdjData(Zera::PcbInterfacePtr pcbInterface, VeinEvent::
 
 void RPCResetAdjData::callRPCFunction(const QUuid &callId, const QVariantMap &parameters)
 {
-    TaskTemplatePtr taskActivePB = TaskResetAdjData::create(m_pcbInterface, TRANSACTION_TIMEOUT);
-    TaskRpcTransactionWrapperPtr taskRpcWrapper = TaskRpcTaskWrapper::create(std::move(taskActivePB), callId);
+    TaskTemplatePtr taskReset = TaskResetAdjData::create(m_pcbInterface, TRANSACTION_TIMEOUT);
+    TaskRpcTransactionWrapperPtr taskRpcWrapper = TaskRpcTaskWrapper::create(std::move(taskReset), callId);
     connect(taskRpcWrapper.get(), &TaskRpcTaskWrapper::sigRpcFinished, this, &RPCResetAdjData::onRpcTaskFinish);
     m_tasksQueue->addSub(std::move(taskRpcWrapper));
 }

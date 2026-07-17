@@ -33,8 +33,8 @@ void test_adj_data::resetAdjustmentDeviceNotAdjusted()
 
     QString response = client.sendReceiveNotSorted("STATUS:DEV1:ADJUSTMENT?", true);
     QCOMPARE(response, "5"); //Device not adjusted + Wrong serial number
-    response = client.sendReceiveNotSorted("RESET:DEV1:ADJUSTMENT;", true);
-    QCOMPARE(response, "");
+    response = client.sendReceiveNotSorted("CALCULATE:ADJ1:RESET;|*stb?", true);
+    QCOMPARE(response, "+0");
     response = client.sendReceiveNotSorted("STATUS:DEV1:ADJUSTMENT?", true);
     QCOMPARE(response, "5");
 }
@@ -48,8 +48,8 @@ void test_adj_data::resetAdjustmentDeviceAdjusted()
 
     QString response = client.sendReceiveNotSorted("STATUS:DEV1:ADJUSTMENT?", true);
     QCOMPARE(response, "0"); //Device adjusted
-    response = client.sendReceiveNotSorted("RESET:DEV1:ADJUSTMENT;", true);
-    QCOMPARE(response, "");
+    response = client.sendReceiveNotSorted("CALCULATE:ADJ1:RESET;|*stb?", true);
+    QCOMPARE(response, "+0");
     response = client.sendReceiveNotSorted("STATUS:DEV1:ADJUSTMENT?", true);
     QCOMPARE(response, "1"); //Device Not adjusted
 }
@@ -63,8 +63,8 @@ void test_adj_data::resetAdjustmentTwice()
 
     QString response = client.sendReceiveNotSorted("STATUS:DEV1:ADJUSTMENT?", true);
     QCOMPARE(response, "0"); //Device adjusted
-    client.sendReceiveNotSorted("RESET:DEV1:ADJUSTMENT;", true);
-    client.sendReceiveNotSorted("RESET:DEV1:ADJUSTMENT;", true);
+    client.sendReceiveNotSorted("CALCULATE:ADJ1:RESET;|*stb?", true);
+    client.sendReceiveNotSorted("CALCULATE:ADJ1:RESET;|*stb?", true);
     response = client.sendReceiveNotSorted("STATUS:DEV1:ADJUSTMENT?", true);
     QCOMPARE(response, "1"); //Device Not adjusted
 }

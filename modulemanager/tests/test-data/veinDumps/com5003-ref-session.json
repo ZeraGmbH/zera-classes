@@ -1965,9 +1965,6 @@
             "RpcInfo": {
                 "RPC_CreateVersionFile(QString p_destinationPath)": {
                     "Description": "<skipped>"
-                },
-                "RPC_resetAdjustmentData()": {
-                    "Description": "<skipped>"
                 }
             },
             "SCPIInfo": {
@@ -2085,16 +2082,7 @@
                         "0"
                     ]
                 ],
-                "Name": "DEV1",
-                "RPC": [
-                    [
-                        "RESET",
-                        "ADJUSTMENT",
-                        "4",
-                        "RPC_resetAdjustmentData()",
-                        "0"
-                    ]
-                ]
+                "Name": "DEV1"
             }
         },
         "INF_PCBServerVersion": "V42.0",
@@ -2241,6 +2229,11 @@
                 "Description": "This module supports commands for adjustment for a configured number of measuring channels",
                 "Name": "AdjustmentModule1"
             },
+            "RpcInfo": {
+                "RPC_resetAdjustmentData()": {
+                    "Description": "<skipped>"
+                }
+            },
             "SCPIInfo": {
                 "Cmd": [
                     [
@@ -2335,7 +2328,16 @@
                         "0"
                     ]
                 ],
-                "Name": "ADJ1"
+                "Name": "ADJ1",
+                "RPC": [
+                    [
+                        "CALCULATE",
+                        "RESET",
+                        "4",
+                        "RPC_resetAdjustmentData()",
+                        "0"
+                    ]
+                ]
             }
         },
         "PAR_AdjustAmplitude": "",
