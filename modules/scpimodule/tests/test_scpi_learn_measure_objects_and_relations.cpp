@@ -17,20 +17,32 @@ void test_scpi_learn_measure_objects_and_relations::countMeasureRelatedObjectsCr
     ModuleManagerTestRunner testRunner(":/session-scpi-osci-for-min-measure.json");
     SCPIMODULE::cSCPIModule* scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(testRunner.getModule(9999));
 
-    constexpr int osciComponentCount = 8; // ACT_OSCI1..ACT_OSCI18
-    QCOMPARE(SCPIMODULE::VeinComponentScpiMeasureSequence::getInstanceCount(), osciComponentCount);
     int noClientDelegateInstanceCount = SCPIMODULE::ScpiDelegateTemplate::getInstanceCount();
 
+    QCOMPARE(SCPIMODULE::ScpiVeinComponentSequenceMeasure::getInstanceCount(), 0);
 
-    // Scpi interface copies
     SCPIMODULE::ScpiTestClient client(scpiModule);
+    QCOMPARE(SCPIMODULE::ScpiVeinComponentSequenceMeasure::getInstanceCount(), 0); // on demand on communication / no I/O yet => 0
+    int clientDelegateInstanceCount = SCPIMODULE::ScpiDelegateTemplate::getInstanceCount();
+    QCOMPARE(noClientDelegateInstanceCount, clientDelegateInstanceCount);
+
+    client.sendScpiCmds("MEASURE:OSC1:UL1?");
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(SCPIMODULE::ScpiVeinComponentSequenceMeasure::getInstanceCount(), 1); // we asked for one component
+
+    client.sendScpiCmds("MEASURE:OSC1:UL2?");
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(SCPIMODULE::ScpiVeinComponentSequenceMeasure::getInstanceCount(), 2); // we asked for two components
+
+    constexpr int osciComponentCount = 8; // ACT_OSCI1..ACT_OSCI18
+    client.sendScpiCmds("MEASURE:OSC1?");
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(SCPIMODULE::ScpiVeinComponentSequenceMeasure::getInstanceCount(), osciComponentCount); // we asked for all components
+
     client.sendScpiCmds("dev:iface?");
     TimeMachineObject::feedEventLoop();
-
-    QCOMPARE(SCPIMODULE::VeinComponentScpiMeasureSequence::getInstanceCount(), 2 * osciComponentCount); // module + client
-    // => PerVeinComponentMeasureTransaction are copied for client
-
     const QString xmlResponse = client.getResponsesNotSorted()[0].getStr();
+
     XmlDocument xmlDoc;
     xmlDoc.loadXml(xmlResponse, true);
     XmlElemIter iter = xmlDoc.root(std::make_unique<XmlElemIterStrategyTree>());
@@ -62,8 +74,7 @@ void test_scpi_learn_measure_objects_and_relations::countMeasureRelatedObjectsCr
     QCOMPARE(scpiPathsNonOsciMeasure.size(), nonOsciMeasureNodeCount);
 
     QCOMPARE(noClientDelegateInstanceCount, scpiPathsNonOsciMeasure.size() + scpiPathsOsciMeasure.size());
-    QCOMPARE(SCPIMODULE::ScpiDelegateTemplate::getInstanceCount(), scpiPathsNonOsciMeasure.size() + 2 * scpiPathsOsciMeasure.size());
-    // => Only ScpiMeasureScpiCmdNodeDelegate are copied for client
+    QCOMPARE(SCPIMODULE::ScpiDelegateTemplate::getInstanceCount(), scpiPathsNonOsciMeasure.size() + scpiPathsOsciMeasure.size());
 }
 
 void test_scpi_learn_measure_objects_and_relations::multipleClientsIndependentStatusbyte()

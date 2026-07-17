@@ -16,7 +16,7 @@ void ScpiModelCatalogs::setupScpi(cSCPIInterface *scpiInterface)
     const VeinScpiModuleInterfaceParser::ScpiParseInfo allCatalogInfos = moduleInterfaces.getCatalogInfo();
 
     for (auto iter = allCatalogInfos.constBegin(); iter != allCatalogInfos.constEnd(); ++iter) {
-        const QList<cSCPICmdInfoPtr> &catalogs = iter.value();
+        const VeinScpiModuleInterfaceParser::ScpiComponentParseInfo &catalogs = iter.value();
         for (const cSCPICmdInfoPtr &command : catalogs)
             addSCPICommand(scpiInterface, command);
     }

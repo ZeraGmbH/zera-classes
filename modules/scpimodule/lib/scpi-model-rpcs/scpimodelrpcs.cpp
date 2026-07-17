@@ -15,7 +15,7 @@ void ScpiModelRpcs::setupScpi(cSCPIInterface *scpiInterface)
     const VeinScpiModuleInterfaceParser::ScpiParseInfo allRpcInfos = moduleInterfaces.getRpcInfo();
 
     for (auto iter = allRpcInfos.constBegin(); iter != allRpcInfos.constEnd(); ++iter) {
-        const QList<cSCPICmdInfoPtr> &rpcs = iter.value();
+        const VeinScpiModuleInterfaceParser::ScpiComponentParseInfo &rpcs = iter.value();
         for (const cSCPICmdInfoPtr &rpc : rpcs)
             addRPCCommand(scpiInterface, rpc);
     }

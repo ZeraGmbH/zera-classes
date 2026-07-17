@@ -32,17 +32,18 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
                     scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
                     scpiCmdInfo->scpiQueryCmdFlags = jsonCmdArr[2].toString().toUShort();
-                    scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
+                    const QString componentName = jsonCmdArr[3].toString();
+                    scpiCmdInfo->componentOrRpcName = componentName;
                     scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentOrRpcName].toObject();
                     const QString refType = jsonCmdArr[4].toString();
                     if (scpiCmdInfo->scpiModel != "MEASURE") {
                         if (refType == "0")
-                            m_paramInfo[entityId].append(scpiCmdInfo);
+                            m_paramInfo[entityId][componentName] = scpiCmdInfo;
                         else
-                            m_catalogInfo[entityId].append(scpiCmdInfo);
+                            m_catalogInfo[entityId][componentName] = scpiCmdInfo;
                     }
                     else
-                        m_measureInfo[entityId].append(scpiCmdInfo);
+                        m_measureInfo[entityId][componentName] = scpiCmdInfo;
                 }
 
                 const QJsonObject jsonRpcInfo = jsonObj["RpcInfo"].toObject();
@@ -55,10 +56,11 @@ bool VeinScpiModuleInterfaceParser::parseVeinStorage(const VeinStorage::Abstract
                     scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
                     scpiCmdInfo->scpiQueryCmdFlags = jsonCmdArr[2].toString().toUShort();
-                    scpiCmdInfo->componentOrRpcName = jsonCmdArr[3].toString();
+                    const QString rpcName = jsonCmdArr[3].toString();
+                    scpiCmdInfo->componentOrRpcName = rpcName;
                     scpiCmdInfo->veinComponentInfo = jsonRpcInfo[scpiCmdInfo->componentOrRpcName].toObject();
 
-                    m_rpcInfo[entityId].append(scpiCmdInfo);
+                    m_rpcInfo[entityId][rpcName] = scpiCmdInfo;
                 }
             }
             else

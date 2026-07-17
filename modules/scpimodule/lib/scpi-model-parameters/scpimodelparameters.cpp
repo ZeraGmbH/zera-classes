@@ -15,7 +15,7 @@ void ScpiModelParameters::setupScpi(cSCPIInterface *scpiInterface)
     const VeinScpiModuleInterfaceParser::ScpiParseInfo allParamInfos = moduleInterfaces.getParamInfo();
 
     for (auto iter = allParamInfos.constBegin(); iter != allParamInfos.constEnd(); ++iter) {
-        const QList<cSCPICmdInfoPtr> &params = iter.value();
+        const VeinScpiModuleInterfaceParser::ScpiComponentParseInfo &params = iter.value();
         for (const cSCPICmdInfoPtr &param : params)
             addSCPICommand(scpiInterface, param);
     }

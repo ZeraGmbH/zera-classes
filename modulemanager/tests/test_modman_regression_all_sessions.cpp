@@ -1,7 +1,7 @@
 #include "test_modman_regression_all_sessions.h"
 #include "scpidocshtmlgenerator.h"
 #include "modulemanagerconfig.h"
-#include "veincomponentscpimeasuresequence.h"
+#include "scpiveincomponentsequencemeasure.h"
 #include "scpidelegatetemplate.h"
 #include "scpimodelbase.h"
 #include "sessionexportgenerator.h"
@@ -184,7 +184,7 @@ void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
     QCOMPARE(VeinTcp::TcpPeer::getInstanceCount(), peersLeftServerDown);
 
     QCOMPARE(SCPIMODULE::ScpiModelBase::getInstanceCount(), 0);
-    QCOMPARE(SCPIMODULE::VeinComponentScpiMeasureSequence::getInstanceCount(), 0);
+    QCOMPARE(SCPIMODULE::ScpiVeinComponentSequenceMeasure::getInstanceCount(), 0);
     QCOMPARE(SCPIMODULE::ScpiDelegateTemplate::getInstanceCount(), 0);
 
     // for zenux-services

@@ -34,9 +34,12 @@ public:
     cSCPIModuleConfigData *getConfigData();
     QByteArray getConfigXml() const override;
 
-    ScpiModelMeasure *getScpiModelMeasurement();
     ScpiModelCatalogs* getScpiModelCatalogs();
+    const VeinScpiModuleInterfaceParser &getScpiModuleInterfaceParser() const;
+    VfEventSytemModuleParam *getValidatorEventSystem();
+    VfCmdEventHandlerSystemPtr getCmdEventHandlerSystem();
 
+    // Stuff below needs cleanup - module does everything!!!
     void removeClientParamOrRpcTransactions(cSCPIClient *client);
 
     void insertScpiVeinParamRpcTransaction(const QString &componentOrRpcName,
@@ -50,13 +53,10 @@ public:
     void removeSignalConnectionDelegates(cSignalConnectionDelegate *delegate);
     void updateSignalConnection(int entityId, const QString &componentName, const QVariant &newValue);
 
-    void updatePendingMeasureSequences(int entityId, const QString &componentName, const QVariant &newValue);
+    void updatePendingMeasureSequences(const VeinComponentId &componentId, const QVariant &newValue);
 
-    VfEventSytemModuleParam *getValidatorEventSystem();
     void emitSigSendEvent(QEvent *event);
-    VfCmdEventHandlerSystemPtr getCmdEventHandlerSystem();
 
-    const VeinScpiModuleInterfaceParser &getScpiModuleInterfaceParser() const;
 
 private slots:
     void activationFinished() override;

@@ -16,6 +16,7 @@ cSCPIClient::cSCPIClient(cSCPIModule* module) :
     m_pModule(module),
     m_pSCPIInterface(module->getScpiInterface()),
     m_ConfigData(*module->getConfigData()),
+    m_measureSequenceStore(m_pModule->getScpiModuleInterfaceParser().getMeasureInfo()),
     m_clientId(QUuid::createUuid()) // we need an unique id in case we want to send deferred error notifications events
 {
     // we instantiate 3 scpi status systems per client
@@ -48,8 +49,6 @@ cSCPIClient::cSCPIClient(cSCPIModule* module) :
     setSignalConnections(scpiQuestStatus, m_ConfigData.m_QuestionableStatDescriptorList, entitiesWithScpi);
     setSignalConnections(scpiOperStatus, m_ConfigData.m_OperationStatDescriptorList, entitiesWithScpi);
     setSignalConnections(scpiOperMeasStatus, m_ConfigData.m_OperationMeasureStatDescriptorList, entitiesWithScpi);
-
-    generateSCPIMeasureSystem();
 }
 
 cSCPIClient::~cSCPIClient()
@@ -62,11 +61,6 @@ cSCPIClient::~cSCPIClient()
     for (int i = 0; i < m_SCPIStatusList.count(); i++)
         delete m_SCPIStatusList.at(i);
     delete m_pIEEE4882;
-
-    QList<VeinComponentScpiMeasureSequence*> keylist;
-    keylist = m_SCPIMeasureTranslationHash.keys();
-    for (int i = 0; i < keylist.count(); i++)
-        delete m_SCPIMeasureTranslationHash[keylist.at(i)];
 }
 
 cSCPIInterface *cSCPIClient::getScpiInterface()
@@ -87,6 +81,11 @@ bool cSCPIClient::isOperationComplete()
 cIEEE4882 *cSCPIClient::getIEEE4882()
 {
     return m_pIEEE4882;
+}
+
+ScpiStoreScpiSequence *cSCPIClient::getMeasureSequenceStore()
+{
+    return &m_measureSequenceStore;
 }
 
 void cSCPIClient::addVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName, const SCPIVeinTransactionInfoPtr &info)
@@ -236,20 +235,6 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus,
                 m_connectDelegateList.append(delegate); // our own list so we can clean up if client dies
             }
         }
-    }
-}
-
-void cSCPIClient::generateSCPIMeasureSystem()
-{
-    // here we generate cSCPIMeasureDelegate objects including cSCPIMeasure objects for the new
-    // client so that they can work independantly when querying measuring values
-    // we ask the moduleinterface for the "base" cSCPIMeasureDelegate hash, that is once built up
-    // on module instanciation and that are connected to the scpi interface
-    QHash<QString, ScpiDelegateMeasurePtr> *pSCPIMeasDelegateHash = m_pModule->getScpiModelMeasurement()->getSCPIMeasDelegateHash();
-    QList<QString> keylist = pSCPIMeasDelegateHash->keys();
-    for (int i = 0; i < keylist.count(); i++) {
-        ScpiDelegateMeasurePtr measDelegate = (*pSCPIMeasDelegateHash)[keylist.at(i)];
-        m_SCPIMeasureDelegateHash[measDelegate.get()] = std::make_shared<ScpiClientMeasureExecutor>(*measDelegate, m_SCPIMeasureTranslationHash);
     }
 }
 

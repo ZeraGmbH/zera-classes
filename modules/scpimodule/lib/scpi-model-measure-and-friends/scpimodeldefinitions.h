@@ -4,11 +4,11 @@
 #include <QString>
 
 enum ScpiModelTypes {
-    measure,
-    configure,
-    read,
-    init,
-    fetch
+    MEASURE,
+    CONFIGURE,
+    READ,
+    INIT,
+    FETCH
 };
 
 struct VeinComponentId {

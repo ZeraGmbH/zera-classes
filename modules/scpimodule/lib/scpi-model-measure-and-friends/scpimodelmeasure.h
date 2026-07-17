@@ -2,9 +2,9 @@
 #define SCPIMODULEINTERFACE_H
 
 #include "scpimodelbase.h"
-#include "scpiinterface.h"
-#include "scpiclientmeasureexecutor.h"
 #include "scpicmdinfo.h"
+#include "scpiinterface.h"
+#include "scpidelegatemeasure.h"
 #include <QHash>
 
 namespace SCPIMODULE
@@ -12,7 +12,7 @@ namespace SCPIMODULE
 
 class cSCPIModule;
 
-/* This class creates of SCPI tree from Vein INF_MODULEINTERFACE of:
+/* This class creates SCPI tree from Vein INF_MODULEINTERFACE of:
  * MEASURE/CONFIGURE/READ/INIT/FETCH models (VfModuleComponent added to m_pModule->m_veinComponentsWithMetaAndScpi)
  */
 class ScpiModelMeasure : public ScpiModelBase
@@ -20,22 +20,24 @@ class ScpiModelMeasure : public ScpiModelBase
     Q_OBJECT
 public:
     explicit ScpiModelMeasure(cSCPIModule* module);
-    ~ScpiModelMeasure() override;
 
     void setupScpi(cSCPIInterface *scpiInterface);
 
-    QHash<QString, ScpiDelegateMeasurePtr>* getSCPIMeasDelegateHash();
-    void updatePendingMeasureSequences(int entityId, const QString &componentName, const QVariant &newValue);
+    void addClient(cSCPIClient *client);
+    void removeClient(cSCPIClient *client);
 
 private:
-    cSCPIModule* m_pModule = nullptr;
-    QHash<QString, ScpiDelegateMeasurePtr> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
-
-    void addSCPICommand(cSCPIInterface *scpiInterface, const cSCPICmdInfoPtr &scpiCmdInfo);
+    typedef QHash<QString /* scpiPath */, ScpiDelegateMeasurePtr> VeinComponentByScpiPath;
+    void addScpiCmdForVeinComponent(cSCPIInterface *scpiInterface,
+                                    VeinComponentByScpiPath &scpiNodesAdded,
+                                    const cSCPICmdInfoPtr &scpiComponentCmdInfo);
     void addSCPIMeasureCommand(cSCPIInterface *scpiInterface,
-                               const ScpiClientMeasureExecutor::Params &params,
+                               VeinComponentByScpiPath &scpiNodesAdded,
+                               const ScpiDelegateMeasure::Params &params,
+                               const VeinComponentId &componentId,
                                const QJsonObject &veinComponentInfo = QJsonObject());
-    QList<VeinComponentScpiMeasureSequence*> m_measureObjectsToDelete;
+
+    cSCPIModule* m_pModule = nullptr;
 };
 
 }

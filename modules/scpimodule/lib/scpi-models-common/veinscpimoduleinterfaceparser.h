@@ -3,7 +3,7 @@
 
 #include "scpicmdinfo.h"
 #include <vs_abstractdatabase.h>
-#include <QHash>
+#include <QMap>
 
 namespace SCPIMODULE
 {
@@ -13,10 +13,11 @@ class VeinScpiModuleInterfaceParser
 public:
     bool parseVeinStorage(const VeinStorage::AbstractDatabase* storageDb);
 
-    typedef QHash<QString /*scpiEntityName*/, int /*entityId*/> ScpiEntityHash;
-    typedef QHash<int /*entityId*/, QList<cSCPICmdInfoPtr>>ScpiParseInfo;
-
+    typedef QMap<QString /*scpiEntityName*/, int /*entityId*/> ScpiEntityHash;
     const ScpiEntityHash &getEntitiesWithScpi() const;
+
+    typedef QMap<QString /*componentName*/, cSCPICmdInfoPtr> ScpiComponentParseInfo;
+    typedef QMap<int /*entityId*/, ScpiComponentParseInfo>ScpiParseInfo;
     const ScpiParseInfo &getParamInfo() const;
     const ScpiParseInfo &getMeasureInfo() const;
     const ScpiParseInfo &getCatalogInfo() const;
@@ -26,6 +27,7 @@ private:
     void clear();
 
     ScpiEntityHash m_entitiesWithScpi;
+
     ScpiParseInfo m_measureInfo;
     ScpiParseInfo m_paramInfo;
     ScpiParseInfo m_catalogInfo;

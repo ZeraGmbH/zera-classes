@@ -58,9 +58,13 @@ QByteArray cSCPIModule::getConfigXml() const
     return m_configuration.exportConfiguration();
 }
 
-ScpiModelMeasure *cSCPIModule::getScpiModelMeasurement()
+void cSCPIModule::updatePendingMeasureSequences(const VeinComponentId &componentId, const QVariant &newValue)
 {
-    return &m_scpiModelMeasurement;
+    const QList<cSCPIClient*> &clients = m_pSCPIServer->getClients();
+    for (cSCPIClient* client : clients) {
+        ScpiStoreScpiSequence* store = client->getMeasureSequenceStore();
+        store->updatePendingMeasureSequences(componentId, newValue);
+    }
 }
 
 ScpiModelCatalogs *cSCPIModule::getScpiModelCatalogs()
@@ -117,11 +121,6 @@ void cSCPIModule::updateSignalConnection(int entityId, const QString &componentN
         if(delegate->EntityId() == entityId && delegate->ComponentName() == componentName)
             delegate->setStatus(newValue);
     }
-}
-
-void cSCPIModule::updatePendingMeasureSequences(int entityId, const QString &componentName, const QVariant &newValue)
-{
-    m_scpiModelMeasurement.updatePendingMeasureSequences(entityId, componentName, newValue);
 }
 
 VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()

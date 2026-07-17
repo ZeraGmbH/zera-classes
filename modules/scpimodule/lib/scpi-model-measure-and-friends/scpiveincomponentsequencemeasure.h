@@ -1,35 +1,31 @@
 #ifndef SCPIMEASURE_H
 #define SCPIMEASURE_H
 
-#include "scpicmdinfo.h"
 #include "scpimodeldefinitions.h"
 #include "scpitransactionid.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
+#include <QJsonObject>
+#include <memory>
 
-namespace SCPIMODULE
-{
+namespace SCPIMODULE {
 
-class VeinComponentScpiMeasureSequence : public QObject
+class ScpiVeinComponentSequenceMeasure : public QObject
 {
     Q_OBJECT
 public:
     struct Params {
+        const QString scpiModuleName;
+        const QString scpiCommand;
+        QJsonObject veinComponentInfo;
     };
-    explicit VeinComponentScpiMeasureSequence(Params params); // not used yet
-
-    static QMultiHash<QString, VeinComponentScpiMeasureSequence *> *getVeinComponentScpiMeasureSequenceStoreSingleton();
-    // Moduleinterface initials
-    VeinComponentScpiMeasureSequence(const cSCPICmdInfoPtr &scpicmdinfo);
-    // Scpi interface copies
-    VeinComponentScpiMeasureSequence(const VeinComponentScpiMeasureSequence &obj);
-    virtual ~VeinComponentScpiMeasureSequence();
+    ScpiVeinComponentSequenceMeasure(const Params &params);
+    ~ScpiVeinComponentSequenceMeasure() override;
 
     void receiveMeasureValue(const QVariant &value);
     void execute(ScpiModelTypes modelType, const ScpiTransactionId &scpiTransactionId);
-    int entityID();
 
     static int getInstanceCount();
 
@@ -40,17 +36,17 @@ signals:
     void initContinue();
     void fetchContinue();
 
-    void sigMeasDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
-    void sigConfDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
-    void sigReadDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
-    void sigInitDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
-    void sigFetchDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::VeinComponentScpiMeasureSequence* sender);
+    void sigMeasDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
+    void sigConfDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
+    void sigReadDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
+    void sigInitDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
+    void sigFetchDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
 
 private:
     void initialize();
     static QString convertVariantToString(const QVariant &value);
 
-    cSCPICmdInfoPtr m_pSCPICmdInfo;
+    Params m_params;
 
     QStateMachine m_MeasureStateMachine;
     QStateMachine m_ConfigureStateMachine;
@@ -106,7 +102,7 @@ private slots:
     void fetchFetch();
 };
 
-typedef std::shared_ptr<VeinComponentScpiMeasureSequence> VeinComponentScpiMeasureSequencePtr;
+typedef std::shared_ptr<ScpiVeinComponentSequenceMeasure> VeinComponentScpiMeasureSequencePtr;
 
 }
 

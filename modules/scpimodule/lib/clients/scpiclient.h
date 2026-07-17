@@ -2,7 +2,8 @@
 #define SCPICLIENT_H
 
 #include "scpiinterface.h"
-#include "scpiclientmeasureexecutor.h"
+#include "scpiclientexecutormeasure.h"
+#include "scpistorescpisequence.h"
 #include "signalconnectiondelegate.h"
 #include "scpiveintransactioninfo.h"
 #include "ieee488-2.h"
@@ -27,13 +28,12 @@ public:
     cSCPIInterface* getScpiInterface();
     cSCPIStatus* getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx);
     cIEEE4882* getIEEE4882();
+    ScpiStoreScpiSequence* getMeasureSequenceStore();
 
     bool isOperationComplete();
 
     QUuid getClientId();
     void addVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
-
-    QHash<ScpiClientMeasureExecutor*, ScpiDelegateMeasurePtr> m_SCPIMeasureDelegateHash;
 
     enum FinishLogTypes {
         LOG_FULL,
@@ -64,16 +64,15 @@ private:
     void setSignalConnections(cSCPIStatus* scpiStatus,
                               const QList<cStatusBitDescriptor> &statusBitDescriptorList,
                               const VeinScpiModuleInterfaceParser::ScpiEntityHash &entitiesWithScpi);
-    void generateSCPIMeasureSystem();
 
     cSCPIModuleConfigData& m_ConfigData;
     // what happens on same component names in different entities as e.g THDN module??? => TODO test
     QHash<QString /* veinComponentOrRpcName */, SCPIVeinTransactionInfoPtr> m_veinParamRpcTransactionHash;
     cIEEE4882* m_pIEEE4882 = nullptr;
+    ScpiStoreScpiSequence m_measureSequenceStore;
 
     QList<cSCPIStatus*> m_SCPIStatusList;
 
-    QHash<VeinComponentScpiMeasureSequence*, VeinComponentScpiMeasureSequence*> m_SCPIMeasureTranslationHash;
     QUuid m_clientId;
 
     QList<cSignalConnectionDelegate*> m_connectDelegateList;

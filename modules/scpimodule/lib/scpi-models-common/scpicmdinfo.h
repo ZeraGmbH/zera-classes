@@ -1,6 +1,7 @@
 #ifndef SCPICMDINFO_H
 #define SCPICMDINFO_H
 
+#include "scpimodeldefinitions.h"
 #include <QStringList>
 #include <QJsonObject>
 #include <memory>
@@ -21,6 +22,7 @@ public:
 
     int entityId;
     QString componentOrRpcName;
+    VeinComponentId componentId() const { return {entityId, componentOrRpcName}; }
 
     QJsonObject veinComponentInfo;
 };
