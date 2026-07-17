@@ -3,21 +3,21 @@
 namespace SCPIMODULE
 {
 
-int ScpiModelBase::m_interfaceCount = 0;
+int ScpiModelBase::m_instanceCount = 0;
 
 ScpiModelBase::ScpiModelBase()
 {
-    m_interfaceCount++;
+    m_instanceCount++;
 }
 
 ScpiModelBase::~ScpiModelBase()
 {
-    m_interfaceCount--;
+    m_instanceCount--;
 }
 
 int ScpiModelBase::getInstanceCount()
 {
-    return m_interfaceCount;
+    return m_instanceCount;
 }
 
 }

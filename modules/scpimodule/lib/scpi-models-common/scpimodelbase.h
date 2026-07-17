@@ -16,7 +16,7 @@ public:
     static int getInstanceCount();
 
 private:
-    static int m_interfaceCount;
+    static int m_instanceCount;
 };
 
 }
