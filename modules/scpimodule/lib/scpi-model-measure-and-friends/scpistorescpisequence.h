@@ -17,7 +17,7 @@ public:
     void updatePendingMeasureSequences(const VeinComponentId &componentId, const QVariant &newValue);
 
 private:
-    QString stringifyComponentId(const VeinComponentId &componentId);
+    static QString stringifyComponentId(const VeinComponentId &componentId);
     VeinComponentScpiMeasureSequencePtr bailOutNotFound(const VeinComponentId &componentId);
 
     const VeinScpiModuleInterfaceParser::ScpiParseInfo m_veinParseInfoMeasure;
