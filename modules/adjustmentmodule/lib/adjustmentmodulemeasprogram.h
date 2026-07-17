@@ -7,6 +7,7 @@
 #include "pcbserviceconnection.h"
 #include "taskcontainerparallel.h"
 #include "vfmoduleparameterdeferredquery.h"
+#include "vfmodulerpc.h"
 #include <QObject>
 #include <QList>
 #include <QHash>
@@ -154,6 +155,7 @@ private:
     VfModuleParameterDeferredQuery* m_pPARAdjustSend = nullptr;
     VfModuleParameterDeferredQuery* m_pPARAdjustPCBData = nullptr;
     VfModuleParameterDeferredQuery* m_pPARAdjustClampData = nullptr;
+    VfModuleRpcPtr m_resetAdjDataRpc;
 
     // statemachine for computation of adjustment values
     QStateMachine m_computationMachine;

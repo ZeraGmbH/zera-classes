@@ -49,11 +49,6 @@
    <IFACE Type="Query" ScpiPath="DEVICE:IFACE"/>
   </DEVICE>
   <MULTST Type="Model,Query" ScpiPath="*TST" Description="Self-Test query"/>
-  <RESET Type="Model,Node">
-   <DEV1 Type="Node">
-    <ADJUSTMENT Type="Command" ScpiPath="RESET:DEV1:ADJUSTMENT" Description="Reset adjustement data"/>
-   </DEV1>
-  </RESET>
   <MEASURE Type="Model,Node,Query" ScpiPath="MEASURE">
    <RNG1 Type="Node,Query" ScpiPath="MEASURE:RNG1">
     <UL1 Type="Query" ScpiPath="MEASURE:RNG1:UL1" Unit="V" Description="Actual peak value"/>

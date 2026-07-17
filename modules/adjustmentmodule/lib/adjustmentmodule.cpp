@@ -4,7 +4,8 @@
 
 cAdjustmentModule::cAdjustmentModule(const ModuleFactoryParam &moduleParam) :
     cBaseMeasModule(moduleParam),
-    m_configuration(moduleParam.m_configXmlData)
+    m_configuration(moduleParam.m_configXmlData),
+    m_spRpcEventSystem(std::make_unique<VfRpcEventSystemSimplified>(moduleParam.m_entityId))
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module supports commands for adjustment for a configured number of measuring channels");
@@ -21,9 +22,24 @@ QByteArray cAdjustmentModule::getConfigXml() const
     return m_configuration.exportConfiguration();
 }
 
+VfRpcEventSystemSimplified *cAdjustmentModule::getRpcEventSystem()
+{
+    return m_spRpcEventSystem.get();
+}
+
+void cAdjustmentModule::activationFinished()
+{
+    getValidatorEventSystem()->setParameterMap(m_veinModuleParameterMap);
+    getRpcEventSystem()->setRPCMap(m_veinModuleRPCMap);
+
+    exportMetaData();
+    emit activationReady();
+}
+
 void cAdjustmentModule::setupModule()
 {
     emit addEventSystem(getValidatorEventSystem());
+    emit addEventSystem(getRpcEventSystem());
 
     cBaseMeasModule::setupModule();
 

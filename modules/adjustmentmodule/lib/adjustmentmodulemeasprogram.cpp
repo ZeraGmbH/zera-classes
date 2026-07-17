@@ -3,6 +3,7 @@
 #include "adjustvalidator.h"
 #include "servicechannelnamehelper.h"
 #include "taskadjustrangeoffset.h"
+#include "rpc/rpcresetadjdata.h"
 #include <reply.h>
 #include <proxy.h>
 #include <intvalidator.h>
@@ -423,6 +424,17 @@ void cAdjustmentModuleMeasProgram::generateVeinInterface()
     connect(m_pPARAdjustClampData, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData);
     connect(m_pPARAdjustClampData, &VfModuleParameterDeferredQuery::sigValueQuery,
             this, &cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData);
+
+    std::shared_ptr<RPCResetAdjData> rpcResetAdjData = std::make_shared<RPCResetAdjData>(m_pcbConnection.getInterface(),
+                                                                                         m_pModule->getRpcEventSystem(),
+                                                                                         m_pModule->getEntityId());
+    m_resetAdjDataRpc = std::make_shared<VfModuleRpc>(rpcResetAdjData, "Reset adjustement data");
+    m_resetAdjDataRpc->setRPCScpiInfo("CALCULATE",
+                                      QString("RESET"),
+                                      SCPI::isCmd,
+                                      rpcResetAdjData->getSignature());
+    m_pModule->m_veinModuleRPCMap[rpcResetAdjData->getSignature()] = m_resetAdjDataRpc; // for modules use
+
 }
 
 void cAdjustmentModuleMeasProgram::computationStartCommand(QVariant var)

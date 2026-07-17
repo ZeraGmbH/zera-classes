@@ -135,6 +135,11 @@
                 "Description": "This module supports commands for adjustment for a configured number of measuring channels",
                 "Name": "AdjustmentModule1"
             },
+            "RpcInfo": {
+                "RPC_resetAdjustmentData()": {
+                    "Description": "Reset adjustement data"
+                }
+            },
             "SCPIInfo": {
                 "Cmd": [
                     [
@@ -229,7 +234,16 @@
                         "0"
                     ]
                 ],
-                "Name": "ADJ1"
+                "Name": "ADJ1",
+                "RPC": [
+                    [
+                        "CALCULATE",
+                        "RESET",
+                        "4",
+                        "RPC_resetAdjustmentData()",
+                        "0"
+                    ]
+                ]
             }
         },
         "PAR_AdjustAmplitude": "",

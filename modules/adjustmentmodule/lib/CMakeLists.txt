@@ -1,11 +1,13 @@
 file(GLOB SOURCES
     *.cpp
     tasks/*.cpp
+    rpc/*.cpp
     )
 
 file(GLOB HEADER
     *.h
     tasks/*.h
+    rpc/*.h
     )
 
 add_library(adjustmentmodule-lib SHARED
@@ -25,6 +27,7 @@ target_link_libraries(adjustmentmodule-lib
     service-common
     Zera::zera-math
     module-tasks
+    vf-cpp-module-wrappers
 )
 
 set_target_properties(adjustmentmodule-lib PROPERTIES VERSION ${PROJECT_VERSION})

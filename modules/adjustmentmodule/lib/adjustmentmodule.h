@@ -3,6 +3,7 @@
 
 #include "adjustmentmoduleconfiguration.h"
 #include "adjustmentmodulemeasprogram.h"
+#include <vfrpceventsystemsimplified.h>
 #include <basemeasmodule.h>
 
 class cAdjustmentModule : public cBaseMeasModule
@@ -17,6 +18,11 @@ public:
     cAdjustmentModuleConfigData *getConfigData();
     QByteArray getConfigXml() const override;
 
+    VfRpcEventSystemSimplified *getRpcEventSystem();
+
+private slots:
+    void activationFinished() override;
+
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
     void startMeas() override; // we make the measuring program start here
@@ -24,6 +30,7 @@ private:
 
     cAdjustmentModuleMeasProgram *m_pMeasProgram = nullptr;
     cAdjustmentModuleConfiguration m_configuration;
+    std::unique_ptr<VfRpcEventSystemSimplified> m_spRpcEventSystem;
 };
 
 #endif // ADJUSTMENTMODULE_H
