@@ -27,7 +27,7 @@ private slots:
     void controllersFound(QVariant value);
 private:
     void readWriteData(const QString &emobChannelAlias, const QString &mt650eChannelAlias);
-    int getEmobId(const QString &emobChannelAlias);
+    static int getEmobId(const QString &emobChannelAlias);
 
     cHotplugControlsModule *m_module = nullptr;
     PcbServiceConnection m_pcbConnection;
