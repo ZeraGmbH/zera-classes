@@ -59,7 +59,7 @@ void ScpiDelegateParameter::executeSCPI(cSCPIClient *client, const QString &scpi
         else
             transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, SCPIMODULE::TYPE_CMD, scpiTransactionId);
 
-        m_pModule->insertScpiVeinParamRpcTransaction(m_componentName, transactionInfo);
+        m_pModule->getRpcTransactionStore()->addTransaction(m_componentName, transactionInfo);
         client->addVeinParamRpcTransactionInfo(m_componentName, transactionInfo);
 
         m_pModule->emitSigSendEvent(event);

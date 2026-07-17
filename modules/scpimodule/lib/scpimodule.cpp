@@ -72,38 +72,6 @@ ScpiModelCatalogs *cSCPIModule::getScpiModelCatalogs()
     return &m_scpiModelCatalogs;
 }
 
-void cSCPIModule::removeClientParamOrRpcTransactions(cSCPIClient *client)
-{
-    for(auto iter = m_scpiVeinParamOrRpcTransactions.begin(); iter != m_scpiVeinParamOrRpcTransactions.end(); ) {
-        if(iter.value()->getClient() == client)
-            iter = m_scpiVeinParamOrRpcTransactions.erase(iter);
-        else
-            iter++;
-    }
-}
-
-void cSCPIModule::insertScpiVeinParamRpcTransaction(const QString &componentOrRpcName,
-                                                    const SCPIVeinTransactionInfoPtr &transactionInfo)
-{
-    m_scpiVeinParamOrRpcTransactions.insert(componentOrRpcName, transactionInfo);
-}
-
-void cSCPIModule::removeScpiVeinParamRpcTransaction(const QString &componentOrRpcName,
-                                                    const SCPIVeinTransactionInfoPtr &transactionInfo)
-{
-    m_scpiVeinParamOrRpcTransactions.remove(componentOrRpcName, transactionInfo);
-}
-
-const QList<SCPIVeinTransactionInfoPtr> cSCPIModule::getAllScpiVeinParamRpcTransactions()
-{
-    return m_scpiVeinParamOrRpcTransactions.values();
-}
-
-const QList<SCPIVeinTransactionInfoPtr> cSCPIModule::getScpiVeinParamRpcTransactions(const QString &componentOrRpcName)
-{
-    return m_scpiVeinParamOrRpcTransactions.values(componentOrRpcName);
-}
-
 VfEventSytemModuleParam *cSCPIModule::getValidatorEventSystem()
 {
     return m_pModuleValidator;
@@ -127,6 +95,11 @@ const VeinScpiModuleInterfaceParser &cSCPIModule::getScpiModuleInterfaceParser()
 SignalConnectionDelegateUpdater *cSCPIModule::getSignalDelegateUpdater()
 {
     return &m_signalDelegateUpdater;
+}
+
+ScpiRpcTransactionStore *cSCPIModule::getRpcTransactionStore()
+{
+    return &m_rpcTransactionStore;
 }
 
 void cSCPIModule::setupModule()

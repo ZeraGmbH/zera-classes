@@ -1,7 +1,6 @@
 #ifndef SCPIMODULE_H
 #define SCPIMODULE_H
 
-#include "scpiveintransactioninfo.h"
 #include "basemodule.h"
 #include "scpiserver.h"
 #include "scpimoduleconfiguration.h"
@@ -10,8 +9,8 @@
 #include "scpimodelieee4882.h"
 #include "scpimodelrpcs.h"
 #include "scpimodelcatalogs.h"
-#include "signalconnectiondelegate.h"
 #include "signalconnectiondelegateupdater.h"
+#include "scpirpctransactionstore.h"
 #include "veinscpimoduleinterfaceparser.h"
 #include "vfeventsytemmoduleparam.h"
 #include <vf_cmd_event_handler_system.h>
@@ -35,28 +34,15 @@ public:
     cSCPIModuleConfigData *getConfigData();
     QByteArray getConfigXml() const override;
 
+    void updatePendingMeasureSequences(const VeinComponentId &componentId, const QVariant &newValue);
     ScpiModelCatalogs* getScpiModelCatalogs();
     const VeinScpiModuleInterfaceParser &getScpiModuleInterfaceParser() const;
     SignalConnectionDelegateUpdater *getSignalDelegateUpdater();
+    ScpiRpcTransactionStore* getRpcTransactionStore();
 
     VfEventSytemModuleParam *getValidatorEventSystem();
     VfCmdEventHandlerSystemPtr getCmdEventHandlerSystem();
-
-    // Stuff below needs cleanup - module does everything!!!
-    void removeClientParamOrRpcTransactions(cSCPIClient *client);
-
-    void insertScpiVeinParamRpcTransaction(const QString &componentOrRpcName,
-                                           const SCPIVeinTransactionInfoPtr &transactionInfo);
-    void removeScpiVeinParamRpcTransaction(const QString &componentOrRpcName,
-                                           const SCPIVeinTransactionInfoPtr &transactionInfo);
-    const QList<SCPIVeinTransactionInfoPtr> getAllScpiVeinParamRpcTransactions();
-    const QList<SCPIVeinTransactionInfoPtr> getScpiVeinParamRpcTransactions(const QString &componentOrRpcName);
-
-
-    void updatePendingMeasureSequences(const VeinComponentId &componentId, const QVariant &newValue);
-
     void emitSigSendEvent(QEvent *event);
-
 
 private slots:
     void activationFinished() override;
@@ -82,7 +68,7 @@ private:
     ScpiModelIEEE4882 m_scpiModelIeee488;
 
     SignalConnectionDelegateUpdater m_signalDelegateUpdater;
-    QMultiHash<QString /*componentOrRpcName*/, SCPIVeinTransactionInfoPtr> m_scpiVeinParamOrRpcTransactions;
+    ScpiRpcTransactionStore m_rpcTransactionStore;
 };
 
 }

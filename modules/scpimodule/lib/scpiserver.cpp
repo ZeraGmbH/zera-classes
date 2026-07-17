@@ -77,7 +77,7 @@ void cSCPIServer::addScpiClient(cSCPIClient* client)
 void cSCPIServer::removeScpiClient(cSCPIClient *client)
 {
     if(m_SCPIClientList.contains(client)) {
-        m_pModule->removeClientParamOrRpcTransactions(client);
+        m_pModule->getRpcTransactionStore()->removeClientTransactions(client);
         m_SCPIClientList.removeAll(client);
     }
 }
@@ -148,7 +148,7 @@ void cSCPIServer::deleteNetClient(cSCPIClient *client)
 {
     // don't use for other than remove from list - it is destroyed and not usable
     if(m_SCPIClientList.contains(client)) {
-        m_pModule->removeClientParamOrRpcTransactions(client);
+        m_pModule->getRpcTransactionStore()->removeClientTransactions(client);
         m_SCPIClientList.removeAll(client);
         delete client;
         qInfo("Network SCPI client deleted / Active clients: %i", m_SCPIClientList.count());

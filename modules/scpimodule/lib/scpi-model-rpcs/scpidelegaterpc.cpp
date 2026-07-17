@@ -42,7 +42,7 @@ void ScpiDelegateRpc::handleRpcFinish(const QVariantMap &resultData, const SCPIV
     emit sigClientInfoSignal(m_rpcSignature);
     disconnect(myConn);
 
-    m_pModule->removeScpiVeinParamRpcTransaction(m_rpcSignature, transactionInfo);
+    m_pModule->getRpcTransactionStore()->removeVeinTransaction(m_rpcSignature, transactionInfo);
 
     bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);
     if(inputIsQuery) {
@@ -95,7 +95,7 @@ void ScpiDelegateRpc::executeScpiRpc(cSCPIClient *client, const QString &scpi, b
             params[paramNamesList[i]] = variantValue;
         }
 
-        m_pModule->insertScpiVeinParamRpcTransaction(rpcSignature, transactionInfo);
+        m_pModule->getRpcTransactionStore()->addTransaction(rpcSignature, transactionInfo);
         client->addVeinParamRpcTransactionInfo(rpcSignature, transactionInfo);
         rpcInvoker->invokeRPC(rpcName, params);
     }
