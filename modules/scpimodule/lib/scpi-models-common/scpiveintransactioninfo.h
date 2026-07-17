@@ -10,22 +10,28 @@ namespace SCPIMODULE
 
 class cSCPIClient;
 
-enum parCmdType {parcmd, parQuery};
+enum QueryCmdType {
+    TYPE_CMD,
+    TYPE_QUERY
+};
 
 class ScpiVeinTransactionInfo
 {
 public:
-    ScpiVeinTransactionInfo(cSCPIClient* client, int entityid, int parcmdtype, const ScpiTransactionId &scpiTransactionId);
+    ScpiVeinTransactionInfo(cSCPIClient* client,
+                            int entityid,
+                            QueryCmdType queryCmdType,
+                            const ScpiTransactionId &scpiTransactionId);
 
-    int entityId();
-    int parCmdType();
+    int getEntityId();
+    QueryCmdType getQueryCmdType();
     cSCPIClient* getClient();
     ScpiTransactionId getScpiTransactionId();
 
 private:
     cSCPIClient *m_pClient;
     int m_nEntityId;
-    int m_nParCmdType;
+    QueryCmdType m_queryCmdType;
     ScpiTransactionId m_scpiTransactionId;
 };
 

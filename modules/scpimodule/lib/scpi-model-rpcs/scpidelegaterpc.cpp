@@ -65,9 +65,9 @@ void ScpiDelegateRpc::executeScpiRpc(cSCPIClient *client, const QString &scpi, b
 {
     SCPIVeinTransactionInfoPtr transactionInfo;
     if (inputIsQuery)
-        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, parQuery, scpiTransactionId);
+        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, TYPE_QUERY, scpiTransactionId);
     else
-        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, parcmd, scpiTransactionId);
+        transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, TYPE_CMD, scpiTransactionId);
 
     VfRPCInvokerPtr rpcInvoker = VfRPCInvoker::create(m_entityId, std::make_unique<VfClientRPCInvoker>());
     connect(rpcInvoker.get(), &VfRPCInvoker::sigRPCFinished, this, [=](bool ok, const QVariantMap &resultData) {

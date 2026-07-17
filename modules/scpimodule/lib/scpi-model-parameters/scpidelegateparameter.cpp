@@ -55,9 +55,9 @@ void ScpiDelegateParameter::executeSCPI(cSCPIClient *client, const QString &scpi
 
         SCPIVeinTransactionInfoPtr transactionInfo;
         if (bQuery)
-            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, SCPIMODULE::parQuery, scpiTransactionId);
+            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, SCPIMODULE::TYPE_QUERY, scpiTransactionId);
         else
-            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, SCPIMODULE::parcmd, scpiTransactionId);
+            transactionInfo = std::make_shared<ScpiVeinTransactionInfo>(client, m_entityId, SCPIMODULE::TYPE_CMD, scpiTransactionId);
 
         m_pModule->insertScpiVeinParamRpcTransaction(m_componentName, transactionInfo);
         client->addVeinParamRpcTransactionInfo(m_componentName, transactionInfo);

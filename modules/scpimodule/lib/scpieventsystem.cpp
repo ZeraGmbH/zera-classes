@@ -42,13 +42,13 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
             QUuid clientId = commandEvent->peerId();
             // test if server notification or client in transaction matches
             if (clientId.isNull() || clientId == transactionInfo->getClient()->getClientId()) {
-                if (transactionInfo->entityId() == entityId) {
+                if (transactionInfo->getEntityId() == entityId) {
                     m_pModule->removeScpiVeinParamRpcTransaction(componentName, transactionInfo);
                     QMetaObject::Connection myConn = connect(this, &SCPIEventSystem::sigClientInfoSignal,
                                                              transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
                     emit sigClientInfoSignal(componentName);
                     disconnect(myConn);
-                    if (transactionInfo->parCmdType() == parcmd) {
+                    if (transactionInfo->getQueryCmdType() == TYPE_CMD) {
                         cSCPIClient* client = transactionInfo->getClient();
                         client->handleCmdFinishStatusOnly(ZSCPI::ack, transactionInfo->getScpiTransactionId());
                     }
@@ -84,7 +84,7 @@ void SCPIEventSystem::handleErrorData(VeinEvent::CommandEvent *commandEvent)
         const QList<SCPIVeinTransactionInfoPtr> transactionInfoList = m_pModule->getAllScpiVeinParamRpcTransactions();
         for (int i = 0; i < transactionInfoList.count(); i++) {
             SCPIVeinTransactionInfoPtr transactionInfo = transactionInfoList.at(i);
-            if (transactionInfo->entityId() == errorEntityId) {
+            if (transactionInfo->getEntityId() == errorEntityId) {
                 commandEvent->accept();  // we caused the error event due to wrong parameter
                 m_pModule->removeScpiVeinParamRpcTransaction(errorComponentName, transactionInfo);
                 QMetaObject::Connection myConn = connect(this, &SCPIEventSystem::sigClientInfoSignal,
