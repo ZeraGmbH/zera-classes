@@ -11,7 +11,7 @@ namespace SCPIMODULE {
 class ScpiStoreScpiSequence
 {
 public:
-    ScpiStoreScpiSequence(const VeinScpiModuleInterfaceParser::ScpiParseInfo &veinParseInfoMeasure);
+    explicit ScpiStoreScpiSequence(const VeinScpiModuleInterfaceParser::ScpiParseInfo &veinParseInfoMeasure);
     VeinComponentScpiMeasureSequencePtr getComponentSequence(const VeinComponentId &componentId);
 
     void updatePendingMeasureSequences(const VeinComponentId &componentId, const QVariant &newValue);
