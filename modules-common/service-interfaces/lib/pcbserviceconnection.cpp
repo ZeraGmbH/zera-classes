@@ -3,11 +3,10 @@
 #include <proxy.h>
 
 PcbServiceConnection::PcbServiceConnection(const NetworkConnectionInfo &networkInfo,
-                                           VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory)
+                                           VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory) :
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
+    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(networkInfo, networkFactory))
 {
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(networkInfo,
-                                                                 networkFactory);
-    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
