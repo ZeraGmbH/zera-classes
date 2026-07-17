@@ -9,11 +9,12 @@
 class RecorderJsonExportVeinGetHandler : public AbstractComponentGetCustomizer
 {
 public:
-    RecorderJsonExportVeinGetHandler(VeinStorage::StorageRecordDataPtr storedData);
+    explicit RecorderJsonExportVeinGetHandler(const VeinStorage::StorageRecordDataPtr &storedData);
     const QVariant &getCustomizedValue(const QVariant &currentValue) override;
 private:
     QJsonArray getLabelsArray();
-    QJsonArray convertVectorToJsonArray(QVector<float> numbers);
+    QJsonArray convertVectorToJsonArray(const QVector<float> &numbers);
+
     VeinStorage::StorageRecordDataPtr m_storedData;
     QVariant m_jsonExport;
 };

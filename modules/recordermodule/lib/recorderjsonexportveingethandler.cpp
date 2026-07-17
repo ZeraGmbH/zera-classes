@@ -2,7 +2,7 @@
 #include <jsonprecisionexport.h>
 #include <QJsonObject>
 
-RecorderJsonExportVeinGetHandler::RecorderJsonExportVeinGetHandler(VeinStorage::StorageRecordDataPtr storedData) :
+RecorderJsonExportVeinGetHandler::RecorderJsonExportVeinGetHandler(const VeinStorage::StorageRecordDataPtr &storedData) :
     m_storedData(storedData)
 {
 }
@@ -55,7 +55,7 @@ QJsonArray RecorderJsonExportVeinGetHandler::getLabelsArray()
     return sequenceArray;
 }
 
-QJsonArray RecorderJsonExportVeinGetHandler::convertVectorToJsonArray(QVector<float> numbers)
+QJsonArray RecorderJsonExportVeinGetHandler::convertVectorToJsonArray(const QVector<float> &numbers)
 {
     QJsonArray jsonArray;
     for (float number : numbers) {
