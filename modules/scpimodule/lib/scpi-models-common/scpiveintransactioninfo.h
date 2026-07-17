@@ -29,14 +29,13 @@ public:
     ScpiTransactionId getScpiTransactionId();
 
 private:
-    cSCPIClient *m_pClient;
-    int m_nEntityId;
-    QueryCmdType m_queryCmdType;
+    cSCPIClient *m_pClient = nullptr;
+    int m_nEntityId = 0;
+    QueryCmdType m_queryCmdType = TYPE_QUERY;
     ScpiTransactionId m_scpiTransactionId;
 };
 
 typedef std::shared_ptr<ScpiVeinTransactionInfo> SCPIVeinTransactionInfoPtr;
-
 
 }
 
