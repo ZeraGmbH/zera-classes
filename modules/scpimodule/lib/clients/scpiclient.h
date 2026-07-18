@@ -44,8 +44,8 @@ public slots:
     void removeVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName);
 
 protected:
-    cSCPIModule* m_pModule;
-    cSCPIInterface* m_pSCPIInterface;
+    cSCPIModule* m_pModule = nullptr;
+    cSCPIInterface* m_pSCPIInterface = nullptr;
     ScpiResponseSorter m_responseSorter;
 
     QString m_sInputFifo;
