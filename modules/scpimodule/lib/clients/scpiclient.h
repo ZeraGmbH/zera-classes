@@ -2,7 +2,6 @@
 #define SCPICLIENT_H
 
 #include "scpiinterface.h"
-#include "scpiclientexecutormeasure.h"
 #include "scpistorescpisequence.h"
 #include "signalconnectiondelegate.h"
 #include "scpiveintransactioninfo.h"
