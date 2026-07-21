@@ -219,12 +219,12 @@ bool test_modman_regression_all_sessions::checkUniqueEntityIdNames(const QString
             QJsonObject jsonDumped = QJsonDocument::fromJson(m_veinDumps.value(sessionFileName)).object();
             for(auto iter=jsonDumped.constBegin(); iter!=jsonDumped.constEnd(); ++iter) {
                 int entityId = iter.key().toInt();
-                const QString entityName = iter.value().toObject()["EntityName"].toString();
+                const QString entityName = iter.value().toObject().value("EntityName").toString();
                 if(!entityIdNamesInSession.contains(entityId))
                     entityIdNamesInSession[entityId] = { entityName, QStringList()<<sessionFileName };
                 else if(entityIdNamesInSession[entityId].entityName == entityName)
                     entityIdNamesInSession[entityId].sessionFileNames.append(sessionFileName);
-                else if(entityIdNamesInSession[entityId].entityName != entityName)
+                else // => entityIdNamesInSession[entityId].entityName != entityName
                     entityIdNamesDouble[entityId].append({ entityName, QStringList()<<sessionFileName });
             }
         }
