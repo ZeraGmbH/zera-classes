@@ -1,7 +1,5 @@
 #include "scpidelegatecatalog.h"
 #include <zscpi_response_definitions.h>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QJsonArray>
 #include <QVariantList>
 
@@ -25,11 +23,9 @@ void ScpiDelegateCatalog::executeSCPI(cSCPIClient *client, const QString &scpi, 
         client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
 }
 
-void ScpiDelegateCatalog::setOutputFromInfModuleInterface(const QVariant &modInterface)
+void ScpiDelegateCatalog::setOutputFromInfModuleInterface(const QJsonObject &modInterfaceJson)
 {
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
-    const QJsonObject jsonModuleInterface = jsonDoc.object();
-    const QJsonObject componentInfos = jsonModuleInterface["ComponentInfo"].toObject();
+    const QJsonObject componentInfos = modInterfaceJson["ComponentInfo"].toObject();
     const QJsonObject componentInfo = componentInfos[m_pSCPICmdInfo->componentOrRpcName].toObject();
     setOutputFromComponentInfo(componentInfo);
 }

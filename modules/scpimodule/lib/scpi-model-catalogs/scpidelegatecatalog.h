@@ -4,6 +4,7 @@
 #include "scpidelegatetemplate.h"
 #include "scpimodule.h"
 #include "scpicmdinfo.h"
+#include <QJsonObject>
 
 namespace SCPIMODULE {
 
@@ -22,7 +23,7 @@ public:
     void executeSCPI(cSCPIClient *client,
                      const QString& scpi,
                      const ScpiTransactionId &scpiTransactionId) override;
-    void setOutputFromInfModuleInterface(const QVariant &modInterface);
+    void setOutputFromInfModuleInterface(const QJsonObject &modInterfaceJson);
 
 private:
     void setOutputInitial(const cSCPICmdInfoPtr &scpicmdinfo);

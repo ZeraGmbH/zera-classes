@@ -24,18 +24,18 @@ void ScpiModelCatalogs::setupScpi(cSCPIInterface *scpiInterface)
 
 void ScpiModelCatalogs::actualizeCatalogs(const QVariant &modInterface)
 {
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
-    if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
-        QJsonObject jsonObj = jsonDoc.object();
-        jsonObj = jsonObj["SCPIInfo"].toObject();
-        QString scpiModuleName = jsonObj["Name"].toString();
-        QJsonArray jsonArr = jsonObj["Cmd"].toArray();
+    QJsonDocument modInterfaceJsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
+    if ( !modInterfaceJsonDoc.isNull() && modInterfaceJsonDoc.isObject() ) {
+        const QJsonObject modInterfaceJson = modInterfaceJsonDoc.object();
+        const QJsonObject scpiInfo = modInterfaceJson["SCPIInfo"].toObject();
+        const QString scpiModuleName = scpiInfo["Name"].toString();
+        const QJsonArray cmdArray = scpiInfo["Cmd"].toArray();
         // we iterate over all cmds
-        for (int j = 0; j < jsonArr.count(); j++) {
-            QJsonArray jsonCmdArr = jsonArr[j].toArray();
-            if (jsonCmdArr[4].toString() != "0") { // so it is a catalog delegate
-                QString scpiPath = QString("%1:%2:%3").arg(jsonCmdArr[0].toString(), scpiModuleName, jsonCmdArr[1].toString());
-                m_scpiCatalogDelegateHash[scpiPath]->setOutputFromInfModuleInterface(modInterface);
+        for (int j = 0; j < cmdArray.count(); j++) {
+            const QJsonArray cmdEntries = cmdArray[j].toArray();
+            if (cmdEntries[4].toString() != "0") { // so it is a catalog delegate
+                const QString scpiPath = QString("%1:%2:%3").arg(cmdEntries[0].toString(), scpiModuleName, cmdEntries[1].toString());
+                m_scpiCatalogDelegateHash[scpiPath]->setOutputFromInfModuleInterface(modInterfaceJson);
             }
         }
     }
