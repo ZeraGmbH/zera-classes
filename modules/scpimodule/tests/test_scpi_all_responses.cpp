@@ -5,6 +5,7 @@
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
 #include <scpinode.h>
+#include <testloghelpers.h>
 #include <QTest>
 
 QTEST_MAIN(test_scpi_all_responses)
@@ -97,6 +98,31 @@ void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse()
 
     QCOMPARE(client.getAtLeastOneResponse(), true);
     QCOMPARE(client.getUnhandledResponses(), 0);
+}
+
+void test_scpi_all_responses::checkNestedMeasureQueries()
+{
+    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::ScpiTestClient client(scpiModule);
+
+    QStringList responses;
+    // For now just unsorted
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseNotSorted, this, [&](const QString &scpiResponse, bool isNull) {
+        if (!isNull) {
+            QString linedResponse = scpiResponse;
+            linedResponse.replace(";", ";\n");
+            responses.append(linedResponse);
+        }
+    });
+    client.sendScpiCmds("MEASURE?\nMEASURE:DFT1?\nMEASURE:DFT1:UL1?");
+    TimeMachineObject::feedEventLoop();
+
+    m_testRunner->fireActualValues();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(client.getHandledResponses(), 3);
+    QCOMPARE(client.getUnhandledResponses(), 0);
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-nested-queries", responses.join("\n")));
 }
 
 void test_scpi_all_responses::checkScpiCmdResponse_data()

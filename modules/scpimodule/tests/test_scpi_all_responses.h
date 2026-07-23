@@ -21,6 +21,8 @@ private slots:
     void checkScpiMulipleTransactionQueryResponse_data();
     void checkScpiMulipleTransactionQueryResponse();
 
+    void checkNestedMeasureQueries();
+
     void checkScpiCmdResponse_data();
     void checkScpiCmdResponse();
 
