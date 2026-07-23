@@ -333,7 +333,7 @@ bool test_scpi_all_responses::ignoreForUnreproducableXmlOrFurtherInvestigation(c
 {
     return
         scpiPath == "DEVICE:IFACE?" ||
-        scpiPath.startsWith("CALCULATE:ADJ1"); // This
+        scpiPath.startsWith("CALCULATE:ADJ1"); // TODO: This needs reduction /
 }
 
 QString test_scpi_all_responses::scpiShortHeader(const QString scpiCmd)
