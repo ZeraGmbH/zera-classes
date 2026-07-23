@@ -30,8 +30,8 @@ public:
 
     void clearResponses();
 signals:
-    void sigScpiResponseNotSorted(const QString &scpiResponse, bool isNull);
-    void sigScpiResponseSorted(const QString &scpiResponse, bool isNull);
+    void sigScpiResponseNotSorted(const QString &scpiResponse, bool isNull, const QString &scpi);
+    void sigScpiResponseSorted(const QString &scpiResponse, bool isNull, const QString &scpi);
 
 private slots:
     void cmdInput() override;
