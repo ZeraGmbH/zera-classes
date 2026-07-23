@@ -2,6 +2,7 @@
 #include "scpimodule.h"
 #include "scpitestclient.h"
 #include <xmldocument.h>
+#include <xmlelemiterstrategysort.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
 #include <scpinode.h>
@@ -102,16 +103,17 @@ void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse()
 
 void test_scpi_all_responses::checkNestedMeasureQueries()
 {
+    restartServerForReproducabilityWithActualValues();
     SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule);
 
     QStringList responses;
     // For now just unsorted
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseNotSorted, this, [&](const QString &scpiResponse, bool isNull) {
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseNotSorted, this, [&](const QString &scpiResponse, bool isNull, const QString &scpi) {
         if (!isNull) {
             QString linedResponse = scpiResponse;
             linedResponse.replace(";", ";\n");
-            responses.append(linedResponse);
+            responses.append(scpi + ":\n" + linedResponse);
         }
     });
     client.sendScpiCmds("MEASURE?\nMEASURE:DFT1?\nMEASURE:DFT1:UL1?");
@@ -196,6 +198,14 @@ void test_scpi_all_responses::checkScpiMulipleTransactionCmdResponse()
     QCOMPARE(client.getResponsesNotSorted()[0].getStr(), "");
 }
 
+void test_scpi_all_responses::restartServerForReproducabilityWithActualValues()
+{
+    m_testRunner.reset();
+    m_testRunner = std::make_unique<ModuleManagerTestRunner>("mt310s2-meas-session.json");
+    m_testRunner->fireActualValues();
+    TimeMachineObject::feedEventLoop();
+}
+
 QStringList test_scpi_all_responses::getAllScpiQueriesFromDevIface()
 {
     SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
@@ -206,7 +216,7 @@ QStringList test_scpi_all_responses::getAllScpiQueriesFromDevIface()
 
     XmlDocument xml;
     xml.loadXml(devIface, true);
-    XmlElemIter iter = xml.root(std::make_unique<XmlElemIterStrategyTree>());
+    XmlElemIter iter = xml.root(std::make_unique<XmlElemIterStrategySort>());
     QStringList scpiPaths;
     while(!iter.isEnd()) {
         QDomElement element = iter.getElem();
