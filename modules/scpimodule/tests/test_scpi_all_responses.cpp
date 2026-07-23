@@ -101,30 +101,67 @@ void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse()
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
-void test_scpi_all_responses::checkNestedMeasureQueries()
+void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
 {
     restartServerForReproducabilityWithActualValues();
     SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule);
 
-    QStringList responses;
-    // For now just unsorted
-    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseNotSorted, this, [&](const QString &scpiResponse, bool isNull, const QString &scpi) {
-        if (!isNull) {
-            QString linedResponse = scpiResponse;
-            linedResponse.replace(";", ";\n");
-            responses.append(scpi + ":\n" + linedResponse);
-        }
-    });
-    client.sendScpiCmds("MEASURE?\nMEASURE:DFT1?\nMEASURE:DFT1:UL1?");
-    TimeMachineObject::feedEventLoop();
+    const QStringList fullList = getAllScpiQueriesFromDevIface();
+    QStringList scpiQueries;
+    for (const QString &scpiQuery : fullList) {
+        if (ignoreForUnreproducableXmlOrFurtherInvestigation(scpiQuery))
+            continue;
+        scpiQueries.append(scpiQuery);
+    }
 
+    QSet<QString> scpiQueriesUniques;
+    for (const QString &scpiQuery : scpiQueries)
+        scpiQueriesUniques.insert(scpiQuery);
+
+    QCOMPARE(scpiQueriesUniques.size(), scpiQueries.size()); // Check no double entries in scpiQueries
+    QSet<QString> scpiQueriesUniquesSorted = scpiQueriesUniques;
+
+    // Not sorted collector
+    QStringList responses;
+    QStringList scpiReceived;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseNotSorted, this, [&](const QString &scpiResponse, bool isNull, const QString &scpi) {
+        Q_UNUSED(isNull)
+        responses.append(scpi + ":\n" + scpiResponse + "\n");
+        scpiQueriesUniques.remove(scpi);
+        scpiReceived.append(scpi);
+    });
+
+    // Sorted collector
+    QStringList responsesSorted;
+    QStringList scpiReceivedSorted;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseSorted, this, [&](const QString &scpiResponse, bool isNull, const QString &scpi) {
+        Q_UNUSED(isNull)
+        responsesSorted.append(scpi + ":\n" + scpiResponse + "\n");
+        scpiQueriesUniquesSorted.remove(scpi);
+        scpiReceivedSorted.append(scpi);
+    });
+
+    client.sendScpiCmds(scpiQueries.join("\n"));
+    TimeMachineObject::feedEventLoop();
     m_testRunner->fireActualValues();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(client.getAllHandledResponseCount(), 3);
+    const int queryCount = scpiQueries.size();
+    QCOMPARE(client.getAllHandledResponseCount(), queryCount);
     QCOMPARE(client.getUnhandledResponses(), 0);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-nested-queries", responses.join("\n")));
+
+    // Not sorted
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-queries-in-one-transaction", responses.join("\n")));
+    QCOMPARE(responses.size(), queryCount);
+    QCOMPARE(scpiQueriesUniques.count(), 0); // this is the silver bullet to find out transactions are not messed up!!!
+    QVERIFY(scpiReceived != scpiQueries); // make sure sorter really sorts
+
+    // Sorted
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-queries-in-one-transaction-sorted", responsesSorted.join("\n")));
+    QCOMPARE(responsesSorted.size(), queryCount);
+    QCOMPARE(scpiQueriesUniquesSorted.count(), 0);
+    QCOMPARE(scpiReceivedSorted, scpiQueries);
 }
 
 void test_scpi_all_responses::checkScpiCmdResponse_data()
@@ -290,6 +327,13 @@ bool test_scpi_all_responses::ignoreToSpeedup(const QString &scpiPath)
             return true;
 
     return false;
+}
+
+bool test_scpi_all_responses::ignoreForUnreproducableXmlOrFurtherInvestigation(const QString &scpiPath)
+{
+    return
+        scpiPath == "DEVICE:IFACE?" ||
+        scpiPath.startsWith("CALCULATE:ADJ1"); // This
 }
 
 QString test_scpi_all_responses::scpiShortHeader(const QString scpiCmd)

@@ -8,6 +8,7 @@ class ScpiTransactionId
 public:
     ScpiTransactionId();
     static ScpiTransactionId createUniqueId(const QString &scpi);
+    bool operator== (const ScpiTransactionId &other) const;
 
     quint64 getChrono() const;
     bool isValid() const;

@@ -21,7 +21,7 @@ private slots:
     void checkScpiMulipleTransactionQueryResponse_data();
     void checkScpiMulipleTransactionQueryResponse();
 
-    void checkNestedMeasureQueries();
+    void checkDumpAllQueriesInOneTransaction(); // This helped most on sorter...
 
     void checkScpiCmdResponse_data();
     void checkScpiCmdResponse();
@@ -34,6 +34,7 @@ private:
     QStringList getAllScpiQueriesFromDevIface();
     QStringList getAllScpiCommandsWithParamFromDevIface();
     bool ignoreToSpeedup(const QString &scpiPath);
+    bool ignoreForUnreproducableXmlOrFurtherInvestigation(const QString &scpiPath);
     QString scpiShortHeader(const QString scpiCmd);
     void addTestRow(const QStringList scpiTransaction);
 

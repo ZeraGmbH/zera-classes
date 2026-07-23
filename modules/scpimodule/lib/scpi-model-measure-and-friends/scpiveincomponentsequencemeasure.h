@@ -2,7 +2,6 @@
 #define SCPIMEASURE_H
 
 #include "scpimodeldefinitions.h"
-#include "scpitransactionid.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -25,7 +24,7 @@ public:
     ~ScpiVeinComponentSequenceMeasure() override;
 
     void receiveMeasureValue(const QVariant &value);
-    void execute(ScpiModelTypes modelType, const ScpiTransactionId &scpiTransactionId);
+    void execute(ScpiModelTypes modelType);
 
     static int getInstanceCount();
 
@@ -36,11 +35,11 @@ signals:
     void initContinue();
     void fetchContinue();
 
-    void sigMeasDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
-    void sigConfDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
-    void sigReadDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
-    void sigInitDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
-    void sigFetchDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
+    void sigMeasDone(const QString &scpiResponse);
+    void sigConfDone();
+    void sigReadDone(const QString &scpiResponse);
+    void sigInitDone();
+    void sigFetchDone(const QString &scpiResponse);
 
 private:
     void initialize();
@@ -53,14 +52,6 @@ private:
     QStateMachine m_ReadStateMachine;
     QStateMachine m_InitStateMachine;
     QStateMachine m_FetchStateMachine;
-
-    // State machines cannot perform more than one transaction at a time
-    // => keep scpi transaction id per state machine / transaction type for those with answers (measure/read/fetch)
-    ScpiTransactionId m_measureScpiTransactionId;
-    ScpiTransactionId m_configureScpiTransactionId;
-    ScpiTransactionId m_readScpiTransactionId;
-    ScpiTransactionId m_initScpiTransactionId;
-    ScpiTransactionId m_fetchScpiTransactionId;
 
     QState m_measureInitState;
     QState m_measureFetchState;
@@ -83,7 +74,7 @@ private:
     QString setAnswer(const QVariant &qvar);
     QList<int> signalList;
 
-    bool m_bInitPending;
+    bool m_bInitPending = false;
     static int m_instanceCount;
 
 private slots:

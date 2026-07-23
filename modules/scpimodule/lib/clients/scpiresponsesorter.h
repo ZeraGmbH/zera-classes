@@ -11,13 +11,20 @@ class ScpiResponseSorter
 public:
     virtual ~ScpiResponseSorter();
     ScpiTransactionId createTransaction(const QString &scpi);
-    NullableStringList genOrDelaySortedOutput(const NullableString &scpiSingleResponse, const ScpiTransactionId &scpiTransactionId);
+
+    struct SortedResponse {
+        NullableString scpiResponse;
+        ScpiTransactionId scpiTransactionId;
+    };
+    typedef QList<SortedResponse> SortedResponseList;
+    SortedResponseList genOrDelaySortedOutput(const NullableString &scpiSingleResponse,
+                                              const ScpiTransactionId &scpiTransactionId);
 
 private:
-    NullableStringList createAccumulatedResponse();
+    SortedResponseList createAccumulatedResponse();
 
     QMap<quint64, ScpiTransactionId> m_transactionsPending;
-    QMap<quint64, NullableString> m_transactionsFinished;
+    QMap<quint64, SortedResponse> m_transactionsFinished;
 };
 
 #endif // SCPIRESPONSESORTER_H

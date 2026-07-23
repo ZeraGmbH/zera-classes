@@ -4,6 +4,7 @@
 #include "scpidelegatetemplate.h"
 #include "scpiveincomponentsequencemeasure.h"
 #include <QList>
+#include <QHash>
 
 namespace SCPIMODULE {
 
@@ -18,18 +19,22 @@ public:
     void executeScpi(const ScpiTransactionId &scpiTransactionId);
 
 private slots:
-    void onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
-    void onSingleScpiQueryDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const SCPIMODULE::ScpiVeinComponentSequenceMeasure* sender);
+    void onSingleScpiCmdDone();
+    void onSingleScpiQueryDone(const QString &scpiResponse);
 
 private:
-    void executeClient(const ScpiTransactionId &scpiTransactionId);
+    void removeCompleteTransactions(const QList<quint64 /*TransactionId chrono */> &toRemoveList);
 
     cSCPIClient *m_client = nullptr;
     const ScpiModelTypes m_modelType;
 
     QList<VeinComponentScpiMeasureSequencePtr> m_veinComponentScpiSequences;
-    int m_nPending = 0;
-    QString m_sAnswer;
+    struct TransactionData {
+        ScpiTransactionId transactionId;
+        int pendingSequences = 0;
+        QString accumulatedResponse;
+    };
+    QHash<quint64 /*TransactionId chrono */, TransactionData> m_pendingTransactions;
 };
 
 typedef std::shared_ptr<ScpiClientExecutorMeasure> ScpiClientExecutorMeasurePtr;

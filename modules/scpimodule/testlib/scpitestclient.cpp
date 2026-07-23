@@ -89,10 +89,11 @@ void ScpiTestClient::handleCmdFinish(const NullableString &scpiResponse, const S
     m_allResponsesPending--;
     emit sigScpiResponseNotSorted(scpiResponse.getStr(), scpiResponse.isNull(), scpiTransactionId.getScpi());
 
-    const NullableStringList sortedResponses = m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId);
-    for (const NullableString &response : sortedResponses) {
-        m_responsesSorted.append(response);
-        emit sigScpiResponseSorted(response.getStr(), response.isNull(), scpiTransactionId.getScpi());
+    const ScpiResponseSorter::SortedResponseList sortedResponses = m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId);
+    for (const ScpiResponseSorter::SortedResponse &response : sortedResponses) {
+        const NullableString &sortedResponse = response.scpiResponse;
+        m_responsesSorted.append(sortedResponse);
+        emit sigScpiResponseSorted(sortedResponse.getStr(), sortedResponse.isNull(), response.scpiTransactionId.getScpi());
     }
 }
 

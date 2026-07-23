@@ -17,6 +17,13 @@ ScpiTransactionId ScpiTransactionId::createUniqueId(const QString &scpi)
     return ScpiTransactionId(currentTransactionId, scpi);
 }
 
+bool ScpiTransactionId::operator==(const ScpiTransactionId &other) const
+{
+    return
+        other.m_id == m_id &&
+        other.m_scpi == m_scpi;
+}
+
 quint64 ScpiTransactionId::getChrono() const
 {
     return m_id;
