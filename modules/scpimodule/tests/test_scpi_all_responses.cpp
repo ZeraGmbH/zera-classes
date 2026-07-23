@@ -120,7 +120,7 @@ void test_scpi_all_responses::checkNestedMeasureQueries()
     m_testRunner->fireActualValues();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(client.getHandledResponses(), 3);
+    QCOMPARE(client.getAllHandledResponseCount(), 3);
     QCOMPARE(client.getUnhandledResponses(), 0);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-nested-queries", responses.join("\n")));
 }

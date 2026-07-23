@@ -24,7 +24,7 @@ public:
     const NullableStringList &getResponsesNotSorted() const;
     const NullableStringList &getResponsesSorted() const;
 
-    int getHandledResponses() const;
+    int getAllHandledResponseCount() const;
     int getUnhandledResponses() const;
     bool getAtLeastOneResponse() const;
 
@@ -40,8 +40,8 @@ private:
 
     NullableStringList m_responseNotSorted;
     NullableStringList m_responsesSorted;
-    int m_handledResponses = 0;
-    int m_unhandledResponses = 0;
+    int m_allResponsesReceivedNotClearable = 0;
+    int m_allResponsesPending = 0;
 };
 
 }

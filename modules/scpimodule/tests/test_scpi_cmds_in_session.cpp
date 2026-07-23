@@ -90,8 +90,8 @@ void test_scpi_cmds_in_session::initialScpiCommandsMultipleClients()
     QCOMPARE(sendReceive(client1, "STATUS:DEV1:SERIAL?"), "Unknown");
     QCOMPARE(sendReceive(client2, "SENSE:RNG1:UL1:RANGE?"), "250V");
 
-    QCOMPARE(client1.getHandledResponses(), 1);
-    QCOMPARE(client2.getHandledResponses(), 1);
+    QCOMPARE(client1.getAllHandledResponseCount(), 1);
+    QCOMPARE(client2.getAllHandledResponseCount(), 1);
     QCOMPARE(client1.getUnhandledResponses(), 0);
     QCOMPARE(client2.getUnhandledResponses(), 0);
 }
@@ -190,8 +190,8 @@ void test_scpi_cmds_in_session::executeRpcQueryWrongRpcNameTwoClients()
     QCOMPARE(sendReceive(client1, "CALCULATE:EM01:0001:FOO?"), "");
     QCOMPARE(sendReceive(client2, "CALCULATE:EM01:0001:FOO?"), "");
 
-    QCOMPARE(client1.getHandledResponses(), 1);
-    QCOMPARE(client2.getHandledResponses(), 1);
+    QCOMPARE(client1.getAllHandledResponseCount(), 1);
+    QCOMPARE(client2.getAllHandledResponseCount(), 1);
     QCOMPARE(client1.getUnhandledResponses(), 0);
     QCOMPARE(client2.getUnhandledResponses(), 0);
 }
@@ -213,8 +213,8 @@ void test_scpi_cmds_in_session::executeRpcReadLockStateQueryTwoClients()
     QCOMPARE(sendReceive(client1, "EMOB:HOTP1:EMLOCKSTATE?"), "4");
     QCOMPARE(sendReceive(client2, "EMOB:HOTP1:EMLOCKSTATE?"), "4");
 
-    QCOMPARE(client1.getHandledResponses(), 1);
-    QCOMPARE(client2.getHandledResponses(), 1);
+    QCOMPARE(client1.getAllHandledResponseCount(), 1);
+    QCOMPARE(client2.getAllHandledResponseCount(), 1);
     QCOMPARE(client1.getUnhandledResponses(), 0);
     QCOMPARE(client2.getUnhandledResponses(), 0);
 }
