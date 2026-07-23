@@ -22,6 +22,13 @@ private slots:
     void checkScpiMulipleTransactionQueryResponse();
 
     void checkDumpAllQueriesInOneTransaction(); // This helped most on sorter...
+    // TODO
+    // re-entrance e.g by doubling SCPI of checkDumpAllQueriesInOneTransaction
+    // * ignoreForUnreproducableXmlOrFurtherInvestigation -> fix special case(s)
+    // * sort SCPI commands => mixed Query/Cmd tests
+    // * accelerate by fixed values / no server restart?
+    // * SCPI changelog: Write down changed behaviour of *OPC?
+    // * Add sort on production (optional!!)
 
     void checkScpiCmdResponse_data();
     void checkScpiCmdResponse();
