@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
+        <file>scpi-dumps/dumped-all-queries-in-one-transaction</file>
+        <file>scpi-dumps/dumped-all-queries-in-one-transaction-sorted</file>
+        <file>scpi-dumps/dumped-nested-queries</file>
         <file>dev-iface-basic.xml</file>
         <file>dev-iface-three.xml</file>
         <file>dev-iface-two-osci.xml</file>

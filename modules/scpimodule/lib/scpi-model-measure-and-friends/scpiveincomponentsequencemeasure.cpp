@@ -97,53 +97,33 @@ void ScpiVeinComponentSequenceMeasure::receiveMeasureValue(const QVariant &value
 }
 
 
-void ScpiVeinComponentSequenceMeasure::execute(ScpiModelTypes modelType, const ScpiTransactionId &scpiTransactionId)
+void ScpiVeinComponentSequenceMeasure::execute(ScpiModelTypes modelType)
 {
     switch (modelType)
     {
     case ScpiModelTypes::MEASURE:
-        if (!m_MeasureStateMachine.isRunning()) {
-            m_measureScpiTransactionId = scpiTransactionId;
+        if (!m_MeasureStateMachine.isRunning())
             m_MeasureStateMachine.start();
-        }
-        else
-            qWarning("Measure state machine already running!");
         break;
 
     case ScpiModelTypes::CONFIGURE:
-        if (!m_ConfigureStateMachine.isRunning()) {
-            m_configureScpiTransactionId = scpiTransactionId;
+        if (!m_ConfigureStateMachine.isRunning())
             m_ConfigureStateMachine.start();
-        }
-        else
-            qWarning("Configure state machine already running!");
         break;
 
     case ScpiModelTypes::READ:
-        if (!m_ReadStateMachine.isRunning()) {
-            m_readScpiTransactionId = scpiTransactionId;
+        if (!m_ReadStateMachine.isRunning())
             m_ReadStateMachine.start();
-        }
-        else
-            qWarning("Model state machine already running!");
         break;
 
     case ScpiModelTypes::INIT:
-        if (!m_InitStateMachine.isRunning()) {
-            m_initScpiTransactionId = scpiTransactionId;
+        if (!m_InitStateMachine.isRunning())
             m_InitStateMachine.start();
-        }
-        else
-            qWarning("Init state machine already running!");
         break;
 
     case ScpiModelTypes::FETCH:
-        if (!m_FetchStateMachine.isRunning()) {
-            m_fetchScpiTransactionId = scpiTransactionId;
+        if (!m_FetchStateMachine.isRunning())
             m_FetchStateMachine.start();
-        }
-        else
-            qWarning("Fetch state machine already running!");
         break;
     }
 }
@@ -188,14 +168,13 @@ void ScpiVeinComponentSequenceMeasure::measureInit()
 
 void ScpiVeinComponentSequenceMeasure::measureFetch()
 {
-    emit sigMeasDone(m_sAnswer, m_measureScpiTransactionId, this);
-    m_measureScpiTransactionId = ScpiTransactionId();
+    emit sigMeasDone(m_sAnswer);
     emit measContinue();
 }
 
 void ScpiVeinComponentSequenceMeasure::configureDone()
 {
-    emit sigConfDone(m_configureScpiTransactionId, this);
+    emit sigConfDone();
 }
 
 void ScpiVeinComponentSequenceMeasure::readInit()
@@ -205,8 +184,7 @@ void ScpiVeinComponentSequenceMeasure::readInit()
 
 void ScpiVeinComponentSequenceMeasure::readFetch()
 {
-    emit sigReadDone(m_sAnswer, m_readScpiTransactionId, this);
-    m_readScpiTransactionId = ScpiTransactionId();
+    emit sigReadDone(m_sAnswer);
     emit readContinue();
 }
 
@@ -224,7 +202,7 @@ void ScpiVeinComponentSequenceMeasure::init()
 void ScpiVeinComponentSequenceMeasure::initDone()
 {
     m_bInitPending = false;
-    emit sigInitDone(m_initScpiTransactionId, this);
+    emit sigInitDone();
 }
 
 void ScpiVeinComponentSequenceMeasure::fetchSync()
@@ -237,8 +215,7 @@ void ScpiVeinComponentSequenceMeasure::fetchSync()
 
 void ScpiVeinComponentSequenceMeasure::fetchFetch()
 {
-    emit sigFetchDone(m_sAnswer, m_fetchScpiTransactionId, this);
-    m_fetchScpiTransactionId = ScpiTransactionId();
+    emit sigFetchDone(m_sAnswer);
     emit fetchContinue();
 }
 

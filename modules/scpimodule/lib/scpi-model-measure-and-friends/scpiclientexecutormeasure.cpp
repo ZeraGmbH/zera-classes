@@ -12,74 +12,84 @@ ScpiClientExecutorMeasure::ScpiClientExecutorMeasure(cSCPIClient *client,
     m_modelType(modelType)
 {
     ScpiStoreScpiSequence* store = client->getMeasureSequenceStore();
-    for (const VeinComponentId &componentId : veinComponents)
-        m_veinComponentScpiSequences.append(store->getComponentSequence(componentId));
+    for (const VeinComponentId &componentId : veinComponents) {
+        const VeinComponentScpiMeasureSequencePtr &measure = store->getComponentSequence(componentId);
+        m_veinComponentScpiSequences.append(measure);
+
+        switch (m_modelType) // don't get fooled: there is one connection made
+        {
+        case ScpiModelTypes::MEASURE:
+            connect(measure.get(), &ScpiVeinComponentSequenceMeasure::sigMeasDone, this, &ScpiClientExecutorMeasure::onSingleScpiQueryDone);
+            break;
+        case ScpiModelTypes::CONFIGURE:
+            connect(measure.get(), &ScpiVeinComponentSequenceMeasure::sigConfDone, this, &ScpiClientExecutorMeasure::onSingleScpiCmdDone);
+            break;
+        case ScpiModelTypes::READ:
+            connect(measure.get(), &ScpiVeinComponentSequenceMeasure::sigReadDone, this, &ScpiClientExecutorMeasure::onSingleScpiQueryDone);
+            break;
+        case ScpiModelTypes::INIT:
+            connect(measure.get(), &ScpiVeinComponentSequenceMeasure::sigInitDone, this, &ScpiClientExecutorMeasure::onSingleScpiCmdDone);
+            break;
+        case ScpiModelTypes::FETCH:
+            connect(measure.get(), &ScpiVeinComponentSequenceMeasure::sigFetchDone, this, &ScpiClientExecutorMeasure::onSingleScpiQueryDone);
+            break;
+        }
+    }
 }
 
 void ScpiClientExecutorMeasure::executeScpi(const ScpiTransactionId &scpiTransactionId)
 {
-    bool reentryPossible;
-    switch (m_modelType)
-    {
-    case ScpiModelTypes::INIT:
-    case ScpiModelTypes::CONFIGURE:
-        reentryPossible = true;
-        break;
-    default:
-        reentryPossible = false;
+    m_pendingTransactions[scpiTransactionId.getChrono()] = { scpiTransactionId, m_veinComponentScpiSequences.count(), "" };
+    for (int i = 0; i < m_veinComponentScpiSequences.count(); i++) {
+        const VeinComponentScpiMeasureSequencePtr &measure = m_veinComponentScpiSequences.at(i);
+        measure->execute(m_modelType);
     }
-    if (m_nPending == 0 || reentryPossible) { // not yet running or reentry
-        m_nPending = m_veinComponentScpiSequences.count();
-        m_sAnswer = "";
-        for (int i = 0; i < m_veinComponentScpiSequences.count(); i++) {
-            ScpiVeinComponentSequenceMeasure* measure = m_veinComponentScpiSequences.at(i).get();
-            switch (m_modelType)
-            {
-            case ScpiModelTypes::MEASURE:
-                connect(measure, &ScpiVeinComponentSequenceMeasure::sigMeasDone, this, &ScpiClientExecutorMeasure::onSingleScpiQueryDone);
-                break;
-            case ScpiModelTypes::CONFIGURE:
-                connect(measure, &ScpiVeinComponentSequenceMeasure::sigConfDone, this, &ScpiClientExecutorMeasure::onSingleScpiCmdDone);
-                break;
-            case ScpiModelTypes::READ:
-                connect(measure, &ScpiVeinComponentSequenceMeasure::sigReadDone, this, &ScpiClientExecutorMeasure::onSingleScpiQueryDone);
-                break;
-            case ScpiModelTypes::INIT:
-                connect(measure, &ScpiVeinComponentSequenceMeasure::sigInitDone, this, &ScpiClientExecutorMeasure::onSingleScpiCmdDone);
-                break;
-            case ScpiModelTypes::FETCH:
-                connect(measure, &ScpiVeinComponentSequenceMeasure::sigFetchDone, this, &ScpiClientExecutorMeasure::onSingleScpiQueryDone);
-                break;
-            }
-            measure->execute(m_modelType, scpiTransactionId);
+}
+
+void ScpiClientExecutorMeasure::onSingleScpiCmdDone()
+{
+    QList<quint64 /*TransactionId chrono */> toRemoveList;
+    for (auto iter=m_pendingTransactions.begin(); iter != m_pendingTransactions.end(); iter++) {
+        TransactionData &pendingTransaction = iter.value();
+        int &pendingSequences = pendingTransaction.pendingSequences;
+        pendingSequences--;
+        if (pendingSequences == 0) {
+            m_client->handleCmdFinishStatusOnly(ZSCPI::ack, pendingTransaction.transactionId);
+            toRemoveList.append(iter.key());
         }
+        else if (pendingSequences < 0)
+            qCritical("cSCPIMeasureDelegate::onSingleScpiCmdDone: Pending < 0");
     }
-    else
-        m_client->handleCmdFinishStatusOnly(ZSCPI::nak, scpiTransactionId);
+    removeCompleteTransactions(toRemoveList);
 }
 
-void ScpiClientExecutorMeasure::onSingleScpiCmdDone(const ScpiTransactionId &scpiTransactionId, const ScpiVeinComponentSequenceMeasure *sender)
+void ScpiClientExecutorMeasure::onSingleScpiQueryDone(const QString &scpiResponse)
 {
-    disconnect(sender, 0, this, 0);
+    QList<quint64 /*TransactionId chrono */> toRemoveList;
+    for (auto iter=m_pendingTransactions.begin(); iter != m_pendingTransactions.end(); iter++) {
+        TransactionData &pendingTransaction = iter.value();
+        int &pendingSequences = pendingTransaction.pendingSequences;
+        pendingSequences--;
 
-    m_nPending--;
-    if (m_nPending == 0)
-        m_client->handleCmdFinishStatusOnly(ZSCPI::ack, scpiTransactionId);
-    else if (m_nPending < 0)
-        qCritical("cSCPIMeasureDelegate::onSingleScpiCmdDone: m_nPending < 0");
+        if ("FETCH:DFT1?" == pendingTransaction.transactionId.getScpi())
+            qInfo("foo");
+
+        QString &accumulatedResponse = pendingTransaction.accumulatedResponse;
+        accumulatedResponse += QString("%1;").arg(scpiResponse);
+        if (pendingSequences == 0) {
+            toRemoveList.append(iter.key());
+            m_client->handleCmdFinish(accumulatedResponse, pendingTransaction.transactionId);
+        }
+        else if (pendingSequences < 0)
+            qCritical("cSCPIMeasureDelegate::onSingleScpiQueryDone: Pending < 0");
+    }
+    removeCompleteTransactions(toRemoveList);
 }
 
-void ScpiClientExecutorMeasure::onSingleScpiQueryDone(const QString &scpiResponse, const ScpiTransactionId &scpiTransactionId, const ScpiVeinComponentSequenceMeasure *sender)
+void ScpiClientExecutorMeasure::removeCompleteTransactions(const QList<quint64> &toRemoveList)
 {
-    disconnect(sender, 0, this, 0);
-
-    m_sAnswer += QString("%1;").arg(scpiResponse);
-
-    m_nPending--;
-    if (m_nPending == 0)
-        m_client->handleCmdFinish(m_sAnswer, scpiTransactionId);
-    else if (m_nPending < 0)
-        qCritical("cSCPIMeasureDelegate::onSingleScpiQueryDone: m_nPending < 0");
+    for (const quint64 &toRemove : toRemoveList)
+        m_pendingTransactions.remove(toRemove);
 }
 
 }

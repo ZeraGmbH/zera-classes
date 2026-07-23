@@ -2,9 +2,11 @@
 #include "scpimodule.h"
 #include "scpitestclient.h"
 #include <xmldocument.h>
+#include <xmlelemiterstrategysort.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
 #include <scpinode.h>
+#include <testloghelpers.h>
 #include <QTest>
 
 QTEST_MAIN(test_scpi_all_responses)
@@ -99,6 +101,69 @@ void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse()
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
+void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
+{
+    restartServerForReproducabilityWithActualValues();
+    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::ScpiTestClient client(scpiModule);
+
+    const QStringList fullList = getAllScpiQueriesFromDevIface();
+    QStringList scpiQueries;
+    for (const QString &scpiQuery : fullList) {
+        if (ignoreForUnreproducableXmlOrFurtherInvestigation(scpiQuery))
+            continue;
+        scpiQueries.append(scpiQuery);
+    }
+
+    QSet<QString> scpiQueriesUniques;
+    for (const QString &scpiQuery : scpiQueries)
+        scpiQueriesUniques.insert(scpiQuery);
+
+    QCOMPARE(scpiQueriesUniques.size(), scpiQueries.size()); // Check no double entries in scpiQueries
+    QSet<QString> scpiQueriesUniquesSorted = scpiQueriesUniques;
+
+    // Not sorted collector
+    QStringList responses;
+    QStringList scpiReceived;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseNotSorted, this, [&](const QString &scpiResponse, bool isNull, const QString &scpi) {
+        Q_UNUSED(isNull)
+        responses.append(scpi + ":\n" + scpiResponse + "\n");
+        scpiQueriesUniques.remove(scpi);
+        scpiReceived.append(scpi);
+    });
+
+    // Sorted collector
+    QStringList responsesSorted;
+    QStringList scpiReceivedSorted;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseSorted, this, [&](const QString &scpiResponse, bool isNull, const QString &scpi) {
+        Q_UNUSED(isNull)
+        responsesSorted.append(scpi + ":\n" + scpiResponse + "\n");
+        scpiQueriesUniquesSorted.remove(scpi);
+        scpiReceivedSorted.append(scpi);
+    });
+
+    client.sendScpiCmds(scpiQueries.join("\n"));
+    TimeMachineObject::feedEventLoop();
+    m_testRunner->fireActualValues();
+    TimeMachineObject::feedEventLoop();
+
+    const int queryCount = scpiQueries.size();
+    QCOMPARE(client.getAllHandledResponseCount(), queryCount);
+    QCOMPARE(client.getUnhandledResponses(), 0);
+
+    // Not sorted
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-queries-in-one-transaction", responses.join("\n")));
+    QCOMPARE(responses.size(), queryCount);
+    QCOMPARE(scpiQueriesUniques.count(), 0); // this is the silver bullet to find out transactions are not messed up!!!
+    QVERIFY(scpiReceived != scpiQueries); // make sure sorter really sorts
+
+    // Sorted
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-queries-in-one-transaction-sorted", responsesSorted.join("\n")));
+    QCOMPARE(responsesSorted.size(), queryCount);
+    QCOMPARE(scpiQueriesUniquesSorted.count(), 0);
+    QCOMPARE(scpiReceivedSorted, scpiQueries);
+}
+
 void test_scpi_all_responses::checkScpiCmdResponse_data()
 {
     QTest::addColumn<QString>("scpiCommand");
@@ -170,6 +235,14 @@ void test_scpi_all_responses::checkScpiMulipleTransactionCmdResponse()
     QCOMPARE(client.getResponsesNotSorted()[0].getStr(), "");
 }
 
+void test_scpi_all_responses::restartServerForReproducabilityWithActualValues()
+{
+    m_testRunner.reset();
+    m_testRunner = std::make_unique<ModuleManagerTestRunner>("mt310s2-meas-session.json");
+    m_testRunner->fireActualValues();
+    TimeMachineObject::feedEventLoop();
+}
+
 QStringList test_scpi_all_responses::getAllScpiQueriesFromDevIface()
 {
     SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
@@ -180,7 +253,7 @@ QStringList test_scpi_all_responses::getAllScpiQueriesFromDevIface()
 
     XmlDocument xml;
     xml.loadXml(devIface, true);
-    XmlElemIter iter = xml.root(std::make_unique<XmlElemIterStrategyTree>());
+    XmlElemIter iter = xml.root(std::make_unique<XmlElemIterStrategySort>());
     QStringList scpiPaths;
     while(!iter.isEnd()) {
         QDomElement element = iter.getElem();
@@ -254,6 +327,13 @@ bool test_scpi_all_responses::ignoreToSpeedup(const QString &scpiPath)
             return true;
 
     return false;
+}
+
+bool test_scpi_all_responses::ignoreForUnreproducableXmlOrFurtherInvestigation(const QString &scpiPath)
+{
+    return
+        scpiPath == "DEVICE:IFACE?" ||
+        scpiPath.startsWith("CALCULATE:ADJ1"); // TODO: This needs reduction /
 }
 
 QString test_scpi_all_responses::scpiShortHeader(const QString scpiCmd)

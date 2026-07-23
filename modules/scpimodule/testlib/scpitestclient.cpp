@@ -24,7 +24,7 @@ void ScpiTestClient::sendScpiCmds(QString cmds)
             line += "\n";
         m_sInputFifo.append(line);
     }
-    m_unhandledResponses += execPendingCmds();
+    m_allResponsesPending += execPendingCmds();
 }
 
 QString ScpiTestClient::sendReceiveNotSorted(const QString &scpi, bool removeLineFeedOnReceive)
@@ -59,19 +59,19 @@ const NullableStringList &ScpiTestClient::getResponsesSorted() const
     return m_responsesSorted;
 }
 
-int ScpiTestClient::getHandledResponses() const
+int ScpiTestClient::getAllHandledResponseCount() const
 {
-    return m_handledResponses;
+    return m_allResponsesReceivedNotClearable;
 }
 
 int ScpiTestClient::getUnhandledResponses() const
 {
-    return m_unhandledResponses;
+    return m_allResponsesPending;
 }
 
 bool ScpiTestClient::getAtLeastOneResponse() const
 {
-    return m_handledResponses > 0;
+    return m_allResponsesReceivedNotClearable > 0;
 }
 
 void ScpiTestClient::clearResponses()
@@ -85,14 +85,15 @@ void ScpiTestClient::handleCmdFinish(const NullableString &scpiResponse, const S
     Q_UNUSED(logType)
 
     m_responseNotSorted.append(scpiResponse);
-    m_handledResponses++;
-    m_unhandledResponses--;
-    emit sigScpiResponseNotSorted(scpiResponse.getStr(), scpiResponse.isNull());
+    m_allResponsesReceivedNotClearable++;
+    m_allResponsesPending--;
+    emit sigScpiResponseNotSorted(scpiResponse.getStr(), scpiResponse.isNull(), scpiTransactionId.getScpi());
 
-    const NullableStringList sortedResponses = m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId);
-    for (const NullableString &response : sortedResponses) {
-        m_responsesSorted.append(response);
-        emit sigScpiResponseSorted(response.getStr(), response.isNull());
+    const ScpiResponseSorter::SortedResponseList sortedResponses = m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId);
+    for (const ScpiResponseSorter::SortedResponse &response : sortedResponses) {
+        const NullableString &sortedResponse = response.scpiResponse;
+        m_responsesSorted.append(sortedResponse);
+        emit sigScpiResponseSorted(sortedResponse.getStr(), sortedResponse.isNull(), response.scpiTransactionId.getScpi());
     }
 }
 

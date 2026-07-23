@@ -27,7 +27,7 @@ void test_scpi_error_and_status::sendBullshitQueryStb()
     QCOMPARE(sendReceive(client, "FOO:BAR?"), "");
     QCOMPARE(sendReceive(client, "*STB?"), "+4");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -41,7 +41,7 @@ void test_scpi_error_and_status::sendBullshitTwiceQueryErrorCount()
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR:COUNT?"), "2");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR:ALL?"), "-100,Command error;-120,Numeric data error");
 
-    QCOMPARE(client.getHandledResponses(), 4);
+    QCOMPARE(client.getAllHandledResponseCount(), 4);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -58,7 +58,7 @@ void test_scpi_error_and_status::sendValidCommandWithoutSemicolonQueryStb()
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR:COUNT?"), "0");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "+0,No error");
 
-    QCOMPARE(client.getHandledResponses(), 8);
+    QCOMPARE(client.getAllHandledResponseCount(), 8);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -79,7 +79,7 @@ void test_scpi_error_and_status::overflowErrorQueue()
         QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-350,Queue overflow");
 
-    QCOMPARE(client.getHandledResponses(), 2*SCPIMODULE::cIEEE4882::getErrorQueueLength() + 3);
+    QCOMPARE(client.getAllHandledResponseCount(), 2*SCPIMODULE::cIEEE4882::getErrorQueueLength() + 3);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -94,7 +94,7 @@ void test_scpi_error_and_status::causeErrorAndClearIt()
     QCOMPARE(sendReceive(client, "*STB?"), "+0");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "+0,No error");
 
-    QCOMPARE(client.getHandledResponses(), 5);
+    QCOMPARE(client.getAllHandledResponseCount(), 5);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -132,7 +132,7 @@ void test_scpi_error_and_status::causeCommandErrorOpc()
     QCOMPARE(sendReceive(client, "*OPC 1;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -143,7 +143,7 @@ void test_scpi_error_and_status::causeCommandErrorEse()
     QCOMPARE(sendReceive(client, "*ESE 1;2;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -154,7 +154,7 @@ void test_scpi_error_and_status::causeCommandErrorSre()
     QCOMPARE(sendReceive(client, "*SRE 1;2;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -165,7 +165,7 @@ void test_scpi_error_and_status::causeCommandErrorCls()
     QCOMPARE(sendReceive(client, "*CLS 1;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -176,7 +176,7 @@ void test_scpi_error_and_status::causeQueryErrorCls()
     QCOMPARE(sendReceive(client, "*CLS?"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-400,Query error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -187,7 +187,7 @@ void test_scpi_error_and_status::causeCommandErrorRst()
     QCOMPARE(sendReceive(client, "*RST 1;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -198,7 +198,7 @@ void test_scpi_error_and_status::causeQueryErrorRst()
     QCOMPARE(sendReceive(client, "*RST?"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-400,Query error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -209,7 +209,7 @@ void test_scpi_error_and_status::causeCommandErrorIdn()
     QCOMPARE(sendReceive(client, "*IDN;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -220,7 +220,7 @@ void test_scpi_error_and_status::causeCommandErrorEsr()
     QCOMPARE(sendReceive(client, "*ESR;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -231,7 +231,7 @@ void test_scpi_error_and_status::causeCommandErrorStb()
     QCOMPARE(sendReceive(client, "*STB;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -242,7 +242,7 @@ void test_scpi_error_and_status::causeCommandErrorTst()
     QCOMPARE(sendReceive(client, "*TST;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -253,7 +253,7 @@ void test_scpi_error_and_status::causeCommandErrorReadError()
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -264,7 +264,7 @@ void test_scpi_error_and_status::causeCommandErrorReadErrorCount()
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR:COUNT;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -275,7 +275,7 @@ void test_scpi_error_and_status::causeCommandErrorReadAllErrors()
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR:ALL;"),"");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "-100,Command error");
 
-    QCOMPARE(client.getHandledResponses(), 2);
+    QCOMPARE(client.getAllHandledResponseCount(), 2);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 
@@ -290,7 +290,7 @@ void test_scpi_error_and_status::sendStatusQuestionableEnableInvalidParam()
     QCOMPARE(sendReceive(client, "*STB?"), "+0");
     QCOMPARE(sendReceive(client, "SYSTEM:ERROR?"), "+0,No error");
 
-    QCOMPARE(client.getHandledResponses(), 5);
+    QCOMPARE(client.getAllHandledResponseCount(), 5);
     QCOMPARE(client.getUnhandledResponses(), 0);
 }
 

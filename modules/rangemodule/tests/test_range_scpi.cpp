@@ -210,8 +210,8 @@ void test_range_scpi::catalogChangeOnScpiByClampMultipleClients()
 
     QCOMPARE(client1.getUnhandledResponses(), 0);
     QCOMPARE(client2.getUnhandledResponses(), 0);
-    QCOMPARE(client1.getHandledResponses(), 2);
-    QCOMPARE(client2.getHandledResponses(), 4);
+    QCOMPARE(client1.getAllHandledResponseCount(), 2);
+    QCOMPARE(client2.getAllHandledResponseCount(), 4);
     testRunner.removeAllHotplugDevices();
 }
 

@@ -35,22 +35,24 @@ ScpiTransactionId ScpiResponseSorter::createTransaction(const QString &scpi)
     return id;
 }
 
-NullableStringList ScpiResponseSorter::genOrDelaySortedOutput(const NullableString &scpiSingleResponse, const ScpiTransactionId &scpiTransactionId)
+ScpiResponseSorter::SortedResponseList ScpiResponseSorter::genOrDelaySortedOutput(const NullableString &scpiSingleResponse,
+                                                                                  const ScpiTransactionId &scpiTransactionId)
 {
     const quint64 chrono = scpiTransactionId.getChrono();
     ScpiTransactionId pendingTransaction = m_transactionsPending.take(chrono);
     if (pendingTransaction.isValid()) {
-        m_transactionsFinished.insert(chrono, scpiSingleResponse);
+        m_transactionsFinished.insert(chrono, {scpiSingleResponse, scpiTransactionId});
         return createAccumulatedResponse();
     }
-    NullableStringList ret;
-    ret.append(scpiSingleResponse);
+    // Commands (might change => createTransaction()) / Answers without query - e.g
+    QList<ScpiResponseSorter::SortedResponse> ret;
+    ret.append( {scpiSingleResponse, scpiTransactionId} );
     return ret;
 }
 
-NullableStringList ScpiResponseSorter::createAccumulatedResponse()
+ScpiResponseSorter::SortedResponseList ScpiResponseSorter::createAccumulatedResponse()
 {
-    NullableStringList responseList;
+    SortedResponseList responseList;
     QList<quint64> toDeleteList;
     for (auto iter = m_transactionsFinished.cbegin(); iter != m_transactionsFinished.cend(); ++iter) {
         quint64 currentChrono = iter.key();
