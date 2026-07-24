@@ -151,7 +151,7 @@ void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
         QString line = scpi + ":\n";
         if(!isNull)
             line += scpiResponse + "\n";
-        responsesSorted.append(scpi + ":\n" + scpiResponse + "\n");
+        responsesSorted.append(line);
         scpiQueriesUniquesSorted.remove(scpi);
         scpiReceivedSorted.append(scpi);
     });
