@@ -8,8 +8,8 @@
 class PcbServiceConnection
 {
 public:
-    PcbServiceConnection(const NetworkConnectionInfo &networkInfo, VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory);
-    PcbServiceConnection(ModuleNetworkParamsPtr networkParams);
+    PcbServiceConnection(const NetworkConnectionInfo &networkInfo, const VeinTcp::AbstractTcpNetworkFactoryPtr &networkFactory);
+    PcbServiceConnection(const ModuleNetworkParamsPtr &networkParams);
     TaskTemplatePtr createConnectionTask() const;
     Zera::PcbInterfacePtr getInterface() const;
 private:

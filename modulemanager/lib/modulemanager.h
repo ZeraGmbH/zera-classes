@@ -29,8 +29,8 @@ class ModuleManager : public QObject
 public:
     static QString getInstalledSessionPath();
     explicit ModuleManager(ModuleManagerSetupFacade *setupFacade,
-                           AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                           VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+                           const AbstractFactoryServiceInterfacesPtr &serviceInterfaceFactory,
+                           const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory,
                            bool moduleDemoMode = false,
                            QObject *parent = nullptr);
     ~ModuleManager() override;

@@ -3,8 +3,8 @@
 #include "demoallservicesmt310s2.h"
 
 DemoModuleManager::DemoModuleManager(ModuleManagerSetupFacade *setupFacade,
-                                     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+                                     const AbstractFactoryServiceInterfacesPtr &serviceInterfaceFactory,
+                                     const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory,
                                      QObject *parent) :
     ZeraModules::ModuleManager(setupFacade,
                                serviceInterfaceFactory,
@@ -15,7 +15,7 @@ DemoModuleManager::DemoModuleManager(ModuleManagerSetupFacade *setupFacade,
 
 }
 
-void DemoModuleManager::startAllDemoServices(QString deviceName)
+void DemoModuleManager::startAllDemoServices(const QString &deviceName)
 {
     if (m_mockAllServices)
         m_mockAllServices = nullptr;

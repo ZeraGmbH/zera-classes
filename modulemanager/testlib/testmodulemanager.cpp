@@ -37,8 +37,8 @@ void TestModuleManager::pointToInstalledSessionFiles()
 }
 
 TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
-                                     AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                                     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory) :
+                                     const AbstractFactoryServiceInterfacesPtr &serviceInterfaceFactory,
+                                     const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory) :
     ModuleManager(
         setupFacade,
         serviceInterfaceFactory,
@@ -52,7 +52,7 @@ TestModuleManager::TestModuleManager(ModuleManagerSetupFacade *setupFacade,
             &TestModuleManager::onAllModulesDestroyed);
 }
 
-void TestModuleManager::startAllTestServices(QString deviceName, bool initialAdjPermission)
+void TestModuleManager::startAllTestServices(const QString &deviceName, bool initialAdjPermission)
 {
     if (m_testAllServices)
         m_testAllServices = nullptr;

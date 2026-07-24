@@ -24,8 +24,8 @@ QString ModuleManager::getInstalledSessionPath()
 }
 
 ModuleManager::ModuleManager(ModuleManagerSetupFacade *setupFacade,
-                             AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                             VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+                             const AbstractFactoryServiceInterfacesPtr &serviceInterfaceFactory,
+                             const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory,
                              bool moduleDemoMode, QObject *parent) :
     QObject(parent),
     m_moduleDataList(createEmptyModuleDataList()),

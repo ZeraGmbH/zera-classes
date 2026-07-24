@@ -8,10 +8,10 @@ class DemoModuleManager : public ZeraModules::ModuleManager
 {
 public:
     explicit DemoModuleManager(ModuleManagerSetupFacade *setupFacade,
-                               AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                               VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
+                               const AbstractFactoryServiceInterfacesPtr &serviceInterfaceFactory,
+                               const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory,
                                QObject *parent = nullptr);
-    void startAllDemoServices(QString deviceName);
+    void startAllDemoServices(const QString &deviceName);
 private:
     std::unique_ptr<AbstractMockAllServices> m_mockAllServices;
 };

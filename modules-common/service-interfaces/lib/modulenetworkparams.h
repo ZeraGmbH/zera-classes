@@ -7,11 +7,11 @@
 
 struct ModuleNetworkParams
 {
-    ModuleNetworkParams(VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                        NetworkConnectionInfo pcbServiceConnectionInfo,
-                        NetworkConnectionInfo dspServiceConnectionInfo,
-                        NetworkConnectionInfo secServiceConnectionInfo,
-                        NetworkConnectionInfo rmServiceConnectionInfo);
+    ModuleNetworkParams(const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory,
+                        const NetworkConnectionInfo &pcbServiceConnectionInfo,
+                        const NetworkConnectionInfo &dspServiceConnectionInfo,
+                        const NetworkConnectionInfo &secServiceConnectionInfo,
+                        const NetworkConnectionInfo &rmServiceConnectionInfo);
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpNetworkFactory;
     const NetworkConnectionInfo m_pcbServiceConnectionInfo;
     const NetworkConnectionInfo m_dspServiceConnectionInfo;

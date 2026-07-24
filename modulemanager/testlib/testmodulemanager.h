@@ -12,9 +12,9 @@ public:
     static void enableTests();
 
     explicit TestModuleManager(ModuleManagerSetupFacade *setupFacade,
-                               AbstractFactoryServiceInterfacesPtr serviceInterfaceFactory,
-                               VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create());
-    void startAllTestServices(QString deviceName, bool initialAdjPermission);
+                               const AbstractFactoryServiceInterfacesPtr &serviceInterfaceFactory,
+                               const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create());
+    void startAllTestServices(const QString &deviceName, bool initialAdjPermission);
     void destroyModulesAndWaitUntilAllShutdown();
     void waitUntilModulesAreReady();
 

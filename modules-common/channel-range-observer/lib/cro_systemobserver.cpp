@@ -11,7 +11,7 @@
 
 namespace ChannelRangeObserver {
 
-SystemObserver::SystemObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory) :
+SystemObserver::SystemObserver(const NetworkConnectionInfo &netInfo, const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpFactory) :
     m_netInfo(netInfo),
     m_tcpFactory(tcpFactory),
     m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory)),

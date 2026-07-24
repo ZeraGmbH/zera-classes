@@ -3,14 +3,14 @@
 #include <proxy.h>
 
 PcbServiceConnection::PcbServiceConnection(const NetworkConnectionInfo &networkInfo,
-                                           VeinTcp::AbstractTcpNetworkFactoryPtr networkFactory) :
+                                           const VeinTcp::AbstractTcpNetworkFactoryPtr &networkFactory) :
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
     m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(networkInfo, networkFactory))
 {
     m_pcbInterface->setClientSmart(m_pcbClient);
 }
 
-PcbServiceConnection::PcbServiceConnection(ModuleNetworkParamsPtr networkParams) :
+PcbServiceConnection::PcbServiceConnection(const ModuleNetworkParamsPtr &networkParams) :
     PcbServiceConnection(networkParams->m_pcbServiceConnectionInfo,
                          networkParams->m_tcpNetworkFactory)
 {

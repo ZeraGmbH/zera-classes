@@ -14,7 +14,7 @@ class SystemObserver : public QObject
 {
     Q_OBJECT
 public:
-    SystemObserver(const NetworkConnectionInfo &netInfo, VeinTcp::AbstractTcpNetworkFactoryPtr tcpFactory);
+    SystemObserver(const NetworkConnectionInfo &netInfo, const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpFactory);
     void startFullScan();
     const QStringList getChannelMNames() const;
     const QStringList getChannelAliases() const;

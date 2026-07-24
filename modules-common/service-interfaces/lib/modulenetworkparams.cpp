@@ -1,10 +1,10 @@
 #include "modulenetworkparams.h"
 
-ModuleNetworkParams::ModuleNetworkParams(VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory,
-                                         NetworkConnectionInfo pcbServiceConnectionInfo,
-                                         NetworkConnectionInfo dspServiceConnectionInfo,
-                                         NetworkConnectionInfo secServiceConnectionInfo,
-                                         NetworkConnectionInfo rmServiceConnectionInfo) :
+ModuleNetworkParams::ModuleNetworkParams(const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory,
+                                         const NetworkConnectionInfo &pcbServiceConnectionInfo,
+                                         const NetworkConnectionInfo &dspServiceConnectionInfo,
+                                         const NetworkConnectionInfo &secServiceConnectionInfo,
+                                         const NetworkConnectionInfo &rmServiceConnectionInfo) :
     m_tcpNetworkFactory(tcpNetworkFactory),
     m_pcbServiceConnectionInfo(pcbServiceConnectionInfo),
     m_dspServiceConnectionInfo(dspServiceConnectionInfo),
