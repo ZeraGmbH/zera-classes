@@ -412,7 +412,7 @@ bool test_scpi_all_responses::ignoreForUnreproducableXml(const QString &scpiPath
         scpiPath == "CALCULATE:ADJ1:CLAMP?";
 }
 
-QString test_scpi_all_responses::scpiShortHeader(const QString scpiCmd)
+QString test_scpi_all_responses::scpiShortHeader(const QString &scpiCmd)
 {
     QString testName = scpiCmd.split(" ")[0]; // remove param
     testName.remove(";");
@@ -424,7 +424,7 @@ QString test_scpi_all_responses::scpiShortHeader(const QString scpiCmd)
     return scpiEntriesShort.join(":");
 }
 
-void test_scpi_all_responses::addTestRow(const QStringList scpiTransaction)
+void test_scpi_all_responses::addTestRow(const QStringList &scpiTransaction)
 {
     QStringList shortTestNamesNoParams;
     for (const QString &cmd : scpiTransaction)
