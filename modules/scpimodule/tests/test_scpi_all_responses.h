@@ -29,12 +29,13 @@ private slots:
     void checkScpiMulipleTransactionCmdResponse_data();
     void checkScpiMulipleTransactionCmdResponse();
 
+
 private:
     void restartServerForReproducabilityWithActualValues();
     QStringList getAllScpiQueriesFromDevIface();
     QStringList getAllScpiCommandsWithParamFromDevIface();
     bool ignoreToSpeedup(const QString &scpiPath);
-    bool ignoreForUnreproducableXmlOrFurtherInvestigation(const QString &scpiPath);
+    bool ignoreForUnreproducableXml(const QString &scpiPath);
     QString scpiShortHeader(const QString scpiCmd);
     void addTestRow(const QStringList scpiTransaction);
 

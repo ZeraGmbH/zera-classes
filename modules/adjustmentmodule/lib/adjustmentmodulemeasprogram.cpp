@@ -11,6 +11,7 @@
 #include <useratan.h>
 #include <errormessages.h>
 #include <math.h>
+#include <zscpi_response_definitions.h>
 
 cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module) :
     cBaseMeasWorkProgram(module->getVeinModuleName()),
@@ -689,7 +690,7 @@ void cAdjustmentModuleMeasProgram::transparentDataSend2Port(QVariant var)
             return;
         }
     }
-    m_pPARAdjustSend->setError();
+    m_pPARAdjustSend->setValue(ZSCPI::scpiAnswer[ZSCPI::errval]);
 }
 
 void cAdjustmentModuleMeasProgram::writePCBAdjustmentData(QVariant var)

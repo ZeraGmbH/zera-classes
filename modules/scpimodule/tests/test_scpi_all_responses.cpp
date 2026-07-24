@@ -43,9 +43,7 @@ void test_scpi_all_responses::checkScpiQueryResponse()
     qInfo("Response: %s", qPrintable(client.getResponsesNotSorted()[0].getStr()));
     QCOMPARE(client.getAtLeastOneResponse(), true);
     QCOMPARE(client.getUnhandledResponses(), 0);
-    // Transparent send to service (without command) is a super nasty/special exception - let's make it a test case
-    bool nullExpected = scpiQuery == "CALCULATE:ADJ1:SEND?";
-    QCOMPARE(client.getResponsesNotSorted()[0].isNull(), nullExpected);
+    QCOMPARE(client.getResponsesNotSorted()[0].isNull(), false);
 }
 
 void test_scpi_all_responses::checkScpiQueryEmptyResponse()
@@ -110,7 +108,7 @@ void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
     const QStringList fullList = getAllScpiQueriesFromDevIface();
     QStringList scpiQueries;
     for (const QString &scpiQuery : fullList) {
-        if (ignoreForUnreproducableXmlOrFurtherInvestigation(scpiQuery))
+        if (ignoreForUnreproducableXml(scpiQuery))
             continue;
         scpiQueries.append(scpiQuery);
     }
@@ -126,8 +124,10 @@ void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
     QStringList responses;
     QStringList scpiReceived;
     connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseNotSorted, this, [&](const QString &scpiResponse, bool isNull, const QString &scpi) {
-        Q_UNUSED(isNull)
-        responses.append(scpi + ":\n" + scpiResponse + "\n");
+        QString line = scpi + ":\n";
+        if(!isNull)
+            line += scpiResponse + "\n";
+        responses.append(line);
         scpiQueriesUniques.remove(scpi);
         scpiReceived.append(scpi);
     });
@@ -136,7 +136,9 @@ void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
     QStringList responsesSorted;
     QStringList scpiReceivedSorted;
     connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseSorted, this, [&](const QString &scpiResponse, bool isNull, const QString &scpi) {
-        Q_UNUSED(isNull)
+        QString line = scpi + ":\n";
+        if(!isNull)
+            line += scpiResponse + "\n";
         responsesSorted.append(scpi + ":\n" + scpiResponse + "\n");
         scpiQueriesUniquesSorted.remove(scpi);
         scpiReceivedSorted.append(scpi);
@@ -329,11 +331,11 @@ bool test_scpi_all_responses::ignoreToSpeedup(const QString &scpiPath)
     return false;
 }
 
-bool test_scpi_all_responses::ignoreForUnreproducableXmlOrFurtherInvestigation(const QString &scpiPath)
+bool test_scpi_all_responses::ignoreForUnreproducableXml(const QString &scpiPath)
 {
     return
         scpiPath == "DEVICE:IFACE?" ||
-        scpiPath.startsWith("CALCULATE:ADJ1"); // This
+        scpiPath == "CALCULATE:ADJ1:PCB?";
 }
 
 QString test_scpi_all_responses::scpiShortHeader(const QString scpiCmd)
