@@ -30,9 +30,7 @@ private slots:
     void checkScpiMulipleTransactionCmdResponse_data();
     void checkScpiMulipleTransactionCmdResponse();
 
-
 private:
-    void restartServerForReproducabilityWithActualValues();
     QStringList getAllScpiQueriesFromDevIface();
     QStringList getAllScpiCommandsWithParamFromDevIface();
     bool ignoreToSpeedup(const QString &scpiPath);

@@ -14,8 +14,21 @@ QTEST_MAIN(test_scpi_all_responses)
 void test_scpi_all_responses::initTestCase()
 {
     qputenv("QT_FATAL_CRITICALS", "1");
+
     TimerFactoryQtForTest::enableTest();
     m_testRunner = std::make_unique<ModuleManagerTestRunner>("mt310s2-meas-session.json");
+
+    // avoid overload on IAUX hand have clamps
+    QList<AbstractMockAllServices::clampParam> clampParams;
+    clampParams.append({"IAUX", cClamp::CL120A});
+    m_testRunner->addClamps(clampParams);
+
+    SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::ScpiTestClient client(scpiModule);
+    client.sendReceiveNotSorted("SENSE:RNG1:IAUX:RANGE C100A;", false);
+
+    m_testRunner->fireActualValues();
+    TimeMachineObject::feedEventLoop();
 }
 
 void test_scpi_all_responses::checkScpiQueryResponse_data()
@@ -101,7 +114,6 @@ void test_scpi_all_responses::checkScpiMulipleTransactionQueryResponse()
 
 void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
 {
-    restartServerForReproducabilityWithActualValues();
     SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule);
 
@@ -168,7 +180,6 @@ void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
 
 void test_scpi_all_responses::checkDumpAllTimes2QueriesInOneTransaction()
 {
-    restartServerForReproducabilityWithActualValues();
     SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
     SCPIMODULE::ScpiTestClient client(scpiModule);
 
@@ -307,14 +318,6 @@ void test_scpi_all_responses::checkScpiMulipleTransactionCmdResponse()
     QCOMPARE(client.getResponsesNotSorted()[0].getStr(), "");
 }
 
-void test_scpi_all_responses::restartServerForReproducabilityWithActualValues()
-{
-    m_testRunner.reset();
-    m_testRunner = std::make_unique<ModuleManagerTestRunner>("mt310s2-meas-session.json");
-    m_testRunner->fireActualValues();
-    TimeMachineObject::feedEventLoop();
-}
-
 QStringList test_scpi_all_responses::getAllScpiQueriesFromDevIface()
 {
     SCPIMODULE::cSCPIModule *scpiModule = qobject_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
@@ -405,7 +408,8 @@ bool test_scpi_all_responses::ignoreForUnreproducableXml(const QString &scpiPath
 {
     return
         scpiPath == "DEVICE:IFACE?" ||
-        scpiPath == "CALCULATE:ADJ1:PCB?";
+        scpiPath == "CALCULATE:ADJ1:PCB?" ||
+        scpiPath == "CALCULATE:ADJ1:CLAMP?";
 }
 
 QString test_scpi_all_responses::scpiShortHeader(const QString scpiCmd)
