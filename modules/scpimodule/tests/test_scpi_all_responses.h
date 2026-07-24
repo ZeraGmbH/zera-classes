@@ -22,6 +22,7 @@ private slots:
     void checkScpiMulipleTransactionQueryResponse();
 
     void checkDumpAllQueriesInOneTransaction(); // This helped most on sorter...
+    void checkDumpAllTimes2QueriesInOneTransaction();
 
     void checkScpiCmdResponse_data();
     void checkScpiCmdResponse();

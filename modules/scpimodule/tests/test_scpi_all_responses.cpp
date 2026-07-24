@@ -166,6 +166,76 @@ void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
     QCOMPARE(scpiReceivedSorted, scpiQueries);
 }
 
+void test_scpi_all_responses::checkDumpAllTimes2QueriesInOneTransaction()
+{
+    restartServerForReproducabilityWithActualValues();
+    SCPIMODULE::cSCPIModule *scpiModule = static_cast<SCPIMODULE::cSCPIModule*>(m_testRunner->getModule(9999));
+    SCPIMODULE::ScpiTestClient client(scpiModule);
+
+    const QStringList fullList = getAllScpiQueriesFromDevIface();
+    QStringList scpiQueries;
+    for (const QString &scpiQuery : fullList) {
+        if (ignoreForUnreproducableXml(scpiQuery))
+            continue;
+        scpiQueries.append(scpiQuery);
+    }
+    // append opposite sequence
+    const QStringList scpiQueriesTmp = scpiQueries;
+    for (int i=scpiQueriesTmp.size()-1; i>=0; --i)
+        scpiQueries.append(scpiQueriesTmp[i]);
+
+    QSet<QString> scpiQueriesUniques;
+    for (const QString &scpiQuery : qAsConst(scpiQueries))
+        scpiQueriesUniques.insert(scpiQuery);
+
+    QSet<QString> scpiQueriesUniquesSorted = scpiQueriesUniques;
+
+    // Not sorted collector
+    QStringList responses;
+    QStringList scpiReceived;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseNotSorted, this, [&](const QString &scpiResponse, bool isNull, const QString &scpi) {
+        QString line = scpi + ":\n";
+        if(!isNull)
+            line += scpiResponse + "\n";
+        responses.append(line);
+        scpiQueriesUniques.remove(scpi);
+        scpiReceived.append(scpi);
+    });
+
+    // Sorted collector
+    QStringList responsesSorted;
+    QStringList scpiReceivedSorted;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiResponseSorted, this, [&](const QString &scpiResponse, bool isNull, const QString &scpi) {
+        QString line = scpi + ":\n";
+        if(!isNull)
+            line += scpiResponse + "\n";
+        responsesSorted.append(scpi + ":\n" + scpiResponse + "\n");
+        scpiQueriesUniquesSorted.remove(scpi);
+        scpiReceivedSorted.append(scpi);
+    });
+
+    client.sendScpiCmds(scpiQueries.join("\n"));
+    TimeMachineObject::feedEventLoop();
+    m_testRunner->fireActualValues();
+    TimeMachineObject::feedEventLoop();
+
+    const int queryCount = scpiQueries.size();
+    QCOMPARE(client.getAllHandledResponseCount(), queryCount);
+    QCOMPARE(client.getUnhandledResponses(), 0);
+
+    // Not sorted
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-double-queries-in-one-transaction", responses.join("\n")));
+    QCOMPARE(responses.size(), queryCount);
+    QCOMPARE(scpiQueriesUniques.count(), 0); // this is the silver bullet to find out transactions are not messed up!!!
+    QVERIFY(scpiReceived != scpiQueries); // make sure sorter really sorts
+
+    // Sorted
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-double-queries-in-one-transaction-sorted", responsesSorted.join("\n")));
+    QCOMPARE(responsesSorted.size(), queryCount);
+    QCOMPARE(scpiQueriesUniquesSorted.count(), 0);
+    QCOMPARE(scpiReceivedSorted, scpiQueries);
+}
+
 void test_scpi_all_responses::checkScpiCmdResponse_data()
 {
     QTest::addColumn<QString>("scpiCommand");
