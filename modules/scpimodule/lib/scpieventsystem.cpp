@@ -83,7 +83,7 @@ void SCPIEventSystem::handleErrorData(VeinEvent::CommandEvent *commandEvent)
         const int errorEntityId = eData->entityId();
         ScpiRpcTransactionStore *transactionStore = m_pModule->getRpcTransactionStore();
 
-            // error notifications are sent for invalid parameters
+        // error notifications are sent for invalid parameters
         const QList<SCPIVeinTransactionInfoPtr> transactionInfoList = transactionStore->getAllScpiVeinParamRpcTransactions();
         for (int i = 0; i < transactionInfoList.count(); i++) {
             SCPIVeinTransactionInfoPtr transactionInfo = transactionInfoList.at(i);
