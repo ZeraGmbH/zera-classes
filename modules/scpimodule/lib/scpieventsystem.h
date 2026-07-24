@@ -12,8 +12,6 @@ class SCPIEventSystem: public VfEventSystemCommandFilter
     Q_OBJECT
 public:
     explicit SCPIEventSystem(cSCPIModule* module);
-signals:
-    void sigClientInfoSignal(QString);
 
 private:
     cSCPIModule* m_pModule = nullptr;

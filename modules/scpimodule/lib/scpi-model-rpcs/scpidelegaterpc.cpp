@@ -37,11 +37,11 @@ void ScpiDelegateRpc::executeSCPI(cSCPIClient *client, const QString &scpi, cons
 
 void ScpiDelegateRpc::handleRpcFinish(const QVariantMap &resultData, const SCPIVeinTransactionInfoPtr &transactionInfo, bool inputIsQuery)
 {
-    QMetaObject::Connection myConn = connect(this, &ScpiDelegateRpc::sigClientInfoSignal,
-                                             transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
-    emit sigClientInfoSignal(m_rpcSignature);
-    disconnect(myConn);
-
+    QMetaObject::invokeMethod(transactionInfo->getClient(),
+                              "removeVeinParamRpcTransactionInfo",
+                              Qt::QueuedConnection,
+                              Q_ARG(QString, m_rpcSignature)
+                              );
     m_pModule->getRpcTransactionStore()->removeVeinTransaction(m_rpcSignature, transactionInfo);
 
     bool rpcSuccessful = (resultData[VeinComponent::RemoteProcedureData::s_resultCodeString] == VeinComponent::RemoteProcedureData::RPCResultCodes::RPC_SUCCESS);

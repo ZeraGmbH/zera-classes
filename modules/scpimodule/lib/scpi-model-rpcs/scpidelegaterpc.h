@@ -24,8 +24,6 @@ public:
     void executeSCPI(cSCPIClient *client,
                      const QString& scpi,
                      const ScpiTransactionId &scpiTransactionId) override;
-signals:
-    void sigClientInfoSignal(QString);
 
 private:
     void executeScpiRpc(cSCPIClient *client, const QString& scpi, bool inputIsQuery, const ScpiTransactionId &scpiTransactionId);

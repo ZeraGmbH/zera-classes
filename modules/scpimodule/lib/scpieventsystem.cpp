@@ -45,10 +45,11 @@ void SCPIEventSystem::handleComponentData(VeinEvent::CommandEvent *commandEvent)
             if (clientId.isNull() || clientId == transactionInfo->getClient()->getClientId()) {
                 if (transactionInfo->getEntityId() == entityId) {
                     transactionStore->removeVeinTransaction(componentName, transactionInfo);
-                    QMetaObject::Connection myConn = connect(this, &SCPIEventSystem::sigClientInfoSignal,
-                                                             transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
-                    emit sigClientInfoSignal(componentName);
-                    disconnect(myConn);
+                    QMetaObject::invokeMethod(transactionInfo->getClient(),
+                                              "removeVeinParamRpcTransactionInfo",
+                                              Qt::QueuedConnection,
+                                              Q_ARG(QString, componentName)
+                                              );
                     if (transactionInfo->getQueryCmdType() == TYPE_CMD) {
                         cSCPIClient* client = transactionInfo->getClient();
                         client->handleCmdFinishStatusOnly(ZSCPI::ack, transactionInfo->getScpiTransactionId());
@@ -89,10 +90,11 @@ void SCPIEventSystem::handleErrorData(VeinEvent::CommandEvent *commandEvent)
             if (transactionInfo->getEntityId() == errorEntityId) {
                 commandEvent->accept();  // we caused the error event due to wrong parameter
                 transactionStore->removeVeinTransaction(errorComponentName, transactionInfo);
-                QMetaObject::Connection myConn = connect(this, &SCPIEventSystem::sigClientInfoSignal,
-                                                         transactionInfo->getClient(), &cSCPIClient::removeVeinParamRpcTransactionInfo, Qt::QueuedConnection);
-                emit sigClientInfoSignal(errorComponentName);
-                disconnect(myConn);
+                QMetaObject::invokeMethod(transactionInfo->getClient(),
+                                          "removeVeinParamRpcTransactionInfo",
+                                          Qt::QueuedConnection,
+                                          Q_ARG(QString, errorComponentName)
+                                          );
                 cSCPIClient* client = transactionInfo->getClient();
                 client->handleCmdFinishStatusOnly(ZSCPI::errval, transactionInfo->getScpiTransactionId());
                 break;
