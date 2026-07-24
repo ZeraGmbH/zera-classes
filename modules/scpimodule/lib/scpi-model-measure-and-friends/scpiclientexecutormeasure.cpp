@@ -68,11 +68,9 @@ void ScpiClientExecutorMeasure::onSingleScpiQueryDone(const QString &scpiRespons
     QList<quint64 /*TransactionId chrono */> toRemoveList;
     for (auto iter=m_pendingTransactions.begin(); iter != m_pendingTransactions.end(); iter++) {
         TransactionData &pendingTransaction = iter.value();
+
         int &pendingSequences = pendingTransaction.pendingSequences;
         pendingSequences--;
-
-        if ("FETCH:DFT1?" == pendingTransaction.transactionId.getScpi())
-            qInfo("foo");
 
         QString &accumulatedResponse = pendingTransaction.accumulatedResponse;
         accumulatedResponse += QString("%1;").arg(scpiResponse);
