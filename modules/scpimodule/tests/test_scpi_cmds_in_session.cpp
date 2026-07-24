@@ -292,5 +292,6 @@ QString test_scpi_cmds_in_session::sendReceive(SCPIMODULE::ScpiTestClient &clien
     case NOT_SORTED:
         return client.sendReceiveNotSorted(scpi, removeLineFeedOnReceive);
     }
+    return QString();
 }
 

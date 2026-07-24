@@ -308,4 +308,5 @@ QString test_scpi_error_and_status::sendReceive(SCPIMODULE::ScpiTestClient &clie
     case NOT_SORTED:
         return client.sendReceiveNotSorted(scpi, true);
     }
+    return QString();
 }
