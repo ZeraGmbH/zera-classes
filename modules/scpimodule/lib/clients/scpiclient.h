@@ -34,10 +34,6 @@ public:
     QUuid getClientId();
     void addVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
 
-    enum FinishLogTypes {
-        LOG_FULL,
-        LOG_SKIP
-    };
     virtual void handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) = 0;
     void handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId &scpiTransactionId);
 public slots:

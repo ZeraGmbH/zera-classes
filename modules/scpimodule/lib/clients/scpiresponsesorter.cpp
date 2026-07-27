@@ -36,17 +36,25 @@ ScpiTransactionId ScpiResponseSorter::createTransaction(const QString &scpi)
 }
 
 ScpiResponseSorter::SortedResponseList ScpiResponseSorter::genOrDelaySortedOutput(const NullableString &scpiSingleResponse,
-                                                                                  const ScpiTransactionId &scpiTransactionId)
+                                                                                  const ScpiTransactionId &scpiTransactionId,
+                                                                                  SCPIMODULE::FinishLogTypes logType)
 {
     const quint64 chrono = scpiTransactionId.getChrono();
     ScpiTransactionId pendingTransaction = m_transactionsPending.take(chrono);
     if (pendingTransaction.isValid()) {
-        m_transactionsFinished.insert(chrono, {scpiSingleResponse, scpiTransactionId});
+        m_transactionsFinished.insert(chrono, {scpiSingleResponse, scpiTransactionId, logType});
         return createAccumulatedResponse();
     }
-    // Commands (might change => createTransaction()) / Answers without query - e.g
+    // SCPI Commands do not sort (= have invalid transaction id / might change see createTransaction())
+    return genImmediateNotSortedOutput(scpiSingleResponse, scpiTransactionId, logType);
+}
+
+ScpiResponseSorter::SortedResponseList ScpiResponseSorter::genImmediateNotSortedOutput(const NullableString &scpiSingleResponse,
+                                                                                       const ScpiTransactionId &scpiTransactionId,
+                                                                                       SCPIMODULE::FinishLogTypes logType)
+{
     QList<ScpiResponseSorter::SortedResponse> ret;
-    ret.append( {scpiSingleResponse, scpiTransactionId} );
+    ret.append( {scpiSingleResponse, scpiTransactionId, logType} );
     return ret;
 }
 

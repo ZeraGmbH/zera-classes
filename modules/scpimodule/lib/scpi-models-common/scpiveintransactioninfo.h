@@ -15,6 +15,11 @@ enum QueryCmdType {
     TYPE_QUERY
 };
 
+enum FinishLogTypes {
+    LOG_FULL,
+    LOG_SKIP
+};
+
 class ScpiVeinTransactionInfo
 {
 public:

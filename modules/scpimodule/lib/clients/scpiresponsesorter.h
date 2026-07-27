@@ -1,7 +1,7 @@
 #ifndef SCPIRESPONSESORTER_H
 #define SCPIRESPONSESORTER_H
 
-#include "scpitransactionid.h"
+#include "scpiveintransactioninfo.h"
 #include "nullablestring.h"
 #include <QString>
 #include <QMap>
@@ -15,10 +15,15 @@ public:
     struct SortedResponse {
         NullableString scpiResponse;
         ScpiTransactionId scpiTransactionId;
+        SCPIMODULE::FinishLogTypes logType;
     };
     typedef QList<SortedResponse> SortedResponseList;
     SortedResponseList genOrDelaySortedOutput(const NullableString &scpiSingleResponse,
-                                              const ScpiTransactionId &scpiTransactionId);
+                                              const ScpiTransactionId &scpiTransactionId,
+                                              SCPIMODULE::FinishLogTypes logType = SCPIMODULE::LOG_FULL);
+    SortedResponseList genImmediateNotSortedOutput(const NullableString &scpiSingleResponse,
+                                                   const ScpiTransactionId &scpiTransactionId,
+                                                   SCPIMODULE::FinishLogTypes logType);
 
 private:
     SortedResponseList createAccumulatedResponse();
