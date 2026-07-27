@@ -65,8 +65,21 @@ void cSCPIServer::generateVeinInterface()
                                                     QString("Device file name for serial SCPI"),
                                                     QVariant(m_ConfigData.m_SerialDevice.m_sDevice) );
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
+
+    m_veinQueryResponseSortActive = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                         key = QString("PAR_QueryResponseSortActive"),
+                                                         QString("Enable/disable sort of query responses"),
+                                                         QVariant(m_ConfigData.m_queryResponseSortActive.m_nActive));
+    m_veinQueryResponseSortActive->setValidator(new cBoolValidator());
+    connect(m_veinQueryResponseSortActive, &VfModuleParameter::sigValueChanged,
+            this, &cSCPIServer::onSortQueryResponseChange);
+    m_pModule->m_veinModuleParameterMap[key] = m_veinQueryResponseSortActive;
 }
 
+bool cSCPIServer::getSortQueryResponse() const
+{
+    return m_ConfigData.m_SerialDevice.m_nOn != 0;
+}
 
 void cSCPIServer::addScpiClient(cSCPIClient* client)
 {
@@ -225,6 +238,12 @@ void cSCPIServer::newSerialOn(const QVariant &serialOn)
             m_SerialTestTimer.stop();
     }
     m_ConfigData.m_SerialDevice.m_nOn = on;
+    emit m_pModule->parameterChanged();
+}
+
+void cSCPIServer::onSortQueryResponseChange(const QVariant &active)
+{
+    m_ConfigData.m_SerialDevice.m_nOn = active.toInt();
     emit m_pModule->parameterChanged();
 }
 

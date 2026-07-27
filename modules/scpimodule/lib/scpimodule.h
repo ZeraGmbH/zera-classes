@@ -40,6 +40,8 @@ public:
     SignalConnectionDelegateUpdater *getSignalDelegateUpdater();
     ScpiRpcTransactionStore* getRpcTransactionStore();
 
+    bool getSortQueryResponse() const;
+
     VfEventSytemModuleParam *getValidatorEventSystem();
     VfCmdEventHandlerSystemPtr getCmdEventHandlerSystem();
     void emitSigSendEvent(QEvent *event);

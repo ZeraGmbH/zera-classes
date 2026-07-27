@@ -27,11 +27,14 @@ public:
     virtual ~cSCPIServer();
     void generateVeinInterface() override;
 
+    bool getSortQueryResponse() const;
+
     void addScpiClient(cSCPIClient *client);
     void removeScpiClient(cSCPIClient *client);
     const QList<cSCPIClient*> &getClients() const;
 public slots:
     void deleteNetClient(SCPIMODULE::cSCPIClient *client);
+
 private slots:
     void addNetClient();
     void TCPError(QAbstractSocket::SocketError);
@@ -44,6 +47,7 @@ private slots:
 
     // vein change handlers
     void newSerialOn(const QVariant &serialOn);
+    void onSortQueryResponseChange(const QVariant &active);
 private:
     void createSerialScpi();
     void destroySerialScpi();
@@ -67,8 +71,10 @@ private:
     cSCPISerialClient *m_pSerialClient = nullptr;
     QTimer m_SerialTestTimer;
     bool m_bSerialScpiActive;
+
     VfModuleParameter* m_pVeinParamSerialOn = nullptr;
     VfModuleComponent* m_pVeinSerialScpiDevFileName = nullptr;
+    VfModuleParameter* m_veinQueryResponseSortActive = nullptr;
 };
 
 }

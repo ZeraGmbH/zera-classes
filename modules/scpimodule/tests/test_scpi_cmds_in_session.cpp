@@ -34,7 +34,7 @@ void test_scpi_cmds_in_session::initialSession()
     QCOMPARE(entityList.count(), 2);
 
     QList<QString> componentList = veinStorageDb->getComponentList(9999);
-    QCOMPARE(componentList.count(), 4); // EntitiyName / Metadata / PAR_SerialScpiActive / ACT_SerialScpiDeviceFile */
+    QCOMPARE(componentList.count(), 5); // EntitiyName / Metadata / PAR_SerialScpiActive / ACT_SerialScpiDeviceFile / PAR_QueryResponseSortActive */
 }
 
 void test_scpi_cmds_in_session::initialTestClient()

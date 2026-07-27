@@ -102,6 +102,11 @@ ScpiRpcTransactionStore *cSCPIModule::getRpcTransactionStore()
     return &m_rpcTransactionStore;
 }
 
+bool cSCPIModule::getSortQueryResponse() const
+{
+    return m_pSCPIServer->getSortQueryResponse();
+}
+
 void cSCPIModule::setupModule()
 {
     emit addEventSubSystem(m_cmdEventHandlerSystem.get());
