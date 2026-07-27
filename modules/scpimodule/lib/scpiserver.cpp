@@ -69,7 +69,7 @@ void cSCPIServer::generateVeinInterface()
     m_veinQueryResponseSortActive = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_QueryResponseSortActive"),
                                                          QString("Enable/disable sort of query responses"),
-                                                         QVariant(m_ConfigData.m_queryResponseSortActive.m_nActive));
+                                                         m_ConfigData.m_queryResponseSortActive.m_active);
     m_veinQueryResponseSortActive->setValidator(new cBoolValidator());
     connect(m_veinQueryResponseSortActive, &VfModuleParameter::sigValueChanged,
             this, &cSCPIServer::onSortQueryResponseChange);
@@ -78,7 +78,7 @@ void cSCPIServer::generateVeinInterface()
 
 bool cSCPIServer::getSortQueryResponse() const
 {
-    return m_ConfigData.m_SerialDevice.m_nOn != 0;
+    return m_ConfigData.m_queryResponseSortActive.m_active != 0;
 }
 
 void cSCPIServer::addScpiClient(cSCPIClient* client)
@@ -243,7 +243,7 @@ void cSCPIServer::newSerialOn(const QVariant &serialOn)
 
 void cSCPIServer::onSortQueryResponseChange(const QVariant &active)
 {
-    m_ConfigData.m_SerialDevice.m_nOn = active.toInt();
+    m_ConfigData.m_queryResponseSortActive.m_active = active.toBool();
     emit m_pModule->parameterChanged();
 }
 

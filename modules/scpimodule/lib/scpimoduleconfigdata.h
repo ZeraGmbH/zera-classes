@@ -11,7 +11,7 @@ namespace SCPIMODULE
 struct boolParameter
 {
     QString m_sKey;
-    quint8 m_nActive; // active or not 1,0
+    bool m_active;
 };
 
 struct serialDevice

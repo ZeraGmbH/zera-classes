@@ -66,7 +66,7 @@ void cSCPIModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 QByteArray cSCPIModuleConfiguration::exportConfiguration() const
 {
     const boolParameter* bSortActive = &m_configData.m_queryResponseSortActive;
-    m_pXMLReader->setValue(bSortActive->m_sKey, QString("%1").arg(bSortActive->m_nActive));
+    m_pXMLReader->setValue(bSortActive->m_sKey, QString("%1").arg(bSortActive->m_active));
 
     m_pXMLReader->setValue("scpimodconfpar:configuration:connectivity:serialdevice:on",
                            QString("%1").arg(m_configData.m_SerialDevice.m_nOn));
@@ -116,7 +116,7 @@ void cSCPIModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setQueryResponseSortActive:
             m_configData.m_queryResponseSortActive.m_sKey = key;
-            m_configData.m_queryResponseSortActive.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_queryResponseSortActive.m_active = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setQuestionableStatusBitCount:
             m_configData.m_nQuestonionableStatusBitCount = m_pXMLReader->getValue(key).toInt(&ok);
