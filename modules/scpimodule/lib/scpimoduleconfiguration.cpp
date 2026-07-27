@@ -19,6 +19,8 @@ enum moduleconfigstate
     setSerialDevice,
     setDeviceName,
 
+    setQueryResponseSortActive,
+
     setQuestionableStatusBitCount,
     setOperationStatusBitCount,
     setOperationMeasureStatusBitCount,
@@ -48,9 +50,12 @@ void cSCPIModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:device:name"] = setDeviceName;
 
+    m_ConfigXMLMap["scpimodconfpar:configuration:queryresponsesort"] = setQueryResponseSortActive;
+
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:questionable:n"] = setQuestionableStatusBitCount;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operation:n"] = setOperationStatusBitCount;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operationmeasure:n"] = setOperationMeasureStatusBitCount;
+
 
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSCPIModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSCPIModuleConfiguration::completeConfiguration);
@@ -60,6 +65,9 @@ void cSCPIModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 
 QByteArray cSCPIModuleConfiguration::exportConfiguration() const
 {
+    const boolParameter* bSortActive = &m_configData.m_queryResponseSortActive;
+    m_pXMLReader->setValue(bSortActive->m_sKey, QString("%1").arg(bSortActive->m_nActive));
+
     m_pXMLReader->setValue("scpimodconfpar:configuration:connectivity:serialdevice:on",
                            QString("%1").arg(m_configData.m_SerialDevice.m_nOn));
 
@@ -105,6 +113,10 @@ void cSCPIModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setDeviceName:
             m_configData.m_sDeviceName = m_pXMLReader->getValue(key);
+            break;
+        case setQueryResponseSortActive:
+            m_configData.m_queryResponseSortActive.m_sKey = key;
+            m_configData.m_queryResponseSortActive.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setQuestionableStatusBitCount:
             m_configData.m_nQuestonionableStatusBitCount = m_pXMLReader->getValue(key).toInt(&ok);

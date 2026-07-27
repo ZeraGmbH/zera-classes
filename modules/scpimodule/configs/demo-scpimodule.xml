@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <scpimodconfpar>
     <configuration>
+        <queryresponsesort>1</queryresponsesort>
         <connectivity>
             <ethernet>
                 <nrclient>5</nrclient>
