@@ -45,6 +45,15 @@
             <!-- 2. Remember to use exact string 'UpcomingRelease:' in header '<h3><b>UpcomingRelease:</b><br/></h3>'. -->
             <li>
                 <p>
+                    <h3><b>UpcomingRelease:</b><br/></h3>
+                    Changes for all devices:
+                    <ul>
+                        <li>SCPI module saw a major rewrite to introduce a new option (enabled by default): Sort repsonses of multiple queries in a transaction so the response sequence matches query sequence. Since this can lead to different behaviour in e.g *OPC? the old behavour can be selected by disabling Settings/Device/Sort SCPI query responses</li>
+                    </ul>
+                </p>
+            </li>
+            <li>
+                <p>
                     <h3><b>release-4.9.10:</b><br/></h3>
                     Changes for all devices:
                     <ul>

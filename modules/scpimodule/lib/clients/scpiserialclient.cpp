@@ -1,14 +1,10 @@
-#include <QtSerialPort/QSerialPort>
-
-#include <QDebug>
-
 #include "scpiinterface.h"
+#include "scpimodule.h"
 #include "ieee488-2.h"
 #include "scpiserialclient.h"
+#include <QSerialPort>
 
-namespace SCPIMODULE
-
-{
+namespace SCPIMODULE {
 
 cSCPISerialClient::cSCPISerialClient(QSerialPort* serial, cSCPIModule *module) :
     cSCPIClient(module),
@@ -27,16 +23,24 @@ cSCPISerialClient::~cSCPISerialClient()
 
 void cSCPISerialClient::handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
 {
-    // For now: As soon as sorter comes in this can block sorter forever!!
-    if (scpiResponse.isNull())
-        return;
+    bool sortResponses = m_pModule->getSortQueryResponse();
+    const ScpiResponseSorter::SortedResponseList responseList =
+        sortResponses ?
+        m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId, logType) :
+        m_responseSorter.genImmediateNotSortedOutput(scpiResponse, scpiTransactionId, logType);
 
-    QString answer = scpiResponse.getStr() + m_endChar;
-    answer.replace("\n", m_endChar);
+    for (const ScpiResponseSorter::SortedResponse &singleResponse : responseList) {
+        const NullableString &currentResponse = singleResponse.scpiResponse;
+        if (currentResponse.isNull())
+            return;
 
-    QByteArray ba = answer.toLatin1();
-    m_pSerialPort->write(ba.data(), ba.size());
-    qInfo("Serial SCPI command response : %s", logType == LOG_SKIP ? "<skipped>" : qPrintable(scpiResponse.getStr()));
+        QString answer = currentResponse.getStr() + m_endChar;
+        answer.replace("\n", m_endChar);
+
+        QByteArray ba = answer.toLatin1();
+        m_pSerialPort->write(ba.data(), ba.size());
+        qInfo("Serial SCPI command response : %s", logType == LOG_SKIP ? "<skipped>" : qPrintable(currentResponse.getStr()));
+    }
 }
 
 

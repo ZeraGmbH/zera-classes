@@ -1,4 +1,5 @@
 #include "scpiethclient.h"
+#include "scpimodule.h"
 #include <QHostAddress>
 
 namespace SCPIMODULE {
@@ -18,13 +19,21 @@ cSCPIEthClient::~cSCPIEthClient()
 
 void cSCPIEthClient::handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
 {
-    // For now: As soon as sorter comes in this can block sorter forever!!
-    if (scpiResponse.isNull())
-        return;
+    bool sortResponses = m_pModule->getSortQueryResponse();
+    const ScpiResponseSorter::SortedResponseList responseList =
+        sortResponses ?
+        m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId, logType) :
+        m_responseSorter.genImmediateNotSortedOutput(scpiResponse, scpiTransactionId, logType);
 
-    QByteArray ba = scpiResponse.getStr().toUtf8() + "\n";
-    m_pSocket->write(ba);
-    qInfo("Network SCPI command response : %s", logType == LOG_SKIP ? "<skipped>" : qPrintable(scpiResponse.getStr()));
+    for (const ScpiResponseSorter::SortedResponse &singleResponse : responseList) {
+        const NullableString &currentResponse = singleResponse.scpiResponse;
+        if (currentResponse.isNull())
+            continue;
+
+        QByteArray ba = currentResponse.getStr().toUtf8() + "\n";
+        m_pSocket->write(ba);
+        qInfo("Network SCPI command response : %s", logType == LOG_SKIP ? "<skipped>" : qPrintable(currentResponse.getStr()));
+    }
 }
 
 QString cSCPIEthClient::getPeerAddress()

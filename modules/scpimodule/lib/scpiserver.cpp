@@ -9,7 +9,7 @@
 #include <QFile>
 #include <QHostAddress>
 #include <QTcpSocket>
-#include <QtSerialPort/QSerialPort>
+#include <QSerialPort>
 
 namespace SCPIMODULE
 {

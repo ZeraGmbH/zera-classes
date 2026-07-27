@@ -13,8 +13,7 @@ ScpiResponseSorter::~ScpiResponseSorter()
                 unfinished++;
             }
         }
-        // TODO: Make critical
-        qWarning("SCPI transactions pending: %i", unfinished);
+        qCritical("Sorted SCPI transactions pending: %i", unfinished);
     }
 #endif
 }
@@ -53,6 +52,9 @@ ScpiResponseSorter::SortedResponseList ScpiResponseSorter::genImmediateNotSorted
                                                                                        const ScpiTransactionId &scpiTransactionId,
                                                                                        SCPIMODULE::FinishLogTypes logType)
 {
+    const quint64 chrono = scpiTransactionId.getChrono();
+    m_transactionsPending.remove(chrono);
+
     QList<ScpiResponseSorter::SortedResponse> ret;
     ret.append( {scpiSingleResponse, scpiTransactionId, logType} );
     return ret;

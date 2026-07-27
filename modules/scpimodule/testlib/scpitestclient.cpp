@@ -82,14 +82,12 @@ void ScpiTestClient::clearResponses()
 
 void ScpiTestClient::handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType)
 {
-    Q_UNUSED(logType)
-
     m_responseNotSorted.append(scpiResponse);
     m_allResponsesReceivedNotClearable++;
     m_allResponsesPending--;
     emit sigScpiResponseNotSorted(scpiResponse.getStr(), scpiResponse.isNull(), scpiTransactionId.getScpi());
 
-    const ScpiResponseSorter::SortedResponseList sortedResponses = m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId);
+    const ScpiResponseSorter::SortedResponseList sortedResponses = m_responseSorter.genOrDelaySortedOutput(scpiResponse, scpiTransactionId, logType);
     for (const ScpiResponseSorter::SortedResponse &response : sortedResponses) {
         const NullableString &sortedResponse = response.scpiResponse;
         m_responsesSorted.append(sortedResponse);
