@@ -40,18 +40,18 @@ public slots:
     void removeVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName);
 
 protected:
+    int execPendingCmds();
+    bool cmdAvail();
+    void takeCmd();
+    void execCmd();
+    QString makeBareScpiInPrintable(const QString &input);
+
     cSCPIModule* m_pModule = nullptr;
     cSCPIInterface* m_pSCPIInterface = nullptr;
     ScpiResponseSorter m_responseSorter;
 
     QString m_sInputFifo;
     QChar m_endChar;
-
-    int execPendingCmds();
-    bool cmdAvail();
-    void takeCmd();
-    void execCmd();
-    QString makeBareScpiInPrintable(const QString &input);
 
 private slots:
     virtual void cmdInput() = 0;
