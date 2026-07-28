@@ -202,7 +202,7 @@ void test_power1_module_regression::scpiDumpMtPower1Module1()
     XmlDocumentCompare compare;
     bool ok = compare.compareXml(dumped, expected);
     if(!ok)
-        TestLogHelpers::compareAndLogOnDiff(expected, dumped);
+        TestLogHelpers::compareAndLogOnDiffFile("://scpiDumps/session-power1module1-scpi.xml", dumped);
     QVERIFY(ok);
 }
 
@@ -221,7 +221,7 @@ void test_power1_module_regression::scpiDumpMtPower1Module4()
     XmlDocumentCompare compare;
     bool ok = compare.compareXml(dumped, expected);
     if(!ok)
-        TestLogHelpers::compareAndLogOnDiff(expected, dumped);
+        TestLogHelpers::compareAndLogOnDiffFile("://scpiDumps/session-power1module4-scpi.xml", dumped);
     QVERIFY(ok);
 }
 

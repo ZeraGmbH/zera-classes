@@ -3,57 +3,57 @@
  <DEVICE>DEMO</DEVICE>
  <RELEASE></RELEASE>
  <MODELS>
-  <CONFIGURATION Type="Model,Node">
-   <SYST Type="Node">
-    <NAMESESSION ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" Description="Session name" ScpiPath="CONFIGURATION:SYST:NAMESESSION" DataType="STRING" Type="Query,Command+Par"/>
-    <XSESSION ValidPar="Foo,Bar" Description="XSession name" Type="Query,Command+Par" ScpiPath="CONFIGURATION:SYST:XSESSION" DataType="STRING">
-     <CATALOG ScpiPath="CONFIGURATION:SYST:XSESSION:CATALOG" Type="Query"/>
-    </XSESSION>
-    <SESSION Type="Node">
-     <CATALOG ScpiPath="CONFIGURATION:SYST:SESSION:CATALOG" Type="Query"/>
-    </SESSION>
-   </SYST>
-  </CONFIGURATION>
+  <MULESE Type="Model,Query,Command+Par" ScpiPath="*ESE" Description="Event Status Enable"/>
   <DEVICE Type="Model,Node">
-   <IFACE ScpiPath="DEVICE:IFACE" Type="Query"/>
+   <IFACE Type="Query" ScpiPath="DEVICE:IFACE"/>
   </DEVICE>
+  <MULRST Type="Model,Command" ScpiPath="*RST" Description="Reset"/>
   <STATUS Type="Model,Node">
    <QUESTIONABLE Type="Node">
-    <CONDITION ScpiPath="STATUS:QUESTIONABLE:CONDITION" Type="Query"/>
-    <PTRANSITION ScpiPath="STATUS:QUESTIONABLE:PTRANSITION" Type="Query,Command+Par"/>
-    <NTRANSITION ScpiPath="STATUS:QUESTIONABLE:NTRANSITION" Type="Query,Command+Par"/>
-    <EVENT ScpiPath="STATUS:QUESTIONABLE:EVENT" Type="Query"/>
-    <ENABLE ScpiPath="STATUS:QUESTIONABLE:ENABLE" Type="Query,Command+Par"/>
+    <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:PTRANSITION"/>
+    <EVENT Type="Query" ScpiPath="STATUS:QUESTIONABLE:EVENT"/>
+    <CONDITION Type="Query" ScpiPath="STATUS:QUESTIONABLE:CONDITION"/>
+    <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:ENABLE"/>
+    <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:NTRANSITION"/>
    </QUESTIONABLE>
    <OPERATION Type="Node">
-    <CONDITION ScpiPath="STATUS:OPERATION:CONDITION" Type="Query"/>
-    <PTRANSITION ScpiPath="STATUS:OPERATION:PTRANSITION" Type="Query,Command+Par"/>
-    <NTRANSITION ScpiPath="STATUS:OPERATION:NTRANSITION" Type="Query,Command+Par"/>
-    <EVENT ScpiPath="STATUS:OPERATION:EVENT" Type="Query"/>
-    <ENABLE ScpiPath="STATUS:OPERATION:ENABLE" Type="Query,Command+Par"/>
+    <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:PTRANSITION"/>
+    <EVENT Type="Query" ScpiPath="STATUS:OPERATION:EVENT"/>
     <MEASURE Type="Node">
-     <CONDITION ScpiPath="STATUS:OPERATION:MEASURE:CONDITION" Type="Query"/>
-     <PTRANSITION ScpiPath="STATUS:OPERATION:MEASURE:PTRANSITION" Type="Query,Command+Par"/>
-     <NTRANSITION ScpiPath="STATUS:OPERATION:MEASURE:NTRANSITION" Type="Query,Command+Par"/>
-     <EVENT ScpiPath="STATUS:OPERATION:MEASURE:EVENT" Type="Query"/>
-     <ENABLE ScpiPath="STATUS:OPERATION:MEASURE:ENABLE" Type="Query,Command+Par"/>
+     <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:PTRANSITION"/>
+     <EVENT Type="Query" ScpiPath="STATUS:OPERATION:MEASURE:EVENT"/>
+     <CONDITION Type="Query" ScpiPath="STATUS:OPERATION:MEASURE:CONDITION"/>
+     <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:ENABLE"/>
+     <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:NTRANSITION"/>
     </MEASURE>
+    <CONDITION Type="Query" ScpiPath="STATUS:OPERATION:CONDITION"/>
+    <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:ENABLE"/>
+    <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:NTRANSITION"/>
    </OPERATION>
   </STATUS>
-  <MULOPC Description="OPeration Complete" ScpiPath="*OPC" Type="Model,Query,Command"/>
-  <MULESE Description="Event Status Enable" ScpiPath="*ESE" Type="Model,Query,Command+Par"/>
-  <MULSRE Description="Service Request Enable" ScpiPath="*SRE" Type="Model,Query,Command+Par"/>
-  <MULCLS Description="Clear Status" ScpiPath="*CLS" Type="Model,Command"/>
-  <MULRST Description="Reset" ScpiPath="*RST" Type="Model,Command"/>
-  <MULIDN Description="Identification query" ScpiPath="*IDN" Type="Model,Query"/>
-  <MULESR Description="Event Status Register" ScpiPath="*ESR" Type="Model,Query"/>
-  <MULSTB Description="Status Byte query" ScpiPath="*STB" Type="Model,Query"/>
-  <MULTST Description="Self-Test query" ScpiPath="*TST" Type="Model,Query"/>
+  <MULTST Type="Model,Query" ScpiPath="*TST" Description="Self-Test query"/>
+  <CONFIGURATION Type="Model,Node">
+   <SYST Type="Node">
+    <SESSION Type="Node">
+     <CATALOG Type="Query" ScpiPath="CONFIGURATION:SYST:SESSION:CATALOG"/>
+    </SESSION>
+    <XSESSION Type="Query,Command+Par" ScpiPath="CONFIGURATION:SYST:XSESSION" Description="XSession name" ValidPar="Foo,Bar" DataType="STRING">
+     <CATALOG Type="Query" ScpiPath="CONFIGURATION:SYST:XSESSION:CATALOG"/>
+    </XSESSION>
+    <NAMESESSION Type="Query,Command+Par" ScpiPath="CONFIGURATION:SYST:NAMESESSION" Description="Session name" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" DataType="STRING"/>
+   </SYST>
+  </CONFIGURATION>
+  <MULESR Type="Model,Query" ScpiPath="*ESR" Description="Event Status Register"/>
   <SYSTEM Type="Model,Node">
-   <ERROR Description="Queries one error of internal error list" ScpiPath="SYSTEM:ERROR" Type="Node,Query">
-    <COUNT Description="Queries the number of error messages of internal error list" ScpiPath="SYSTEM:ERROR:COUNT" Type="Query"/>
-    <ALL Description="Queries all error stored in internal error list" ScpiPath="SYSTEM:ERROR:ALL" Type="Query"/>
+   <ERROR Type="Node,Query" ScpiPath="SYSTEM:ERROR" Description="Queries first error from error queue and removes it from queue">
+    <COUNT Type="Query" ScpiPath="SYSTEM:ERROR:COUNT" Description="Queries the number of error messages of internal error list"/>
+    <ALL Type="Query" ScpiPath="SYSTEM:ERROR:ALL" Description="Queries all errors from error queue and removes them from queue"/>
    </ERROR>
   </SYSTEM>
+  <MULCLS Type="Model,Command" ScpiPath="*CLS" Description="Clear Status"/>
+  <MULSTB Type="Model,Query" ScpiPath="*STB" Description="Status Byte query:&#xa;Bit0: Unused - always 0&#xa;Bit1: Unused - always 0&#xa;Bit2: Error queue not empty - read further details by SYSTEM:ERROR queries&#xa;Bit3: Questionable (=non fatal errors / warnings) available&#xa;Bit4: Message available - Unused - always 0&#xa;Bit5: Event summary - set if enabled events in ESE are set in ESR&#xa;Bit6: Requested service (or MSS Master summary status)&#xa;Bit7: Operation status summary&#xa;"/>
+  <MULIDN Type="Model,Query" ScpiPath="*IDN" Description="Identification query"/>
+  <MULOPC Type="Model,Query,Command" ScpiPath="*OPC" Description="OPeration Complete"/>
+  <MULSRE Type="Model,Query,Command+Par" ScpiPath="*SRE" Description="Service Request Enable"/>
  </MODELS>
 </MODELLIST>
