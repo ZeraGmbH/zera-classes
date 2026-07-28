@@ -63,7 +63,16 @@ void ScpiModelIEEE4882::setupScpi(cSCPIInterface *scpiInterface)
     delegate = std::make_shared<ScpiDelegateInterface>(ScpiDelegateInterface::Params{"", "*STB",
                                                                                      SCPI::isQuery,
                                                                                      statusbyte,
-                                                                                     "Status Byte query"});
+                                                                                     "Status Byte query\n"
+                                                                                     "Bit0: Unused - always 0\n"
+                                                                                     "Bit1: Unused - always 0\n"
+                                                                                     "Bit2: Error queue not empty - read further details by SYSTEM:ERROR queries\n"
+                                                                                     "Bit3: Questionable (=non fatal errors / warnings) available"
+                                                                                     "Bit4: Message available - Unused - always 0\n"
+                                                                                     "Bit5: Event summary - set if enabled events in ESE are set in ESR\n"
+                                                                                     "Bit6: Requested service (or MSS Master summary status)\n"
+                                                                                     "Bit7: Operation status summary\n"
+                                                                                    });
     scpiInterface->addSCPICommand(delegate);
     connect(delegate.get(), &ScpiDelegateInterface::signalExecuteSCPI, this, &ScpiModelIEEE4882::executeCmd);
 
@@ -78,7 +87,7 @@ void ScpiModelIEEE4882::setupScpi(cSCPIInterface *scpiInterface)
     delegate = std::make_shared<ScpiDelegateInterface>(ScpiDelegateInterface::Params{"SYSTEM", "ERROR",
                                                                                      SCPI::isNode | SCPI::isQuery,
                                                                                      read1error,
-                                                                                     "Queries one error of internal error list"});
+                                                                                     "Queries first error from error queue and removes it from queue"});
     scpiInterface->addSCPICommand(delegate);
     connect(delegate.get(), &ScpiDelegateInterface::signalExecuteSCPI, this, &ScpiModelIEEE4882::executeCmd);
 
@@ -92,7 +101,7 @@ void ScpiModelIEEE4882::setupScpi(cSCPIInterface *scpiInterface)
     delegate = std::make_shared<ScpiDelegateInterface>(ScpiDelegateInterface::Params{"SYSTEM:ERROR", "ALL",
                                                                                      SCPI::isQuery,
                                                                                      readallerrors,
-                                                                                     "Queries all error stored in internal error list"});
+                                                                                     "Queries all errors from error queue and removes them from queue"});
     scpiInterface->addSCPICommand(delegate);
     connect(delegate.get(), &ScpiDelegateInterface::signalExecuteSCPI, this, &ScpiModelIEEE4882::executeCmd);
 }
