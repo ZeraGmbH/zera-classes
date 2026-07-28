@@ -63,11 +63,11 @@ void ScpiModelIEEE4882::setupScpi(cSCPIInterface *scpiInterface)
     delegate = std::make_shared<ScpiDelegateInterface>(ScpiDelegateInterface::Params{"", "*STB",
                                                                                      SCPI::isQuery,
                                                                                      statusbyte,
-                                                                                     "Status Byte query\n"
+                                                                                     "Status Byte query:\n"
                                                                                      "Bit0: Unused - always 0\n"
                                                                                      "Bit1: Unused - always 0\n"
                                                                                      "Bit2: Error queue not empty - read further details by SYSTEM:ERROR queries\n"
-                                                                                     "Bit3: Questionable (=non fatal errors / warnings) available"
+                                                                                     "Bit3: Questionable (=non fatal errors / warnings) available\n"
                                                                                      "Bit4: Message available - Unused - always 0\n"
                                                                                      "Bit5: Event summary - set if enabled events in ESE are set in ESR\n"
                                                                                      "Bit6: Requested service (or MSS Master summary status)\n"
