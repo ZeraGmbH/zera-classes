@@ -125,8 +125,10 @@ JsonParamApi SourceSwitchJsonInternal::getCurrLoadpoint()
 void SourceSwitchJsonInternal::onSwitchTasksFinish(bool ok, int taskId)
 {
     m_pendingTask.reset();
-    if (ok)
+    if (ok) {
         m_loadpointCurrent = m_loadpointRequestedLast;
+        m_persistentParamState.saveJsonState(m_loadpointCurrent);
+    }
     emit sigSwitchFinished(ok, taskId);
 
     if (m_pendingSwitchRequests.size() != 0) {
