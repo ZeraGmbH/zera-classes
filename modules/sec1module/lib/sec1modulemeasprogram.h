@@ -151,8 +151,6 @@ private:
     void updateDemoMeasurementResults();
     void updateProgress(quint32 dUTPulseCounterActual);
     void deduceMeasStartTime(quint32 dUTPulseCounterActual);
-    void setDateTimeNow(QDateTime &var, VfModuleParameter* veinParam);
-    void setDateTime(QDateTime var, VfModuleParameter* veinParam);
     void calculateMeasTime();
 
     cSec1Module* m_pModule = nullptr; // the module we live in

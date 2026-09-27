@@ -1,6 +1,7 @@
 #include "sec1modulemeasprogram.h"
 #include "sec1module.h"
 #include "sec1moduleconfigdata.h"
+#include "secdatetimehelper.h"
 #include "unithelper.h"
 #include "errormessages.h"
 #include <proxy.h>
@@ -491,22 +492,11 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 void cSec1ModuleMeasProgram::deduceMeasStartTime(quint32 dUTPulseCounterActual)
 {
     if(dUTPulseCounterActual > m_lastProgress) { // counts downwards
-        setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
+        SecDateTimeHelper::setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
         m_measEndDateTime = QDateTime();
-        setDateTime(m_measEndDateTime, m_pMeasEndTime);
+        SecDateTimeHelper::setDateTime(m_measEndDateTime, m_pMeasEndTime);
     }
     m_lastProgress = dUTPulseCounterActual;
-}
-
-void cSec1ModuleMeasProgram::setDateTimeNow(QDateTime &var, VfModuleParameter *veinParam)
-{
-    var = QDateTime::currentDateTime();
-    setDateTime(var, veinParam);
-}
-
-void cSec1ModuleMeasProgram::setDateTime(QDateTime var, VfModuleParameter *veinParam)
-{
-    veinParam->setValue(var.toString("dd-MM-yyyy HH:mm:ss"));
 }
 
 void cSec1ModuleMeasProgram::calculateMeasTime()
@@ -1322,9 +1312,9 @@ void cSec1ModuleMeasProgram::startMeasurement()
     m_fProgress = 0.0;
     m_pProgressAct->setValue(QVariant(m_fProgress));
     m_bMeasurementRunning = true;
-    setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
+    SecDateTimeHelper::setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
     m_measEndDateTime = QDateTime();
-    setDateTime(m_measEndDateTime, m_pMeasEndTime);
+    SecDateTimeHelper::setDateTime(m_measEndDateTime, m_pMeasEndTime);
     // All preparations done: do start
     if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
@@ -1414,7 +1404,7 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
             // with statistics below, the following should be split into a
             // seperate module/library/?
 
-            setDateTimeNow(m_measEndDateTime, m_pMeasEndTime);
+            SecDateTimeHelper::setDateTimeNow(m_measEndDateTime, m_pMeasEndTime);
             calculateMeasTime();
             // append to our result list
             const cSec1ModuleConfigData *configData = m_pModule->getConfigData();

@@ -1,7 +1,7 @@
 #include "sem1modulemeasprogram.h"
 #include "sem1module.h"
 #include "sem1moduleconfigdata.h"
-#include "sem1moduleconfiguration.h"
+#include "secdatetimehelper.h"
 #include <errormessages.h>
 #include <scpi.h>
 #include <unithelper.h>
@@ -709,17 +709,6 @@ void cSem1ModuleMeasProgram::updateDemoMeasurementResults()
     setEMResult();
 }
 
-void cSem1ModuleMeasProgram::setDateTimeNow(QDateTime &var, VfModuleParameter *veinParam)
-{
-    var = QDateTime::currentDateTime();
-    setDateTime(var, veinParam);
-}
-
-void cSem1ModuleMeasProgram::setDateTime(QDateTime var, VfModuleParameter *veinParam)
-{
-    veinParam->setValue(var.toString("dd-MM-yyyy HH:mm:ss"));
-}
-
 void cSem1ModuleMeasProgram::calculateMeasTime()
 {
     m_measDuration = m_measStartDateTime.msecsTo(m_measEndDateTime);
@@ -968,11 +957,11 @@ void cSem1ModuleMeasProgram::enableInterrupt()
 
 void cSem1ModuleMeasProgram::startMeasurement()
 {
-    setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
+    SecDateTimeHelper::setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
     m_measDuration = 0;
     m_pMeasDurationMs->setValue(m_measDuration);
     m_measEndDateTime = QDateTime();
-    setDateTime(m_measEndDateTime, m_pMeasEndTime);
+    SecDateTimeHelper::setDateTime(m_measEndDateTime, m_pMeasEndTime);
     if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
@@ -1019,7 +1008,7 @@ void cSem1ModuleMeasProgram::readTCountact()
 
 void cSem1ModuleMeasProgram::onEMResultState()
 {
-    setDateTimeNow(m_measEndDateTime, m_pMeasEndTime);
+    SecDateTimeHelper::setDateTimeNow(m_measEndDateTime, m_pMeasEndTime);
     calculateMeasTime();
     setEMResult();
 }

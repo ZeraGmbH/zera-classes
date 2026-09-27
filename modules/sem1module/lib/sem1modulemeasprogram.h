@@ -140,8 +140,6 @@ private:
     void handleSECInterrupt();
     void updateDemoMeasurementResults();
 
-    static void setDateTimeNow(QDateTime &var, VfModuleParameter* veinParam);
-    static void setDateTime(QDateTime var, VfModuleParameter* veinParam);
     void calculateMeasTime();
 
     qint8 getEmobLockState();

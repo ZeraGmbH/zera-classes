@@ -138,8 +138,6 @@ private:
     void handleSECInterrupt();
     void updateDemoMeasurementResults();
 
-    static void setDateTimeNow(QDateTime &var, VfModuleParameter* veinParam);
-    static void setDateTime(QDateTime var, VfModuleParameter* veinParam);
     void calculateMeasTime();
 
     cSpm1Module* m_pModule = nullptr; // the module we live in
