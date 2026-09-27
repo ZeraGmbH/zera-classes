@@ -8,7 +8,7 @@ IoQueueGroup::IoQueueGroup(IoQueueErrorBehaviors errorBehavior) :
 {
 }
 
-void IoQueueGroup::appendTransferList(tIoTransferList transferList)
+void IoQueueGroup::appendTransferList(const tIoTransferList &transferList)
 {
     m_ioTransferList.append(transferList);
 }

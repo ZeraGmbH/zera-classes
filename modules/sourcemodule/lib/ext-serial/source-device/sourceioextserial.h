@@ -17,7 +17,7 @@ class SourceIoExtSerial : public AbstractSourceIo
 {
     Q_OBJECT
 public:
-    SourceIoExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties);
+    SourceIoExtSerial(IoDeviceBase::Ptr ioDevice, const SourceProperties &sourceProperties);
     int startTransaction(IoQueueGroup::Ptr transferGroup) override;
     QJsonObject getCapabilities() const override;
 

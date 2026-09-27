@@ -8,9 +8,9 @@ class IoTransferDemoResponder
 {
 public:
     typedef QSharedPointer<IoTransferDemoResponder> Ptr;
-    IoTransferDemoResponder(QByteArray expectedDataLead, QByteArray expectedDataTrail);
+    IoTransferDemoResponder(const QByteArray &expectedDataLead, const QByteArray &expectedDataTrail);
     void activateErrorResponse();
-    void overrideDefaultResponse(QByteArray override);
+    void overrideDefaultResponse(const QByteArray &override);
     QByteArray getDemoResponse() const;
     static QByteArray getDefaultErrorResponse();
 

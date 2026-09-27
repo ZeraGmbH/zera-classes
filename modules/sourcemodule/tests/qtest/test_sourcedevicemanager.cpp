@@ -6,14 +6,14 @@
 
 QTEST_MAIN(test_sourcedevicemanager)
 
-FinishEntry::FinishEntry(int slotNo, QUuid uuid, QString errorMsg)
+FinishEntry::FinishEntry(int slotNo, const QUuid &uuid, const QString &errorMsg)
 {
     this->slotNo = slotNo;
     this->uuid = uuid;
     this->errorMsg = errorMsg;
 }
 
-void test_sourcedevicemanager::onSourceScanFinished(int slotNo, QUuid uuid, QString errorMsg)
+void test_sourcedevicemanager::onSourceScanFinished(int slotNo, const QUuid &uuid, const QString &errorMsg)
 {
     m_listSourcesAdded.append(FinishEntry(slotNo, uuid, errorMsg));
 }

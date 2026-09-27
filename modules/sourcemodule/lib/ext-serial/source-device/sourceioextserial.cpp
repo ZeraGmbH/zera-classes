@@ -1,7 +1,7 @@
 #include "sourceioextserial.h"
 #include "jsonstructureloader.h"
 
-SourceIoExtSerial::SourceIoExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties) :
+SourceIoExtSerial::SourceIoExtSerial(IoDeviceBase::Ptr ioDevice, const SourceProperties &sourceProperties) :
     m_ioDevice(ioDevice),
     m_capabilities(JsonStructureLoader::loadJsonStructure(sourceProperties))
 {

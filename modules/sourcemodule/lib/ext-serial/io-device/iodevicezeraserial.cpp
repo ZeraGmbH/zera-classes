@@ -92,7 +92,7 @@ void IoDeviceZeraSerial::setBlockEndCriteria()
     m_serialIO.setBlockEndCriteria(endCriteria->iBlockLenReceive, endCriteria->endBlock);
 }
 
-void IoDeviceZeraSerial::setBlockEndCriteriaNextIo(int iBlockLenReceive, QByteArray endBlock)
+void IoDeviceZeraSerial::setBlockEndCriteriaNextIo(int iBlockLenReceive, const QByteArray &endBlock)
 {
     nextBlockEndCriteria.iBlockLenReceive = iBlockLenReceive;
     nextBlockEndCriteria.endBlock = endBlock;

@@ -114,7 +114,7 @@ void test_sourcedeviceextserial::checkVeinInitialInfo()
     TVeinObjects vein(jsonStructure, &veinEventSystem);
     veinEventSystem.addComponentToNotify(componentNameActInfo, &vein.veinActDeviceInfo);
     QList<QJsonObject> infosReceived;
-    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
+    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (const QString &componentName, const QVariant &newValue) {
         QCOMPARE(componentName, componentNameActInfo);
         QJsonObject jsonInfo = newValue.toJsonObject();
         infosReceived.append(jsonInfo);
@@ -140,7 +140,7 @@ void test_sourcedeviceextserial::checkVeinInitialLoad()
     TVeinObjects vein(jsonStructure, &veinEventSystem);
     veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter);
     QList<QJsonObject> loadsReceived;
-    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
+    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (const QString &componentName, const QVariant &newValue) {
         QCOMPARE(componentName, componentNameParLoad);
         QJsonObject jsonInfo = newValue.toJsonObject();
         loadsReceived.append(jsonInfo);
@@ -169,7 +169,7 @@ void test_sourcedeviceextserial::checkVeinSwitchTwoStateChanges()
     TVeinObjects vein(jsonStructure, &veinEventSystem);
     veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState);
     QList<QJsonObject> statesReceived;
-    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
+    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (const QString &componentName, const QVariant &newValue) {
         QCOMPARE(componentName, componentNameActState);
         QJsonObject jsonState = newValue.toJsonObject();
         statesReceived.append(jsonState);
@@ -202,7 +202,7 @@ void test_sourcedeviceextserial::checkVeinSwitchChangesLoad()
     TVeinObjects vein(jsonStructure, &veinEventSystem);
     veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter);
     QList<QJsonObject> loadsReceived;
-    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
+    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (const QString &componentName, const QVariant &newValue) {
         QCOMPARE(componentName, componentNameParLoad);
         QJsonObject jsonInfo = newValue.toJsonObject();
         loadsReceived.append(jsonInfo);
@@ -243,7 +243,7 @@ void test_sourcedeviceextserial::checkVeinSwitchError()
     veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState);
     QList<QJsonObject> loadsReceived;
     QList<QJsonObject> statesReceived;
-    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
+    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (const QString &componentName, const QVariant &newValue) {
         QJsonObject json = newValue.toJsonObject();
         if(componentName == componentNameParLoad) {
             loadsReceived.append(json);
@@ -297,7 +297,7 @@ void test_sourcedeviceextserial::checkVeinStateError()
     veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState);
     QList<QJsonObject> loadsReceived;
     QList<QJsonObject> statesReceived;
-    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
+    connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (const QString &componentName, const QVariant &newValue) {
         QJsonObject json = newValue.toJsonObject();
         if(componentName == componentNameParLoad) {
             loadsReceived.append(json);

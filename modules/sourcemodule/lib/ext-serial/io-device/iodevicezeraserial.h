@@ -20,7 +20,7 @@ public:
     virtual bool isOpen() override;
     virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) override;
     void setDefaultTimeout(int defaultTimeoutMs);
-    void setBlockEndCriteriaNextIo(int iBlockLenReceive = 0, QByteArray endBlock = QByteArray());
+    void setBlockEndCriteriaNextIo(int iBlockLenReceive = 0, const QByteArray &endBlock = QByteArray());
 
 protected:
     virtual void setReadTimeoutNextIo(int timeoutMs) override;

@@ -19,7 +19,7 @@ private slots:
 
 private:
     static QString getPathName();
-    QString getFilePath(const QString &fileName);
+    static QString getFilePath(const QString &fileName);
     QString createFile(const QString &fileName);
     bool deleteFile(const QString &fileName);
 };

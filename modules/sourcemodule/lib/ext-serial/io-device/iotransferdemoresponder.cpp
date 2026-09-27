@@ -2,7 +2,7 @@
 
 const QByteArray IoTransferDemoResponder::errorResponseData = QByteArrayLiteral("_ERROR_RESPONSE_");
 
-IoTransferDemoResponder::IoTransferDemoResponder(QByteArray expectedDataLead, QByteArray expectedDataTrail) :
+IoTransferDemoResponder::IoTransferDemoResponder(const QByteArray &expectedDataLead, const QByteArray &expectedDataTrail) :
     m_expectedDataLead(expectedDataLead),
     m_expectedDataTrail(expectedDataTrail)
 {
@@ -13,7 +13,7 @@ void IoTransferDemoResponder::activateErrorResponse()
     m_responseOverride = errorResponseData;
 }
 
-void IoTransferDemoResponder::overrideDefaultResponse(QByteArray override)
+void IoTransferDemoResponder::overrideDefaultResponse(const QByteArray &override)
 {
     m_responseOverride = override;
 }

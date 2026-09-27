@@ -13,7 +13,7 @@ class IoQueueGroup
 public:
     typedef QSharedPointer<IoQueueGroup> Ptr;
     IoQueueGroup(IoQueueErrorBehaviors errorBehavior);
-    void appendTransferList(tIoTransferList transferList);
+    void appendTransferList(const tIoTransferList &transferList);
     bool passedAll() const;
     int getGroupId() const;
     IoQueueErrorBehaviors getErrorBehavior() const;

@@ -6,7 +6,7 @@
 
 struct FinishEntry
 {
-    FinishEntry(int slotNo, QUuid uuid, QString errorMsg);
+    FinishEntry(int slotNo, const QUuid &uuid, const QString &errorMsg);
     int slotNo;
     QUuid uuid;
     QString errorMsg;
@@ -16,7 +16,7 @@ class test_sourcedevicemanager : public QObject
 {
     Q_OBJECT
 public slots:
-    void onSourceScanFinished(int slotNo, QUuid uuid, QString errorMsg);
+    void onSourceScanFinished(int slotNo, const QUuid &uuid, const QString &errorMsg);
     void onSlotRemoved(int slotNo);
 
 private slots:
@@ -52,7 +52,7 @@ private slots:
     void demoScanNoDevFoundOnDemo();
 
 private:
-    void checkSlotCount(SourceDeviceManager &devMan, int total, int active, int demo);
+    static void checkSlotCount(SourceDeviceManager &devMan, int total, int active, int demo);
     void checkAddRemoveNotifications(int total, int add, int remove);
 
     QList<FinishEntry> m_listSourcesAdded;
