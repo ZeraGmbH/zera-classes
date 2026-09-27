@@ -45,8 +45,8 @@ private slots:
 
     void denyRangeNotSet();
 private:
-    double adjustAngle(double angle);
-    double adjustAngleWithNeg(double angle);
+    static double adjustAngle(double angle);
+    static double adjustAngleWithNeg(double angle);
     void destroyCommonTestRunner();
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;

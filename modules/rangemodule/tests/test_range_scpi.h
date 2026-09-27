@@ -18,7 +18,7 @@ private slots:
 
 private:
     SCPIMODULE::cSCPIModule *getScpiModule(ModuleManagerTestRunner &testRunner);
-    QString sendReceive(SCPIMODULE::ScpiTestClient &client, const QString &scpi, bool removeLineFeedOnReceive = true);
+    static QString sendReceive(SCPIMODULE::ScpiTestClient &client, const QString &scpi, bool removeLineFeedOnReceive = true);
 };
 
 #endif // TEST_RANGE_SCPI_H

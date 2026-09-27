@@ -34,7 +34,7 @@ private:
     QStringList getAllScpiQueriesFromDevIface();
     QStringList getAllScpiCommandsWithParamFromDevIface();
     bool ignoreToSpeedup(const QString &scpiPath);
-    bool ignoreForUnreproducableXml(const QString &scpiPath);
+    static bool ignoreForUnreproducableXml(const QString &scpiPath);
     QString scpiShortHeader(const QString &scpiCmd);
     void addTestRow(const QStringList &scpiTransaction);
 
