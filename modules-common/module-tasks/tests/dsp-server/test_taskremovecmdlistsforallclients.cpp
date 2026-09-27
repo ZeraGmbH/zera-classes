@@ -25,7 +25,6 @@ void test_taskremovecmdlistsforallclients::timeoutAndErrFunc()
 {
     DspInitForTest dsp;
     int localErrorCount = 0;
-    QString channelAlias;
     TaskTemplatePtr task = TaskRemoveCmdListsForAllClients::create(dsp.getDspInterface(),
                                                                    DEFAULT_EXPIRE,
                                                                    [&]{
