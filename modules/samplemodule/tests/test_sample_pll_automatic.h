@@ -26,8 +26,8 @@ private slots:
     void emitNothingOnEmptyChannelList();
 
 private:
-    void fireRangeValues(float rmsValue, QList<int> activePhaseIdxs);
-    void fireRangeValues(float rmsValue, QList<int> activePhaseIdxs, DemoDspValuesRange &dspRangeValues);
+    void fireRangeValues(float rmsValue, const QList<int> &activePhaseIdxs);
+    void fireRangeValues(float rmsValue, const QList<int> &activePhaseIdxs, DemoDspValuesRange &dspRangeValues);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
 };

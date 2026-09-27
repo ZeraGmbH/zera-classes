@@ -217,7 +217,7 @@ void test_sample_pll_automatic::emitNothingOnEmptyChannelList()
     QCOMPARE(spy.count(), 0);
 }
 
-void test_sample_pll_automatic::fireRangeValues(float rmsValue, QList<int> activePhaseIdxs)
+void test_sample_pll_automatic::fireRangeValues(float rmsValue, const QList<int> &activePhaseIdxs)
 {
     TestDspInterfacePtr dspInterface = m_testRunner->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     DemoDspValuesRange dspRangeValues(phaseCountMt);
@@ -228,7 +228,7 @@ void test_sample_pll_automatic::fireRangeValues(float rmsValue, QList<int> activ
     TimeMachineObject::feedEventLoop();
 }
 
-void test_sample_pll_automatic::fireRangeValues(float rmsValue, QList<int> activePhaseIdxs, DemoDspValuesRange &dspRangeValues)
+void test_sample_pll_automatic::fireRangeValues(float rmsValue, const QList<int> &activePhaseIdxs, DemoDspValuesRange &dspRangeValues)
 {
     TestDspInterfacePtr dspInterface = m_testRunner->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
     for(int i = 0; i < phaseCountMt; i++)

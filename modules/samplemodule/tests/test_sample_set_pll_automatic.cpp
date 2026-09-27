@@ -66,7 +66,7 @@ void test_sample_set_pll_automatic::activateOnNoValuesFired()
 
 void test_sample_set_pll_automatic::fireRangeValues(ModuleManagerTestRunner &testRunner,
                                                     float rmsValue,
-                                                    QList<int> activePhaseIdxs,
+                                                    const QList<int> &activePhaseIdxs,
                                                     DemoDspValuesRange &dspRangeValues)
 {
     TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByType(INJECT_RANGE_PROGRAM);

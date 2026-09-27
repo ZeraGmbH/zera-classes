@@ -15,7 +15,7 @@ private slots:
 private:
     void fireRangeValues(ModuleManagerTestRunner &testRunner,
                          float rmsValue,
-                         QList<int> activePhaseIdxs,
+                         const QList<int> &activePhaseIdxs,
                          DemoDspValuesRange &dspRangeValues);
 };
 
