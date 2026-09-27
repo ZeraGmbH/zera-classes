@@ -65,8 +65,9 @@ QStringList ModuleManager::getModuleFileNames()
 {
     QString modulePath = MODMAN_MODULE_PATH;
     QDir moduleDir(modulePath);
+    const QStringList &entryList = moduleDir.entryList(QDir::Files);
     QStringList fullNames;
-    for(auto &name : moduleDir.entryList(QDir::Files))
+    for(const QString &name : entryList)
         fullNames.append(moduleDir.absoluteFilePath(name));
     return fullNames;
 }

@@ -9,10 +9,10 @@ class ModulemanagerConfig
 {
 public:
     static ModulemanagerConfig *getInstance();
-    static void setDemoDevice(QString demoDevice);
+    static void setDemoDevice(const QString &demoDevice);
     static QString getConfigFileNameFull();
     bool isValid() const;
-    const QString getDeviceName();
+    static const QString getDeviceName();
     bool getCustomerDataEnabled();
     const QStringList getAvailableSessions();
     const QStringList getSessionDisplayStrings();

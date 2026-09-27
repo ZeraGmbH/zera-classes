@@ -19,7 +19,7 @@ ModulemanagerConfig *ModulemanagerConfig::getInstance()
     return m_instance;
 }
 
-void ModulemanagerConfig::setDemoDevice(QString demoDevice)
+void ModulemanagerConfig::setDemoDevice(const QString &demoDevice)
 {
     m_deviceName = demoDevice;
     m_configFileName = MODMAN_DEFAULT_SESSION;
@@ -142,9 +142,9 @@ void ModulemanagerConfig::save()
     cJsonFileLoader::storeJsonFile(getConfigFileNameFull(), m_jsonConfig);
 }
 
-ModulemanagerConfig::ModulemanagerConfig()
+ModulemanagerConfig::ModulemanagerConfig() :
+    m_jsonConfig(cJsonFileLoader::loadJsonFile(getConfigFileNameFull()))
 {
-    m_jsonConfig = cJsonFileLoader::loadJsonFile(getConfigFileNameFull());
     if(m_deviceName.isEmpty()) {
         m_deviceName = ZenuxDeviceInfo::getDeviceNameFromKernelParam();
         if(m_deviceName.isEmpty() && isValid()) {

@@ -217,7 +217,6 @@ int main(int argc, char *argv[])
         QList<int>()
             << 0    /* SYSTEM */
             << 1150 /* STATUS */);
-    CustomerDataSystem *customerDataSystem = nullptr;
     vfExport::vf_export *exportModule=new vfExport::vf_export();
 
     QStringList allowedFolders{QStringLiteral(MODMAN_CUSTOMERDATA_PATH),
@@ -253,23 +252,22 @@ int main(int argc, char *argv[])
                 true);
     filesModule->addTtyWatcher("Ttys");
 
-    //conditional systems
-    bool customerDataSystemInitialized = false;
-    if(customerdataSystemEnabled)
-    {
-        QObject::connect(licenseSystem, &LicenseSystem::sigSerialNumberInitialized, [&]() {
+    // conditional systems
+    if(customerdataSystemEnabled) {
+        bool customerDataSystemInitialized = false;
+        QObject::connect(licenseSystem, &LicenseSystem::sigSerialNumberInitialized, app.get(), [&]() {
             if(licenseSystem->isSystemLicensed(CustomerDataSystem::s_entityName) && !customerDataSystemInitialized)
             {
                 customerDataSystemInitialized = true;
                 qInfo("Starting CustomerDataSystem");
-                customerDataSystem = new CustomerDataSystem(MODMAN_CUSTOMERDATA_PATH, app.get());
+                CustomerDataSystem *customerDataSystem = new CustomerDataSystem(MODMAN_CUSTOMERDATA_PATH, app.get());
                 modManSetupFacade->addSubsystem(customerDataSystem);
                 customerDataSystem->initializeEntity();
             }
         });
     }
     bool dataLoggerSystemInitialized = false;
-    QObject::connect(licenseSystem, &LicenseSystem::sigSerialNumberInitialized, [&](){
+    QObject::connect(licenseSystem, &LicenseSystem::sigSerialNumberInitialized, app.get(), [&](){
         if(licenseSystem->isSystemLicensed(dataLoggerSystem->entityName()))
         {
             if(!dataLoggerSystemInitialized)
