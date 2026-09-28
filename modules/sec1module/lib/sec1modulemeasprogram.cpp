@@ -618,8 +618,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 if (reply == ack) {
                     // Still running and not waiting for next?
                     if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
-                        m_nEnergyCounterActual = answer.toUInt();
-                        m_fEnergy = m_nEnergyCounterActual / m_pModule->getConfigData()->m_fRefConstant.m_fPar;
+                        quint32 energyCounterActual = answer.toUInt();
+                        m_fEnergy = energyCounterActual / m_pModule->getConfigData()->m_fRefConstant.m_fPar;
                         m_pEnergyAct->setValue(m_fEnergy);
                         if (m_bFirstMeas) {
                             // keep in final until a result is calculated in
