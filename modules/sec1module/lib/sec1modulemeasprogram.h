@@ -7,6 +7,7 @@
 #include "secmeasinputdictionary.h"
 #include "secresourcetypelist.h"
 #include "refpowerconstantobserver.h"
+#include "uint32bitexpander.h"
 #include <rminterface.h>
 #include <doublevalidator.h>
 #include <stringvalidator.h>
@@ -298,6 +299,7 @@ private:
 
     MultipleResultHelper m_multipleResultHelper;
     cDoubleValidator *m_dutConstValidator = nullptr;
+    UInt32BitExpander m_uint32BitExpander;
 
     QElapsedTimer m_demoTimeSinceStart;
 };

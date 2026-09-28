@@ -5,6 +5,7 @@
 #include "refpowerconstantobserver.h"
 #include "secresourcetypelist.h"
 #include "secmeasinputdictionary.h"
+#include "uint32bitexpander.h"
 #include <basemeasprogram.h>
 #include <rminterface.h>
 #include <clientactivecomponent.h>
@@ -255,6 +256,7 @@ private:
     QDateTime m_measStartDateTime;
     QDateTime m_measEndDateTime;
     int m_measDuration = 0;
+    UInt32BitExpander m_uint32BitExpander;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;

@@ -439,8 +439,8 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
-                        quint32 energyCounterActual = answer.toUInt();
-                        m_fEnergy = 1.0 * energyCounterActual / (m_pRefConstantPar->getValue().toDouble() * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
+                        m_uint32BitExpander.setValue32(answer.toUInt());
+                        m_fEnergy = m_uint32BitExpander.getExpandedValueDbl() / (m_pRefConstantPar->getValue().toDouble() * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
                         m_pEnergyAct->setValue(m_fEnergy); // in kWh
                     }
                 }
@@ -1081,6 +1081,7 @@ void cSpm1ModuleMeasProgram::newStartStop(QVariant startstop)
     int ss = startstop.toInt(&ok);
     if (ss > 0) // we get started
     {
+        m_uint32BitExpander.reset();
         if (!m_startMeasurementMachine.isRunning())
             m_startMeasurementMachine.start();
         // setsync
