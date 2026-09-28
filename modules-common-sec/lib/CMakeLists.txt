@@ -6,6 +6,8 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
+find_package(Qt5 REQUIRED COMPONENTS Core)
+
 add_library(modules-common-sec SHARED
     ${HEADER}
     ${SOURCES}
@@ -21,6 +23,7 @@ target_link_libraries(modules-common-sec
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
+target_link_libraries(modules-common-sec PRIVATE Qt5::Core)
 
 target_include_directories(modules-common-sec
     PUBLIC
