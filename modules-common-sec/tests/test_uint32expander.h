@@ -17,6 +17,27 @@ private slots:
     void setValueTwiceWithOverflowThenReset();
 
     void doubleLimits();
+
+    // |                act                                  |
+    // |                final                                |
+    // act == final => same upper
+
+    // |                act                                  |
+    // |                     final                           |
+    // act < final / no overflow => same upper
+
+    // |                       act                           |
+    // |                final                                |
+    // act > final / no overflow => same upper
+
+    // |                                                 act |
+    // | final                                               |
+    // act < final / overflow => upper final == upper act + 1
+
+    // | act                                                 |
+    // |                                               final |
+    // act > final / overflow => upper final == upper act - 1
+
 };
 
 #endif // TEST_UINT32EXPANDER_H
