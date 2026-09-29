@@ -13,18 +13,19 @@ public:
 
     void setActual32(quint32 value);
     quint64 getActualExpanded64() const;
-    double getActualExpandedDbl() const;
 
     void setFinal32(quint32 value);
     quint64 getFinalExpanded64() const;
-    double getFinalExpandedDbl() const;
+
+    static double uint64ToDbl(const quint64 &value);
 
 private:
+    void adjustFinalOffsetToActual();
+
     quint32 m_actualLower = 0;
     quint32 m_actualUpper = 0;
 
     quint32 m_finalLower = 0;
-    quint32 m_finalUpper = 0;
     qint32 m_signedOffsetFinalToActual = 0;
 };
 

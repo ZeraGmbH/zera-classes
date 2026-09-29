@@ -9,7 +9,6 @@ void test_uint32expander::initZero()
     UInt32BitExpander expander;
 
     QCOMPARE(expander.getActualExpanded64(), 0);
-    QCOMPARE(expander.getActualExpandedDbl(), 0.0);
 }
 
 void test_uint32expander::setValueOnce()
@@ -18,7 +17,6 @@ void test_uint32expander::setValueOnce()
 
     expander.setActual32(42);
     QCOMPARE(expander.getActualExpanded64(), 42);
-    QCOMPARE(expander.getActualExpandedDbl(), 42.0);
 }
 
 void test_uint32expander::setValueTwiceWithoutOverflow()
@@ -28,7 +26,6 @@ void test_uint32expander::setValueTwiceWithoutOverflow()
     expander.setActual32(1);
     expander.setActual32(2);
     QCOMPARE(expander.getActualExpanded64(), 2);
-    QCOMPARE(expander.getActualExpandedDbl(), 2.0);
 }
 
 void test_uint32expander::setValueTwiceWithoutOverflowEqual()
@@ -38,7 +35,6 @@ void test_uint32expander::setValueTwiceWithoutOverflowEqual()
     expander.setActual32(42);
     expander.setActual32(42);
     QCOMPARE(expander.getActualExpanded64(), 42);
-    QCOMPARE(expander.getActualExpandedDbl(), 42.0);
 }
 
 void test_uint32expander::setValueTwiceWithOverflow()
@@ -50,7 +46,6 @@ void test_uint32expander::setValueTwiceWithOverflow()
 
     const quint64 expected = (1ULL << 32) + 3;
     QCOMPARE(expander.getActualExpanded64(), expected);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expected));
 }
 
 void test_uint32expander::setValueMultipleOverflow()
@@ -64,7 +59,6 @@ void test_uint32expander::setValueMultipleOverflow()
 
     const quint64 expected = 3*(1ULL << 32) + 39;
     QCOMPARE(expander.getActualExpanded64(), expected);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expected));
 }
 
 void test_uint32expander::setValueTwiceWithOverflowThenReset()
@@ -76,27 +70,25 @@ void test_uint32expander::setValueTwiceWithOverflowThenReset()
 
     const quint64 expected = (1ULL << 32) + 3;
     QCOMPARE(expander.getActualExpanded64(), expected);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expected));
 
     expander.reset();
     QCOMPARE(expander.getActualExpanded64(), 0);
-    QCOMPARE(expander.getActualExpandedDbl(), 0.0);
 }
 
 void test_uint32expander::doubleLimits()
 {
-    QCOMPARE(static_cast<double>(1ULL << 32), 4294967296.0);
-    QCOMPARE(static_cast<double>(1ULL << 53), 9007199254740992.0);
+    QCOMPARE(UInt32BitExpander::uint64ToDbl(1ULL << 32), 4294967296.0);
+    QCOMPARE(UInt32BitExpander::uint64ToDbl(1ULL << 53), 9007199254740992.0);
 
     const quint64 im2 = (1ULL << 53)-2;
     const quint64 im1 = im2+1;
     const quint64 i0 = im2+2;
     const quint64 i1 = im2 + 3;
 
-    const double dm2 = static_cast<double>(im2);
-    const double dm1 = static_cast<double>(im1);
-    const double d0 = static_cast<double>(i0);
-    const double d1 = static_cast<double>(i1);
+    const double dm2 = UInt32BitExpander::uint64ToDbl(im2);
+    const double dm1 = UInt32BitExpander::uint64ToDbl(im1);
+    const double d0 = UInt32BitExpander::uint64ToDbl(i0);
+    const double d1 = UInt32BitExpander::uint64ToDbl(i1);
 
     QCOMPARE(dm2, 9007199254740990.0);
     QCOMPARE(dm1, 9007199254740991.0);
@@ -119,9 +111,7 @@ void test_uint32expander::actEqualFinalNoOverflow()
     expander.setFinal32(42);
 
     QCOMPARE(expander.getActualExpanded64(), 42);
-    QCOMPARE(expander.getActualExpandedDbl(), 42.0);
     QCOMPARE(expander.getFinalExpanded64(), 42);
-    QCOMPARE(expander.getFinalExpandedDbl(), 42.0);
 }
 
 void test_uint32expander::actEqualFinalWithOverflow()
@@ -134,9 +124,7 @@ void test_uint32expander::actEqualFinalWithOverflow()
 
     const quint64 expected = (1ULL << 32) + 42;
     QCOMPARE(expander.getActualExpanded64(), expected);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expected));
     QCOMPARE(expander.getFinalExpanded64(), expected);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expected));
 }
 
 void test_uint32expander::actLessThanFinalNoOverflow()
@@ -147,9 +135,7 @@ void test_uint32expander::actLessThanFinalNoOverflow()
     expander.setFinal32(42);
 
     QCOMPARE(expander.getActualExpanded64(), 40);
-    QCOMPARE(expander.getActualExpandedDbl(), 40.0);
     QCOMPARE(expander.getFinalExpanded64(), 42);
-    QCOMPARE(expander.getFinalExpandedDbl(), 42.0);
 }
 
 void test_uint32expander::actLessThanFinalWithOverflow()
@@ -162,11 +148,9 @@ void test_uint32expander::actLessThanFinalWithOverflow()
 
     const quint64 expectedActual = (1ULL << 32) + 40;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32) + 42;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::actLargerThanFinalNoOverflow()
@@ -177,9 +161,7 @@ void test_uint32expander::actLargerThanFinalNoOverflow()
     expander.setFinal32(40);
 
     QCOMPARE(expander.getActualExpanded64(), 42);
-    QCOMPARE(expander.getActualExpandedDbl(), 42.0);
     QCOMPARE(expander.getFinalExpanded64(), 40);
-    QCOMPARE(expander.getFinalExpandedDbl(), 40.0);
 }
 
 void test_uint32expander::actLargerThanFinalWithOverflow()
@@ -192,11 +174,9 @@ void test_uint32expander::actLargerThanFinalWithOverflow()
 
     const quint64 expectedActual = (1ULL << 32) + 42;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32) + 40;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::actLessThanOverflowFinal()
@@ -208,11 +188,9 @@ void test_uint32expander::actLessThanOverflowFinal()
 
     const quint64 expectedActual = (1ULL << 32) - 1;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32);
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::actLargerThanOverflowFinal()
@@ -225,11 +203,9 @@ void test_uint32expander::actLargerThanOverflowFinal()
 
     const quint64 expectedActual = (1ULL << 32);
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32)-1;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setActOnlyNoOverflow()
@@ -240,11 +216,9 @@ void test_uint32expander::setActOnlyNoOverflow()
 
     const quint64 expectedActual = 42;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = 0;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setActFinalActNoOverflow()
@@ -257,11 +231,9 @@ void test_uint32expander::setActFinalActNoOverflow()
 
     const quint64 expectedActual = 44;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = 43;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setFinalActFinalNoOverflow()
@@ -274,11 +246,9 @@ void test_uint32expander::setFinalActFinalNoOverflow()
 
     const quint64 expectedActual = 43;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = 44;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setActOnlyWithOverflow()
@@ -290,11 +260,9 @@ void test_uint32expander::setActOnlyWithOverflow()
 
     const quint64 expectedActual = (1ULL << 32) + 42;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32);
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setActFinalWithOverflow()
@@ -306,11 +274,9 @@ void test_uint32expander::setActFinalWithOverflow()
 
     const quint64 expectedActual = (1ULL << 32)-1;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32) + 43;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setFinalActWithOverflow()
@@ -322,11 +288,9 @@ void test_uint32expander::setFinalActWithOverflow()
 
     const quint64 expectedActual = (1ULL << 32)+43;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32)-1;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setActFinalActWithOverflow1()
@@ -339,11 +303,9 @@ void test_uint32expander::setActFinalActWithOverflow1()
 
     const quint64 expectedActual = (1ULL << 32) + 44;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32) + 43;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setActFinalActWithOverflow2()
@@ -356,11 +318,9 @@ void test_uint32expander::setActFinalActWithOverflow2()
 
     const quint64 expectedActual = (1ULL << 32) + 44;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32) - 1;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setFinalActFinalwithOverflow()
@@ -373,11 +333,9 @@ void test_uint32expander::setFinalActFinalwithOverflow()
 
     const quint64 expectedActual = (1ULL << 32) + 43;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32) + 44;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setActualSmallerFinalOverflowActual()
@@ -390,11 +348,9 @@ void test_uint32expander::setActualSmallerFinalOverflowActual()
 
     const quint64 expectedActual = (1ULL << 32) + 2;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32) - 2;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setActOnlyWithOverflowImmediateRead()
@@ -404,19 +360,15 @@ void test_uint32expander::setActOnlyWithOverflowImmediateRead()
     expander.setActual32((1ULL << 32)-1);
     const quint64 expectedActual1 = (1ULL << 32)-1;
     QCOMPARE(expander.getActualExpanded64(), expectedActual1);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual1));
 
     expander.setActual32(42);
     const quint64 expectedActual2 = (1ULL << 32)+42;
     QCOMPARE(expander.getActualExpanded64(), expectedActual2);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual2));
 
     const quint64 expectedFinal = (1ULL << 32);
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 
     QCOMPARE(expander.getActualExpanded64(), expectedActual2);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual2));
 }
 
 void test_uint32expander::setActFinalWithOverflowImmediateRead()
@@ -426,15 +378,12 @@ void test_uint32expander::setActFinalWithOverflowImmediateRead()
     expander.setActual32((1ULL << 32)-1);
     const quint64 expectedActual = (1ULL << 32)-1;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     expander.setFinal32(43);
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     const quint64 expectedFinal = (1ULL << 32) + 43;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setFinalActWithOverflowImmediateRead()
@@ -444,15 +393,12 @@ void test_uint32expander::setFinalActWithOverflowImmediateRead()
     expander.setFinal32((1ULL << 32)-1);
     const quint64 expectedFinal = (1ULL << 32)-1;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 
     expander.setActual32(43);
     const quint64 expectedActual = (1ULL << 32)+43;
     QCOMPARE(expander.getActualExpanded64(), expectedActual);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual));
 
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setActFinalActWithOverflow1ImmediateRead()
@@ -462,20 +408,16 @@ void test_uint32expander::setActFinalActWithOverflow1ImmediateRead()
     expander.setActual32((1ULL << 32)-1);
     const quint64 expectedActual1 = (1ULL << 32) - 1;
     QCOMPARE(expander.getActualExpanded64(), expectedActual1);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual1));
 
     expander.setFinal32(43);
     const quint64 expectedFinal = (1ULL << 32) + 43;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 
     expander.setActual32(44);
     const quint64 expectedActual2 = (1ULL << 32) + 44;
     QCOMPARE(expander.getActualExpanded64(), expectedActual2);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual2));
 
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setActFinalActWithOverflow2ImmediateRead()
@@ -485,20 +427,16 @@ void test_uint32expander::setActFinalActWithOverflow2ImmediateRead()
     expander.setActual32((1ULL << 32)-1);
     const quint64 expectedActual1 = (1ULL << 32) -1;
     QCOMPARE(expander.getActualExpanded64(), expectedActual1);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual1));
 
     expander.setFinal32((1ULL << 32)-1);
     const quint64 expectedFinal = (1ULL << 32) - 1;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 
     expander.setActual32(44);
     const quint64 expectedActual2 = (1ULL << 32) + 44;
     QCOMPARE(expander.getActualExpanded64(), expectedActual2);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual2));
 
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 }
 
 void test_uint32expander::setFinalActFinalwithOverflowImmediateRead()
@@ -508,15 +446,12 @@ void test_uint32expander::setFinalActFinalwithOverflowImmediateRead()
     expander.setFinal32((1ULL << 32)-1);
     const quint64 expectedFinal = (1ULL << 32) - 1;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal));
 
     expander.setActual32(43);
     const quint64 expectedActual1 = (1ULL << 32) + 43;
     QCOMPARE(expander.getActualExpanded64(), expectedActual1);
-    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expectedActual1));
 
     expander.setFinal32(44);
     const quint64 expectedFinal2 = (1ULL << 32) + 44;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal2);
-    QCOMPARE(expander.getFinalExpandedDbl(), static_cast<double>(expectedFinal2));
 }

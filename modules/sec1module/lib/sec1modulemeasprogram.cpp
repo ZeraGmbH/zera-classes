@@ -619,7 +619,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                     // Still running and not waiting for next?
                     if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
                         m_uint32BitExpander.setActual32(answer.toUInt());
-                        m_fEnergy = m_uint32BitExpander.getActualExpandedDbl() / m_pModule->getConfigData()->m_fRefConstant.m_fPar;
+                        m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / m_pModule->getConfigData()->m_fRefConstant.m_fPar;
                         m_pEnergyAct->setValue(m_fEnergy);
                         if (m_bFirstMeas) {
                             // keep in final until a result is calculated in
