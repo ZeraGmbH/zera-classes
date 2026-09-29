@@ -618,8 +618,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 if (reply == ack) {
                     // Still running and not waiting for next?
                     if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
-                        m_uint32BitExpander.setValue32(answer.toUInt());
-                        m_fEnergy = m_uint32BitExpander.getExpandedValueDbl() / m_pModule->getConfigData()->m_fRefConstant.m_fPar;
+                        m_uint32BitExpander.setActual32(answer.toUInt());
+                        m_fEnergy = m_uint32BitExpander.getActualExpandedDbl() / m_pModule->getConfigData()->m_fRefConstant.m_fPar;
                         m_pEnergyAct->setValue(m_fEnergy);
                         if (m_bFirstMeas) {
                             // keep in final until a result is calculated in
@@ -1306,6 +1306,7 @@ void cSec1ModuleMeasProgram::enableInterrupt()
 void cSec1ModuleMeasProgram::startMeasurement()
 {
     setStatus(ECALCSTATUS::ARMED);
+    m_uint32BitExpander.reset();
     m_fEnergy = 0.0;
     m_pEnergyAct->setValue(m_fEnergy);
     m_pEnergyFinalAct->setValue(m_fEnergy);
@@ -1491,7 +1492,6 @@ void cSec1ModuleMeasProgram::newStartStop(const QVariant &startstop)
     int ss = startstop.toInt(&ok);
     if (ss > 0) // we get started
     {
-        m_uint32BitExpander.reset();
         m_bFirstMeas = true; // it is the first measurement
         m_nMeasurementsToGo = m_pMeasCountPar->getValue().toInt();
         m_nMeasurementNo = 0;

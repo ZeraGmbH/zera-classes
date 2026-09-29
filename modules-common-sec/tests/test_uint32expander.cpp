@@ -8,79 +8,79 @@ void test_uint32expander::initZero()
 {
     UInt32BitExpander expander;
 
-    QCOMPARE(expander.getExpandedValue64(), 0);
-    QCOMPARE(expander.getExpandedValueDbl(), 0.0);
+    QCOMPARE(expander.getActualExpanded64(), 0);
+    QCOMPARE(expander.getActualExpandedDbl(), 0.0);
 }
 
 void test_uint32expander::setValueOnce()
 {
     UInt32BitExpander expander;
 
-    expander.setValue32(42);
-    QCOMPARE(expander.getExpandedValue64(), 42);
-    QCOMPARE(expander.getExpandedValueDbl(), 42.0);
+    expander.setActual32(42);
+    QCOMPARE(expander.getActualExpanded64(), 42);
+    QCOMPARE(expander.getActualExpandedDbl(), 42.0);
 }
 
 void test_uint32expander::setValueTwiceWithoutOverflow()
 {
     UInt32BitExpander expander;
 
-    expander.setValue32(1);
-    expander.setValue32(2);
-    QCOMPARE(expander.getExpandedValue64(), 2);
-    QCOMPARE(expander.getExpandedValueDbl(), 2.0);
+    expander.setActual32(1);
+    expander.setActual32(2);
+    QCOMPARE(expander.getActualExpanded64(), 2);
+    QCOMPARE(expander.getActualExpandedDbl(), 2.0);
 }
 
 void test_uint32expander::setValueTwiceWithoutOverflowEqual()
 {
     UInt32BitExpander expander;
 
-    expander.setValue32(42);
-    expander.setValue32(42);
-    QCOMPARE(expander.getExpandedValue64(), 42);
-    QCOMPARE(expander.getExpandedValueDbl(), 42.0);
+    expander.setActual32(42);
+    expander.setActual32(42);
+    QCOMPARE(expander.getActualExpanded64(), 42);
+    QCOMPARE(expander.getActualExpandedDbl(), 42.0);
 }
 
 void test_uint32expander::setValueTwiceWithOverflow()
 {
     UInt32BitExpander expander;
 
-    expander.setValue32(42);
-    expander.setValue32(3);
+    expander.setActual32(42);
+    expander.setActual32(3);
 
     const quint64 expected = (1ULL << 32) + 3;
-    QCOMPARE(expander.getExpandedValue64(), expected);
-    QCOMPARE(expander.getExpandedValueDbl(), static_cast<double>(expected));
+    QCOMPARE(expander.getActualExpanded64(), expected);
+    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expected));
 }
 
 void test_uint32expander::setValueMultipleOverflow()
 {
     UInt32BitExpander expander;
 
-    expander.setValue32(42);
-    expander.setValue32(41);
-    expander.setValue32(40);
-    expander.setValue32(39);
+    expander.setActual32(42);
+    expander.setActual32(41);
+    expander.setActual32(40);
+    expander.setActual32(39);
 
     const quint64 expected = 3*(1ULL << 32) + 39;
-    QCOMPARE(expander.getExpandedValue64(), expected);
-    QCOMPARE(expander.getExpandedValueDbl(), static_cast<double>(expected));
+    QCOMPARE(expander.getActualExpanded64(), expected);
+    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expected));
 }
 
 void test_uint32expander::setValueTwiceWithOverflowThenReset()
 {
     UInt32BitExpander expander;
 
-    expander.setValue32(42);
-    expander.setValue32(3);
+    expander.setActual32(42);
+    expander.setActual32(3);
 
     const quint64 expected = (1ULL << 32) + 3;
-    QCOMPARE(expander.getExpandedValue64(), expected);
-    QCOMPARE(expander.getExpandedValueDbl(), static_cast<double>(expected));
+    QCOMPARE(expander.getActualExpanded64(), expected);
+    QCOMPARE(expander.getActualExpandedDbl(), static_cast<double>(expected));
 
     expander.reset();
-    QCOMPARE(expander.getExpandedValue64(), 0);
-    QCOMPARE(expander.getExpandedValueDbl(), 0.0);
+    QCOMPARE(expander.getActualExpanded64(), 0);
+    QCOMPARE(expander.getActualExpandedDbl(), 0.0);
 }
 
 void test_uint32expander::doubleLimits()

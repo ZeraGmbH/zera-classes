@@ -443,8 +443,8 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
-                        m_uint32BitExpander.setValue32(answer.toUInt());
-                        m_fEnergy = m_uint32BitExpander.getExpandedValueDbl() / (m_pRefConstantPar->getValue().toDouble() * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
+                        m_uint32BitExpander.setActual32(answer.toUInt());
+                        m_fEnergy = m_uint32BitExpander.getActualExpandedDbl() / (m_pRefConstantPar->getValue().toDouble() * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
                         m_pEnergyAct->setValue(m_fEnergy); // in MWh, kWh, Wh depends on selected unit for user input
                     }
                 }
@@ -964,6 +964,7 @@ void cSem1ModuleMeasProgram::startMeasurement()
     if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
+    m_uint32BitExpander.reset();
     m_fEnergy = 0.0;
     m_pEnergyAct->setValue(m_fEnergy);
     m_fPower = 0.0;
@@ -1053,7 +1054,6 @@ void cSem1ModuleMeasProgram::newStartStop(QVariant startstop)
 {
     int ss = startstop.toInt();
     if (ss > 0) { // we get started
-        m_uint32BitExpander.reset();
         if (!m_startMeasurementMachine.isRunning())
             m_startMeasurementMachine.start();
         // setsync

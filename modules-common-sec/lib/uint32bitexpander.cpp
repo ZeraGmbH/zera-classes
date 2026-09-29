@@ -2,23 +2,23 @@
 
 void UInt32BitExpander::reset()
 {
-    m_currentValueLower = 0;
-    m_currentValueUpper = 0;
+    m_actualLower = 0;
+    m_actualUpper = 0;
 }
 
-void UInt32BitExpander::setValue32(quint32 value)
+void UInt32BitExpander::setActual32(quint32 value)
 {
-    if (value < m_currentValueLower)
-        m_currentValueUpper++;
-    m_currentValueLower = value;
+    if (value < m_actualLower)
+        m_actualUpper++;
+    m_actualLower = value;
 }
 
-quint64 UInt32BitExpander::getExpandedValue64() const
+quint64 UInt32BitExpander::getActualExpanded64() const
 {
-    return (static_cast<quint64>(m_currentValueUpper) << 32) | m_currentValueLower;
+    return (static_cast<quint64>(m_actualUpper) << 32) | m_actualLower;
 }
 
-double UInt32BitExpander::getExpandedValueDbl() const
+double UInt32BitExpander::getActualExpandedDbl() const
 {
-    return static_cast<double>(getExpandedValue64());
+    return static_cast<double>(getActualExpanded64());
 }
