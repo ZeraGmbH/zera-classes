@@ -2,7 +2,6 @@
 #include "taskrefpowerregisterconstchangenotifications.h"
 #include "taskrefpowerfetchconstant.h"
 #include <taskcontainersequence.h>
-#include <cmath>
 
 static constexpr int firstNotifcationId = 42;
 
