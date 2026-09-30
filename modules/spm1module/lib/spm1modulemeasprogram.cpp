@@ -114,10 +114,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module) :
     m_startMeasurementMachine.addState(&m_startMeasurementState);
     m_startMeasurementMachine.addState(&m_startMeasurementDoneState);
 
-    if(m_pModule->getDemo())
-        m_startMeasurementMachine.setInitialState(&m_startMeasurementState);
-    else
-        m_startMeasurementMachine.setInitialState(&m_setsyncState);
+    m_startMeasurementMachine.setInitialState(&m_setsyncState);
 
     connect(&m_setsyncState, &QState::entered, this, &cSpm1ModuleMeasProgram::setSync);
     connect(&m_setsync2State, &QState::entered, this, &cSpm1ModuleMeasProgram::setSync2);
