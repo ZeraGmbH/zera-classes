@@ -921,7 +921,18 @@ void cSec1ModuleMeasProgram::computeDependencies()
 
     if (mode == "mrate") {
         // we calculate the new target value
-        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / dutConstant);
+        // Long story:
+        // If a power module sits on AUX with no clamp (DC session do):
+        // * zenux-services / MT310s2ChannelRangeFactory::createChannelAndRanges sets max current to 1e-12
+        // * cPower1ModuleMeasProgram::foutParamsToDsp() calculates 2.88e18 reference contant
+        // * Out of bounds cast to integer is undefined behavior try
+        //     double val = 2.88e18;
+        //     quint32 limitedIntegerVal = val;
+        //     qInfo("%i", limitedIntegerVal);
+        // We found that by adding more functionality to tests and saw that dev PC's gcc and target arm gcc produced different results
+        double target = static_cast<double>(confData->m_nMRate.m_nPar) * confData->m_fRefConstant.m_fPar / dutConstant;
+        double clampedTarget = std::min(target, static_cast<double>(std::numeric_limits<quint32>::max()));
+        confData->m_nTarget.m_nPar = static_cast<quint32>(clampedTarget);
         confData->m_fEnergy.m_fPar = confData->m_nMRate.m_nPar / dutConstant;
     }
     else if (mode == "energy") {
