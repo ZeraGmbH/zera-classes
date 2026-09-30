@@ -247,7 +247,6 @@ private:
     double m_fResult = 0.0; // error value in %
     ECALCRESULT::enResultTypes m_eRating = ECALCRESULT::RESULT_PASSED;
     quint32 m_nTimerCountStart = 0; // master / time counts down
-    quint32 m_nEnergyCounterFinal = 0;
     double m_fTimeSecondsActual = 0.0; // slave2 / time counts up
     double m_fTimeSecondsFinal = 0.0;
     double m_fEnergy = 0.0;

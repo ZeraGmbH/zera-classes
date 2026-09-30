@@ -550,7 +550,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // see cSec1ModuleMeasProgram::catchInterfaceAnswer /
                     // case readvicount
                     if((getStatus() & ECALCSTATUS::ABORT) == 0)
-                        m_nEnergyCounterFinal = answer.toLongLong();
+                        m_uint32BitExpander.setFinal32(answer.toLongLong());
                     emit interruptContinue();
                 }
                 else
@@ -697,7 +697,7 @@ void cSpm1ModuleMeasProgram::updateDemoMeasurementResults()
 {
     setStatus(ECALCSTATUS::READY); //still need more thoughts on this
 
-    m_nEnergyCounterFinal = rand() % 10; //random value between 0 and 9
+    m_uint32BitExpander.setFinal32(rand() % 10); //random value between 0 and 9
     m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
 
     newRefConstant(QVariant(3600000));
@@ -1036,7 +1036,8 @@ void cSpm1ModuleMeasProgram::onEMResult()
 
 void cSpm1ModuleMeasProgram::setEMResult()
 {
-    m_fEnergy = 1.0 * m_nEnergyCounterFinal / m_pRefConstantPar->getValue().toDouble();
+    const double energyCounterFinal = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getFinalExpanded64());
+    m_fEnergy = energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
     double time = m_fTimeSecondsFinal;
 
     double PRef = m_fEnergy * 3600.0 / time;

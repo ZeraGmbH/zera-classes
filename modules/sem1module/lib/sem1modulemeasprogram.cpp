@@ -555,9 +555,8 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // incorporate still running check as we learned from sec1
                     // see cSec1ModuleMeasProgram::catchInterfaceAnswer /
                     // case readvicount
-                    if((getStatus() & ECALCSTATUS::ABORT) == 0) {
-                        m_nEnergyCounterFinal = answer.toLongLong();
-                    }
+                    if((getStatus() & ECALCSTATUS::ABORT) == 0)
+                        m_uint32BitExpander.setFinal32(answer.toLongLong());
                     emit interruptContinue();
                 }
                 else
@@ -702,7 +701,7 @@ void cSem1ModuleMeasProgram::updateDemoMeasurementResults()
 {
     setStatus(ECALCSTATUS::READY); //still need more thoughts on this
 
-    m_nEnergyCounterFinal = rand() % 10; //random value between 0 and 9
+    m_uint32BitExpander.setFinal32(rand() % 10); //random value between 0 and 9
     m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
     newRefConstant(QVariant(3600000));
     setEMResult();
@@ -1015,7 +1014,8 @@ void cSem1ModuleMeasProgram::onEMResultState()
 
 void cSem1ModuleMeasProgram::setEMResult()
 {
-    double WRef =  m_nEnergyCounterFinal / m_pRefConstantPar->getValue().toDouble();
+    const double energyCounterFinal = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getFinalExpanded64());
+    double WRef =  energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
     double time = m_fTimeSecondsFinal;
     double WDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()];
     if (WRef == 0) {

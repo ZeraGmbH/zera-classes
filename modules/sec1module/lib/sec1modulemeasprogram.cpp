@@ -731,7 +731,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                     // * Stop it (all OK up here)
                     // * Change DUT constant/unit -> Crap results
                     if(m_bMeasurementRunning) {
-                        m_nEnergyCounterFinal = answer.toLongLong();
+                        m_uint32BitExpander.setFinal32(answer.toLongLong());
                     }
                     emit interruptContinue();
                 }
@@ -802,7 +802,7 @@ void cSec1ModuleMeasProgram::updateDemoMeasurementResults()
             setStatus(ECALCSTATUS::STARTED | ECALCSTATUS::READY);
     }
     else {
-        m_nEnergyCounterFinal = rand() % 10;
+        m_uint32BitExpander.setFinal32(rand() % 10); //random value between 0 and 9
         setECResultAndResetInt();
         checkForRestart();
     }
@@ -1356,16 +1356,18 @@ void cSec1ModuleMeasProgram::readMTCountact()
 void cSec1ModuleMeasProgram::setECResult()
 {
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
-    if (m_nEnergyCounterFinal == 0) {
+    quint64 energyCounterFinal = m_uint32BitExpander.getFinalExpanded64();
+    double energyCounterFinalForCalc = UInt32BitExpander::uint64ToDbl(energyCounterFinal);
+    if (energyCounterFinal == 0) {
         m_fResult = qQNaN();
         m_eRating = ECALCRESULT::RESULT_UNFINISHED;
     }
     else {
-        m_fResult = (1.0 * configData->m_nTarget.m_nPar - 1.0 * m_nEnergyCounterFinal) * getUnitFactor() / m_nEnergyCounterFinal;
+        m_fResult = (1.0 * configData->m_nTarget.m_nPar - energyCounterFinalForCalc) * getUnitFactor() / energyCounterFinalForCalc;
         setRating();
     }
 
-    m_fEnergy = 1.0 * m_nEnergyCounterFinal / configData->m_fRefConstant.m_fPar;
+    m_fEnergy = energyCounterFinalForCalc / configData->m_fRefConstant.m_fPar;
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pEnergyAct->setValue(m_fEnergy);
     m_pEnergyFinalAct->setValue(m_fEnergy);
@@ -1517,7 +1519,8 @@ void cSec1ModuleMeasProgram::newDutConstant(const QVariant &dutconst)
 {
     m_pModule->getConfigData()->m_fDutConstant.m_fPar = dutconst.toDouble();
     setInterfaceComponents();
-    if (!m_bMeasurementRunning && m_nEnergyCounterFinal != 0) {
+    quint64 energyContFinal = m_uint32BitExpander.getFinalExpanded64();
+    if (!m_bMeasurementRunning && energyContFinal != 0) {
         setECResult();
     }
 
@@ -1527,7 +1530,8 @@ void cSec1ModuleMeasProgram::newDutConstant(const QVariant &dutconst)
 void cSec1ModuleMeasProgram::newDutConstantAuto(const QVariant &dutConstAuto)
 {
     if (dutConstAuto.toInt()) {
-        if (!m_bMeasurementRunning && m_nEnergyCounterFinal != 0) {
+        quint64 energyContFinal = m_uint32BitExpander.getFinalExpanded64();
+        if (!m_bMeasurementRunning && energyContFinal != 0) {
             newDutConstant(calculateDutConstant());
         }
         m_pDutConstantAuto->setValue(0);
