@@ -81,16 +81,11 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     m_startMeasurementMachine.addState(&m_startMeasurementState);
     m_startMeasurementMachine.addState(&m_startMeasurementDoneState);
 
-    if(m_pModule->getDemo())
-        m_startMeasurementMachine.setInitialState(&m_startMeasurementState);
-    else
-        m_startMeasurementMachine.setInitialState(&m_enableInterruptState);
-
+    m_startMeasurementMachine.setInitialState(&m_enableInterruptState);
 
     connect(&m_enableInterruptState, &QState::entered, this, &cSfcModuleMeasProgram::enableInterrupt);
     connect(&m_startMeasurementState, &QState::entered, this, &cSfcModuleMeasProgram::startMeasurement);
     connect(&m_startMeasurementDoneState, &QState::entered, this, &cSfcModuleMeasProgram::startMeasurementDone);
-
 
     // setting up statemachine for interrupt handling (Interrupt is thrown on measuremnt finished)
     m_readIntRegisterState.addTransition(this, &cSfcModuleMeasProgram::interruptContinue, &m_FinalState);
