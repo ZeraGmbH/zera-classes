@@ -330,6 +330,7 @@
     "1200": {
         "ACT_EndTime": "",
         "ACT_Energy": 0,
+        "ACT_EstimEndTime": "",
         "ACT_MeasTime": 0,
         "ACT_Power": 0,
         "ACT_Rating": -1,
