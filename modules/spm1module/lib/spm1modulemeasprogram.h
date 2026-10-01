@@ -232,6 +232,7 @@ private:
     VfModuleParameter* m_pRatingAct = nullptr;
     VfModuleParameter* m_pMeasStartTime = nullptr;
     VfModuleParameter* m_pMeasEndTime = nullptr;
+    VfModuleParameter* m_pMeasEstimatedEndTime = nullptr;
     VfModuleParameter* m_pMeasDurationMs = nullptr;
 
     VfModuleParameter* m_pClientNotifierPar = nullptr;

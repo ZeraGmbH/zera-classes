@@ -7961,6 +7961,7 @@
     "1210": {
         "ACT_EndTime": "",
         "ACT_Energy": 0,
+        "ACT_EstimEndTime": "",
         "ACT_MeasTime": 0,
         "ACT_Power": 0,
         "ACT_Rating": -1,
@@ -7978,6 +7979,9 @@
                 "ACT_Energy": {
                     "Description": "<skipped>",
                     "Unit": "kWh"
+                },
+                "ACT_EstimEndTime": {
+                    "Description": "<skipped>"
                 },
                 "ACT_MeasTime": {
                     "Description": "<skipped>"
@@ -8149,6 +8153,13 @@
                         "0001:ENERGY",
                         "2",
                         "ACT_Energy",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:ESTENDTIME",
+                        "2",
+                        "ACT_EstimEndTime",
                         "0"
                     ],
                     [

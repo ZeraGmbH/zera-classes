@@ -355,6 +355,13 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_pMeasEndTime->setScpiInfo("CALCULATE",  QString("%1:ENDTIME").arg(modNr), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasEndTime; // and for the modules interface
 
+    m_pMeasEstimatedEndTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                    key = QString("ACT_EstimEndTime"),
+                                                    QString("Estimated End time (dd-MM-yyyy HH:mm:ss)"),
+                                                    QString());
+    m_pMeasEstimatedEndTime->setScpiInfo("CALCULATE",  QString("%1:ESTENDTIME").arg(modNr), SCPI::isQuery);
+    m_pModule->m_veinModuleParameterMap[key] = m_pMeasEstimatedEndTime; // and for the modules interface
+
     m_pMeasDurationMs = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                         key = QString("ACT_MeasTime"),
                                         QString("Last measurement Duration [ms]"),
@@ -973,6 +980,8 @@ void cSpm1ModuleMeasProgram::startMeasurement()
     m_pMeasDurationMs->setValue(0);
     m_measEndDateTime = QDateTime();
     SecDateTimeHelper::setDateTime(m_measEndDateTime, m_pMeasEndTime);
+    QDateTime estimatedEndTime = m_measStartDateTime.addSecs(m_pMeasTimePar->getValue().toUInt());
+    SecDateTimeHelper::setDateTime(estimatedEndTime, m_pMeasEstimatedEndTime);
     if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
