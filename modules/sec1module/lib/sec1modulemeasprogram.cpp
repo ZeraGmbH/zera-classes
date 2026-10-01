@@ -497,8 +497,8 @@ void cSec1ModuleMeasProgram::deduceMeasStartTime(quint32 dUTPulseCounterActual)
 
 void cSec1ModuleMeasProgram::calculateMeasTime()
 {
-    m_measDuration = m_measStartDateTime.msecsTo(m_measEndDateTime);
-    m_pMeasDurationMs->setValue(m_measDuration);
+    int measDuration = m_measStartDateTime.msecsTo(m_measEndDateTime);
+    m_pMeasDurationMs->setValue(measDuration);
 }
 
 void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)

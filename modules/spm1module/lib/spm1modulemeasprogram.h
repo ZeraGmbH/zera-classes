@@ -249,7 +249,6 @@ private:
 
     QDateTime m_measStartDateTime;
     QDateTime m_measEndDateTime;
-    int m_measDuration = 0;
     UInt32BitExpander m_uint32BitExpander;
 
     // Some decisions - we have enough of configration params around

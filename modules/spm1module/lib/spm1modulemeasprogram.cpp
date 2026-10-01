@@ -705,8 +705,8 @@ void cSpm1ModuleMeasProgram::updateDemoMeasurementResults()
 
 void cSpm1ModuleMeasProgram::calculateMeasTime()
 {
-    m_measDuration = m_measStartDateTime.msecsTo(m_measEndDateTime);
-    m_pMeasDurationMs->setValue(m_measDuration);
+    int measDuration = m_measStartDateTime.msecsTo(m_measEndDateTime);
+    m_pMeasDurationMs->setValue(measDuration);
 }
 
 void cSpm1ModuleMeasProgram::resourceManagerConnect()
@@ -970,8 +970,7 @@ void cSpm1ModuleMeasProgram::enableInterrupt()
 void cSpm1ModuleMeasProgram::startMeasurement()
 {
     SecDateTimeHelper::setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
-    m_measDuration = 0;
-    m_pMeasDurationMs->setValue(m_measDuration);
+    m_pMeasDurationMs->setValue(0);
     m_measEndDateTime = QDateTime();
     SecDateTimeHelper::setDateTime(m_measEndDateTime, m_pMeasEndTime);
     if(!m_pModule->getDemo())
