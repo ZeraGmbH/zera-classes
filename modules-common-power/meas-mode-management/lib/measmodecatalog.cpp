@@ -27,7 +27,7 @@ void MeasModeCatalog::setupHashes()
     addInfoToHashes(cMeasModeInfo("XLB", "Q", "Var", mXlb));
     addInfoToHashes(cMeasModeInfo("XLS", "S", "VA", mXls));
     addInfoToHashes(cMeasModeInfo("XLSg", "S", "VA", mXlsg));
-    addInfoToHashes(cMeasModeInfo("QREF", "", "", mqref));
+    addInfoToHashes(cMeasModeInfo("QREF", "P", "W", mqref));
 }
 
 void MeasModeCatalog::addInfoToHashes(const cMeasModeInfo &info)

@@ -1101,10 +1101,10 @@
         "ACT_PQS2": 0,
         "ACT_PQS3": 0,
         "ACT_PQS4": 0,
-        "ACT_PowerDisplayName": "",
+        "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module1",
         "INF_ModeTypes": [
-            ""
+            "P"
         ],
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -1115,20 +1115,24 @@
                     "Description": "<skipped>"
                 },
                 "ACT_PQS1": {
-                    "ChannelName": "1",
-                    "Description": "<skipped>"
+                    "ChannelName": "P1",
+                    "Description": "<skipped>",
+                    "Unit": "W"
                 },
                 "ACT_PQS2": {
-                    "ChannelName": "2",
-                    "Description": "<skipped>"
+                    "ChannelName": "P2",
+                    "Description": "<skipped>",
+                    "Unit": "W"
                 },
                 "ACT_PQS3": {
-                    "ChannelName": "3",
-                    "Description": "<skipped>"
+                    "ChannelName": "P3",
+                    "Description": "<skipped>",
+                    "Unit": "W"
                 },
                 "ACT_PQS4": {
-                    "ChannelName": "S",
-                    "Description": "<skipped>"
+                    "ChannelName": "PS",
+                    "Description": "<skipped>",
+                    "Unit": "W"
                 },
                 "ACT_PowerDisplayName": {
                     "Description": "<skipped>"
@@ -1213,28 +1217,28 @@
                     ],
                     [
                         "MEASURE",
-                        "1",
+                        "P1",
                         "8",
                         "ACT_PQS1",
                         "0"
                     ],
                     [
                         "MEASURE",
-                        "2",
+                        "P2",
                         "8",
                         "ACT_PQS2",
                         "0"
                     ],
                     [
                         "MEASURE",
-                        "3",
+                        "P3",
                         "8",
                         "ACT_PQS3",
                         "0"
                     ],
                     [
                         "MEASURE",
-                        "S",
+                        "PS",
                         "8",
                         "ACT_PQS4",
                         "0"
@@ -1333,11 +1337,11 @@
                 },
                 "ACT_Energy": {
                     "Description": "<skipped>",
-                    "Unit": "kh"
+                    "Unit": "kWh"
                 },
                 "ACT_EnergyFinal": {
                     "Description": "<skipped>",
-                    "Unit": "kh"
+                    "Unit": "kWh"
                 },
                 "ACT_MeasNum": {
                     "Description": "<skipped>"
@@ -1401,6 +1405,8 @@
                     "Description": "<skipped>",
                     "Validation": {
                         "Data": [
+                            "I/kWh",
+                            "Wh/I"
                         ],
                         "Type": "STRING"
                     }
@@ -1481,7 +1487,7 @@
                 },
                 "PAR_Energy": {
                     "Description": "<skipped>",
-                    "Unit": "kh",
+                    "Unit": "kWh",
                     "Validation": {
                         "Data": [
                             0,
@@ -1544,7 +1550,7 @@
                     "Description": "<skipped>",
                     "Validation": {
                         "Data": [
-                            ""
+                            "P"
                         ],
                         "Type": "STRING"
                     }
@@ -1844,7 +1850,7 @@
         },
         "PAR_ClientActiveNotify": 0,
         "PAR_Continuous": 0,
-        "PAR_DUTConstUnit": "",
+        "PAR_DUTConstUnit": "I/kWh",
         "PAR_DutConstant": 930000000,
         "PAR_DutConstantAuto": 0,
         "PAR_DutConstantIScaleDenom": "1",
@@ -1859,7 +1865,7 @@
         "PAR_MeasCount": 1,
         "PAR_MeasWait": 0,
         "PAR_RefConstant": 12000000000,
-        "PAR_RefInput": "",
+        "PAR_RefInput": "P",
         "PAR_ResultUnit": "ppm",
         "PAR_StartStop": 0,
         "PAR_Target": 1000000,

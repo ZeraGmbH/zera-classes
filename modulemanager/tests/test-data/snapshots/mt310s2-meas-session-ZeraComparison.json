@@ -143,6 +143,7 @@
         "INF_ModeTypes": "P",
         "PAR_FOUT0": "",
         "PAR_FOUTConstant0": 96000000,
+        "PAR_FOUT_QREF_FREQ": 200,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": 111,
         "PAR_MeasuringMode": "4LW",

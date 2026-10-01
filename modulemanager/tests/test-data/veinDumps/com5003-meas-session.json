@@ -2877,7 +2877,6 @@
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module4",
         "INF_ModeTypes": [
-            "",
             "P",
             "Q",
             "S"
@@ -2947,7 +2946,7 @@
                     "Validation": {
                         "Data": [
                             0.001,
-                            200,
+                            20000,
                             0.001
                         ],
                         "Type": "DOUBLE"

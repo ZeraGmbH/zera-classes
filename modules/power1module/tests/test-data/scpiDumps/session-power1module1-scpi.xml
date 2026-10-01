@@ -3,107 +3,108 @@
  <DEVICE>DEMO</DEVICE>
  <RELEASE></RELEASE>
  <MODELS>
-  <STATUS Type="Model,Node">
-   <QUESTIONABLE Type="Node">
-    <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:NTRANSITION"/>
-    <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:ENABLE"/>
-    <EVENT Type="Query" ScpiPath="STATUS:QUESTIONABLE:EVENT"/>
-    <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:QUESTIONABLE:PTRANSITION"/>
-    <CONDITION Type="Query" ScpiPath="STATUS:QUESTIONABLE:CONDITION"/>
-   </QUESTIONABLE>
-   <OPERATION Type="Node">
-    <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:NTRANSITION"/>
-    <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:ENABLE"/>
-    <MEASURE Type="Node">
-     <NTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:NTRANSITION"/>
-     <ENABLE Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:ENABLE"/>
-     <EVENT Type="Query" ScpiPath="STATUS:OPERATION:MEASURE:EVENT"/>
-     <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:MEASURE:PTRANSITION"/>
-     <CONDITION Type="Query" ScpiPath="STATUS:OPERATION:MEASURE:CONDITION"/>
-    </MEASURE>
-    <EVENT Type="Query" ScpiPath="STATUS:OPERATION:EVENT"/>
-    <PTRANSITION Type="Query,Command+Par" ScpiPath="STATUS:OPERATION:PTRANSITION"/>
-    <CONDITION Type="Query" ScpiPath="STATUS:OPERATION:CONDITION"/>
-   </OPERATION>
-  </STATUS>
-  <MULRST Type="Model,Command" ScpiPath="*RST" Description="Reset"/>
-  <MULOPC Type="Model,Query,Command" ScpiPath="*OPC" Description="OPeration Complete"/>
-  <FETCH Type="Model,Node,Query" ScpiPath="FETCH">
-   <POW1 Type="Node,Query" ScpiPath="FETCH:POW1">
-    <P2 Type="Query" ScpiPath="FETCH:POW1:P2" Description="Actual power value UL2/IL2" Unit="W"/>
-    <PS Type="Query" ScpiPath="FETCH:POW1:PS" Description="Actual power value sum all phases" Unit="W"/>
-    <P3 Type="Query" ScpiPath="FETCH:POW1:P3" Description="Actual power value UL3/IL3" Unit="W"/>
-    <P1 Type="Query" ScpiPath="FETCH:POW1:P1" Description="Actual power value UL1/IL1" Unit="W"/>
+  <MEASURE ScpiPath="MEASURE" Type="Model,Node,Query">
+   <POW1 ScpiPath="MEASURE:POW1" Type="Node,Query">
+    <P3 ScpiPath="MEASURE:POW1:P3" Type="Query" Description="Actual power value UL3/IL3" Unit="W"/>
+    <P1 ScpiPath="MEASURE:POW1:P1" Type="Query" Description="Actual power value UL1/IL1" Unit="W"/>
+    <P2 ScpiPath="MEASURE:POW1:P2" Type="Query" Description="Actual power value UL2/IL2" Unit="W"/>
+    <PS ScpiPath="MEASURE:POW1:PS" Type="Query" Description="Actual power value sum all phases" Unit="W"/>
    </POW1>
-  </FETCH>
-  <MULTST Type="Model,Query" ScpiPath="*TST" Description="Self-Test query"/>
-  <MULSTB Type="Model,Query" ScpiPath="*STB" Description="Status Byte query:&#xa;Bit0: Unused - always 0&#xa;Bit1: Unused - always 0&#xa;Bit2: Error queue not empty - read further details by SYSTEM:ERROR queries&#xa;Bit3: Questionable (=non fatal errors / warnings) available&#xa;Bit4: Message available - Unused - always 0&#xa;Bit5: Event summary - set if enabled events in ESE are set in ESR&#xa;Bit6: Requested service (or MSS Master summary status)&#xa;Bit7: Operation status summary&#xa;"/>
-  <MULESE Type="Model,Query,Command+Par" ScpiPath="*ESE" Description="Event Status Enable"/>
-  <READ Type="Model,Node,Query" ScpiPath="READ">
-   <POW1 Type="Node,Query" ScpiPath="READ:POW1">
-    <P2 Type="Query" ScpiPath="READ:POW1:P2" Description="Actual power value UL2/IL2" Unit="W"/>
-    <PS Type="Query" ScpiPath="READ:POW1:PS" Description="Actual power value sum all phases" Unit="W"/>
-    <P3 Type="Query" ScpiPath="READ:POW1:P3" Description="Actual power value UL3/IL3" Unit="W"/>
-    <P1 Type="Query" ScpiPath="READ:POW1:P1" Description="Actual power value UL1/IL1" Unit="W"/>
+  </MEASURE>
+  <MULIDN ScpiPath="*IDN" Type="Model,Query" Description="Identification query"/>
+  <MULSRE ScpiPath="*SRE" Type="Model,Query,Command+Par" Description="Service Request Enable"/>
+  <MULESE ScpiPath="*ESE" Type="Model,Query,Command+Par" Description="Event Status Enable"/>
+  <MULESR ScpiPath="*ESR" Type="Model,Query" Description="Event Status Register"/>
+  <INIT ScpiPath="INIT" Type="Model,Node,Command">
+   <POW1 ScpiPath="INIT:POW1" Type="Node,Command">
+    <P3 ScpiPath="INIT:POW1:P3" Type="Command" Description="Actual power value UL3/IL3" Unit="W"/>
+    <P1 ScpiPath="INIT:POW1:P1" Type="Command" Description="Actual power value UL1/IL1" Unit="W"/>
+    <P2 ScpiPath="INIT:POW1:P2" Type="Command" Description="Actual power value UL2/IL2" Unit="W"/>
+    <PS ScpiPath="INIT:POW1:PS" Type="Command" Description="Actual power value sum all phases" Unit="W"/>
+   </POW1>
+  </INIT>
+  <MULRST ScpiPath="*RST" Type="Model,Command" Description="Reset"/>
+  <READ ScpiPath="READ" Type="Model,Node,Query">
+   <POW1 ScpiPath="READ:POW1" Type="Node,Query">
+    <P3 ScpiPath="READ:POW1:P3" Type="Query" Description="Actual power value UL3/IL3" Unit="W"/>
+    <P1 ScpiPath="READ:POW1:P1" Type="Query" Description="Actual power value UL1/IL1" Unit="W"/>
+    <P2 ScpiPath="READ:POW1:P2" Type="Query" Description="Actual power value UL2/IL2" Unit="W"/>
+    <PS ScpiPath="READ:POW1:PS" Type="Query" Description="Actual power value sum all phases" Unit="W"/>
    </POW1>
   </READ>
-  <MULCLS Type="Model,Command" ScpiPath="*CLS" Description="Clear Status"/>
+  <SYSTEM Type="Model,Node">
+   <ERROR ScpiPath="SYSTEM:ERROR" Type="Node,Query" Description="Queries first error from error queue and removes it from queue">
+    <COUNT ScpiPath="SYSTEM:ERROR:COUNT" Type="Query" Description="Queries the number of error messages of internal error list"/>
+    <ALL ScpiPath="SYSTEM:ERROR:ALL" Type="Query" Description="Queries all errors from error queue and removes them from queue"/>
+   </ERROR>
+  </SYSTEM>
+  <CONFIGURE ScpiPath="CONFIGURE" Type="Model,Node,Command">
+   <POW1 ScpiPath="CONFIGURE:POW1" Type="Node,Command">
+    <P3 ScpiPath="CONFIGURE:POW1:P3" Type="Command" Description="Actual power value UL3/IL3" Unit="W"/>
+    <P1 ScpiPath="CONFIGURE:POW1:P1" Type="Command" Description="Actual power value UL1/IL1" Unit="W"/>
+    <P2 ScpiPath="CONFIGURE:POW1:P2" Type="Command" Description="Actual power value UL2/IL2" Unit="W"/>
+    <PS ScpiPath="CONFIGURE:POW1:PS" Type="Command" Description="Actual power value sum all phases" Unit="W"/>
+   </POW1>
+  </CONFIGURE>
+  <STATUS Type="Model,Node">
+   <QUESTIONABLE Type="Node">
+    <EVENT ScpiPath="STATUS:QUESTIONABLE:EVENT" Type="Query"/>
+    <NTRANSITION ScpiPath="STATUS:QUESTIONABLE:NTRANSITION" Type="Query,Command+Par"/>
+    <PTRANSITION ScpiPath="STATUS:QUESTIONABLE:PTRANSITION" Type="Query,Command+Par"/>
+    <ENABLE ScpiPath="STATUS:QUESTIONABLE:ENABLE" Type="Query,Command+Par"/>
+    <CONDITION ScpiPath="STATUS:QUESTIONABLE:CONDITION" Type="Query"/>
+   </QUESTIONABLE>
+   <OPERATION Type="Node">
+    <EVENT ScpiPath="STATUS:OPERATION:EVENT" Type="Query"/>
+    <MEASURE Type="Node">
+     <EVENT ScpiPath="STATUS:OPERATION:MEASURE:EVENT" Type="Query"/>
+     <NTRANSITION ScpiPath="STATUS:OPERATION:MEASURE:NTRANSITION" Type="Query,Command+Par"/>
+     <PTRANSITION ScpiPath="STATUS:OPERATION:MEASURE:PTRANSITION" Type="Query,Command+Par"/>
+     <ENABLE ScpiPath="STATUS:OPERATION:MEASURE:ENABLE" Type="Query,Command+Par"/>
+     <CONDITION ScpiPath="STATUS:OPERATION:MEASURE:CONDITION" Type="Query"/>
+    </MEASURE>
+    <NTRANSITION ScpiPath="STATUS:OPERATION:NTRANSITION" Type="Query,Command+Par"/>
+    <PTRANSITION ScpiPath="STATUS:OPERATION:PTRANSITION" Type="Query,Command+Par"/>
+    <ENABLE ScpiPath="STATUS:OPERATION:ENABLE" Type="Query,Command+Par"/>
+    <CONDITION ScpiPath="STATUS:OPERATION:CONDITION" Type="Query"/>
+   </OPERATION>
+  </STATUS>
   <CONFIGURATION Type="Model,Node">
    <SYST Type="Node">
-    <NAMESESSION DataType="STRING" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current" Type="Query,Command+Par" ScpiPath="CONFIGURATION:SYST:NAMESESSION" Description="Session name"/>
-    <XSESSION DataType="STRING" ValidPar="Foo,Bar" Type="Query,Command+Par" ScpiPath="CONFIGURATION:SYST:XSESSION" Description="XSession name">
-     <CATALOG Type="Query" ScpiPath="CONFIGURATION:SYST:XSESSION:CATALOG"/>
-    </XSESSION>
     <SESSION Type="Node">
-     <CATALOG Type="Query" ScpiPath="CONFIGURATION:SYST:SESSION:CATALOG"/>
+     <CATALOG ScpiPath="CONFIGURATION:SYST:SESSION:CATALOG" Type="Query"/>
     </SESSION>
+    <XSESSION ScpiPath="CONFIGURATION:SYST:XSESSION" Type="Query,Command+Par" Description="XSession name" DataType="STRING" ValidPar="Foo,Bar">
+     <CATALOG ScpiPath="CONFIGURATION:SYST:XSESSION:CATALOG" Type="Query"/>
+    </XSESSION>
+    <NAMESESSION ScpiPath="CONFIGURATION:SYST:NAMESESSION" Type="Query,Command+Par" Description="Session name" DataType="STRING" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current"/>
    </SYST>
    <POW1 Type="Node">
-    <TINTEGRATION Min="1" DataType="DOUBLE" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:TINTEGRATION" Max="100" Description="Integration time" Unit="s"/>
-    <M0OUT Type="Query" ScpiPath="CONFIGURATION:POW1:M0OUT" Description="Frequency output name"/>
-    <MEASMODEPHASESELECT DataType="STRING" ValidPar="000,100,010,110,001,101,011,111" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:MEASMODEPHASESELECT" Description="Active phases selection mask"/>
-    <M0CONSTANT Type="Query" ScpiPath="CONFIGURATION:POW1:M0CONSTANT" Description="Frequency output constant"/>
-    <MMODE DataType="STRING" ValidPar="4LW,3LW,2LW" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:MMODE" Description="Measuring mode">
-     <CATALOG Type="Query" ScpiPath="CONFIGURATION:POW1:MMODE:CATALOG"/>
+    <M0OUT ScpiPath="CONFIGURATION:POW1:M0OUT" Type="Query" Description="Frequency output name"/>
+    <MEASMODEPHASESELECT ScpiPath="CONFIGURATION:POW1:MEASMODEPHASESELECT" Type="Query,Command+Par" Description="Active phases selection mask" DataType="STRING" ValidPar="000,100,010,110,001,101,011,111"/>
+    <TINTEGRATION Max="100" ScpiPath="CONFIGURATION:POW1:TINTEGRATION" Type="Query,Command+Par" Description="Integration time" DataType="DOUBLE" Min="1" Unit="s"/>
+    <FIXFREQ Max="20000" ScpiPath="CONFIGURATION:POW1:FIXFREQ" Type="Query,Command+Par" Description="Fixed frequency output mode (QREF): frequency value" DataType="DOUBLE" Min="0.001" Unit="kHz"/>
+    <M0CONSTANT ScpiPath="CONFIGURATION:POW1:M0CONSTANT" Type="Query" Description="Frequency output constant"/>
+    <MMODE ScpiPath="CONFIGURATION:POW1:MMODE" Type="Query,Command+Par" Description="Measuring mode" DataType="STRING" ValidPar="4LW,3LW,2LW,QREF">
+     <CATALOG ScpiPath="CONFIGURATION:POW1:MMODE:CATALOG" Type="Query"/>
     </MMODE>
    </POW1>
   </CONFIGURATION>
-  <INIT Type="Model,Node,Command" ScpiPath="INIT">
-   <POW1 Type="Node,Command" ScpiPath="INIT:POW1">
-    <P2 Type="Command" ScpiPath="INIT:POW1:P2" Description="Actual power value UL2/IL2" Unit="W"/>
-    <PS Type="Command" ScpiPath="INIT:POW1:PS" Description="Actual power value sum all phases" Unit="W"/>
-    <P3 Type="Command" ScpiPath="INIT:POW1:P3" Description="Actual power value UL3/IL3" Unit="W"/>
-    <P1 Type="Command" ScpiPath="INIT:POW1:P1" Description="Actual power value UL1/IL1" Unit="W"/>
+  <FETCH ScpiPath="FETCH" Type="Model,Node,Query">
+   <POW1 ScpiPath="FETCH:POW1" Type="Node,Query">
+    <P3 ScpiPath="FETCH:POW1:P3" Type="Query" Description="Actual power value UL3/IL3" Unit="W"/>
+    <P1 ScpiPath="FETCH:POW1:P1" Type="Query" Description="Actual power value UL1/IL1" Unit="W"/>
+    <P2 ScpiPath="FETCH:POW1:P2" Type="Query" Description="Actual power value UL2/IL2" Unit="W"/>
+    <PS ScpiPath="FETCH:POW1:PS" Type="Query" Description="Actual power value sum all phases" Unit="W"/>
    </POW1>
-  </INIT>
-  <MULIDN Type="Model,Query" ScpiPath="*IDN" Description="Identification query"/>
-  <MULSRE Type="Model,Query,Command+Par" ScpiPath="*SRE" Description="Service Request Enable"/>
+  </FETCH>
+  <MULCLS ScpiPath="*CLS" Type="Model,Command" Description="Clear Status"/>
   <DEVICE Type="Model,Node">
-   <IFACE Type="Query" ScpiPath="DEVICE:IFACE"/>
+   <IFACE ScpiPath="DEVICE:IFACE" Type="Query"/>
   </DEVICE>
-  <CONFIGURE Type="Model,Node,Command" ScpiPath="CONFIGURE">
-   <POW1 Type="Node,Command" ScpiPath="CONFIGURE:POW1">
-    <P2 Type="Command" ScpiPath="CONFIGURE:POW1:P2" Description="Actual power value UL2/IL2" Unit="W"/>
-    <PS Type="Command" ScpiPath="CONFIGURE:POW1:PS" Description="Actual power value sum all phases" Unit="W"/>
-    <P3 Type="Command" ScpiPath="CONFIGURE:POW1:P3" Description="Actual power value UL3/IL3" Unit="W"/>
-    <P1 Type="Command" ScpiPath="CONFIGURE:POW1:P1" Description="Actual power value UL1/IL1" Unit="W"/>
-   </POW1>
-  </CONFIGURE>
-  <SYSTEM Type="Model,Node">
-   <ERROR Type="Node,Query" ScpiPath="SYSTEM:ERROR" Description="Queries first error from error queue and removes it from queue">
-    <COUNT Type="Query" ScpiPath="SYSTEM:ERROR:COUNT" Description="Queries the number of error messages of internal error list"/>
-    <ALL Type="Query" ScpiPath="SYSTEM:ERROR:ALL" Description="Queries all errors from error queue and removes them from queue"/>
-   </ERROR>
-  </SYSTEM>
-  <MULESR Type="Model,Query" ScpiPath="*ESR" Description="Event Status Register"/>
-  <MEASURE Type="Model,Node,Query" ScpiPath="MEASURE">
-   <POW1 Type="Node,Query" ScpiPath="MEASURE:POW1">
-    <P2 Type="Query" ScpiPath="MEASURE:POW1:P2" Description="Actual power value UL2/IL2" Unit="W"/>
-    <PS Type="Query" ScpiPath="MEASURE:POW1:PS" Description="Actual power value sum all phases" Unit="W"/>
-    <P3 Type="Query" ScpiPath="MEASURE:POW1:P3" Description="Actual power value UL3/IL3" Unit="W"/>
-    <P1 Type="Query" ScpiPath="MEASURE:POW1:P1" Description="Actual power value UL1/IL1" Unit="W"/>
-   </POW1>
-  </MEASURE>
+  <MULSTB ScpiPath="*STB" Type="Model,Query" Description="Status Byte query:&#xa;Bit0: Unused - always 0&#xa;Bit1: Unused - always 0&#xa;Bit2: Error queue not empty - read further details by SYSTEM:ERROR queries&#xa;Bit3: Questionable (=non fatal errors / warnings) available&#xa;Bit4: Message available - Unused - always 0&#xa;Bit5: Event summary - set if enabled events in ESE are set in ESR&#xa;Bit6: Requested service (or MSS Master summary status)&#xa;Bit7: Operation status summary&#xa;"/>
+  <MULTST ScpiPath="*TST" Type="Model,Query" Description="Self-Test query"/>
+  <MULOPC ScpiPath="*OPC" Type="Model,Query,Command" Description="OPeration Complete"/>
  </MODELS>
 </MODELLIST>
 

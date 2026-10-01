@@ -2717,6 +2717,18 @@
                     "ChannelName": "Fout2",
                     "Description": "<skipped>"
                 },
+                "PAR_FOUT_QREF_FREQ": {
+                    "Description": "<skipped>",
+                    "Unit": "kHz",
+                    "Validation": {
+                        "Data": [
+                            0.001,
+                            20000,
+                            0.001
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
                 "PAR_Interval": {
                     "Description": "<skipped>",
                     "Unit": "s",
@@ -2751,7 +2763,8 @@
                         "Data": [
                             "4LW",
                             "3LW",
-                            "2LW"
+                            "2LW",
+                            "QREF"
                         ],
                         "Type": "STRING"
                     }
@@ -2820,6 +2833,13 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "FIXFREQ",
+                        "10",
+                        "PAR_FOUT_QREF_FREQ",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
                         "TINTEGRATION",
                         "10",
                         "PAR_Interval",
@@ -2845,6 +2865,7 @@
         },
         "PAR_FOUT0": "",
         "PAR_FOUTConstant0": 96000000,
+        "PAR_FOUT_QREF_FREQ": 200,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LW",
@@ -3245,7 +3266,6 @@
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module4",
         "INF_ModeTypes": [
-            "",
             "P",
             "Q",
             "S"
@@ -3315,7 +3335,7 @@
                     "Validation": {
                         "Data": [
                             0.001,
-                            200,
+                            20000,
                             0.001
                         ],
                         "Type": "DOUBLE"
