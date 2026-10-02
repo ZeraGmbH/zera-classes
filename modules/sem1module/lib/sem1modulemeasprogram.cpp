@@ -156,15 +156,15 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
     connect(&m_setEMResultState, &QState::entered, this, &cSem1ModuleMeasProgram::onEMResultState);
 
     // we need a hash for our different energy input units
-    mEnergyUnitFactorHash["MWh"] = 1000.0;
-    mEnergyUnitFactorHash["kWh"] = 1.0;
-    mEnergyUnitFactorHash["Wh"] = 0.001;
-    mEnergyUnitFactorHash["MVarh"] = 1000.0;
-    mEnergyUnitFactorHash["kVarh"] = 1.0;
-    mEnergyUnitFactorHash["Varh"] = 0.001;
-    mEnergyUnitFactorHash["MVAh"] = 1000.0;
-    mEnergyUnitFactorHash["kVAh"] = 1.0;
-    mEnergyUnitFactorHash["VAh"] = 0.001;
+    m_unitFactorHash["MWh"] = 1000.0;
+    m_unitFactorHash["kWh"] = 1.0;
+    m_unitFactorHash["Wh"] = 0.001;
+    m_unitFactorHash["MVarh"] = 1000.0;
+    m_unitFactorHash["kVarh"] = 1.0;
+    m_unitFactorHash["Varh"] = 0.001;
+    m_unitFactorHash["MVAh"] = 1000.0;
+    m_unitFactorHash["kVAh"] = 1.0;
+    m_unitFactorHash["VAh"] = 0.001;
 
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
 
@@ -448,7 +448,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         m_uint32BitExpander.setActual32(answer.toUInt());
-                        m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / (m_pRefConstantPar->getValue().toDouble() * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
+                        m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / (m_pRefConstantPar->getValue().toDouble() * m_unitFactorHash[m_pInputUnitPar->getValue().toString()]);
                         m_pEnergyAct->setValue(m_fEnergy); // in MWh, kWh, Wh depends on selected unit for user input
                     }
                 }
@@ -1022,7 +1022,7 @@ void cSem1ModuleMeasProgram::setEMResult()
     const double energyCounterFinal = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getFinalExpanded64());
     double WRef =  energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
     double time = m_fTimeSecondsFinal;
-    double WDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()];
+    double WDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
     if (WRef == 0) {
         m_fResult = qQNaN();
         m_eRating = ECALCRESULT::RESULT_UNFINISHED;
@@ -1032,7 +1032,7 @@ void cSem1ModuleMeasProgram::setEMResult()
         setRating();
     }
 
-    m_fEnergy = WRef / mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()];
+    m_fEnergy = WRef / m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
     m_fPower = m_fEnergy * 3600.0 / time;
 
     m_pTimeAct->setValue(QVariant(time));
