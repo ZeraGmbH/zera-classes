@@ -2,7 +2,7 @@
 #define FFTMODULECONFIGDATA_H
 
 #include "configtypes.h"
-#include <QList>
+#include <QStringList>
 
 namespace FFTMODULE
 {
@@ -11,13 +11,13 @@ class cFftModuleConfigData
 {
 public:
     cFftModuleConfigData(){}
-    quint8 m_nFftOrder;
-    quint8 m_nValueCount; // how many measurement values
+    quint8 m_nFftOrder = 0;
+    quint8 m_nValueCount = 0;       // how many measurement values
     QStringList m_valueChannelList; // a list of channel or channel pairs we work on to generate our measurement values
     stringParameter m_RefChannel;
     doubleParameter m_fMeasInterval; // measuring interval 0.1 .. 100.0 sec.
-    double m_fmovingwindowInterval;
-    bool m_bmovingWindow;
+    double m_fmovingwindowInterval = 0.0;
+    bool m_bmovingWindow = false;
 };
 
 }

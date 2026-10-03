@@ -12,9 +12,9 @@ class cSec1ModuleConfigData
 {
 public:
     cSec1ModuleConfigData(){}
-    quint8 m_nRefInpCount;
-    quint8 m_nDutInpCount;
-    quint8 m_nModeCount;
+    quint8 m_nRefInpCount = 0;
+    quint8 m_nDutInpCount = 0;
+    quint8 m_nModeCount = 0;
     stringParameter m_sRefInput;
     stringParameter m_sDutInput;
     QList<TRefInput> m_refInpList;

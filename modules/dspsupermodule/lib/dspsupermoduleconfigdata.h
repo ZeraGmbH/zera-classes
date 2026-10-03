@@ -14,9 +14,9 @@ public:
     // In case NO module causes an interrupt in a period the period tupel is
     // kept inside DSP array. In case the DSP array is full, DspSuperModule
     // causes an 'extra' interrupt.
-    quint32 m_dspArrayEntrySize;
+    quint32 m_dspArrayEntrySize = 0;
     // Module extents DSP array size
-    quint32 m_periodsTotal;
+    quint32 m_periodsTotal = 0;
 };
 
 }

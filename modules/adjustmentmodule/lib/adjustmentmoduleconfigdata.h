@@ -8,14 +8,14 @@
 struct adjInfoType
 {
     bool m_bAvail = false;
-    int m_nEntity = 0;
+    int m_nEntity = -1;
     QString m_sComponent;
 };
 
 struct adjInfoTypeDc
 {
     bool m_bAvail = false;
-    bool m_denyOffsetAdjustment;
+    bool m_denyOffsetAdjustment = false;
     int m_nEntity = 0;
     QString m_sComponent;
 };

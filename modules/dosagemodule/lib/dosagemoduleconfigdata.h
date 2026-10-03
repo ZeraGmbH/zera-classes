@@ -2,7 +2,6 @@
 #define DOSAGEMODULECONFIGDATA_H
 
 #include <QString>
-#include <QStringList>
 #include <QList>
 
 namespace DOSAGEMODULE
@@ -10,9 +9,9 @@ namespace DOSAGEMODULE
 
 struct dosagesystemconfiguration
 {
-    int m_nEntity;
+    int m_nEntity = 0;
     QString m_ComponentName;
-    double m_fUpperLimit;
+    double m_fUpperLimit = 0.0;
 };
 
 class cDosageModuleConfigData
@@ -20,8 +19,8 @@ class cDosageModuleConfigData
 public:
     cDosageModuleConfigData(){}
 
-    quint8 m_nDosageSystemCount;
-    int m_nModuleId;
+    quint8 m_nDosageSystemCount = 0;
+    int m_nModuleId = 0;
     QList<dosagesystemconfiguration>m_DosageSystemConfigList;
 
 };

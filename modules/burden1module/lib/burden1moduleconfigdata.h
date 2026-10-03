@@ -20,8 +20,8 @@ class cBurden1ModuleConfigData
 public:
     cBurden1ModuleConfigData(){}
 
-    quint8 m_nBurdenSystemCount;
-    int m_nModuleId;
+    quint8 m_nBurdenSystemCount = 0;
+    int m_nModuleId = 0;
     QList<burdensystemconfiguration> m_BurdenSystemConfigList;
     QString m_Unit; // A or V
     QStringList m_BurdenChannelList;

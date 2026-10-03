@@ -19,8 +19,8 @@ class cTransformer1ModuleConfigData
 public:
     cTransformer1ModuleConfigData(){}
 
-    quint8 m_nTransformerSystemCount;
-    int m_nModuleId;
+    quint8 m_nTransformerSystemCount = 0;
+    int m_nModuleId = 0;
     QList<transformersystemconfiguration> m_transformerSystemConfigList;
     QString m_clampUnit; // 4 chars defining unit of primclampprim, primclampsec, secclamprim, secclampsec, primdut, secdut
     QStringList m_TransformerChannelList;

@@ -12,14 +12,14 @@ class cSpm1ModuleConfigData
 {
 public:
     cSpm1ModuleConfigData(){}
-    quint8 m_nRefInpCount;
+    quint8 m_nRefInpCount = 0;
     stringParameter m_sRefInput;
     QList<TRefInput> m_refInpList;
-    quint8 m_nActiveUnitCount;
+    quint8 m_nActiveUnitCount = 0;
     QList<QString> m_ActiveUnitList;
-    quint8 m_nReactiveUnitCount;
+    quint8 m_nReactiveUnitCount = 0;
     QList<QString> m_ReactiveUnitList;
-    quint8 m_nApparentUnitCount;
+    quint8 m_nApparentUnitCount = 0;
     QList<QString> m_ApparentUnitList;
     intParameter m_nMeasTime; // time in sec. from 0 to 7200
     boolParameter m_bTargeted;
