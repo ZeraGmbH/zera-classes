@@ -8,7 +8,7 @@ TestDspInterface::TestDspInterface(const QStringList &valueNamesList, int entity
 {
 }
 
-void TestDspInterface::setClientSmart(Zera::ProxyClientPtr client)
+void TestDspInterface::setClientSmart(const Zera::ProxyClientPtr &client)
 {
     connect(client.get(), &Zera::ProxyClient::connected,
             this, &TestDspInterface::onConnect);
