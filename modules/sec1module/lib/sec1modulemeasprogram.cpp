@@ -399,13 +399,13 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
                                             QString("Actual frequency input (internal)"),
-                                            QVariant(configData->m_sRefInput.m_sPar));
+                                            QVariant(configData->m_sRefInput.m_sValue));
     m_pModule->m_veinModuleParameterMap[key] = m_pRefFreqInput; // and for the modules interface
 
     m_pUpperLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("PAR_Uplimit"),
                                                 QString("Error limit: upper"),
-                                                QVariant(configData->m_fUpperLimit.m_fPar));
+                                                QVariant(configData->m_fUpperLimit.m_fValue));
     m_pUpperLimitPar->setScpiInfo("CALCULATE",  QString("%1:UPLIMIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pUpperLimitPar->setValidator(new cDoubleValidator(-100.0, 100.0, 1e-6));
     m_pUpperLimitPar->setUnit("%");
@@ -414,7 +414,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pLowerLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("PAR_Lolimit"),
                                                 QString("Error limit: lower"),
-                                                QVariant(configData->m_fLowerLimit.m_fPar));
+                                                QVariant(configData->m_fLowerLimit.m_fValue));
     m_pLowerLimitPar->setScpiInfo("CALCULATE",  QString("%1:LOLIMIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pLowerLimitPar->setValidator(new cDoubleValidator(-100.0, 100.0, 1e-6));
     m_pLowerLimitPar->setUnit("%");
@@ -615,7 +615,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                     // Still running and not waiting for next?
                     if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
                         m_uint32BitExpander.setActual32(answer.toUInt());
-                        m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / m_pModule->getConfigData()->m_fRefConstant.m_fPar;
+                        m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / m_pModule->getConfigData()->m_fRefConstant.m_fValue;
                         m_pEnergyAct->setValue(m_fEnergy);
                         if (m_bFirstMeas) {
                             // keep in final until a result is calculated in
@@ -742,7 +742,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
 
 void cSec1ModuleMeasProgram::actualizeRefConstant()
 {
-    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_sRefInput.m_sPar);
+    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_sRefInput.m_sValue);
     m_pRefConstantPar->setValue(QVariant(constant));
     newRefConstant(QVariant(constant));
 }
@@ -762,9 +762,9 @@ double cSec1ModuleMeasProgram::calculateDutConstant()
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
     double dutConst;
     if(m_sDutConstantUnit.contains(QString("/I")))
-        dutConst = m_pEnergyAct->getValue().toDouble() * 1000 / configData->m_nMRate.m_nPar;
+        dutConst = m_pEnergyAct->getValue().toDouble() * 1000 / configData->m_nMRate.m_nValue;
     else
-        dutConst = configData->m_nMRate.m_nPar / m_pEnergyAct->getValue().toDouble();
+        dutConst = configData->m_nMRate.m_nValue / m_pEnergyAct->getValue().toDouble();
 
     if(dutConst < m_dutConstValidator->getMinValue())
         dutConst = m_dutConstValidator->getMinValue();
@@ -807,7 +807,7 @@ void cSec1ModuleMeasProgram::updateDemoMeasurementResults()
 
 void cSec1ModuleMeasProgram::onRefConstantChanged(const QString &refPowerName)
 {
-    if(m_pModule->getConfigData()->m_sRefInput.m_sPar == refPowerName) {
+    if(m_pModule->getConfigData()->m_sRefInput.m_sValue == refPowerName) {
         stopMeasurement(true);
         actualizeRefConstant();
     }
@@ -818,17 +818,17 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
     computeDependencies(); // dependant on mode we calculate parameters by ourself
 
     const cSec1ModuleConfigData *confData = m_pModule->getConfigData();
-    m_pDutInputPar->setValue(QVariant(m_dutInputDictionary.getAlias(confData->m_sDutInput.m_sPar)));
-    m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(confData->m_sRefInput.m_sPar)));
-    m_pDutConstantPar->setValue(QVariant(confData->m_fDutConstant.m_fPar));
-    m_pRefConstantPar->setValue(QVariant(confData->m_fRefConstant.m_fPar));
-    m_pMRatePar->setValue(QVariant(confData->m_nMRate.m_nPar));
-    m_pTargetPar->setValue(QVariant(confData->m_nTarget.m_nPar));
-    m_pEnergyPar->setValue(QVariant(confData->m_fEnergy.m_fPar));
+    m_pDutInputPar->setValue(QVariant(m_dutInputDictionary.getAlias(confData->m_sDutInput.m_sValue)));
+    m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(confData->m_sRefInput.m_sValue)));
+    m_pDutConstantPar->setValue(QVariant(confData->m_fDutConstant.m_fValue));
+    m_pRefConstantPar->setValue(QVariant(confData->m_fRefConstant.m_fValue));
+    m_pMRatePar->setValue(QVariant(confData->m_nMRate.m_nValue));
+    m_pTargetPar->setValue(QVariant(confData->m_nTarget.m_nValue));
+    m_pEnergyPar->setValue(QVariant(confData->m_fEnergy.m_fValue));
     m_pProgressAct->setValue(QVariant(double(0.0)));
-    m_pUpperLimitPar->setValue(QVariant(confData->m_fUpperLimit.m_fPar));
-    m_pLowerLimitPar->setValue(QVariant(confData->m_fLowerLimit.m_fPar));
-    m_pResultUnit->setValue(QVariant(confData->m_sResultUnit.m_sPar));
+    m_pUpperLimitPar->setValue(QVariant(confData->m_fUpperLimit.m_fValue));
+    m_pLowerLimitPar->setValue(QVariant(confData->m_fLowerLimit.m_fValue));
+    m_pResultUnit->setValue(QVariant(confData->m_sResultUnit.m_sValue));
 }
 
 
@@ -853,7 +853,7 @@ void cSec1ModuleMeasProgram::setValidators()
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 {
     QStringList sl;
-    QString powType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_sRefInput.m_sPar);
+    QString powType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_sRefInput.m_sValue);
     if (powType.contains('P'))
         sl << QString("I/kWh") << QString("Wh/I");
     if (powType.contains('Q'))
@@ -866,7 +866,7 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 
 QString cSec1ModuleMeasProgram::getEnergyUnit()
 {
-    QString powerType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_sRefInput.m_sPar);
+    QString powerType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_sRefInput.m_sValue);
     return cUnitHelper::getNewEnergyUnit(powerType, QString('k'), 3600);
 }
 
@@ -876,7 +876,7 @@ void cSec1ModuleMeasProgram::initDutConstantUnit(const QStringList &sl)
     if(sl.isEmpty())
         m_sDutConstantUnit.clear();
     else {
-        QString lastDutUnit = m_pModule->getConfigData()->m_sDutConstantUnit.m_sPar;
+        QString lastDutUnit = m_pModule->getConfigData()->m_sDutConstantUnit.m_sValue;
         if(lastDutUnit.isEmpty() || !sl.contains(lastDutUnit)) {
             m_sDutConstantUnit = sl.at(0);
         }
@@ -904,8 +904,8 @@ void cSec1ModuleMeasProgram::handleSECInterrupt()
 void cSec1ModuleMeasProgram::computeDependencies()
 {
     cSec1ModuleConfigData *confData = m_pModule->getConfigData();
-    QString mode = confData->m_sMode.m_sPar;
-    double dutConstant = confData->m_fDutConstant.m_fPar; // assumed I/kxxx because all computation is based on this
+    QString mode = confData->m_sMode.m_sValue;
+    double dutConstant = confData->m_fDutConstant.m_fValue; // assumed I/kxxx because all computation is based on this
     bool energyPerImpulse = m_sDutConstantUnit.contains(QString("/I"));
 
     if (energyPerImpulse)
@@ -926,22 +926,22 @@ void cSec1ModuleMeasProgram::computeDependencies()
         //     quint32 limitedIntegerVal = val;
         //     qInfo("%i", limitedIntegerVal);
         // We found that by adding more functionality to tests and saw that dev PC's gcc and target arm gcc produced different results
-        double target = static_cast<double>(confData->m_nMRate.m_nPar) * confData->m_fRefConstant.m_fPar / dutConstant;
+        double target = static_cast<double>(confData->m_nMRate.m_nValue) * confData->m_fRefConstant.m_fValue / dutConstant;
         double clampedTarget = std::min(target, static_cast<double>(std::numeric_limits<quint32>::max()));
-        confData->m_nTarget.m_nPar = static_cast<quint32>(clampedTarget);
-        confData->m_fEnergy.m_fPar = confData->m_nMRate.m_nPar / dutConstant;
+        confData->m_nTarget.m_nValue = static_cast<quint32>(clampedTarget);
+        confData->m_fEnergy.m_fValue = confData->m_nMRate.m_nValue / dutConstant;
     }
     else if (mode == "energy") {
         // we calcute the new mrate and target
-        confData->m_nMRate.m_nPar = ceil(dutConstant * confData->m_fEnergy.m_fPar);
-        confData->m_nTarget.m_nPar = floor(confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / dutConstant);
+        confData->m_nMRate.m_nValue = ceil(dutConstant * confData->m_fEnergy.m_fValue);
+        confData->m_nTarget.m_nValue = floor(confData->m_nMRate.m_nValue * confData->m_fRefConstant.m_fValue / dutConstant);
     }
     else if (mode == "target") {
-        dutConstant = confData->m_nMRate.m_nPar * confData->m_fRefConstant.m_fPar / confData->m_nTarget.m_nPar;
+        dutConstant = confData->m_nMRate.m_nValue * confData->m_fRefConstant.m_fValue / confData->m_nTarget.m_nValue;
         if (energyPerImpulse)
             dutConstant = (1.0/dutConstant) * 1000.0;
-        confData->m_fDutConstant.m_fPar = dutConstant;
-        confData->m_fEnergy.m_fPar = confData->m_nMRate.m_nPar / confData->m_fDutConstant.m_fPar;
+        confData->m_fDutConstant.m_fValue = dutConstant;
+        confData->m_fEnergy.m_fValue = confData->m_nMRate.m_nValue / confData->m_fDutConstant.m_fValue;
     }
 }
 
@@ -1276,14 +1276,14 @@ void cSec1ModuleMeasProgram::setMeaspulses()
 
 void cSec1ModuleMeasProgram::setMasterMux()
 {
-    QString dutInputName = m_pModule->getConfigData()->m_sDutInput.m_sPar;
+    QString dutInputName = m_pModule->getConfigData()->m_sDutInput.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_masterErrCalcName, dutInputName)] = setmastermux;
 }
 
 
 void cSec1ModuleMeasProgram::setSlaveMux()
 {
-    QString refPowerName = m_pModule->getConfigData()->m_sRefInput.m_sPar;
+    QString refPowerName = m_pModule->getConfigData()->m_sRefInput.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_slaveErrCalcName, refPowerName)] = setslavemux;
 }
 
@@ -1370,11 +1370,11 @@ void cSec1ModuleMeasProgram::setECResult()
         m_eRating = ECALCRESULT::RESULT_UNFINISHED;
     }
     else {
-        m_fResult = (1.0 * configData->m_nTarget.m_nPar - energyCounterFinalForCalc) * getUnitFactor() / energyCounterFinalForCalc;
+        m_fResult = (1.0 * configData->m_nTarget.m_nValue - energyCounterFinalForCalc) * getUnitFactor() / energyCounterFinalForCalc;
         setRating();
     }
 
-    m_fEnergy = energyCounterFinalForCalc / configData->m_fRefConstant.m_fPar;
+    m_fEnergy = energyCounterFinalForCalc / configData->m_fRefConstant.m_fValue;
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pEnergyAct->setValue(m_fEnergy);
     m_pEnergyFinalAct->setValue(m_fEnergy);
@@ -1420,8 +1420,8 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
             const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
             m_multipleResultHelper.append(m_fResult,
                                           m_eRating,
-                                          configData->m_fLowerLimit.m_fPar,
-                                          configData->m_fUpperLimit.m_fPar,
+                                          configData->m_fLowerLimit.m_fValue,
+                                          configData->m_fUpperLimit.m_fValue,
                                           getUnitFactor(),
                                           m_pMeasStartTime->getValue().toString(),
                                           m_pMeasEndTime->getValue().toString(),
@@ -1483,7 +1483,7 @@ void cSec1ModuleMeasProgram::setRating()
 {
     if (getStatus() & ECALCSTATUS::READY) {
         const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
-        if ( (m_fResult >= configData->m_fLowerLimit.m_fPar) && (m_fResult <= configData->m_fUpperLimit.m_fPar))
+        if ( (m_fResult >= configData->m_fLowerLimit.m_fValue) && (m_fResult <= configData->m_fUpperLimit.m_fValue))
             m_eRating = ECALCRESULT::RESULT_PASSED;
         else
             m_eRating = ECALCRESULT::RESULT_FAILED;
@@ -1524,7 +1524,7 @@ void cSec1ModuleMeasProgram::newStartStop(const QVariant &startstop)
 
 void cSec1ModuleMeasProgram::newDutConstant(const QVariant &dutconst)
 {
-    m_pModule->getConfigData()->m_fDutConstant.m_fPar = dutconst.toDouble();
+    m_pModule->getConfigData()->m_fDutConstant.m_fValue = dutconst.toDouble();
     setInterfaceComponents();
     quint64 energyContFinal = m_uint32BitExpander.getFinalExpanded64();
     if (!m_bMeasurementRunning && energyContFinal != 0) {
@@ -1591,7 +1591,7 @@ void cSec1ModuleMeasProgram::newDutConstantScale(const QVariant &value)
 void cSec1ModuleMeasProgram::newDutConstantUnit(const QVariant &dutconstunit)
 {
     m_sDutConstantUnit = dutconstunit.toString();
-    m_pModule->getConfigData()->m_sDutConstantUnit.m_sPar = m_sDutConstantUnit;
+    m_pModule->getConfigData()->m_sDutConstantUnit.m_sValue = m_sDutConstantUnit;
     setInterfaceComponents(); // to compute the dependencies
     quint32 flagsForRecalc = ECALCSTATUS::READY;
     if (m_pContinuousPar->getValue().toInt() != 0) {
@@ -1606,7 +1606,7 @@ void cSec1ModuleMeasProgram::newDutConstantUnit(const QVariant &dutconstunit)
 
 void cSec1ModuleMeasProgram::newRefConstant(const QVariant &refconst)
 {
-    m_pModule->getConfigData()->m_fRefConstant.m_fPar = refconst.toDouble();
+    m_pModule->getConfigData()->m_fRefConstant.m_fValue = refconst.toDouble();
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1616,7 +1616,7 @@ void cSec1ModuleMeasProgram::newRefConstant(const QVariant &refconst)
 void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 {
     QString dutInputName = m_dutInputDictionary.getInputNameFromDisplayedName(dutinput.toString());
-    m_pModule->getConfigData()->m_sDutInput.m_sPar = dutInputName;
+    m_pModule->getConfigData()->m_sDutInput.m_sValue = dutInputName;
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1626,7 +1626,7 @@ void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
 {
     QString refPowerName = m_refInputDictionary.getInputNameFromDisplayedName(refinput.toString());
-    m_pModule->getConfigData()->m_sRefInput.m_sPar = refPowerName;
+    m_pModule->getConfigData()->m_sRefInput.m_sValue = refPowerName;
     actualizeRefConstant();
     setInterfaceComponents();
 
@@ -1651,7 +1651,7 @@ void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
 
 void cSec1ModuleMeasProgram::newMRate(const QVariant &mrate)
 {
-    m_pModule->getConfigData()->m_nMRate.m_nPar = mrate.toInt();
+    m_pModule->getConfigData()->m_nMRate.m_nValue = mrate.toInt();
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1660,7 +1660,7 @@ void cSec1ModuleMeasProgram::newMRate(const QVariant &mrate)
 
 void cSec1ModuleMeasProgram::newTarget(const QVariant &target)
 {
-    m_pModule->getConfigData()->m_nTarget.m_nPar = target.toInt();
+    m_pModule->getConfigData()->m_nTarget.m_nValue = target.toInt();
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1669,7 +1669,7 @@ void cSec1ModuleMeasProgram::newTarget(const QVariant &target)
 
 void cSec1ModuleMeasProgram::newEnergy(const QVariant &energy)
 {
-    m_pModule->getConfigData()->m_fEnergy.m_fPar = energy.toDouble();
+    m_pModule->getConfigData()->m_fEnergy.m_fValue = energy.toDouble();
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1678,7 +1678,7 @@ void cSec1ModuleMeasProgram::newEnergy(const QVariant &energy)
 
 void cSec1ModuleMeasProgram::newUpperLimit(const QVariant &limit)
 {
-    m_pModule->getConfigData()->m_fUpperLimit.m_fPar = limit.toDouble();
+    m_pModule->getConfigData()->m_fUpperLimit.m_fValue = limit.toDouble();
     setInterfaceComponents();
     setRating();
 
@@ -1688,7 +1688,7 @@ void cSec1ModuleMeasProgram::newUpperLimit(const QVariant &limit)
 
 void cSec1ModuleMeasProgram::newLowerLimit(const QVariant &limit)
 {
-    m_pModule->getConfigData()->m_fLowerLimit.m_fPar = limit.toDouble();
+    m_pModule->getConfigData()->m_fLowerLimit.m_fValue = limit.toDouble();
     setInterfaceComponents();
     setRating();
 

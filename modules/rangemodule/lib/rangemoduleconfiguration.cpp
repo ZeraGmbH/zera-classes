@@ -68,7 +68,7 @@ QByteArray cRangeModuleConfiguration::exportConfiguration() const
     QList<stringParameter> sParList = m_configData.m_ObsermaticConfPar.m_senseChannelRangeParameter;
     for (int i = 0; i < sParList.count(); i++) {
         stringParameter sPar = sParList.at(i);
-        m_pXMLReader->setValue(sPar.m_sKey, sPar.m_sPar);
+        m_pXMLReader->setValue(sPar.m_sKey, sPar.m_sValue);
 
         boolParameter invertPhaseState = invertPhaseStateList.at(i);
         m_pXMLReader->setValue(invertPhaseState.m_sKey, QString("%1").arg(invertPhaseState.m_nActive));
@@ -100,7 +100,7 @@ void cRangeModuleConfiguration::configXMLInfo(const QString &key)
         {
         case setSession:
             m_configData.m_session.m_sKey = key;
-            m_configData.m_session.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_session.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setChannelCount:
         {
@@ -169,7 +169,7 @@ void cRangeModuleConfiguration::configXMLInfo(const QString &key)
                 //m_configData.m_senseChannelRangeList.replace(cmd, m_pXMLReader->getValue(key));
                 stringParameter sParam;
                 sParam.m_sKey = key;
-                sParam.m_sPar = m_pXMLReader->getValue(key);
+                sParam.m_sValue = m_pXMLReader->getValue(key);
                 m_configData.m_ObsermaticConfPar.m_senseChannelRangeParameter.replace(cmd, sParam);
             }
             else if ((cmd >= setInvertChannel1) && (cmd < setInvertChannel1 + 32)) {

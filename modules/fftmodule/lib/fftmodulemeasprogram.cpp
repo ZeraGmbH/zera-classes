@@ -116,7 +116,7 @@ void cFftModuleMeasProgram::generateVeinInterface()
     m_pIntegrationTimeParameter->setValidator(new cDoubleValidator(1.0, 100.0, 0.5));
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
-    QString refChannelMNameConfigured = m_pModule->getConfigData()->m_RefChannel.m_sPar;
+    QString refChannelMNameConfigured = m_pModule->getConfigData()->m_RefChannel.m_sValue;
     const QString channelMarkdown = m_pModule->getSharedChannelRangeObserver()->getChannelNamesForMardownDoc();
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_RefChannel"),
@@ -181,7 +181,7 @@ void cFftModuleMeasProgram::setDspCmdList()
 {
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     int samples = observer->getSamplesPerPeriod();
-    QString referenceChannel = m_pModule->getConfigData()->m_RefChannel.m_sPar;
+    QString referenceChannel = m_pModule->getConfigData()->m_RefChannel.m_sValue;
     int referenceDspChannel = observer->getChannel(referenceChannel)->getDspChannel();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,MEASSIGNAL)").arg(2*samples) ); // clear meassignal
@@ -417,7 +417,7 @@ void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
 void cFftModuleMeasProgram::newRefChannel(QVariant chn)
 {
     QString channelMName = chn.toString();
-    m_pModule->getConfigData()->m_RefChannel.m_sPar = channelMName;
+    m_pModule->getConfigData()->m_RefChannel.m_sValue = channelMName;
     ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
     int dspChannel = channel->getDspChannel();

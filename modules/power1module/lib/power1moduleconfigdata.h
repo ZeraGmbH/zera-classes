@@ -1,32 +1,11 @@
 #ifndef POWER1MODULECONFIGDATA_H
 #define POWER1MODULECONFIGDATA_H
 
+#include "configtypes.h"
 #include <QStringList>
 
 namespace POWER1MODULE
 {
-
-// used for configuration export
-struct doubleParameter
-{
-    QString m_sKey;
-    double m_fValue;
-};
-
-
-struct intParameter
-{
-    QString m_sKey;
-    quint32 m_nValue;
-};
-
-
-struct stringParameter
-{
-    QString m_sKey;
-    QString m_sValue;
-};
-
 
 struct scaling
 {

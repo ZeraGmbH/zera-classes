@@ -1,18 +1,13 @@
 #ifndef SCPIMODULECONFIGDATA_H
 #define SCPIMODULECONFIGDATA_H
 
+#include "configtypes.h"
 #include "networkconnectioninfo.h"
 #include "statusbitdescriptor.h"
 #include <QStringList>
 
 namespace SCPIMODULE
 {
-
-struct boolParameter
-{
-    QString m_sKey;
-    bool m_active;
-};
 
 struct serialDevice
 {

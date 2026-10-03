@@ -74,7 +74,7 @@ void cFftModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setRefChannel:
             m_configData.m_RefChannel.m_sKey = key;
-            m_configData.m_RefChannel.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_RefChannel.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setMeasureInterval:
             m_configData.m_fMeasInterval.m_sKey = key;

@@ -249,7 +249,7 @@ void cSfcModuleMeasProgram::setsecINTNotifier()
 
 void cSfcModuleMeasProgram::setMasterMux()
 {
-    const QString &dutInputName = m_pModule->getConfigData()->m_sDutInput.m_sPar;
+    const QString &dutInputName = m_pModule->getConfigData()->m_sDutInput.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_masterErrCalcName, dutInputName)] = setmastermux;
 }
 

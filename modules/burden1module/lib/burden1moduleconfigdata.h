@@ -1,7 +1,7 @@
 #ifndef BURDEN1MODULECONFIGDATA_H
 #define BURDEN1MODULECONFIGDATA_H
 
-#include <QString>
+#include "configtypes.h"
 #include <QStringList>
 #include <QList>
 
@@ -12,21 +12,6 @@ struct burdensystemconfiguration
 {
     QString m_sInputVoltageVector; // component name for voltage vector
     QString m_sInputCurrentVector; // component name for current vector
-};
-
-
-// used for configuration export
-struct doubleParameter
-{
-    QString m_sKey;
-    double m_fValue;
-};
-
-
-struct stringParameter
-{
-    QString m_sKey;
-    QString m_sPar;
 };
 
 

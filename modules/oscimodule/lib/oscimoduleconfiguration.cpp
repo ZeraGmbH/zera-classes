@@ -35,7 +35,7 @@ void cOsciModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 QByteArray cOsciModuleConfiguration::exportConfiguration() const
 {
     const stringParameter paramRefChannel = m_configData.m_RefChannel;
-    m_pXMLReader->setValue(paramRefChannel.m_sKey, QString("%1").arg(paramRefChannel.m_sPar));
+    m_pXMLReader->setValue(paramRefChannel.m_sKey, QString("%1").arg(paramRefChannel.m_sValue));
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -66,7 +66,7 @@ void cOsciModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setRefChannel:
             m_configData.m_RefChannel.m_sKey = key;
-            m_configData.m_RefChannel.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_RefChannel.m_sValue = m_pXMLReader->getValue(key);
             break;
         default:
             if ((cmd >= setValue1) && (cmd < setValue1 + 32)) {

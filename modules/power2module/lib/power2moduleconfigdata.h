@@ -1,33 +1,12 @@
 #ifndef POWER2MODULECONFIGDATA_H
 #define POWER2MODULECONFIGDATA_H
 
+#include "configtypes.h"
 #include <QStringList>
 #include <QList>
 
 namespace POWER2MODULE
 {
-
-// used for configuration export
-struct doubleParameter
-{
-    QString m_sKey;
-    double m_fValue;
-};
-
-
-struct intParameter
-{
-    QString m_sKey;
-    quint32 m_nValue;
-};
-
-
-struct stringParameter
-{
-    QString m_sKey;
-    QString m_sValue;
-};
-
 
 struct freqoutconfiguration
 {

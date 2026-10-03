@@ -82,7 +82,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     m_pNominalRangeFactorParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                            key = QString("PAR_NominalRangeFactor"),
                                                            QString("Nominal range factor"),
-                                                           QVariant(configData->nominalRangeFactor.m_sPar));
+                                                           QVariant(configData->nominalRangeFactor.m_sValue));
     m_pNominalRangeFactorParameter->setScpiInfo("CONFIGURATION","RFACTOR", SCPI::isQuery|SCPI::isCmdwP);
     m_pNominalRangeFactorParameter->setValidator(new cStringValidator(QString("1;sqrt(3);1/sqrt(3);1/3")));
     m_pModule->m_veinModuleParameterMap[key] = m_pNominalRangeFactorParameter; // for modules use
@@ -208,7 +208,7 @@ void cBurden1ModuleMeasProgram::newNominalRange(const QVariant &nr)
 
 void cBurden1ModuleMeasProgram::newNominalFactorRange(const QVariant &nrf)
 {
-    m_pModule->getConfigData()->nominalRangeFactor.m_sPar = nrf.toString();
+    m_pModule->getConfigData()->nominalRangeFactor.m_sValue = nrf.toString();
     setParameters();
     emit m_pModule->parameterChanged();
 }
@@ -243,7 +243,7 @@ void cBurden1ModuleMeasProgram::setParameters()
         tmd->setNominalRange(configData->nominalRange.m_fValue);
         tmd->setWireLength(configData->wireLength.m_fValue);
         tmd->setWireCrosssection(configData->wireCrosssection.m_fValue);
-        tmd->setNominalRangeFactor(configData->nominalRangeFactor.m_sPar);
+        tmd->setNominalRangeFactor(configData->nominalRangeFactor.m_sValue);
     }
 }
 

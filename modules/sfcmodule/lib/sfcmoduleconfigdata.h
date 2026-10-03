@@ -1,15 +1,11 @@
 #ifndef SFCMODULECONFIGDATA_H
 #define SFCMODULECONFIGDATA_H
 
+#include "configtypes.h"
 #include <QList>
 
 namespace SFCMODULE
 {
-struct stringParameter
-{
-    QString m_sKey;
-    QString m_sPar;
-};
 
 class cSfcModuleConfigData
 {

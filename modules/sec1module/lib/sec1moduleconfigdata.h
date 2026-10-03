@@ -1,39 +1,12 @@
 #ifndef SEC1MODULECONFIGDATA_H
 #define SEC1MODULECONFIGDATA_H
 
+#include "configtypes.h"
 #include "secconfigdatacommon.h"
 #include <QList>
 
 namespace SEC1MODULE
 {
-
-struct boolParameter
-{
-    QString m_sKey;
-    quint8 m_nActive = false; // active or 1,0
-};
-
-
-struct doubleParameter
-{
-    QString m_sKey;
-    double m_fPar = 1.0;
-};
-
-
-struct intParameter
-{
-    QString m_sKey;
-    quint32 m_nPar = 0;
-};
-
-
-struct stringParameter
-{
-    QString m_sKey;
-    QString m_sPar;
-};
-
 
 class cSec1ModuleConfigData
 {

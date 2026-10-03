@@ -21,7 +21,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module) :
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeProg(
         m_pModule->getEntityId(),
         channelMNames,
-        m_pModule->getConfigData()->m_session.m_sPar == "ref");
+        m_pModule->getConfigData()->m_session.m_sValue == "ref");
     m_bRanging = false;
     m_bIgnore = false;
 

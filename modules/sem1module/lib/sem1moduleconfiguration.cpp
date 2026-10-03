@@ -50,19 +50,19 @@ void cSem1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 QByteArray cSem1ModuleConfiguration::exportConfiguration() const
 {
     const stringParameter* paramRefInput = &m_configData.m_sRefInput;
-    m_pXMLReader->setValue(paramRefInput->m_sKey, paramRefInput->m_sPar);
+    m_pXMLReader->setValue(paramRefInput->m_sKey, paramRefInput->m_sValue);
 
     const boolParameter* paramTargeted = &m_configData.m_bTargeted;
     m_pXMLReader->setValue(paramTargeted->m_sKey, QString("%1").arg(paramTargeted->m_nActive));
 
     const intParameter* paramMeasTime = &m_configData.m_nMeasTime;
-    m_pXMLReader->setValue(paramMeasTime->m_sKey, QString("%1").arg(paramMeasTime->m_nPar));
+    m_pXMLReader->setValue(paramMeasTime->m_sKey, QString("%1").arg(paramMeasTime->m_nValue));
 
     const doubleParameter* paramUpperLimit = &m_configData.m_fUpperLimit;
-    m_pXMLReader->setValue(paramUpperLimit->m_sKey, QString("%1").arg(paramUpperLimit->m_fPar));
+    m_pXMLReader->setValue(paramUpperLimit->m_sKey, QString("%1").arg(paramUpperLimit->m_fValue));
 
     const doubleParameter* paramLowerLimit = &m_configData.m_fLowerLimit;
-    m_pXMLReader->setValue(paramLowerLimit->m_sKey, QString("%1").arg(paramLowerLimit->m_fPar));
+    m_pXMLReader->setValue(paramLowerLimit->m_sKey, QString("%1").arg(paramLowerLimit->m_fValue));
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -115,7 +115,7 @@ void cSem1ModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setRefInput:
             m_configData.m_sRefInput.m_sKey = key;
-            m_configData.m_sRefInput.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_sRefInput.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setTargeted:
             m_configData.m_bTargeted.m_sKey = key;
@@ -123,15 +123,15 @@ void cSem1ModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setMeasTime:
             m_configData.m_nMeasTime.m_sKey = key;
-            m_configData.m_nMeasTime.m_nPar = m_pXMLReader->getValue(key).toInt(&ok);
+            m_configData.m_nMeasTime.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setUpperLimit:
             m_configData.m_fUpperLimit.m_sKey = key;
-            m_configData.m_fUpperLimit.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fUpperLimit.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setLowerLimit:
             m_configData.m_fLowerLimit.m_sKey = key;
-            m_configData.m_fLowerLimit.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fLowerLimit.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
 
         default:

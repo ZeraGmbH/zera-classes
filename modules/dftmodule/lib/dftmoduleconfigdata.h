@@ -1,24 +1,11 @@
 #ifndef DFTMODULECONFIGDATA_H
 #define DFTMODULECONFIGDATA_H
 
-#include <QString>
+#include "configtypes.h"
 #include <QList>
 
 namespace DFTMODULE
 {
-
-// used for configuration export
-struct doubleParameter
-{
-    QString m_sKey;
-    double m_fValue;
-};
-
-struct stringParameter
-{
-    QString m_sKey;
-    QString m_sPar;
-};
 
 class cDftModuleConfigData
 {

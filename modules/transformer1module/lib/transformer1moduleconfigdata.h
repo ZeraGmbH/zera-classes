@@ -1,6 +1,7 @@
 #ifndef TRANSFORMER1MODULECONFIGDATA_H
 #define TRANSFORMER1MODULECONFIGDATA_H
 
+#include "configtypes.h"
 #include <QStringList>
 
 namespace TRANSFORMER1MODULE
@@ -10,14 +11,6 @@ struct transformersystemconfiguration
 {
     QString m_sInputPrimaryVector; // component name for primary vector
     QString m_sInputSecondaryVector; // component name for secondary vector
-};
-
-
-// used for configuration export
-struct doubleParameter
-{
-    QString m_sKey;
-    double m_fValue;
 };
 
 

@@ -1,16 +1,11 @@
 #ifndef OSCIMODULECONFIGDATA_H
 #define OSCIMODULECONFIGDATA_H
 
+#include "configtypes.h"
 #include <QStringList>
 
 namespace OSCIMODULE
 {
-
-struct stringParameter
-{
-    QString m_sKey;
-    QString m_sPar;
-};
 
 class cOsciModuleConfigData
 {

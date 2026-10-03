@@ -1,7 +1,7 @@
 #ifndef RANGEMODULECONFIGDATA_H
 #define RANGEMODULECONFIGDATA_H
 
-#include <QString>
+#include "configtypes.h"
 #include <QList>
 
 #include <networkconnectioninfo.h>
@@ -9,39 +9,13 @@
 namespace RANGEMODULE
 {
 
-// used for configuration export
-
-struct boolParameter
-{
-    QString m_sKey;
-    quint8 m_nActive; // active or not 1,0
-};
-
-struct stringParameter
-{
-    QString m_sKey;
-    QString m_sPar;
-};
-
-struct doubleParameter
-{
-    QString m_sKey;
-    double m_fValue;
-};
-
-struct intParameter
-{
-    QString m_sKey;
-    quint32 m_nValue;
-};
-
 struct cObsermaticConfPar
 {
     void setCurrentRange(int channelIdx, const QString &rangeAlias) {
-        m_senseChannelRangeParameter[channelIdx].m_sPar = rangeAlias;
+        m_senseChannelRangeParameter[channelIdx].m_sValue = rangeAlias;
     }
     const QString &getCurrentRange(int channelIdx) {
-        return m_senseChannelRangeParameter[channelIdx].m_sPar;
+        return m_senseChannelRangeParameter[channelIdx].m_sValue;
     }
     boolParameter m_nGroupAct; // grouping active or not 1,0
     boolParameter m_nRangeAutoAct; // range automatic active or not 1,0

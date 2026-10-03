@@ -1,17 +1,10 @@
 #ifndef THDNMODULECONFIGDATA_H
 #define THDNMODULECONFIGDATA_H
 
-#include <QStringList>
+#include "configtypes.h"
 
 namespace THDNMODULE
 {
-
-// used for configuration export
-struct doubleParameter
-{
-    QString m_sKey;
-    double m_fValue = 0.0;
-};
 
 class cThdnModuleConfigData
 {

@@ -25,7 +25,7 @@ void cSampleModuleMeasProgram::generateVeinInterface()
     m_pVeinPllChannelAlias = new VfModuleParameter(m_module->getEntityId(), m_module->getValidatorEventSystem(),
                                                    key = QString("PAR_PllChannel"),
                                                    QString("PLL reference channel"),
-                                                   QVariant(getAlias(m_obsermaticConfig.m_pllSystemChannel.m_sPar)));
+                                                   QVariant(getAlias(m_obsermaticConfig.m_pllSystemChannel.m_sValue)));
     m_module->m_veinModuleParameterMap[key] = m_pVeinPllChannelAlias; // for modules use
     m_pVeinPllChannelAlias->setScpiInfo("CONFIGURATION", "PLLREFERENCE", SCPI::isQuery|SCPI::isCmdwP);
     setPllChannelValidator();
@@ -62,7 +62,7 @@ void cSampleModuleMeasProgram::activate()
         emit activated();
     });
     m_pendingTasks.addSub(m_pcbConnection.createConnectionTask());
-    startSetPllChannel(m_obsermaticConfig.m_pllSystemChannel.m_sPar);
+    startSetPllChannel(m_obsermaticConfig.m_pllSystemChannel.m_sValue);
 }
 
 void cSampleModuleMeasProgram::deactivate()
@@ -75,7 +75,7 @@ void cSampleModuleMeasProgram::onVeinPllChannelChanged(const QVariant &channelAl
 {
     if (m_obsermaticConfig.m_npllAutoAct.m_nActive != 0) {
         qWarning("Cannot set PLL channel when automatic mode is on!");
-        m_pVeinPllChannelAlias->setValue(getAlias(m_obsermaticConfig.m_pllSystemChannel.m_sPar));
+        m_pVeinPllChannelAlias->setValue(getAlias(m_obsermaticConfig.m_pllSystemChannel.m_sValue));
         return;
     }
     else if (m_obsermaticConfig.m_bpllFixed) {
@@ -131,7 +131,7 @@ void cSampleModuleMeasProgram::setPllChannelValidator()
 void cSampleModuleMeasProgram::trySendPllChannel(const QString &channelMName)
 {
     if(m_bActive && !m_obsermaticConfig.m_bpllFixed) {
-        if(channelMName != m_obsermaticConfig.m_pllSystemChannel.m_sPar)
+        if(channelMName != m_obsermaticConfig.m_pllSystemChannel.m_sValue)
             startSetPllChannel(channelMName);
     }
 }
@@ -151,9 +151,9 @@ void cSampleModuleMeasProgram::startSetPllChannel(const QString &channelMName)
 
 void cSampleModuleMeasProgram::setVeinPllChannelPesistent(const QString &channelMName)
 {
-    if(m_obsermaticConfig.m_pllSystemChannel.m_sPar != channelMName) {
+    if(m_obsermaticConfig.m_pllSystemChannel.m_sValue != channelMName) {
         m_pVeinPllChannelAlias->setValue(getAlias(channelMName));
-        m_obsermaticConfig.m_pllSystemChannel.m_sPar = channelMName;
+        m_obsermaticConfig.m_pllSystemChannel.m_sValue = channelMName;
         emit m_module->parameterChanged();
     }
 }

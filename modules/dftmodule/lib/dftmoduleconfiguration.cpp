@@ -50,7 +50,7 @@ QByteArray cDftModuleConfiguration::exportConfiguration() const
     m_pXMLReader->setValue(paramMeasInterval->m_sKey, QString("%1").arg(paramMeasInterval->m_fValue));
 
     const stringParameter* paramRefChannel = &m_configData.m_sRefChannel;
-    m_pXMLReader->setValue(paramRefChannel->m_sKey, paramRefChannel->m_sPar);
+    m_pXMLReader->setValue(paramRefChannel->m_sKey, paramRefChannel->m_sValue);
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -93,7 +93,7 @@ void cDftModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setRefChannel:
             m_configData.m_sRefChannel.m_sKey = key;
-            m_configData.m_sRefChannel.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_sRefChannel.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setRefChannelOn:
             m_configData.m_bRefChannelOn = (m_pXMLReader->getValue(key).toInt(&ok) == 1);

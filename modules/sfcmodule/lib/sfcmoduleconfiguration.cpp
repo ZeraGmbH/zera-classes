@@ -53,7 +53,7 @@ void cSfcModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setDutInputPar:
             m_configData.m_sDutInput.m_sKey = key;
-            m_configData.m_sDutInput.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_sDutInput.m_sValue = m_pXMLReader->getValue(key);
             break;
         default:
             if ((cmd >= setDutInput1Name) && (cmd < setDutInput1Name + 32)) {

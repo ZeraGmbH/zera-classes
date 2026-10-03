@@ -39,7 +39,7 @@ QByteArray cSampleModuleConfiguration::exportConfiguration() const
     m_pXMLReader->setValue(paramPllAuto->m_sKey, QString("%1").arg(paramPllAuto->m_nActive));
 
     const stringParameter* paramPllChannel = &m_configData.m_ObsermaticConfPar.m_pllSystemChannel;
-    m_pXMLReader->setValue(paramPllChannel->m_sKey, paramPllChannel->m_sPar);
+    m_pXMLReader->setValue(paramPllChannel->m_sKey, paramPllChannel->m_sValue);
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -77,7 +77,7 @@ void cSampleModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setPllChannel:
             m_configData.m_ObsermaticConfPar.m_pllSystemChannel.m_sKey = key;
-            m_configData.m_ObsermaticConfPar.m_pllSystemChannel.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_ObsermaticConfPar.m_pllSystemChannel.m_sValue = m_pXMLReader->getValue(key);
             break;
         default:
             if ((cmd >= setPllChannel1) && (cmd < setPllChannel1 + 32))

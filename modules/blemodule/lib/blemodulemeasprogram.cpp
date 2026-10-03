@@ -115,7 +115,7 @@ void cBleModuleMeasProgram::activateDone()
     connect(m_bluetooth, &BluetoothConvenienceFacade::sigOnOff,
             this, &cBleModuleMeasProgram::onBluetoothStatusChanged);
     switchBluetooth(m_pBluetoothOnOff->getValue().toBool());
-    m_pMacAddress->setValue(m_pModule->getConfigData()->m_macAddress.m_sPar);
+    m_pMacAddress->setValue(m_pModule->getConfigData()->m_macAddress.m_sValue);
     onVeinMacAddressChanged(m_pMacAddress->getValue());
     m_bActive = true;
     emit activated();
@@ -207,9 +207,9 @@ void cBleModuleMeasProgram::onVeinMacAddressChanged(QVariant macAddress)
         connect(sensor.get(), &EfentoEnvironmentSensor::sigNewValues,
                 this, &cBleModuleMeasProgram::onNewValues);
         m_bleDispatcherId = m_bluetooth->addBleDecoder(sensor);
-        const QString oldMac = m_pModule->getConfigData()->m_macAddress.m_sPar;
+        const QString oldMac = m_pModule->getConfigData()->m_macAddress.m_sValue;
         if(oldMac != newMac) {
-            m_pModule->getConfigData()->m_macAddress.m_sPar = newMac;
+            m_pModule->getConfigData()->m_macAddress.m_sValue = newMac;
             emit m_pModule->parameterChanged();
         }
     }

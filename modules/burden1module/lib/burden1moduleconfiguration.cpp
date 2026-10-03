@@ -48,7 +48,7 @@ QByteArray cBurden1ModuleConfiguration::exportConfiguration() const
     m_pXMLReader->setValue(paramNominalRange->m_sKey, QString("%1").arg(paramNominalRange->m_fValue));
 
     const stringParameter *paramNminalRangeFactor = &m_configData.nominalRangeFactor;
-    m_pXMLReader->setValue(paramNminalRangeFactor->m_sKey, paramNminalRangeFactor->m_sPar);
+    m_pXMLReader->setValue(paramNminalRangeFactor->m_sKey, paramNminalRangeFactor->m_sValue);
 
     const doubleParameter* paramNominalBurden = &m_configData.nominalBurden;
     m_pXMLReader->setValue(paramNominalBurden->m_sKey, QString("%1").arg(paramNominalBurden->m_fValue));
@@ -102,7 +102,7 @@ void cBurden1ModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setNominalRangeFactor:
             m_configData.nominalRangeFactor.m_sKey = key;
-            m_configData.nominalRangeFactor.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.nominalRangeFactor.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setNominalBurden:
             m_configData.nominalBurden.m_sKey = key;

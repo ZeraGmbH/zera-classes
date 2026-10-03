@@ -24,7 +24,7 @@ QByteArray cBleModuleConfiguration::exportConfiguration() const
     m_pXMLReader->setValue(paramBluetoothOn->m_sKey, QString("%1").arg(paramBluetoothOn->m_nActive));
 
     const stringParameter *paramMachAddress = &m_configData.m_macAddress;
-    m_pXMLReader->setValue(paramMachAddress->m_sKey, paramMachAddress->m_sPar);
+    m_pXMLReader->setValue(paramMachAddress->m_sKey, paramMachAddress->m_sValue);
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -47,7 +47,7 @@ void cBleModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setMacAddress:
             m_configData.m_macAddress.m_sKey = key;
-            m_configData.m_macAddress.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_macAddress.m_sValue = m_pXMLReader->getValue(key);
             break;
         }
         m_bConfigError |= !ok;

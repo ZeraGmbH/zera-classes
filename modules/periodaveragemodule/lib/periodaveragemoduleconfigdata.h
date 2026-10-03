@@ -1,17 +1,11 @@
 #ifndef PERIODAVERAGEMODULECONFIGDATA_H
 #define PERIODAVERAGEMODULECONFIGDATA_H
 
-#include <QString>
+#include "configtypes.h"
 #include <QList>
 
 namespace PERIODAVERAGEMODULE
 {
-
-struct intParameter
-{
-    QString m_sKey;
-    quint32 m_nValue;
-};
 
 class PeriodAverageModuleConfigData
 {

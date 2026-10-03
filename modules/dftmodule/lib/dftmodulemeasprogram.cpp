@@ -174,7 +174,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
 
 
-    QString refChannelAliasConfigured = m_pModule->getConfigData()->m_sRefChannel.m_sPar;
+    QString refChannelAliasConfigured = m_pModule->getConfigData()->m_sRefChannel.m_sValue;
     m_pRefChannelParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("PAR_RefChannel"),
                                                    QString("Reference channel"),
@@ -479,7 +479,7 @@ void cDftModuleMeasProgram::turnVectorsToRefChannel()
     for (int i = 0; i < configData->m_valueChannelList.count(); i++)
         dftActComplexValuesChannelHash[configData->m_valueChannelList.at(i)] = std::complex<double>(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
 
-    QString referenceChannelName = m_ChannelSystemNameHash.value(configData->m_sRefChannel.m_sPar);
+    QString referenceChannelName = m_ChannelSystemNameHash.value(configData->m_sRefChannel.m_sValue);
     std::complex<double> complexReferenceVector = dftActComplexValuesChannelHash.value(referenceChannelName);
 
     double tanRef = complexReferenceVector.imag() / complexReferenceVector.real();
@@ -533,7 +533,7 @@ void cDftModuleMeasProgram::newIntegrationtime(QVariant ti)
 
 void cDftModuleMeasProgram::newRefChannel(QVariant refchn)
 {
-    m_pModule->getConfigData()->m_sRefChannel.m_sPar = refchn.toString();
+    m_pModule->getConfigData()->m_sRefChannel.m_sValue = refchn.toString();
     emit m_pModule->parameterChanged();
 }
 

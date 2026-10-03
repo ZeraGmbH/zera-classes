@@ -60,43 +60,43 @@ void cSec1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 QByteArray cSec1ModuleConfiguration::exportConfiguration() const
 {
     const doubleParameter* paramDutConstant = &m_configData.m_fDutConstant;
-    m_pXMLReader->setValue(paramDutConstant->m_sKey, QString("%1").arg(paramDutConstant->m_fPar));
+    m_pXMLReader->setValue(paramDutConstant->m_sKey, QString("%1").arg(paramDutConstant->m_fValue));
 
     const stringParameter* paramDutConstantUnit = &m_configData.m_sDutConstantUnit;
-    m_pXMLReader->setValue(paramDutConstantUnit->m_sKey, paramDutConstantUnit->m_sPar);
+    m_pXMLReader->setValue(paramDutConstantUnit->m_sKey, paramDutConstantUnit->m_sValue);
 
     const doubleParameter* paramRefConstant = &m_configData.m_fRefConstant;
-    m_pXMLReader->setValue(paramRefConstant->m_sKey, QString("%1").arg(paramRefConstant->m_fPar));
+    m_pXMLReader->setValue(paramRefConstant->m_sKey, QString("%1").arg(paramRefConstant->m_fValue));
 
     const doubleParameter* paramEnergy = &m_configData.m_fEnergy;
-    m_pXMLReader->setValue(paramEnergy->m_sKey, QString("%1").arg(paramEnergy->m_fPar));
+    m_pXMLReader->setValue(paramEnergy->m_sKey, QString("%1").arg(paramEnergy->m_fValue));
 
     const intParameter* paramTarget = &m_configData.m_nTarget;
-    m_pXMLReader->setValue(paramTarget->m_sKey, QString("%1").arg(paramTarget->m_nPar));
+    m_pXMLReader->setValue(paramTarget->m_sKey, QString("%1").arg(paramTarget->m_nValue));
 
     const intParameter* paramRate = &m_configData.m_nMRate;
-    m_pXMLReader->setValue(paramRate->m_sKey, QString("%1").arg(paramRate->m_nPar));
+    m_pXMLReader->setValue(paramRate->m_sKey, QString("%1").arg(paramRate->m_nValue));
 
     const stringParameter* paramDutInput = &m_configData.m_sDutInput;
-    m_pXMLReader->setValue(paramDutInput->m_sKey, paramDutInput->m_sPar);
+    m_pXMLReader->setValue(paramDutInput->m_sKey, paramDutInput->m_sValue);
 
     const stringParameter* paramRefInput = &m_configData.m_sRefInput;
-    m_pXMLReader->setValue(paramRefInput->m_sKey, paramRefInput->m_sPar);
+    m_pXMLReader->setValue(paramRefInput->m_sKey, paramRefInput->m_sValue);
 
     const stringParameter* paramNode = &m_configData.m_sMode;
-    m_pXMLReader->setValue(paramNode->m_sKey, paramNode->m_sPar);
+    m_pXMLReader->setValue(paramNode->m_sKey, paramNode->m_sValue);
 
     const boolParameter* paramContinous = &m_configData.m_bContinous;
     m_pXMLReader->setValue(paramContinous->m_sKey, QString("%1").arg(paramContinous->m_nActive));
 
     const doubleParameter* paramUpperLimit = &m_configData.m_fUpperLimit;
-    m_pXMLReader->setValue(paramUpperLimit->m_sKey, QString("%1").arg(paramUpperLimit->m_fPar));
+    m_pXMLReader->setValue(paramUpperLimit->m_sKey, QString("%1").arg(paramUpperLimit->m_fValue));
 
     const doubleParameter* paramLowerLimit = &m_configData.m_fLowerLimit;
-    m_pXMLReader->setValue(paramLowerLimit->m_sKey, QString("%1").arg(paramLowerLimit->m_fPar));
+    m_pXMLReader->setValue(paramLowerLimit->m_sKey, QString("%1").arg(paramLowerLimit->m_fValue));
 
     const stringParameter* paramResultUnit = &m_configData.m_sResultUnit;
-    m_pXMLReader->setValue(paramResultUnit->m_sKey, paramResultUnit->m_sPar);
+    m_pXMLReader->setValue(paramResultUnit->m_sKey, paramResultUnit->m_sValue);
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -132,39 +132,39 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setDutInputPar:
             m_configData.m_sDutInput.m_sKey = key;
-            m_configData.m_sDutInput.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_sDutInput.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setRefInputPar:
             m_configData.m_sRefInput.m_sKey = key;
-            m_configData.m_sRefInput.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_sRefInput.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setMeasMode:
             m_configData.m_sMode.m_sKey = key;
-            m_configData.m_sMode.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_sMode.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setDutConstant:
             m_configData.m_fDutConstant.m_sKey = key;
-            m_configData.m_fDutConstant.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fDutConstant.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setDutConstantUnit:
             m_configData.m_sDutConstantUnit.m_sKey = key;
-            m_configData.m_sDutConstantUnit.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_sDutConstantUnit.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setRefConstant:
             m_configData.m_fRefConstant.m_sKey = key;
-            m_configData.m_fRefConstant.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fRefConstant.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setTarget:
             m_configData.m_nTarget.m_sKey = key;
-            m_configData.m_nTarget.m_nPar =m_pXMLReader->getValue(key).toUInt(&ok);
+            m_configData.m_nTarget.m_nValue =m_pXMLReader->getValue(key).toUInt(&ok);
             break;
         case setEnergy:
             m_configData.m_fEnergy.m_sKey = key;
-            m_configData.m_fEnergy.m_fPar =m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fEnergy.m_fValue =m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setMRate:
             m_configData.m_nMRate.m_sKey = key;
-            m_configData.m_nMRate.m_nPar = m_pXMLReader->getValue(key).toUInt(&ok);
+            m_configData.m_nMRate.m_nValue = m_pXMLReader->getValue(key).toUInt(&ok);
             break;
         case setContinousMode:
             m_configData.m_bContinous.m_sKey = key;
@@ -172,15 +172,15 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
             break;
         case setUpperLimit:
             m_configData.m_fUpperLimit.m_sKey = key;
-            m_configData.m_fUpperLimit.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fUpperLimit.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setLowerLimit:
             m_configData.m_fLowerLimit.m_sKey = key;
-            m_configData.m_fLowerLimit.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_fLowerLimit.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setResultUnit:
             m_configData.m_sResultUnit.m_sKey = key;
-            m_configData.m_sResultUnit.m_sPar = m_pXMLReader->getValue(key);
+            m_configData.m_sResultUnit.m_sValue = m_pXMLReader->getValue(key);
             break;
 
         default:
