@@ -65,6 +65,7 @@ public slots:
     void stop() override;
 
 private slots:
+    void activate() override;
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void onRefConstantChanged(const QString &refPowerName);
     void resourceManagerConnect();
@@ -151,6 +152,7 @@ private:
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;
     Zera::ProxyClientPtr m_pcbClient;
+    TaskTemplatePtr m_activationTaskSequence;
 
     // statemachine for activating gets the following states
     QState resourceManagerConnectState; // connect to resource manager

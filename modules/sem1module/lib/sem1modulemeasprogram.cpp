@@ -4,6 +4,7 @@
 #include "secdatetimehelper.h"
 #include <errormessages.h>
 #include <scpi.h>
+#include <taskcontainersequence.h>
 #include <unithelper.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
@@ -21,7 +22,8 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
     cBaseMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
-    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
+    m_activationTaskSequence(TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail))
 {
     m_IdentifyState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_readResourcesState);
     m_readResourcesState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
@@ -842,6 +844,14 @@ void cSem1ModuleMeasProgram::setpcbREFConstantNotifier()
 void cSem1ModuleMeasProgram::setsecINTNotifier()
 {
     m_MsgNrCmdList[m_secInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterErrCalcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
+}
+
+void cSem1ModuleMeasProgram::activate()
+{
+    connect(m_activationTaskSequence.get(), &TaskTemplate::sigFinish, this, [this](bool ok) {
+        cModuleActivist::activate();
+    });
+    m_activationTaskSequence->start();
 }
 
 void cSem1ModuleMeasProgram::activationDone()
