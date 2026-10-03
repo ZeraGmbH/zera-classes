@@ -14,12 +14,9 @@ struct burdensystemconfiguration
     QString m_sInputCurrentVector; // component name for current vector
 };
 
-
 class cBurden1ModuleConfigData
 {
 public:
-    cBurden1ModuleConfigData(){}
-
     quint8 m_nBurdenSystemCount = 0;
     int m_nModuleId = 0;
     QList<burdensystemconfiguration> m_BurdenSystemConfigList;

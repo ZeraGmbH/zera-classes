@@ -11,7 +11,6 @@ namespace SEC1MODULE
 class cSec1ModuleConfigData
 {
 public:
-    cSec1ModuleConfigData(){}
     quint8 m_nRefInpCount = 0;
     quint8 m_nDutInpCount = 0;
     quint8 m_nModeCount = 0;

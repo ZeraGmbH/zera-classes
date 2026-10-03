@@ -19,7 +19,6 @@ struct cObsermaticConfPar
 class cSampleModuleConfigData
 {
 public:
-    cSampleModuleConfigData(){}
     cObsermaticConfPar m_ObsermaticConfPar;
 };
 

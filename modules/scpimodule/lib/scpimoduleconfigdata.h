@@ -21,7 +21,6 @@ struct serialDevice
 class cSCPIModuleConfigData
 {
 public:
-    cSCPIModuleConfigData(){}
     quint8 m_nClients = 0; // the max. nr of clients accepted to connect
     NetworkConnectionInfo m_InterfaceSocket; // we listen here ip is localhost
     QString m_sDeviceName;

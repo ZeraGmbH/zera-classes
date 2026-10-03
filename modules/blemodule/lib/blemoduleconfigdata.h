@@ -9,7 +9,6 @@ namespace BLEMODULE
 class cBleModuleConfigData
 {
 public:
-    cBleModuleConfigData(){}
     boolParameter m_bluetoothOn;
     stringParameter m_macAddress;
 };

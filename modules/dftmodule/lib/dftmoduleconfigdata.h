@@ -10,7 +10,6 @@ namespace DFTMODULE
 class cDftModuleConfigData
 {
 public:
-    cDftModuleConfigData(){}
     quint8 m_nDftOrder = 0;
     quint8 m_nValueCount = 0; // how many measurment values
     QStringList m_valueChannelList; // a list of channel or channel pairs we work on to generate our measurement values

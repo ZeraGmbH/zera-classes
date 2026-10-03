@@ -13,12 +13,9 @@ struct transformersystemconfiguration
     QString m_sInputSecondaryVector; // component name for secondary vector
 };
 
-
 class cTransformer1ModuleConfigData
 {
 public:
-    cTransformer1ModuleConfigData(){}
-
     quint8 m_nTransformerSystemCount = 0;
     int m_nModuleId = 0;
     QList<transformersystemconfiguration> m_transformerSystemConfigList;

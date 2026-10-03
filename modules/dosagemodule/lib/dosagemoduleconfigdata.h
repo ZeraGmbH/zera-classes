@@ -17,8 +17,6 @@ struct dosagesystemconfiguration
 class cDosageModuleConfigData
 {
 public:
-    cDosageModuleConfigData(){}
-
     quint8 m_nDosageSystemCount = 0;
     int m_nModuleId = 0;
     QList<dosagesystemconfiguration>m_DosageSystemConfigList;

@@ -11,7 +11,6 @@ namespace SPM1MODULE
 class cSpm1ModuleConfigData
 {
 public:
-    cSpm1ModuleConfigData(){}
     quint8 m_nRefInpCount = 0;
     stringParameter m_sRefInput;
     QList<TRefInput> m_refInpList;

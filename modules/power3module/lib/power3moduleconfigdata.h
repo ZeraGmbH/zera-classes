@@ -17,10 +17,8 @@ struct powersystemconfiguration
 class cPower3ModuleConfigData
 {
 public:
-    cPower3ModuleConfigData(){}
-
-    quint8 m_nPowerSystemCount;
-    int m_nModuleId;
+    quint8 m_nPowerSystemCount = 0;
+    int m_nModuleId = 0;
     QList<powersystemconfiguration> m_powerSystemConfigList;
     QStringList m_powerChannelList;
 };

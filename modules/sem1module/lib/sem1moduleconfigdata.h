@@ -11,7 +11,6 @@ namespace SEM1MODULE
 class cSem1ModuleConfigData
 {
 public:
-    cSem1ModuleConfigData(){}
     QList<TRefInput> m_refInpList;
     quint8 m_nRefInpCount = 0;
     stringParameter m_sRefInput;

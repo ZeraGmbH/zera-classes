@@ -10,7 +10,6 @@ namespace FFTMODULE
 class cFftModuleConfigData
 {
 public:
-    cFftModuleConfigData(){}
     quint8 m_nFftOrder = 0;
     quint8 m_nValueCount = 0;       // how many measurement values
     QStringList m_valueChannelList; // a list of channel or channel pairs we work on to generate our measurement values

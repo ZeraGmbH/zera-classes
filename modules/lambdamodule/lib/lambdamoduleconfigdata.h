@@ -17,12 +17,9 @@ struct lambdasystemconfiguration
     QString m_sInputS;            // component name for current input
 };
 
-
 class cLambdaModuleConfigData
 {
 public:
-    cLambdaModuleConfigData(){}
-
     quint8 m_nLambdaSystemCount = 0;
     int m_nModuleId = 0;
     QList<lambdasystemconfiguration> m_lambdaSystemConfigList;

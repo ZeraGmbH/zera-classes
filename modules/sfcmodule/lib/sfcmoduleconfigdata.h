@@ -10,7 +10,6 @@ namespace SFCMODULE
 class cSfcModuleConfigData
 {
 public:
-    cSfcModuleConfigData(){}
     quint8 m_nDutInpCount = 0;
     QList<QString> m_dutInpList;
     stringParameter m_sDutInput;
