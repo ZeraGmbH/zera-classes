@@ -11,6 +11,7 @@
 #include <unithelper.h>
 #include <math.h>
 #include <timerfactoryqt.h>
+#include <taskcontainersequence.h>
 
 namespace SPM1MODULE
 {
@@ -19,7 +20,8 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module) :
     cBaseMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
-    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
+    m_activationTaskSequence(TaskContainerSequence::create(TaskContainerSequence::StopOnFirstTaskFail))
 {
     m_IdentifyState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readResourcesState);
     m_readResourcesState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
@@ -174,6 +176,14 @@ void cSpm1ModuleMeasProgram::start()
 
 void cSpm1ModuleMeasProgram::stop()
 {
+}
+
+void cSpm1ModuleMeasProgram::activate()
+{
+    connect(m_activationTaskSequence.get(), &TaskTemplate::sigFinish, this, [this](bool ok) {
+        cModuleActivist::activate();
+    });
+    m_activationTaskSequence->start();
 }
 
 void cSpm1ModuleMeasProgram::generateVeinInterface()
