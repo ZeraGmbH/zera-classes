@@ -1,22 +1,24 @@
 file(GLOB HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/dsp-server/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/channels/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/emob/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/generator/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/sec/*.h
+    *.h
+    dsp-server/*.h
+    pcb-server/*.h
+    pcb-server/channels/*.h
+    pcb-server/emob/*.h
+    pcb-server/generator/*.h
+    pcb-server/ranges/*.h
+    pcb-server/sec/*.h
+    resman-server/*.h
     )
 file(GLOB SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/dsp-server/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/channels/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/emob/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/generator/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/sec/*.cpp
+    *.cpp
+    dsp-server/*.cpp
+    pcb-server/*.cpp
+    pcb-server/channels/*.cpp
+    pcb-server/emob/*.cpp
+    pcb-server/generator/*.cpp
+    pcb-server/ranges/*.cpp
+    pcb-server/sec/*.cpp
+    resman-server/*.cpp
     )
 
 add_library(module-tasks SHARED
@@ -41,6 +43,7 @@ target_include_directories(module-tasks
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/generator>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/sec>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/resman-server>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/module-tasks>
     )
 
