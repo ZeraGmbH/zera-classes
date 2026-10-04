@@ -97,7 +97,6 @@ private:
 
     cPower1Module* m_pModule = nullptr;
     Zera::cRMInterface m_rmInterface;
-    Zera::ProxyClientPtr m_rmClient;
     MeasModeSelector m_measModeSelector;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QMap<QString, cFoutInfo> m_FoutInfoMap; // a list with frequency output information for each channel

@@ -2,7 +2,6 @@
 #define SFCMODULEMEASPROGRAM_H
 
 #include "secmeasinputdictionary.h"
-#include "sfcmoduleconfigdata.h"
 #include "vfmoduleparameter.h"
 #include "secresourcetypelist.h"
 #include <rminterface.h>
@@ -66,10 +65,8 @@ public slots:
 private:
     cSfcModule *m_pModule = nullptr;
     Zera::cRMInterface m_rmInterface;
-    Zera::ProxyClientPtr m_rmClient;
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;
-    Zera::ProxyClientPtr m_pcbClient;
 
     QList<VfModuleComponent *> m_veinActValueList; // the list of actual values we work on
     qint32 m_nIt = 0;

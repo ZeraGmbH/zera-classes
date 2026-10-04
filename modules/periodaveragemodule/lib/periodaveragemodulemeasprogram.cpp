@@ -261,12 +261,11 @@ void PeriodAverageModuleMeasProgram::setInterfaceActualValues(QVector<float> *ac
 
 void PeriodAverageModuleMeasProgram::dspserverConnect()
 {
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_dspInterface->setClientSmart(m_dspClient);
-    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_var2DSPState);
+    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_var2DSPState);
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &PeriodAverageModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 
 void PeriodAverageModuleMeasProgram::varList2DSP()
@@ -299,7 +298,7 @@ void PeriodAverageModuleMeasProgram::activateDSPdone()
 void PeriodAverageModuleMeasProgram::deactivateDSPStart()
 {
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient); // no async. messages anymore
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspInterface->getClientSmart()); // no async. messages anymore
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivationContinue();
 }

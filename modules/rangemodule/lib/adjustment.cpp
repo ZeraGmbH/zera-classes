@@ -159,12 +159,10 @@ void cAdjustManagement::generateVeinInterface()
 void cAdjustManagement::dspserverConnect()
 {
     // we set up our dsp server connection
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_dspInterface->setClientSmart(m_dspClient);
-    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
+    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo, m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 
 void cAdjustManagement::readGainCorr()
@@ -231,7 +229,7 @@ void cAdjustManagement::activationDone()
 void cAdjustManagement::deactivationInit()
 {
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspInterface->getClientSmart());
     disconnect(m_dspInterface.get(), 0, this, 0);
 
     for (int i = 0; i < m_ChannelList.count(); i++)

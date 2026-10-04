@@ -92,13 +92,12 @@ void cReferenceAdjustment::generateVeinInterface()
 
 void cReferenceAdjustment::pcbserverConnect()
 {
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pcbserverConnectState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_set0VRangeState);
+    m_pPCBInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_pcbserverConnectState.addTransition(m_pPCBInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_set0VRangeState);
 
-    m_pPCBInterface->setClientSmart(m_pPCBClient);
     connect(m_pPCBInterface.get(), &AbstractServerInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pPCBClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pPCBInterface->getClientSmart());
 }
 
 void cReferenceAdjustment::set0VRange()
@@ -110,12 +109,11 @@ void cReferenceAdjustment::set0VRange()
 
 void cReferenceAdjustment::dspserverConnect()
 {
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_dspInterface->setClientSmart(m_dspClient);
-    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_activationDoneState);
+    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_activationDoneState);
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cReferenceAdjustment::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 
 void cReferenceAdjustment::activationDone()
@@ -189,8 +187,8 @@ void cReferenceAdjustment::referenceAdjustDone()
 void cReferenceAdjustment::deactivationInit()
 {
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_pPCBClient);
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspInterface->getClientSmart());
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_pPCBInterface->getClientSmart());
     emit deactivationContinue();
 }
 

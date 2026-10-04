@@ -170,14 +170,11 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 
 void cReferenceMeasChannel::pcbConnection()
 {
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pcbNetworkInfo.m_sIP,
-                                                                 m_pcbNetworkInfo.m_nPort,
-                                                                 m_tcpNetworkFactory);
-    m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readRangelistState);
+    m_pcbInterface->setClientSuperSmart(m_pcbNetworkInfo, m_tcpNetworkFactory);
+    m_pcbConnectionState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readRangelistState);
 
-    m_pcbInterface->setClientSmart(m_pcbClient);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cReferenceMeasChannel::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
 }
 
 

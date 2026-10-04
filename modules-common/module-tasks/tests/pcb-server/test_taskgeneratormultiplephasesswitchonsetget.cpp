@@ -9,7 +9,6 @@
 #include <mocktcpnetworkfactory.h>
 #include <resmanrunfacade.h>
 #include <mockmt310s2d.h>
-#include <proxyclient.h>
 #include <QSignalSpy>
 #include <QTest>
 
@@ -22,10 +21,9 @@ void test_taskgeneratormultiplephasesswitchonsetget::checkScpiSendReceive()
     std::unique_ptr<MockMt310s2d> mt310s2d = std::make_unique<MockMt310s2d>(std::make_shared<TestFactoryI2cCtrl>(true), tcpNetworkFactory, "mt581s2d");
     TimeMachineObject::feedEventLoop();
 
-    Zera::ProxyClientPtr proxyClient = Zera::Proxy::getInstance()->getConnectionSmart("127.0.0.1", 6307, tcpNetworkFactory);
     std::shared_ptr<Zera::cPCBInterface> pcbIFace = std::make_shared<Zera::cPCBInterface>();
-    pcbIFace->setClientSmart(proxyClient);
-    Zera::Proxy::getInstance()->startConnectionSmart(proxyClient);
+    pcbIFace->setClientSuperSmart(NetworkConnectionInfo("127.0.0.1", 6307), tcpNetworkFactory);
+    Zera::Proxy::getInstance()->startConnectionSmart(pcbIFace->getClientSmart());
     TimeMachineObject::feedEventLoop();
 
     // necessary to switch phases

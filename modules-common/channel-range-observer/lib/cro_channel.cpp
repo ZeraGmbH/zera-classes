@@ -21,8 +21,7 @@ Channel::Channel(const QString &channelMName,
     m_channelMName(channelMName),
     m_hasInternalSourceGenerator(hasInternalSourceGenerator),
     m_netInfo(netInfo),
-    m_tcpFactory(tcpFactory),
-    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory))
+    m_tcpFactory(tcpFactory)
 {
 }
 
@@ -97,14 +96,14 @@ void Channel::clearRanges()
 void Channel::preparePcbInterface()
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-    m_pcbInterface->setClientSmart(m_pcbClient);
+    m_pcbInterface->setClientSuperSmart(m_netInfo, m_tcpFactory);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
             this, &Channel::onInterfaceAnswer);
 }
 
 TaskTemplatePtr Channel::getPcbConnectionTask()
 {
-    return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
+    return TaskServerConnectionStart::create(m_pcbInterface->getClientSmart(), CONNECTION_TIMEOUT);
 }
 
 void Channel::startAllRangesTasks()

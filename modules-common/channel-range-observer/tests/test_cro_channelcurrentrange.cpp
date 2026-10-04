@@ -32,7 +32,6 @@ void test_cro_channelcurrentrange::init()
 void test_cro_channelcurrentrange::cleanup()
 {
     m_pcbInterface = nullptr;
-    m_pcbClient = nullptr;
     TimeMachineObject::feedEventLoop();
     m_testServer = nullptr;
     m_resmanServer = nullptr;
@@ -155,9 +154,8 @@ void test_cro_channelcurrentrange::setupServers()
 
 void test_cro_channelcurrentrange::setupClient()
 {
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(netInfo, m_tcpFactory);
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-    m_pcbInterface->setClientSmart(m_pcbClient);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
+    m_pcbInterface->setClientSuperSmart(netInfo, m_tcpFactory);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
     TimeMachineObject::feedEventLoop();
 }

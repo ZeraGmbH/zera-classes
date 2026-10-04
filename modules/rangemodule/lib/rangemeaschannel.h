@@ -120,8 +120,6 @@ private:
     qint32 m_RangeQueryIt;
     cRangeInfoWithConstantValues m_CurrRangeInfo;
 
-    Zera::ProxyClientPtr m_pcbClient;
-
     void setRangeListAlias();
     QString findOptimalRange(double actualValue, const QString &actRngAlias, qint32 actRngType, double extraRejectionFactor);
 

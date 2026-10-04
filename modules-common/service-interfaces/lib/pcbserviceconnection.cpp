@@ -4,10 +4,9 @@
 
 PcbServiceConnection::PcbServiceConnection(const NetworkConnectionInfo &networkInfo,
                                            const VeinTcp::AbstractTcpNetworkFactoryPtr &networkFactory) :
-    m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
-    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(networkInfo, networkFactory))
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    m_pcbInterface->setClientSmart(m_pcbClient);
+    m_pcbInterface->setClientSuperSmart(networkInfo, networkFactory);
 }
 
 PcbServiceConnection::PcbServiceConnection(const ModuleNetworkParamsPtr &networkParams) :
@@ -18,7 +17,7 @@ PcbServiceConnection::PcbServiceConnection(const ModuleNetworkParamsPtr &network
 
 TaskTemplatePtr PcbServiceConnection::createConnectionTask() const
 {
-    return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
+    return TaskServerConnectionStart::create(m_pcbInterface->getClientSmart(), CONNECTION_TIMEOUT);
 }
 
 Zera::PcbInterfacePtr PcbServiceConnection::getInterface() const

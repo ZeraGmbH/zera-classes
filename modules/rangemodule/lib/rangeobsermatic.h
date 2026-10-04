@@ -58,7 +58,6 @@ private:
     QList<QStringList> m_GroupList;
     cObsermaticConfPar& m_ConfPar;
     Zera::DspInterfacePtr m_dspInterface;
-    Zera::ProxyClientPtr m_dspClient;
     QList<cRangeMeasChannel*> m_RangeMeasChannelList;
     QHash<QString,cStringValidator*> m_ChannelRangeValidatorHash;
     QList<bool> m_softOvlList; // here we enter software detected overloads

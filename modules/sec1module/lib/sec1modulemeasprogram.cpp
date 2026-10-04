@@ -5,7 +5,6 @@
 #include "unithelper.h"
 #include "errormessages.h"
 #include <proxy.h>
-#include <proxyclient.h>
 #include <scpi.h>
 #include <regexvalidator.h>
 #include <intvalidator.h>
@@ -999,15 +998,12 @@ QString cSec1ModuleMeasProgram::getRefInputDisplayString(const QString &inputNam
 
 void cSec1ModuleMeasProgram::resourceManagerConnect()
 {
-    // first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
-                                                                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    // and then we set connection resource manager interface's connection
-    m_rmInterface.setClientSmart(m_rmClient);
-    resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
+    m_rmInterface.setClientSuperSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
+                                      m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    resourceManagerConnectState.addTransition(m_rmInterface.getClientSmart().get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_rmInterface.getClientSmart());
 }
 
 void cSec1ModuleMeasProgram::sendRMIdent()
@@ -1066,13 +1062,11 @@ void cSec1ModuleMeasProgram::testSecInputs()
 
 void cSec1ModuleMeasProgram::ecalcServerConnect()
 {
-    Zera::ProxyClientPtr secClient = Zera::Proxy::getInstance()->getConnectionSmart(
-        m_pModule->getNetworkConfig()->m_secServiceConnectionInfo,
-        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_secInterface->setClientSmart(secClient);
-    m_ecalcServerConnectState.addTransition(secClient.get(), &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
+    m_secInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_secServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_ecalcServerConnectState.addTransition(m_secInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
     connect(m_secInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(secClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_secInterface->getClientSmart());
 }
 
 void cSec1ModuleMeasProgram::fetchECalcUnits()
@@ -1082,13 +1076,11 @@ void cSec1ModuleMeasProgram::fetchECalcUnits()
 
 void cSec1ModuleMeasProgram::pcbServerConnect()
 {
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(
-        m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pcbInterface->setClientSmart(m_pcbClient); //
-    m_pcbServerConnectState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readREFInputsState);
+    m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readREFInputsState);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
 }
 
 void cSec1ModuleMeasProgram::readREFInputs()
@@ -1103,7 +1095,6 @@ void cSec1ModuleMeasProgram::readREFInputAlias()
     m_sIt = m_sItList.takeFirst();
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
     m_MsgNrCmdList[m_pcbInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
-
 }
 
 

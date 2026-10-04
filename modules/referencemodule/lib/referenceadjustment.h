@@ -37,9 +37,7 @@ signals:
 private:
     cReferenceModule* m_pModule = nullptr;
     Zera::DspInterfacePtr m_dspInterface;
-    Zera::ProxyClientPtr m_dspClient;
     Zera::PcbInterfacePtr m_pPCBInterface;
-    Zera::ProxyClientPtr m_pPCBClient;
     QList<cReferenceMeasChannel*> m_ChannelList;
     QVector<float> m_ActualValues;
     quint32 m_nIgnoreCount = 0;

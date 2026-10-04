@@ -1,7 +1,6 @@
 #include "modemodule.h"
 #include "modemoduleinit.h"
 #include <proxy.h>
-#include <proxyclient.h>
 #include <reply.h>
 #include <errormessages.h>
 #include <pcbinterface.h>
@@ -135,14 +134,12 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
 
 void cModeModuleInit::pcbserverConnect()
 {
-    m_pPCBClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_sIP,
-                                                                  m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo.m_nPort,
-                                                                  m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pcbserverConnectionState.addTransition(m_pPCBClient.get(), &Zera::ProxyClient::connected, &m_setModeState);
+    m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_pcbserverConnectionState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_setModeState);
 
-    m_pcbInterface->setClientSmart(m_pPCBClient);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pPCBClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
 }
 
 
@@ -154,12 +151,11 @@ void cModeModuleInit::setMode()
 
 void cModeModuleInit::dspserverConnect()
 {
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_dspInterface->setClientSmart(m_dspClient);
-    m_dspserverConnectionState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_writeGainCorrState);
+    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_dspserverConnectionState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_writeGainCorrState);
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 
 void cModeModuleInit::writeGainCorr()

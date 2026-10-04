@@ -30,7 +30,6 @@ void test_cro_range::init()
 void test_cro_range::cleanup()
 {
     m_pcbInterface = nullptr;
-    m_pcbClient = nullptr;
     TimeMachineObject::feedEventLoop();
     m_testServer = nullptr;
     m_resmanServer = nullptr;

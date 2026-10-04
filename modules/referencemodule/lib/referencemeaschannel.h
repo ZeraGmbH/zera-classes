@@ -77,8 +77,6 @@ private:
     qint32 m_RangeQueryIt;
     cRangeInfoBase m_rangeInfo;
 
-    Zera::ProxyClientPtr m_pcbClient;
-
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void pcbConnection();

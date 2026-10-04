@@ -553,12 +553,11 @@ double cRangeObsermatic::getPreScale(int channelIdx)
 
 void cRangeObsermatic::dspserverConnect()
 {
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_dspInterface->setClientSmart(m_dspClient);
-    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
+    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 
 
@@ -640,7 +639,7 @@ void cRangeObsermatic::readGainScaleDone()
 void cRangeObsermatic::deactivationInit()
 {
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspInterface->getClientSmart());
     disconnect(m_dspInterface.get(), 0, this, 0); // we disconnect from our dsp interface
     emit deactivationContinue();
 }

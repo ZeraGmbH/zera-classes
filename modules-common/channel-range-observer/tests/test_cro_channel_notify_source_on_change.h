@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <pcbinterface.h>
-#include <proxyclient.h>
 
 class test_cro_channel_notify_source_on_change : public QObject
 {
@@ -18,7 +17,6 @@ private slots:
 
 private:
     void createClient();
-    Zera::ProxyClientPtr m_proxyClient;
     Zera::PcbInterfacePtr m_pcbIFace;
 };
 

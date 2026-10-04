@@ -2,7 +2,6 @@
 #define TEST_CRO_RANGE_H
 
 #include <pcbinterface.h>
-#include <proxyclient.h>
 #include <resmanrunfacade.h>
 #include <testserverforsenseinterfacemt310s2.h>
 #include <abstracttcpnetworkfactory.h>
@@ -36,7 +35,6 @@ private:
     std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testServer;
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
 
-    Zera::ProxyClientPtr m_pcbClient;
     Zera::PcbInterfacePtr m_pcbInterface;
 };
 

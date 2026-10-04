@@ -69,7 +69,6 @@ private:
 
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
-    const Zera::ProxyClientPtr m_pcbClient;
     Zera::PcbInterfacePtr m_pcbInterface;
 
     TaskContainerInterfacePtr m_currentTasks;

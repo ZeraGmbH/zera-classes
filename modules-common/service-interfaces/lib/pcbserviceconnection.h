@@ -14,7 +14,6 @@ public:
     Zera::PcbInterfacePtr getInterface() const;
 private:
     Zera::PcbInterfacePtr m_pcbInterface;
-    Zera::ProxyClientPtr m_pcbClient;
 };
 
 #endif // PCBSERVICECONNECTION_H

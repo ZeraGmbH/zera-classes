@@ -651,15 +651,11 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
 
     m_NotifierInfoHash.clear();
 
-    // we have to instantiate a working resource manager interface
-    // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
-                                                                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    // and then we set resource manager interface's connection
-    m_rmInterface.setClientSmart(m_rmClient);
-    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
+    m_rmInterface.setClientSuperSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
+                                      m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_resourceManagerConnectState.addTransition(m_rmInterface.getClientSmart().get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_rmInterface.getClientSmart());
 }
 
 void cPower1ModuleMeasProgram::sendRMIdent()
@@ -699,16 +695,14 @@ void cPower1ModuleMeasProgram::pcbserverConnect4measChannels()
     for (int i = 0; i < infoReadList.count(); i++) {
         QString key = infoReadList.at(i);
         cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
-        Zera::ProxyClientPtr pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(
-            m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-            m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
         Zera::PcbInterfacePtr pcbInterface = std::make_shared<Zera::cPCBInterface>();
-        pcbInterface->setClientSmart(pcbClient);
+        pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                          m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
         mi.pcbIFace = pcbInterface;
         m_measChannelInfoHash[key] = mi;
-        connect(pcbClient.get(), &Zera::ProxyClient::connected, this, &cPower1ModuleMeasProgram::monitorConnection); // here we wait until all connections are established
+        connect(pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, this, &cPower1ModuleMeasProgram::monitorConnection); // here we wait until all connections are established
         connect(pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
-        Zera::Proxy::getInstance()->startConnectionSmart(pcbClient);
+        Zera::Proxy::getInstance()->startConnectionSmart(pcbInterface->getClientSmart());
     }
 }
 
@@ -720,17 +714,15 @@ void cPower1ModuleMeasProgram::pcbserverConnect4freqChannels()
         for (int i = 0; i < infoReadList.count(); i++) {
             QString key = infoReadList.at(i);
             cFoutInfo fi = m_FoutInfoMap.take(key);
-            Zera::ProxyClientPtr pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(
-                m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
             Zera::PcbInterfacePtr pcbInterface = std::make_shared<Zera::cPCBInterface>();
-            pcbInterface->setClientSmart(pcbClient);
+            pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                              m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
             fi.pcbIFace = pcbInterface;
             fi.name = key;
             m_FoutInfoMap[key] = fi;
-            connect(pcbClient.get(), &Zera::ProxyClient::connected, this, &cPower1ModuleMeasProgram::monitorConnection); // here we wait until all connections are established
+            connect(pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, this, &cPower1ModuleMeasProgram::monitorConnection); // here we wait until all connections are established
             connect(pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
-            Zera::Proxy::getInstance()->startConnectionSmart(pcbClient);
+            Zera::Proxy::getInstance()->startConnectionSmart(pcbInterface->getClientSmart());
         }
     }
     else
@@ -797,12 +789,11 @@ void cPower1ModuleMeasProgram::setSenseChannelRangeNotifierDone()
 
 void cPower1ModuleMeasProgram::dspserverConnect()
 {
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_dspInterface->setClientSmart(m_dspClient);
-    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_var2DSPState);
+    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_var2DSPState);
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 
 void cPower1ModuleMeasProgram::varList2DSP()
@@ -874,7 +865,7 @@ void cPower1ModuleMeasProgram::freeFreqOutputs()
 {
     m_dataAcquisitionMachine.stop();
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspInterface->getClientSmart());
     if (m_pModule->getConfigData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
     {
         infoReadList = m_FoutInfoMap.keys(); // we have to read information for all channels in this list

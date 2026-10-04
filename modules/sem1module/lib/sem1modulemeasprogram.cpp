@@ -719,15 +719,12 @@ void cSem1ModuleMeasProgram::calculateMeasTime()
 
 void cSem1ModuleMeasProgram::resourceManagerConnect()
 {
-    // first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
-                                                                m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    // and then we set connection resource manager interface's connection
-    m_rmInterface.setClientSmart(m_rmClient); //
-    resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
+    m_rmInterface.setClientSuperSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
+                                      m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    resourceManagerConnectState.addTransition(m_rmInterface.getClientSmart().get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_rmInterface.getClientSmart());
 }
 
 void cSem1ModuleMeasProgram::sendRMIdent()
@@ -771,15 +768,12 @@ void cSem1ModuleMeasProgram::testSemInputs()
 
 void cSem1ModuleMeasProgram::ecalcServerConnect()
 {
-    Zera::ProxyClientPtr secClient = Zera::Proxy::getInstance()->getConnectionSmart(
-        m_pModule->getNetworkConfig()->m_secServiceConnectionInfo,
-        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    // and then we set ecalcalculator interface's connection
-    m_secInterface->setClientSmart(secClient);
-    m_ecalcServerConnectState.addTransition(secClient.get(), &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
+    m_secInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_secServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_ecalcServerConnectState.addTransition(m_secInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
     connect(m_secInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::getInstance()->startConnectionSmart(secClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_secInterface->getClientSmart());
 }
 
 void cSem1ModuleMeasProgram::fetchECalcUnits()
@@ -789,13 +783,11 @@ void cSem1ModuleMeasProgram::fetchECalcUnits()
 
 void cSem1ModuleMeasProgram::pcbServerConnect()
 {
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(
-        m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pcbInterface->setClientSmart(m_pcbClient);
-    m_pcbServerConnectState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readREFInputsState);
+    m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readREFInputsState);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
 }
 
 void cSem1ModuleMeasProgram::readREFInputs()

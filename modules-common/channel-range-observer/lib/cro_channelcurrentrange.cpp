@@ -12,8 +12,7 @@ ChannelCurrentRange::ChannelCurrentRange(const QString &channelMName,
                                          const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpFactory) :
     m_channelMName(channelMName),
     m_netInfo(netInfo),
-    m_tcpFactory(tcpFactory),
-    m_pcbClient(Zera::Proxy::getInstance()->getConnectionSmart(netInfo, tcpFactory))
+    m_tcpFactory(tcpFactory)
 {
 }
 
@@ -31,7 +30,7 @@ void ChannelCurrentRange::startObserve()
 void ChannelRangeObserver::ChannelCurrentRange::preparePcbInterface()
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
-    m_pcbInterface->setClientSmart(m_pcbClient);
+    m_pcbInterface->setClientSuperSmart(m_netInfo, m_tcpFactory);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
             this, &ChannelCurrentRange::onInterfaceAnswer);
 }
@@ -72,7 +71,7 @@ void ChannelCurrentRange::onInterfaceAnswer(quint32 msgnr, quint8 reply, const Q
 
 TaskTemplatePtr ChannelCurrentRange::getPcbConnectionTask()
 {
-    return TaskServerConnectionStart::create(m_pcbClient, CONNECTION_TIMEOUT);
+    return TaskServerConnectionStart::create(m_pcbInterface->getClientSmart(), CONNECTION_TIMEOUT);
 }
 
 void ChannelCurrentRange::notifyError(const QString &errMsg)

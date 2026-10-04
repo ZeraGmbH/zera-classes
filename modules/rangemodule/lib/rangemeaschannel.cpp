@@ -592,14 +592,12 @@ void cRangeMeasChannel::setRangeListAlias()
 
 void cRangeMeasChannel::pcbConnection()
 {
-    m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pcbNetworkInfo.m_sIP,
-                                                                 m_pcbNetworkInfo.m_nPort,
-                                                                 m_tcpNetworkFactory);
-    m_pcbConnectionState.addTransition(m_pcbClient.get(), &Zera::ProxyClient::connected, &m_readRangeAndProperties);
+    m_pcbInterface->setClientSuperSmart(NetworkConnectionInfo(m_pcbNetworkInfo.m_sIP, m_pcbNetworkInfo.m_nPort),
+                                                              m_tcpNetworkFactory);
+    m_pcbConnectionState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readRangeAndProperties);
 
-    m_pcbInterface->setClientSmart(m_pcbClient);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
 }
 
 
@@ -637,7 +635,7 @@ void cRangeMeasChannel::deactivationResetNotifiers()
 
 void cRangeMeasChannel::deactivationDone()
 {
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_pcbClient);
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_pcbInterface->getClientSmart());
     // and disconnect for our servers afterwards
     disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();

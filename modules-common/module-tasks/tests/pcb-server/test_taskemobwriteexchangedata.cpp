@@ -14,7 +14,6 @@ QTEST_MAIN(test_taskemobwriteexchangedata)
 void test_taskemobwriteexchangedata::cleanup()
 {
     m_pcbIFace = nullptr;
-    m_proxyClient = nullptr;
     m_mt310s2d = nullptr;
     TimeMachineObject::feedEventLoop();
     m_resman = nullptr;
@@ -133,10 +132,9 @@ void test_taskemobwriteexchangedata::setupServers()
     m_mt310s2d = std::make_unique<MockMt310s2d>(std::make_shared<TestFactoryI2cCtrl>(true), tcpNetworkFactory, "mt310s2d");
     TimeMachineObject::feedEventLoop();
 
-    m_proxyClient = Zera::Proxy::getInstance()->getConnectionSmart("127.0.0.1", 6307, tcpNetworkFactory);
     m_pcbIFace = std::make_shared<Zera::cPCBInterface>();
-    m_pcbIFace->setClientSmart(m_proxyClient);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_proxyClient);
+    m_pcbIFace->setClientSuperSmart(NetworkConnectionInfo("127.0.0.1", 6307), tcpNetworkFactory);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbIFace->getClientSmart());
     TimeMachineObject::feedEventLoop();
 }
 

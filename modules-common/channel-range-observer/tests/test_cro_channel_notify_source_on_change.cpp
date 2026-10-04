@@ -20,7 +20,6 @@ void test_cro_channel_notify_source_on_change::cleanup()
 {
     TimeMachineObject::feedEventLoop();
     m_pcbIFace = nullptr;
-    m_proxyClient = nullptr;
     TimeMachineObject::feedEventLoop();
     ControllerPersitentData::cleanupPersitentData();
 }
@@ -122,9 +121,8 @@ void test_cro_channel_notify_source_on_change::com5003Startup()
 
 void test_cro_channel_notify_source_on_change::createClient()
 {
-    m_proxyClient = Zera::Proxy::getInstance()->getConnectionSmart("127.0.0.1", 6307, VeinTcp::MockTcpNetworkFactory::create());
     m_pcbIFace = std::make_unique<Zera::cPCBInterface>();
-    m_pcbIFace->setClientSmart(m_proxyClient);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_proxyClient);
+    m_pcbIFace->setClientSuperSmart(NetworkConnectionInfo("127.0.0.1", 6307), VeinTcp::MockTcpNetworkFactory::create());
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbIFace->getClientSmart());
     TimeMachineObject::feedEventLoop();
 }

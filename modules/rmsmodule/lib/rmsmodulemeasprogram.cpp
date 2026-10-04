@@ -306,12 +306,11 @@ void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
 
 void cRmsModuleMeasProgram::dspserverConnect()
 {
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_dspInterface->setClientSmart(m_dspClient);
-    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_var2DSPState);
+    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_var2DSPState);
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRmsModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 
 void cRmsModuleMeasProgram::varList2DSP()
@@ -345,7 +344,7 @@ void cRmsModuleMeasProgram::activateDSPdone()
 void cRmsModuleMeasProgram::deactivateDSPStart()
 {
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspInterface->getClientSmart());
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivationContinue();
 }

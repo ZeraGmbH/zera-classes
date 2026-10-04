@@ -3,7 +3,6 @@
 #include "referencemeaschannel.h"
 #include <errormessages.h>
 #include <proxy.h>
-#include <proxyclient.h>
 #include <reply.h>
 #include <timerfactoryqt.h>
 
@@ -166,12 +165,11 @@ void cReferenceModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 rep
 
 void cReferenceModuleMeasProgram::dspserverConnect()
 {
-    m_dspClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
-                                                                 m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_dspInterface->setClientSmart(m_dspClient);
-    m_dspserverConnectState.addTransition(m_dspClient.get(), &Zera::ProxyClient::connected, &m_var2DSPState);
+    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_var2DSPState);
     connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cReferenceModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 
 void cReferenceModuleMeasProgram::varList2DSP()
@@ -201,7 +199,7 @@ void cReferenceModuleMeasProgram::deactivateDSPStart()
 {
     m_dataAcquisitionMachine.stop();
     m_bActive = false;
-    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspClient);
+    Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspInterface->getClientSmart());
     disconnect(m_dspInterface.get(), 0, this, 0);
     emit deactivationContinue();
 }

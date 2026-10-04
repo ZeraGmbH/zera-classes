@@ -50,7 +50,6 @@ private:
     QStringList m_subdcChannelNameList; // the list of channels we have to subtract dc
     adjustConfPar *m_adjustmentConfig = nullptr;
     Zera::DspInterfacePtr m_dspInterface;
-    Zera::ProxyClientPtr m_dspClient;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
     QList<cRangeMeasChannel*> m_subDCChannelList;
     // Those are the actual values without preSacling

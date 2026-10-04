@@ -3,7 +3,6 @@
 
 #include "cro_channel.h"
 #include <pcbinterface.h>
-#include <proxyclient.h>
 #include <taskcontainerinterface.h>
 #include <QMap>
 #include <QJsonObject>
@@ -40,7 +39,6 @@ private:
 
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
-    const Zera::ProxyClientPtr m_pcbClient;
     Zera::PcbInterfacePtr m_pcbInterface;
 
     std::shared_ptr<int> m_samplesPerPeriod = std::make_shared<int>(0);

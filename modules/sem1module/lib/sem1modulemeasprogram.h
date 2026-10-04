@@ -147,10 +147,8 @@ private:
 
     cSem1Module* m_pModule = nullptr; // the module we live in
     Zera::cRMInterface m_rmInterface;
-    Zera::ProxyClientPtr m_rmClient;
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;
-    Zera::ProxyClientPtr m_pcbClient;
 
     // statemachine for activating gets the following states
     QState resourceManagerConnectState; // connect to resource manager

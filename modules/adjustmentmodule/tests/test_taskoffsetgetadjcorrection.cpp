@@ -93,9 +93,8 @@ void test_taskoffsetgetadjcorrection::setupServers()
         tcpNetworkFactory);
     TimeMachineObject::feedEventLoop();
 
-    m_proxyClient = Zera::Proxy::getInstance()->getConnectionSmart("127.0.0.1", 6307, tcpNetworkFactory);
     m_pcbIFace = std::make_shared<Zera::cPCBInterface>();
-    m_pcbIFace->setClientSmart(m_proxyClient);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_proxyClient);
+    m_pcbIFace->setClientSuperSmart(NetworkConnectionInfo("127.0.0.1", 6307), tcpNetworkFactory);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbIFace->getClientSmart());
     TimeMachineObject::feedEventLoop();
 }
