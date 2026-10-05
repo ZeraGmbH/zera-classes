@@ -8,8 +8,8 @@ void SecMeasInputDictionary::addReferenceInput(const QString &inputFName, const 
 
 void SecMeasInputDictionary::setAlias(const QString &inputFName, const QString &alias)
 {
-    Q_ASSERT(!m_aliasHash.contains(inputFName));
-    m_aliasHash[inputFName] = alias;
+    Q_ASSERT(!m_aliasMap.contains(inputFName));
+    m_aliasMap[inputFName] = alias;
     Q_ASSERT(!m_reverseAliasHash.contains(alias));
     m_reverseAliasHash[alias] = inputFName;
 }
@@ -22,22 +22,22 @@ QString SecMeasInputDictionary::getResource(const QString &inputFName) const
 
 QString SecMeasInputDictionary::getAlias(const QString &inputFName) const
 {
-    if(m_aliasHash.contains(inputFName))
-        return m_aliasHash[inputFName];
+    if(m_aliasMap.contains(inputFName))
+        return m_aliasMap[inputFName];
     qWarning("Alias for input name %s not found", qPrintable(inputFName));
     return QString("P");
 }
 
 void SecMeasInputDictionary::setNotificationId(const QString &inputFName, int notificationId)
 {
-    Q_ASSERT(!m_notificationIdHash.contains(notificationId));
-    m_notificationIdHash[notificationId] = inputFName;
+    Q_ASSERT(!m_notificationIdMap.contains(notificationId));
+    m_notificationIdMap[notificationId] = inputFName;
 }
 
-QString SecMeasInputDictionary::getInputNameFromNotificationId(int notificationId)
+QString SecMeasInputDictionary::getInputNameFromNotificationId(int notificationId) const
 {
-    Q_ASSERT(m_notificationIdHash.contains(notificationId));
-    return m_notificationIdHash[notificationId];
+    Q_ASSERT(m_notificationIdMap.contains(notificationId));
+    return m_notificationIdMap[notificationId];
 }
 
 QString SecMeasInputDictionary::getInputFNameFromAlias(const QString &alias) const
@@ -46,12 +46,12 @@ QString SecMeasInputDictionary::getInputFNameFromAlias(const QString &alias) con
     return m_reverseAliasHash[alias];
 }
 
-QStringList SecMeasInputDictionary::getInputNameList()
+QStringList SecMeasInputDictionary::getInputNameList() const
 {
     return m_resourceHash.keys();
 }
 
-QStringList SecMeasInputDictionary::getInputAliasList()
+QStringList SecMeasInputDictionary::getInputAliasList() const
 {
-    return m_aliasHash.values();
+    return m_aliasMap.values();
 }
