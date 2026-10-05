@@ -1103,6 +1103,9 @@
         "ACT_PQS4": 0,
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module1",
+        "INF_FreqOuts": [
+            "fo0"
+        ],
         "INF_ModeTypes": [
             "P"
         ],
@@ -1138,6 +1141,9 @@
                     "Description": "<skipped>"
                 },
                 "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_FreqOuts": {
                     "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {

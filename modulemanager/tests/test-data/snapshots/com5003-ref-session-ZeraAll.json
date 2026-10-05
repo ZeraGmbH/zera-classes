@@ -101,6 +101,7 @@
         "ACT_PQS3": 0,
         "ACT_PQS4": 0,
         "ACT_PowerDisplayName": "P",
+        "INF_FreqOuts": "fo0",
         "INF_ModeTypes": "P",
         "PAR_FOUT0": "fOUT1",
         "PAR_FOUTConstant0": 12000000000,

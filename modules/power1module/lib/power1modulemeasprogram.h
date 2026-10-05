@@ -118,6 +118,7 @@ private:
     VfModuleComponent *m_MModeMaxMeasSysCount = nullptr;
     VfModuleParameter* m_pConstantParameter = nullptr;
     VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleComponent* m_freqOuts = nullptr;
     VfModuleComponent *m_MModesTypes = nullptr;
 
     QList<QPair<VeinStorage::AbstractComponentPtr, VeinStorage::AbstractComponentPtr>> m_scalingInputs;

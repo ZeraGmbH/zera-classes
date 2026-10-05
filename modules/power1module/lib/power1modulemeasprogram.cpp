@@ -203,7 +203,11 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
     VfModuleParameter* pFoutParameter;
     bool foutDisplayNameFound = false;
+    QStringList frequencyOutNames;
     for (int i = 0; i < configData->m_nFreqOutputCount; i++) {
+        const freqoutconfiguration &freqOutConfig = configData->m_FreqOutputConfList.at(i);
+        frequencyOutNames.append(freqOutConfig.m_sName);
+
         // Note: Although components are 'PAR_' they are not changable currently
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                           key = QString("PAR_FOUTConstant%1").arg(i),
@@ -215,7 +219,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         m_FoutConstParameterList.append(pFoutParameter);
         m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
 
-        QString foutName = configData->m_FreqOutputConfList.at(i).m_sFreqOutNameDisplayed;
+        QString foutName = freqOutConfig.m_sFreqOutNameDisplayed;
         if (!foutName.isEmpty())
             foutDisplayNameFound = true;
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -232,13 +236,13 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
         VeinStorage::AbstractComponentPtr scaleInputU;
         VeinStorage::AbstractComponentPtr scaleInputI;
         if(configData->m_FreqOutputConfList.length() > i) {
-            int entityIdScaleU = configData->m_FreqOutputConfList.at(i).m_uscale.m_entityId;
+            int entityIdScaleU = freqOutConfig.m_uscale.m_entityId;
             const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
-            QString componentNameScaleU = configData->m_FreqOutputConfList.at(i).m_uscale.m_componentName;
+            QString componentNameScaleU = freqOutConfig.m_uscale.m_componentName;
             scaleInputU = storageDb->findComponent(entityIdScaleU, componentNameScaleU);
 
-            int entityIdScaleI = configData->m_FreqOutputConfList.at(i).m_iscale.m_entityId;
-            QString componentNameScaleI = configData->m_FreqOutputConfList.at(i).m_iscale.m_componentName;
+            int entityIdScaleI = freqOutConfig.m_iscale.m_entityId;
+            QString componentNameScaleI = freqOutConfig.m_iscale.m_componentName;
             scaleInputI = storageDb->findComponent(entityIdScaleI, componentNameScaleI);
         }
         QPair<VeinStorage::AbstractComponentPtr, VeinStorage::AbstractComponentPtr> tmpScalePair(scaleInputU, scaleInputI);
@@ -303,6 +307,12 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                                      QString("Number of max measurement systems for current measurement mode"),
                                                      QVariant(3) );
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_MModeMaxMeasSysCount); // and for the modules interface
+
+    m_freqOuts = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                          QString("INF_FreqOuts"),
+                                          QString("Display names of frequency outputs configured"),
+                                          frequencyOutNames);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_freqOuts);
 
     m_MModesTypes = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                           QString("INF_ModeTypes"),

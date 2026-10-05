@@ -8,6 +8,9 @@
         "ACT_PQS4": 3,
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module1",
+        "INF_FreqOuts": [
+            "fo1"
+        ],
         "INF_ModeTypes": [
             "P"
         ],
@@ -44,6 +47,9 @@
                 },
                 "EntityName": {
                     "Description": "Module's name"
+                },
+                "INF_FreqOuts": {
+                    "Description": "Display names of frequency outputs configured"
                 },
                 "INF_ModeTypes": {
                     "Description": "Display names (P/Q/S) of available modes"

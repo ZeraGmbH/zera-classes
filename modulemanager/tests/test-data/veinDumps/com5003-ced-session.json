@@ -2233,6 +2233,8 @@
         "ACT_PQS4": 6900,
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module1",
+        "INF_FreqOuts": [
+        ],
         "INF_ModeTypes": [
             "P"
         ],
@@ -2268,6 +2270,9 @@
                     "Description": "<skipped>"
                 },
                 "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_FreqOuts": {
                     "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
@@ -2402,6 +2407,8 @@
         "ACT_PQS4": 6900,
         "ACT_PowerDisplayName": "Q",
         "EntityName": "POWER1Module2",
+        "INF_FreqOuts": [
+        ],
         "INF_ModeTypes": [
             "Q"
         ],
@@ -2437,6 +2444,9 @@
                     "Description": "<skipped>"
                 },
                 "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_FreqOuts": {
                     "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
@@ -2572,6 +2582,8 @@
         "ACT_PQS4": 6900,
         "ACT_PowerDisplayName": "S",
         "EntityName": "POWER1Module3",
+        "INF_FreqOuts": [
+        ],
         "INF_ModeTypes": [
             "S"
         ],
@@ -2607,6 +2619,9 @@
                     "Description": "<skipped>"
                 },
                 "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_FreqOuts": {
                     "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
@@ -2742,6 +2757,8 @@
         "ACT_PQS4": 6900,
         "ACT_PowerDisplayName": "Q",
         "EntityName": "POWER1Module98",
+        "INF_FreqOuts": [
+        ],
         "INF_ModeTypes": [
             "Q"
         ],
@@ -2777,6 +2794,9 @@
                     "Description": "<skipped>"
                 },
                 "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_FreqOuts": {
                     "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
@@ -2846,6 +2866,8 @@
         "ACT_PQS4": 6900,
         "ACT_PowerDisplayName": "S",
         "EntityName": "POWER1Module99",
+        "INF_FreqOuts": [
+        ],
         "INF_ModeTypes": [
             "S"
         ],
@@ -2881,6 +2903,9 @@
                     "Description": "<skipped>"
                 },
                 "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_FreqOuts": {
                     "Description": "<skipped>"
                 },
                 "INF_ModeTypes": {
