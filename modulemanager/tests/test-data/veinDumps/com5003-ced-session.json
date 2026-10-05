@@ -2981,6 +2981,11 @@
         "ACT_PP4": null,
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER2Module1",
+        "INF_FreqOuts": [
+            "fo0",
+            "fo1",
+            "fo2"
+        ],
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_P1": {
@@ -3047,6 +3052,9 @@
                     "Description": "<skipped>"
                 },
                 "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_FreqOuts": {
                     "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {

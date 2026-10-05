@@ -211,12 +211,18 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
 
     }
+    const cPower2ModuleConfigData *configData = m_pModule->getConfigData();
+    QStringList frequencyOutNames;
+    for (int i = 0; i < configData->m_nFreqOutputCount; i++) {
+        const freqoutconfiguration &freqOutConfig = configData->m_FreqOutputConfList.at(i);
+        frequencyOutNames.append(freqOutConfig.m_sName);
+    }
 
     m_pPQSCountInfo = new VfModuleMetaData(QString("PQSCount"), QVariant(3*(MeasPhaseCount+SumValueCount)));
     m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
-    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(m_pModule->getConfigData()->m_nNominalFrequency));
+    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(configData->m_nNominalFrequency));
     m_pModule->veinModuleMetaDataList.append(m_pNomFrequencyInfo);
-    m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(m_pModule->getConfigData()->m_nFreqOutputCount));
+    m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(configData->m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
 
     QString key;
@@ -224,10 +230,10 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
     m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_MeasuringMode"),
                                                          QString("Measuring mode"),
-                                                         QVariant(m_pModule->getConfigData()->m_sMeasuringMode.m_sValue));
+                                                         QVariant(configData->m_sMeasuringMode.m_sValue));
 
     m_pMeasuringmodeParameter->setScpiInfo("CONFIGURATION","MMODE", SCPI::isQuery|SCPI::isCmdwP);
-    cStringValidator *sValidator = new cStringValidator(m_pModule->getConfigData()->m_sMeasmodeList);
+    cStringValidator *sValidator = new cStringValidator(configData->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasuringmodeParameter; // for modules use
 
@@ -235,19 +241,24 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
                                                     QString("ACT_PowerDisplayName"), // a better name would be ACT_PowerTypePQS - but the cat is more or less out (reports...)
                                                     QString("Power display name (P/Q/S)"),
                                                     QVariant("P") ); // ced supports 4WA only -> fixed
-    m_veinActValueList.append(m_MModePowerDisplayName);
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_MModePowerDisplayName);
+
+    m_freqOuts = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                       QString("INF_FreqOuts"),
+                                       QString("Display names of frequency outputs configured"),
+                                       frequencyOutNames);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_freqOuts);
 
     QVariant val;
     QString s, unit;
-    bool btime = (m_pModule->getConfigData()->m_sIntegrationMode == "time");
+    bool btime = (configData->m_sIntegrationMode == "time");
     if (btime) {
-        val = QVariant(m_pModule->getConfigData()->m_fMeasIntervalTime.m_fValue);
+        val = QVariant(configData->m_fMeasIntervalTime.m_fValue);
         s = QString("Integration time");
         unit = QString("s");
     }
     else {
-        val = QVariant(m_pModule->getConfigData()->m_nMeasIntervalPeriod.m_nValue);
+        val = QVariant(configData->m_nMeasIntervalPeriod.m_nValue);
         s = QString("Integration period");
         unit = QString("period");
     }
