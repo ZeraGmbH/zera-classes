@@ -168,6 +168,7 @@
         "ACT_PP2": "",
         "ACT_PP3": "",
         "ACT_PP4": "",
+        "ACT_PowerDisplayName": "P",
         "PAR_Interval": 200,
         "PAR_MeasuringMode": "4LW",
         "SIG_Measuring": 1

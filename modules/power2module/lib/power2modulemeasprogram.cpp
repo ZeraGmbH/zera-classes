@@ -231,6 +231,13 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
     m_pMeasuringmodeParameter->setValidator(sValidator);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasuringmodeParameter; // for modules use
 
+    m_MModePowerDisplayName = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                    QString("ACT_PowerDisplayName"), // a better name would be ACT_PowerTypePQS - but the cat is more or less out (reports...)
+                                                    QString("Power display name (P/Q/S)"),
+                                                    QVariant("P") ); // ced supports 4WA only -> fixed
+    m_veinActValueList.append(m_MModePowerDisplayName);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_MModePowerDisplayName);
+
     QVariant val;
     QString s, unit;
     bool btime = (m_pModule->getConfigData()->m_sIntegrationMode == "time");

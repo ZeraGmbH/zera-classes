@@ -294,7 +294,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_MModeCanChangePhaseMask); // and for the modules interface
 
     m_MModePowerDisplayName = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                   QString("ACT_PowerDisplayName"),
+                                                   QString("ACT_PowerDisplayName"), // a better name would be ACT_PowerTypePQS - but the cat is more or less out (reports...)
                                                    QString("Power display name (P/Q/S)"),
                                                    QVariant("") );
     m_veinActValueList.append(m_MModePowerDisplayName);

@@ -2954,6 +2954,7 @@
         "ACT_PP2": null,
         "ACT_PP3": null,
         "ACT_PP4": null,
+        "ACT_PowerDisplayName": "P",
         "EntityName": "POWER2Module1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -3016,6 +3017,9 @@
                     "ChannelName": "+PS",
                     "Description": "<skipped>",
                     "Unit": "W"
+                },
+                "ACT_PowerDisplayName": {
+                    "Description": "<skipped>"
                 },
                 "EntityName": {
                     "Description": "<skipped>"

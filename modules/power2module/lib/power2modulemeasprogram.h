@@ -87,6 +87,7 @@ private:
     VfModuleMetaData* m_pNomFrequencyInfo = nullptr; // the modules nominal frequency
     VfModuleParameter* m_pIntegrationParameter = nullptr;
     VfModuleParameter* m_pMeasuringmodeParameter = nullptr;
+    VfModuleComponent *m_MModePowerDisplayName = nullptr;
     VfModuleComponent* m_pMeasureSignal = nullptr;
 
     QList<QString> infoReadList; // a list of all channel info we have to read
