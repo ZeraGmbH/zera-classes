@@ -647,7 +647,7 @@ QString cSem1ModuleMeasProgram::getEnergyUnit()
 QStringList cSem1ModuleMeasProgram::getPowerUnitValidator()
 {
     QStringList sl;
-    const cSem1ModuleConfigData *configData = m_pModule->getConfigData();
+    const cSem1ModuleConfigData *configData = m_pModule->getConfigData(); // This won't work for PQS
     QString powType = m_refInputDictionary.getAlias(configData->m_sRefInput.m_sValue);
     if (powType.contains('P'))
         sl = configData->m_ActiveUnitList;

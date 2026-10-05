@@ -865,7 +865,7 @@ void cSec1ModuleMeasProgram::setValidators()
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 {
     QStringList sl;
-    QString powType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_sRefInput.m_sValue);
+    QString powType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_sRefInput.m_sValue); // This won't work for PQS
     if (powType.contains('P'))
         sl << QString("I/kWh") << QString("Wh/I");
     if (powType.contains('Q'))

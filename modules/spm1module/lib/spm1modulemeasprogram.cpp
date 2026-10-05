@@ -666,7 +666,7 @@ QString cSpm1ModuleMeasProgram::getEnergyUnit()
     return s;
 }
 
-QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator()
+QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator() // This won't work for PQS
 {
     QStringList sl;
     const cSpm1ModuleConfigData *configData = m_pModule->getConfigData();
