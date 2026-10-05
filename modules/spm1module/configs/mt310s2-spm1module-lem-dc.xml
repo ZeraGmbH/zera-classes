@@ -4,17 +4,11 @@
         <measure>
             <refinput>
                 <n>4</n>
-                <inp1>fo0</inp1>
-                <inp2>fo1</inp2>
-                <inp3>fo2</inp3>
-                <inp4>fo3</inp4>
+                <inp1>fo0,P 1</inp1>
+                <inp2>fo1,P 2</inp2>
+                <inp3>fo2,P 3</inp3>
+                <inp4>fo3,P AUX</inp4>
             </refinput>
-            <refinput_appends>
-                <append1> 1</append1>
-                <append2> 2</append2>
-                <append3> 3</append3>
-                <append4> AUX</append4>
-            </refinput_appends>
             <activeunits>
                 <n>3</n>
                 <unit1>MW</unit1>

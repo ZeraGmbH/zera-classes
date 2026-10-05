@@ -11,7 +11,7 @@
             </dutinput>
             <refinput>
                 <n>1</n>
-                <inp1>fo0</inp1>
+                <inp1>fo0,</inp1>
             </refinput>
         </measure>
     </configuration>

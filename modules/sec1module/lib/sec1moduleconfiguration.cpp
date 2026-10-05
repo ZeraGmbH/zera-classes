@@ -28,8 +28,7 @@ enum moduleconfigstate
     setResultUnit,
 
     setDutInput1Name = 32,
-    setRefInput1Name = 64,
-    setRefInput1Append = 96
+    setRefInput1Name = 64
 };
 
 void cSec1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
@@ -126,7 +125,6 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
             m_configData.m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_configData.m_nRefInpCount; i++) {
                 m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
-                m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput_appends:append%1").arg(i+1)] = setRefInput1Append+i;
                 m_configData.m_refInpList.append(TRefInput());
             }
             break;
@@ -191,15 +189,17 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
             }
             else if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32)) {
                 cmd -= setRefInput1Name;
-                TRefInput refInput;
-                refInput.inputName = m_pXMLReader->getValue(key);
-                m_configData.m_refInpList.replace(cmd, refInput);
-            }
-            else if ((cmd >= setRefInput1Append) && (cmd < setRefInput1Append + 32)) {
-                cmd -= setRefInput1Append;
-                TRefInput refInput = m_configData.m_refInpList[cmd];
-                refInput.nameAppend = m_pXMLReader->getValue(key);
-                m_configData.m_refInpList.replace(cmd, refInput);
+                const QStringList refInputFNameAndAlias = m_pXMLReader->getValue(key).split(",");
+                if (refInputFNameAndAlias.count() != 2) {
+                    qCritical("SEC configuration: Input is not comma separated input,alias!");
+                    m_bConfigError = true;
+                }
+                else {
+                    TRefInput refInput;
+                    refInput.inputFName = refInputFNameAndAlias[0];
+                    refInput.alias = refInputFNameAndAlias[1];
+                    m_configData.m_refInpList.replace(cmd, refInput);
+                }
             }
             break;
         }

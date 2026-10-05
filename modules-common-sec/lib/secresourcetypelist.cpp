@@ -4,7 +4,7 @@ void SecResourceTypeList::addTypesFromConfig(const QList<TRefInput> &refInputLis
 {
     QStringList inputNames;
     for(const auto &input : refInputList)
-        inputNames.append(input.inputName);
+        inputNames.append(input.inputFName);
     addTypesFromConfig(inputNames);
 }
 

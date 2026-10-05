@@ -9,9 +9,9 @@
             </dutinput>
             <refinput>
                 <n>3</n>
-                <inp1>fo1</inp1>
-                <inp2>fo2</inp2>
-                <inp3>fo3</inp3>
+                <inp1>fo1,P</inp1>
+                <inp2>fo2,Q</inp2>
+                <inp3>fo3,S</inp3>
             </refinput>
         </measure>
     </configuration>

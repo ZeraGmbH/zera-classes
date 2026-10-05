@@ -84,12 +84,12 @@
       },
       {
         "name" : "sec1module",
-        "configFile" : "com5003-sec1module.xml",
+        "configFile" : "com5003-sec1module-ced.xml",
         "id": 1130
       },
       {
         "name" : "sec1module",
-        "configFile" : "com5003-sec1module-energy-comparison.xml",
+        "configFile" : "com5003-sec1module-energy-comparison-ced.xml",
         "id": 1131
       },
       {

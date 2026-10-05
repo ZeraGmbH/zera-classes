@@ -9,16 +9,16 @@
             </dutinput>
             <refinput>
                 <n>3</n>
-                <inp1>fo0,P</inp1>
-                <inp2>fo1,Q</inp2>
-                <inp3>fo2,S</inp3>
+                <inp1>fo1,+P</inp1>
+                <inp2>fo2,-P</inp2>
+                <inp3>fo3,P</inp3>
             </refinput>
         </measure>
     </configuration>
     <parameter>
         <measure>
             <dutinput>sh0</dutinput>
-            <refinput>fo0</refinput>
+            <refinput>fo1</refinput>
             <mode>mrate</mode>
             <dutconstant>10000</dutconstant>
             <dutconstantunit>none</dutconstantunit>

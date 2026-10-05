@@ -19,38 +19,6 @@
 namespace SEC1MODULE
 {
 
-enum sec1moduleCmds
-{
-    sendrmident,
-    readresource,
-    fetchecalcunits,
-    readrefInputalias,
-    readdutInputalias,
-    setsecintnotifier,
-
-    freeecalcunits,
-
-    actualizeprogress,
-    actualizestatus,
-    actualizeenergy,
-
-    setsync,
-    setmeaspulses,
-    setmastermux,
-    setslavemux,
-    setmastermeasmode,
-    setslavemeasmode,
-    enableinterrupt,
-    startmeasurement,
-
-    stopmeas,
-
-    readintregister,
-    resetintregister,
-    readvicount
-
-};
-
 class cSec1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
@@ -74,9 +42,6 @@ private slots:
     void ecalcServerConnect();
     void fetchECalcUnits();
     void pcbServerConnect();
-    void readREFInputs();
-    void readREFInputAlias();
-    void readREFInputDone();
     void readDUTInputs();
     void readDUTInputAlias();
     void readDUTInputDone();
@@ -124,8 +89,6 @@ private slots:
     void Actualize();
     void startNext();
     void clientActivationChanged(bool bActive);
-    bool found(QList<QString>& list, QString searched);
-    bool found(QList<TRefInput> &list, QString searched);
 
 private:
     void setInterfaceComponents();
@@ -143,7 +106,6 @@ private:
     const QString multiResultToJson();
     void multiResultToVein();
     double getUnitFactor();
-    QString getRefInputDisplayString(const QString &inputName);
     void actualizeRefConstant();
     quint32 getStatus();
     void setStatus(quint32 status);
@@ -170,10 +132,6 @@ private:
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 2 error calc units from sec server
     QState m_pcbServerConnectState; // connect to pcb server
-
-    QState m_readREFInputsState; // init to read all ref Input informations
-    QState m_readREFInputAliasState; // read for 1 Input
-    QState m_readREFInputDoneState;
 
     QState m_readDUTInputsState; // init to read all ref Input informations
     QState m_readDUTInputAliasState; // read for 1 Input

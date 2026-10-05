@@ -4,11 +4,8 @@
         <measure>
             <refinput>
                 <n>1</n>
-                <inp1>fo0</inp1>
+                <inp1>fo0,P DC</inp1>
             </refinput>
-            <refinput_appends>
-                <append1> DC</append1>
-            </refinput_appends>
             <activeunits>
                 <n>3</n>
                 <unit1>MW</unit1>

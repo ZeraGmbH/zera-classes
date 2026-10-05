@@ -5,8 +5,8 @@
 
 struct TRefInput
 {
-    QString inputName;
-    QString nameAppend;
+    QString inputFName;
+    QString alias;
 };
 
 #endif // SECCONFIGDATACOMMON_H

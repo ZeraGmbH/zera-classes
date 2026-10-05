@@ -23,6 +23,17 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
+    const cSec1ModuleConfigData *confData = m_pModule->getConfigData();
+    const QList<TRefInput> refInputList = confData->m_refInpList;
+    for(const TRefInput &refInput : refInputList) {
+        m_REFAliasList.append(refInput.alias);
+        m_refInputDictionary.setAlias(refInput.inputFName, refInput.alias);
+    }
+
+    m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
+
     m_IdentifyState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourcesState);
     m_readResourcesState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
     m_readResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
@@ -31,14 +42,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     //m_ecalcServerConnectState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_fetchECalcUnitsState); // connect to ecalc server
     //transition from this state to m_fetch....is done in ecalcServerConnect
     m_fetchECalcUnitsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_pcbServerConnectState); // connect to pcbserver
+    m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readDUTInputsState);
 
-
-    //m_pcbServerConnectState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_pcbServerConnectState);
-    //transition from this state to m_readREFInputsState....is done in pcbServerConnect
-    m_readREFInputsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readREFInputAliasState);
-    m_readREFInputAliasState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readREFInputDoneState);
-    m_readREFInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readREFInputAliasState);
-    m_readREFInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputsState);
     m_readDUTInputsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputAliasState);
     m_readDUTInputAliasState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputDoneState);
     m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readDUTInputAliasState);
@@ -54,9 +59,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     m_activationMachine.addState(&m_ecalcServerConnectState);
     m_activationMachine.addState(&m_fetchECalcUnitsState);
     m_activationMachine.addState(&m_pcbServerConnectState);
-    m_activationMachine.addState(&m_readREFInputsState);
-    m_activationMachine.addState(&m_readREFInputAliasState);
-    m_activationMachine.addState(&m_readREFInputDoneState);
     m_activationMachine.addState(&m_readDUTInputsState);
     m_activationMachine.addState(&m_readDUTInputAliasState);
     m_activationMachine.addState(&m_readDUTInputDoneState);
@@ -74,9 +76,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     connect(&m_ecalcServerConnectState, &QState::entered, this, &cSec1ModuleMeasProgram::ecalcServerConnect);
     connect(&m_fetchECalcUnitsState, &QState::entered, this, &cSec1ModuleMeasProgram::fetchECalcUnits);
     connect(&m_pcbServerConnectState, &QState::entered, this, &cSec1ModuleMeasProgram::pcbServerConnect);
-    connect(&m_readREFInputsState, &QState::entered, this, &cSec1ModuleMeasProgram::readREFInputs);
-    connect(&m_readREFInputAliasState, &QState::entered, this, &cSec1ModuleMeasProgram::readREFInputAlias);
-    connect(&m_readREFInputDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::readREFInputDone);
     connect(&m_readDUTInputsState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputs);
     connect(&m_readDUTInputAliasState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputAlias);
     connect(&m_readDUTInputDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputDone);
@@ -516,6 +515,37 @@ void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)
     }
 }
 
+enum sec1moduleCmds
+{
+   sendrmident,
+   readresource,
+   fetchecalcunits,
+   readdutInputalias,
+   setsecintnotifier,
+
+   freeecalcunits,
+
+   actualizeprogress,
+   actualizestatus,
+   actualizeenergy,
+
+   setsync,
+   setmeaspulses,
+   setmastermux,
+   setslavemux,
+   setmastermeasmode,
+   setslavemeasmode,
+   enableinterrupt,
+   startmeasurement,
+
+   stopmeas,
+
+   readintregister,
+   resetintregister,
+   readvicount
+};
+
+
 void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
 {
     if (msgnr == 0) // 0 was reserved for async. messages
@@ -561,21 +591,6 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 }
                 else
                     notifyError(fetchsececalcunitErrMsg);
-                break;
-            }
-
-            case readrefInputalias:
-            {
-                if (reply == ack) {
-                    QString alias = answer.toString();
-                    if(alias != "0.0")
-                        m_refInputDictionary.setAlias(m_sIt, answer.toString());
-                    else
-                        qWarning("SEC: Improper alias %s received for iterator %i", qPrintable(alias), m_nIt);
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readaliasErrMsg);
                 break;
             }
 
@@ -816,18 +831,18 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
 {
     computeDependencies(); // dependant on mode we calculate parameters by ourself
 
-    const cSec1ModuleConfigData *confData = m_pModule->getConfigData();
-    m_pDutInputPar->setValue(QVariant(m_dutInputDictionary.getAlias(confData->m_sDutInput.m_sValue)));
-    m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(confData->m_sRefInput.m_sValue)));
-    m_pDutConstantPar->setValue(QVariant(confData->m_fDutConstant.m_fValue));
-    m_pRefConstantPar->setValue(QVariant(confData->m_fRefConstant.m_fValue));
-    m_pMRatePar->setValue(QVariant(confData->m_nMRate.m_nValue));
-    m_pTargetPar->setValue(QVariant(confData->m_nTarget.m_nValue));
-    m_pEnergyPar->setValue(QVariant(confData->m_fEnergy.m_fValue));
-    m_pProgressAct->setValue(QVariant(double(0.0)));
-    m_pUpperLimitPar->setValue(QVariant(confData->m_fUpperLimit.m_fValue));
-    m_pLowerLimitPar->setValue(QVariant(confData->m_fLowerLimit.m_fValue));
-    m_pResultUnit->setValue(QVariant(confData->m_sResultUnit.m_sValue));
+    const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
+    m_pDutInputPar->setValue(m_dutInputDictionary.getAlias(configData->m_sDutInput.m_sValue));
+    m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_sRefInput.m_sValue));
+    m_pDutConstantPar->setValue(configData->m_fDutConstant.m_fValue);
+    m_pRefConstantPar->setValue(configData->m_fRefConstant.m_fValue);
+    m_pMRatePar->setValue(configData->m_nMRate.m_nValue);
+    m_pTargetPar->setValue(configData->m_nTarget.m_nValue);
+    m_pEnergyPar->setValue(configData->m_fEnergy.m_fValue);
+    m_pProgressAct->setValue(double(0.0));
+    m_pUpperLimitPar->setValue(configData->m_fUpperLimit.m_fValue);
+    m_pLowerLimitPar->setValue(configData->m_fLowerLimit.m_fValue);
+    m_pResultUnit->setValue(configData->m_sResultUnit.m_sValue);
 }
 
 
@@ -983,19 +998,6 @@ double cSec1ModuleMeasProgram::getUnitFactor()
     return factor;
 }
 
-QString cSec1ModuleMeasProgram::getRefInputDisplayString(const QString &inputName)
-{
-    QString displayString = m_refInputDictionary.getAlias(inputName);
-    QList<TRefInput> refInputList = m_pModule->getConfigData()->m_refInpList;
-    for(const auto &entry : refInputList) {
-        if(entry.inputName == inputName) {
-            displayString += entry.nameAppend;
-            break;
-        }
-    }
-    return displayString;
-}
-
 void cSec1ModuleMeasProgram::resourceManagerConnect()
 {
     m_rmInterface.setClientSuperSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
@@ -1029,7 +1031,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
     qint32 refInCountLeftToCheck = refInpList.count();
     QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
     for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
-        QString refPowerName = refInpList[refInputNo].inputName;
+        QString refPowerName = refInpList[refInputNo].inputFName;
         for (int resourceTypeNo = 0; resourceTypeNo < resourceTypeList.count(); resourceTypeNo++) {
             QString resourcelist = m_ResourceHash[resourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refPowerName)) {
@@ -1076,36 +1078,8 @@ void cSec1ModuleMeasProgram::fetchECalcUnits()
 
 void cSec1ModuleMeasProgram::pcbServerConnect()
 {
-    m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readREFInputsState);
-    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
 }
-
-void cSec1ModuleMeasProgram::readREFInputs()
-{
-    m_sItList = m_refInputDictionary.getInputNameList();
-    emit activationContinue();
-}
-
-
-void cSec1ModuleMeasProgram::readREFInputAlias()
-{
-    m_sIt = m_sItList.takeFirst();
-    // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
-    m_MsgNrCmdList[m_pcbInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
-}
-
-
-void cSec1ModuleMeasProgram::readREFInputDone()
-{
-    if (m_sItList.isEmpty())
-        emit activationContinue();
-    else
-        emit activationLoop();
-}
-
 
 void cSec1ModuleMeasProgram::readDUTInputs()
 {
@@ -1159,19 +1133,10 @@ void cSec1ModuleMeasProgram::setsecINTNotifier()
 void cSec1ModuleMeasProgram::activationDone()
 {
     cSec1ModuleConfigData *confData = m_pModule->getConfigData();
-    const QList<TRefInput> refInputList = confData->m_refInpList;
-    for(const TRefInput &refInput : refInputList) {
-        QString displayString = getRefInputDisplayString(refInput.inputName);
-        m_REFAliasList.append(displayString); // build up a fixed sorted list of alias
-        m_refInputDictionary.setDisplayedString(refInput.inputName, displayString);
-    }
-
     for (int i = 0; i < confData->m_dutInpList.count(); i++) {
         QString alias = m_dutInputDictionary.getAlias(confData->m_dutInpList.at(i));
         m_DUTAliasList.append(alias); // build up a fixed sorted list of alias
-        m_dutInputDictionary.setDisplayedString(confData->m_dutInpList.at(i), alias);
     }
-
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
     connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &cSec1ModuleMeasProgram::Actualize);
     m_WaitMultiTimer.setSingleShot(true);
@@ -1606,7 +1571,7 @@ void cSec1ModuleMeasProgram::newRefConstant(const QVariant &refconst)
 
 void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 {
-    QString dutInputName = m_dutInputDictionary.getInputNameFromDisplayedName(dutinput.toString());
+    QString dutInputName = m_dutInputDictionary.getInputFNameFromAlias(dutinput.toString());
     m_pModule->getConfigData()->m_sDutInput.m_sValue = dutInputName;
     setInterfaceComponents();
 
@@ -1616,7 +1581,7 @@ void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 
 void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
 {
-    QString refPowerName = m_refInputDictionary.getInputNameFromDisplayedName(refinput.toString());
+    QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refinput.toString());
     m_pModule->getConfigData()->m_sRefInput.m_sValue = refPowerName;
     actualizeRefConstant();
     setInterfaceComponents();
@@ -1728,24 +1693,6 @@ void cSec1ModuleMeasProgram::stopMeasurement(bool bAbort)
     m_pStartStopPar->setValue(QVariant(0));
     m_ActualizeTimer->stop();
     m_WaitMultiTimer.stop();
-}
-
-
-bool cSec1ModuleMeasProgram::found(QList<QString> &list, QString searched)
-{
-    for (int i = 0; i < list.count(); i++)
-        if (list.at(i).contains(searched))
-            return true;
-    return false;
-}
-
-bool cSec1ModuleMeasProgram::found(QList<TRefInput> &list, QString searched)
-{
-    for (int i = 0; i < list.count(); i++) {
-        if (list.at(i).inputName.contains(searched))
-            return true;
-    }
-    return false;
 }
 
 }

@@ -16,38 +16,6 @@
 namespace SPM1MODULE
 {
 
-enum spm1moduleCmds
-{
-    sendrmident,
-    readresource,
-    fetchecalcunits,
-    readrefInputalias,
-    setsecintnotifier,
-
-    freeecalcunits,
-
-    actualizestatus,
-    actualizeenergy,
-    actualizepower,
-
-    setsync,
-    setmeaspulses,
-    setmastermux,
-    setslavemux,
-    setmastermeasmode,
-    setslavemeasmode,
-    enableinterrupt,
-    startmeasurement,
-
-    stopmeas,
-
-    readintregister,
-    resetintregister,
-    readvicount,
-    readtcount
-
-};
-
 class cSpm1Module;
 
 class cSpm1ModuleMeasProgram: public cBaseMeasProgram
@@ -74,9 +42,6 @@ private slots:
     void ecalcServerConnect();
     void fetchECalcUnits();
     void pcbServerConnect();
-    void readREFInputs();
-    void readREFInputAlias();
-    void readREFInputDone();
     void setpcbREFConstantNotifier();
     void setsecINTNotifier();
     void activationDone();
@@ -119,7 +84,6 @@ private slots:
     void Actualize();
     void clientActivationChanged(bool bActive);
     void stopMeasurement(bool bAbort);
-    bool found(QList<TRefInput> &list, QString searched);
 
 private:
     void setInterfaceComponents();
@@ -131,7 +95,6 @@ private:
     QString getEnergyUnit();
     QStringList getPowerUnitValidator();
     QString getPowerUnit();
-    QString getRefInputDisplayString(QString inputName);
     void actualizeRefConstant();
     quint32 getStatus();
     void setStatus(quint32 status);
@@ -158,9 +121,6 @@ private:
     QState m_fetchECalcUnitsState; // we try to fetch 3 error calc units from sec server
     QState m_pcbServerConnectState; // connect to pcb server
 
-    QState m_readREFInputsState; // init to read all ref Input informations
-    QState m_readREFInputAliasState; // read for 1 Input
-    QState m_readREFInputDoneState;
     QState m_setpcbREFConstantNotifierState; // we get notified on refconstant changes
     QState m_setsecINTNotifierState; // we get notified on sec interrupts
 

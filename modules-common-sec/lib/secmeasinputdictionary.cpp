@@ -1,53 +1,49 @@
 #include "secmeasinputdictionary.h"
 
-void SecMeasInputDictionary::addReferenceInput(const QString &inputName, const QString &resource)
+void SecMeasInputDictionary::addReferenceInput(const QString &inputFName, const QString &resource)
 {
-    Q_ASSERT(!m_resourceHash.contains(inputName));
-    m_resourceHash[inputName] = resource;
+    Q_ASSERT(!m_resourceHash.contains(inputFName));
+    m_resourceHash[inputFName] = resource;
 }
 
-void SecMeasInputDictionary::setAlias(const QString &inputName, const QString &alias)
+void SecMeasInputDictionary::setAlias(const QString &inputFName, const QString &alias)
 {
-    Q_ASSERT(!m_aliasHash.contains(inputName));
-    m_aliasHash[inputName] = alias;
+    Q_ASSERT(!m_aliasHash.contains(inputFName));
+    m_aliasHash[inputFName] = alias;
+    Q_ASSERT(!m_reverseAliasHash.contains(alias));
+    m_reverseAliasHash[alias] = inputFName;
 }
 
-void SecMeasInputDictionary::setDisplayedString(const QString &inputName, const QString &displayName)
+QString SecMeasInputDictionary::getResource(const QString &inputFName) const
 {
-    Q_ASSERT(!m_displayHash.contains(displayName));
-    m_displayHash[displayName] = inputName;
+    Q_ASSERT(m_resourceHash.contains(inputFName));
+    return m_resourceHash[inputFName];
 }
 
-QString SecMeasInputDictionary::getResource(const QString &inputName) const
+QString SecMeasInputDictionary::getAlias(const QString &inputFName) const
 {
-    Q_ASSERT(m_resourceHash.contains(inputName));
-    return m_resourceHash[inputName];
-}
-
-QString SecMeasInputDictionary::getAlias(const QString &inputName) const
-{
-    if(m_aliasHash.contains(inputName))
-        return m_aliasHash[inputName];
-    qWarning("Alias for input name %s not found", qPrintable(inputName));
+    if(m_aliasHash.contains(inputFName))
+        return m_aliasHash[inputFName];
+    qWarning("Alias for input name %s not found", qPrintable(inputFName));
     return QString("P");
 }
 
-QString SecMeasInputDictionary::getInputNameFromDisplayedName(const QString &displayName) const
-{
-    Q_ASSERT(m_displayHash.contains(displayName));
-    return m_displayHash[displayName];
-}
-
-void SecMeasInputDictionary::setNotificationId(const QString &inputName, int notificationId)
+void SecMeasInputDictionary::setNotificationId(const QString &inputFName, int notificationId)
 {
     Q_ASSERT(!m_notificationIdHash.contains(notificationId));
-    m_notificationIdHash[notificationId] = inputName;
+    m_notificationIdHash[notificationId] = inputFName;
 }
 
 QString SecMeasInputDictionary::getInputNameFromNotificationId(int notificationId)
 {
     Q_ASSERT(m_notificationIdHash.contains(notificationId));
     return m_notificationIdHash[notificationId];
+}
+
+QString SecMeasInputDictionary::getInputFNameFromAlias(const QString &alias) const
+{
+    Q_ASSERT(m_reverseAliasHash.contains(alias));
+    return m_reverseAliasHash[alias];
 }
 
 QStringList SecMeasInputDictionary::getInputNameList()
