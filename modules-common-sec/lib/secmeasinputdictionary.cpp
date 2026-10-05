@@ -50,3 +50,8 @@ QStringList SecMeasInputDictionary::getInputNameList()
 {
     return m_resourceHash.keys();
 }
+
+QStringList SecMeasInputDictionary::getInputAliasList()
+{
+    return m_aliasHash.values();
+}

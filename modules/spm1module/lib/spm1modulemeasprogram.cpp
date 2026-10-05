@@ -23,10 +23,8 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module) :
 {
     const cSpm1ModuleConfigData *confData = m_pModule->getConfigData();
     const QList<TRefInput> refInputList = confData->m_refInpList;
-    for(const TRefInput &refInput : refInputList) {
-        m_REFAliasList.append(refInput.alias);
+    for(const TRefInput &refInput : refInputList)
         m_refInputDictionary.setAlias(refInput.inputFName, refInput.alias);
-    }
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -601,7 +599,7 @@ void cSpm1ModuleMeasProgram::setInterfaceComponents()
 void cSpm1ModuleMeasProgram::setValidators()
 {
     cStringValidator *sValidator;
-    sValidator = new cStringValidator(m_REFAliasList);
+    sValidator = new cStringValidator(m_refInputDictionary.getInputAliasList());
     m_pRefInputPar->setValidator(sValidator);
     sValidator = new cStringValidator(getPowerUnitValidator());
     m_pInputUnitPar->setValidator(sValidator);

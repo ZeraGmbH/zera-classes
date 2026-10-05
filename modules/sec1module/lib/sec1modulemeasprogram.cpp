@@ -25,10 +25,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
 {
     const cSec1ModuleConfigData *confData = m_pModule->getConfigData();
     const QList<TRefInput> refInputList = confData->m_refInpList;
-    for(const TRefInput &refInput : refInputList) {
-        m_REFAliasList.append(refInput.alias);
+    for(const TRefInput &refInput : refInputList)
         m_refInputDictionary.setAlias(refInput.inputFName, refInput.alias);
-    }
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -848,10 +846,10 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
 
 void cSec1ModuleMeasProgram::setValidators()
 {
-    cStringValidator *sValidator = new cStringValidator(m_DUTAliasList);
+    cStringValidator *sValidator = new cStringValidator(m_dutInputDictionary.getInputAliasList());
     m_pDutInputPar->setValidator(sValidator);
 
-    sValidator = new cStringValidator(m_REFAliasList);
+    sValidator = new cStringValidator(m_refInputDictionary.getInputAliasList());
     m_pRefInputPar->setValidator(sValidator);
 
     m_pDutConstanstUnitValidator = new cStringValidator(getDutConstUnitValidator());
@@ -1132,11 +1130,6 @@ void cSec1ModuleMeasProgram::setsecINTNotifier()
 
 void cSec1ModuleMeasProgram::activationDone()
 {
-    cSec1ModuleConfigData *confData = m_pModule->getConfigData();
-    for (int i = 0; i < confData->m_dutInpList.count(); i++) {
-        QString alias = m_dutInputDictionary.getAlias(confData->m_dutInpList.at(i));
-        m_DUTAliasList.append(alias); // build up a fixed sorted list of alias
-    }
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
     connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &cSec1ModuleMeasProgram::Actualize);
     m_WaitMultiTimer.setSingleShot(true);

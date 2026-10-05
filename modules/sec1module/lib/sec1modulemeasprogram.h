@@ -172,8 +172,6 @@ private:
     SecMeasInputDictionary m_dutInputDictionary;
     RefPowerConstantObserver m_refConstantObserver;
 
-    QStringList m_REFAliasList; // we want to have an ordered list with Input alias
-    QStringList m_DUTAliasList;
     qint32 m_nIt = 0;
     QList<QString> m_sItList; // for interation over x Input hash
     QString m_sIt;

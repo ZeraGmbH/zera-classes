@@ -160,7 +160,6 @@ private:
     RefPowerConstantObserver m_refConstantObserver;
     QHash<QString, double> m_unitFactorHash;
 
-    QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     qint32 m_nIt = 0;
 
     QString m_masterErrCalcName;
