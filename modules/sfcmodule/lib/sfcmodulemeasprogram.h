@@ -20,32 +20,6 @@ namespace ECALCCMDID {
 enum { COUNTEDGE = 1, COUNTRESET, ARM = 128};
 }
 
-enum sfcmoduleCmds
-{
-    sendrmident,
-    readresource,
-    fetchecalcunits,
-    readrefInputalias,
-    readdutInputalias,
-    setsecintnotifier,
-
-    freeecalcunits,
-
-    stopmeas,
-
-    readintregister,
-    resetintregister,
-    readvicount,
-
-    setmastermux,
-    setmastermeasmode,
-    enableinterrupt,
-    startmeasurement,
-
-    actualizeprogress,
-    readstatus
-};
-
 class cSfcModule;
 
 class cSfcModuleMeasProgram : public cBaseMeasProgram

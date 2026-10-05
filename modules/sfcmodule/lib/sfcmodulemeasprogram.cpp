@@ -133,6 +133,31 @@ void cSfcModuleMeasProgram::updateProgress(quint32 flankCountActual)
     m_pFlankCountAct->setValue(flankCountActual);
 }
 
+enum sfcmoduleCmds
+{
+    sendrmident,
+    readresource,
+    fetchecalcunits,
+    readdutInputalias,
+    setsecintnotifier,
+
+    freeecalcunits,
+
+    stopmeas,
+
+    readintregister,
+    resetintregister,
+    readvicount,
+
+    setmastermux,
+    setmastermeasmode,
+    enableinterrupt,
+    startmeasurement,
+
+    actualizeprogress,
+    readstatus
+};
+
 void cSfcModuleMeasProgram::stopMeasurement(bool bAbort)
 {
     Q_UNUSED(bAbort)
