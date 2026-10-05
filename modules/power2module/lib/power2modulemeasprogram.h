@@ -200,7 +200,6 @@ private slots:
     void readUrvalue();
     void readUrvalueDone();
     void foutParamsToDsp();
-    void setFoutPowerModes();
 
     void newIntegrationtime(QVariant ti);
     void newIntegrationPeriod(QVariant period);

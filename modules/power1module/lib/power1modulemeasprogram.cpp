@@ -1049,7 +1049,6 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
         m_dspVars.getFreqScale()->setVarData(datalist);
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getFreqScale())] = writeparameter;
     }
-    setFoutPowerModes();
     double constantImpulsePerKwh = 3600.0 * 1000.0 * constantImpulsePerWs; // imp./kwh
     for (int i = 0; i < configData->m_nFreqOutputCount; i++) {
         // calculate prescaling factor for Fout
@@ -1072,30 +1071,6 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
     }
 
     setNominalPowerForQref();
-}
-
-void cPower1ModuleMeasProgram::setFoutPowerModes()
-{
-    QList<QString> keylist = m_FoutInfoMap.keys();
-    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
-    for (int i = 0; i < keylist.count(); i++) {
-        QString powtype;
-        int foutmode = configData->m_FreqOutputConfList.at(i).m_nFoutMode;
-        switch (foutmode)
-        {
-        case posPower:
-            powtype = "+";
-            break;
-        case negPower:
-            powtype = "-";
-            break;
-        default:
-            powtype = "";
-        }
-        powtype += MeasModeCatalog::getInfo(configData->m_sMeasuringMode.m_sValue).getActvalName();
-        cFoutInfo fi = m_FoutInfoMap[keylist.at(i)];
-        m_MsgNrCmdList[fi.pcbIFace->setPowTypeSource(fi.name, powtype)] = writeparameter;
-    }
 }
 
 QString cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
