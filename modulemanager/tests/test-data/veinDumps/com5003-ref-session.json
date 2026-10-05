@@ -1101,10 +1101,10 @@
         "ACT_PQS2": 0,
         "ACT_PQS3": 0,
         "ACT_PQS4": 0,
-        "ACT_PowerDisplayName": "",
+        "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module1",
         "INF_ModeTypes": [
-            ""
+            "P"
         ],
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -1115,20 +1115,24 @@
                     "Description": "<skipped>"
                 },
                 "ACT_PQS1": {
-                    "ChannelName": "1",
-                    "Description": "<skipped>"
+                    "ChannelName": "P1",
+                    "Description": "<skipped>",
+                    "Unit": "W"
                 },
                 "ACT_PQS2": {
-                    "ChannelName": "2",
-                    "Description": "<skipped>"
+                    "ChannelName": "P2",
+                    "Description": "<skipped>",
+                    "Unit": "W"
                 },
                 "ACT_PQS3": {
-                    "ChannelName": "3",
-                    "Description": "<skipped>"
+                    "ChannelName": "P3",
+                    "Description": "<skipped>",
+                    "Unit": "W"
                 },
                 "ACT_PQS4": {
-                    "ChannelName": "S",
-                    "Description": "<skipped>"
+                    "ChannelName": "PS",
+                    "Description": "<skipped>",
+                    "Unit": "W"
                 },
                 "ACT_PowerDisplayName": {
                     "Description": "<skipped>"
@@ -1213,28 +1217,28 @@
                     ],
                     [
                         "MEASURE",
-                        "1",
+                        "P1",
                         "8",
                         "ACT_PQS1",
                         "0"
                     ],
                     [
                         "MEASURE",
-                        "2",
+                        "P2",
                         "8",
                         "ACT_PQS2",
                         "0"
                     ],
                     [
                         "MEASURE",
-                        "3",
+                        "P3",
                         "8",
                         "ACT_PQS3",
                         "0"
                     ],
                     [
                         "MEASURE",
-                        "S",
+                        "PS",
                         "8",
                         "ACT_PQS4",
                         "0"

@@ -214,7 +214,7 @@
         "ACT_PQS3": 2300,
         "ACT_PQS4": 6900,
         "ACT_PowerDisplayName": "P",
-        "INF_ModeTypes": ";P;Q;S",
+        "INF_ModeTypes": "P;Q;S",
         "PAR_FOUT0": "fOUT",
         "PAR_FOUTConstant0": 96000000,
         "PAR_FOUT_NOMINAL_FREQ": 200000,

@@ -3245,7 +3245,6 @@
         "ACT_PowerDisplayName": "P",
         "EntityName": "POWER1Module4",
         "INF_ModeTypes": [
-            "",
             "P",
             "Q",
             "S"
