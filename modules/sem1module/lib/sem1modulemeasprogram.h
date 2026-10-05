@@ -166,8 +166,6 @@ private:
 
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     qint32 m_nIt = 0;
-    QList<QString> m_sItList; // for interation over x Input hash
-    QString m_sIt;
 
     QString m_masterErrCalcName;
     QString m_slaveErrCalcName;
