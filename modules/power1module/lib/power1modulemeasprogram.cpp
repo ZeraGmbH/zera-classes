@@ -290,21 +290,18 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
                                      QString("ACT_CanChangePhaseMask"),
                                      QString("Boolean indicator that current measurement mode can change phase mask"),
                                      QVariant(false) );
-    m_veinActValueList.append(m_MModeCanChangePhaseMask); // we add the component for our measurement
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_MModeCanChangePhaseMask); // and for the modules interface
 
     m_MModePowerDisplayName = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    QString("ACT_PowerDisplayName"), // a better name would be ACT_PowerTypePQS - but the cat is more or less out (reports...)
                                                    QString("Power display name (P/Q/S)"),
                                                    QVariant("") );
-    m_veinActValueList.append(m_MModePowerDisplayName);
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_MModePowerDisplayName);
 
     m_MModeMaxMeasSysCount = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                      QString("ACT_MaxMeasSysCount"),
                                                      QString("Number of max measurement systems for current measurement mode"),
                                                      QVariant(3) );
-    m_veinActValueList.append(m_MModeMaxMeasSysCount); // we add the component for our measurement
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_MModeMaxMeasSysCount); // and for the modules interface
 
     m_MModesTypes = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
