@@ -21,10 +21,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module) :
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    const cSpm1ModuleConfigData *confData = m_pModule->getConfigData();
-    const QList<TRefInput> refInputList = confData->m_refInpList;
-    for(const TRefInput &refInput : refInputList)
-        m_refInputDictionary.setAlias(refInput.inputName, refInput.alias);
+    setReferenceAliases();
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -603,6 +600,14 @@ void cSpm1ModuleMeasProgram::setValidators()
     m_pRefInputPar->setValidator(sValidator);
     sValidator = new cStringValidator(getPowerUnitValidator());
     m_pInputUnitPar->setValidator(sValidator);
+}
+
+void SPM1MODULE::cSpm1ModuleMeasProgram::setReferenceAliases()
+{
+    const cSpm1ModuleConfigData *confData = m_pModule->getConfigData();
+    const QList<TRefInput> refInputList = confData->m_refInpList;
+    for(const TRefInput &refInput : refInputList)
+        m_refInputDictionary.setAlias(refInput.inputName, refInput.alias);
 }
 
 void cSpm1ModuleMeasProgram::setUnits()

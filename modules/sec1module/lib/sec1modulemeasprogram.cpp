@@ -23,10 +23,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    const cSec1ModuleConfigData *confData = m_pModule->getConfigData();
-    const QList<TRefInput> refInputList = confData->m_refInpList;
-    for(const TRefInput &refInput : refInputList)
-        m_refInputDictionary.setAlias(refInput.inputName, refInput.alias);
+    setReferenceAliases();
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -861,6 +858,13 @@ void cSec1ModuleMeasProgram::setValidators()
     m_pEnergyPar->setUnit(s);
 }
 
+void cSec1ModuleMeasProgram::setReferenceAliases()
+{
+    const cSec1ModuleConfigData *confData = m_pModule->getConfigData();
+    const QList<TRefInput> refInputList = confData->m_refInpList;
+    for(const TRefInput &refInput : refInputList)
+        m_refInputDictionary.setAlias(refInput.inputName, refInput.alias);
+}
 
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 {
