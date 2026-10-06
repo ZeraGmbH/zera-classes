@@ -19,7 +19,7 @@ public:
 private:
     static QList<Component> findIntegrationComponents(const VeinStorage::AbstractDatabase *storageDb, const QString &integrationUnit);
     static QJsonObject getModuleInterface(const VeinStorage::AbstractDatabase *storageDb, int entityId);
-    static QJsonObject getParInterval(const VeinStorage::AbstractDatabase *storageDb, int entityId);
+    static QJsonObject getComponentInfo(const VeinStorage::AbstractDatabase *storageDb, int entityId, const QString &componentName);
 };
 
 #endif // DSPSUPERMODULEINTEGRATIONCOMPONENTFINDER_H

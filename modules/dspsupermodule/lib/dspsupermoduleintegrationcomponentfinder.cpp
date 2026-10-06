@@ -21,7 +21,7 @@ QList<DspSuperModuleIntegrationComponentFinder::Component> DspSuperModuleIntegra
     QList<Component> ret;
     const QList<int> entityList = storageDb->getEntityList();
     for (int entityId : entityList) {
-        QJsonObject parInterval = getParInterval(storageDb, entityId);
+        QJsonObject parInterval = getComponentInfo(storageDb, entityId, integrationTimeComponentName);
         if (!parInterval.isEmpty() && parInterval["Unit"] == integrationUnit)
             ret.append({entityId, integrationTimeComponentName});
     }
@@ -45,9 +45,10 @@ QJsonObject DspSuperModuleIntegrationComponentFinder::getModuleInterface(const V
     return QJsonObject();
 }
 
-QJsonObject DspSuperModuleIntegrationComponentFinder::getParInterval(const VeinStorage::AbstractDatabase *storageDb, int entityId)
+QJsonObject DspSuperModuleIntegrationComponentFinder::getComponentInfo(const VeinStorage::AbstractDatabase *storageDb,
+                                                                       int entityId, const QString &componentName)
 {
     QJsonObject moduleInterface = getModuleInterface(storageDb, entityId);
     QJsonObject componentInfo = moduleInterface["ComponentInfo"].toObject();
-    return componentInfo[integrationTimeComponentName].toObject();
+    return componentInfo[componentName].toObject();
 }
