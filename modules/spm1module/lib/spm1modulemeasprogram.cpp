@@ -156,7 +156,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module) :
     m_unitFactorHash["VA"] = 0.001;
 
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
-    m_resourceTypeList.addTypesFromConfig(m_pModule->getConfigData()->m_refInpList);
+    m_resourceTypeList.addTypesFromConfig(m_pModule->getConfigData()->m_refConfigs.m_refInpList);
 }
 
 void cSpm1ModuleMeasProgram::start()
@@ -292,13 +292,13 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
                                             QString("Actual frequency input (internal)"),
-                                            QVariant(configData->m_sRefInput.m_sValue));
+                                            QVariant(configData->m_refConfigs.m_sRefInput.m_sValue));
     m_pModule->m_veinModuleParameterMap[key] = m_pRefFreqInput; // and for the modules interface
 
     m_pUpperLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("PAR_Uplimit"),
                                                 QString("Error limit: upper"),
-                                                QVariant(configData->m_fUpperLimit.m_fValue));
+                                                QVariant(configData->m_limitConfigs.m_fUpperLimit.m_fValue));
     m_pUpperLimitPar->setScpiInfo("CALCULATE", QString("%1:UPLIMIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pUpperLimitPar->setValidator(new cDoubleValidator(-100.0, 100.0, 1e-6));
     m_pUpperLimitPar->setUnit("%");
@@ -307,7 +307,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_pLowerLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("PAR_Lolimit"),
                                                 QString("Error limit: lower"),
-                                                QVariant(configData->m_fLowerLimit.m_fValue));
+                                                QVariant(configData->m_limitConfigs.m_fLowerLimit.m_fValue));
     m_pLowerLimitPar->setScpiInfo("CALCULATE", QString("%1:LOLIMIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pLowerLimitPar->setValidator(new cDoubleValidator(-100.0, 100.0, 1e-6));
     m_pLowerLimitPar->setUnit("%");
@@ -586,11 +586,11 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 void cSpm1ModuleMeasProgram::setInterfaceComponents()
 {
     const cSpm1ModuleConfigData *configData = m_pModule->getConfigData();
-    m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_sRefInput.m_sValue));
+    m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_refConfigs.m_sRefInput.m_sValue));
     m_pTargetedPar->setValue(configData->m_bTargeted.m_nActive);
     m_pMeasTimePar->setValue(configData->m_nMeasTime.m_nValue);
-    m_pUpperLimitPar->setValue(configData->m_fUpperLimit.m_fValue);
-    m_pLowerLimitPar->setValue(configData->m_fLowerLimit.m_fValue);
+    m_pUpperLimitPar->setValue(configData->m_limitConfigs.m_fUpperLimit.m_fValue);
+    m_pLowerLimitPar->setValue(configData->m_limitConfigs.m_fLowerLimit.m_fValue);
 }
 
 void cSpm1ModuleMeasProgram::setValidators()
@@ -605,7 +605,7 @@ void cSpm1ModuleMeasProgram::setValidators()
 void SPM1MODULE::cSpm1ModuleMeasProgram::setReferenceAliases()
 {
     const cSpm1ModuleConfigData *confData = m_pModule->getConfigData();
-    const QList<TRefInput> refInputList = confData->m_refInpList;
+    const QList<TRefInput> refInputList = confData->m_refConfigs.m_refInpList;
     for(const TRefInput &refInput : refInputList)
         m_refInputDictionary.setAlias(refInput.inputName, refInput.alias);
 }
@@ -633,7 +633,7 @@ void cSpm1ModuleMeasProgram::setUnits()
 
 void cSpm1ModuleMeasProgram::actualizeRefConstant()
 {
-    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_sRefInput.m_sValue);
+    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
     m_pRefConstantPar->setValue(QVariant(constant));
     newRefConstant(QVariant(constant));
 }
@@ -650,7 +650,7 @@ void cSpm1ModuleMeasProgram::setStatus(quint32 status)
 
 void cSpm1ModuleMeasProgram::onRefConstantChanged(const QString &refPowerName)
 {
-    if(m_pModule->getConfigData()->m_sRefInput.m_sValue == refPowerName) {
+    if(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue == refPowerName) {
         stopMeasurement(true);
         actualizeRefConstant();
     }
@@ -675,19 +675,19 @@ QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator() // This won't work f
 {
     QStringList sl;
     const cSpm1ModuleConfigData *configData = m_pModule->getConfigData();
-    QString powType = m_refInputDictionary.getAlias(configData->m_sRefInput.m_sValue);
+    QString powType = m_refInputDictionary.getAlias(configData->m_refConfigs.m_sRefInput.m_sValue);
     if (powType.contains('P'))
-        sl = configData->m_ActiveUnitList;
+        sl = configData->m_unitConfigs.m_ActiveUnitList;
     if (powType.contains('Q'))
-        sl = configData->m_ReactiveUnitList;
+        sl = configData->m_unitConfigs.m_ReactiveUnitList;
     if (powType.contains('S'))
-        sl = configData->m_ApparentUnitList;
+        sl = configData->m_unitConfigs.m_ApparentUnitList;
     return sl;
 }
 
 QString cSpm1ModuleMeasProgram::getPowerUnit()
 {
-    QString powerType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_sRefInput.m_sValue);
+    QString powerType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
     QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
 }
@@ -749,7 +749,7 @@ void cSpm1ModuleMeasProgram::readResource()
 
 void cSpm1ModuleMeasProgram::testSpmInputs()
 {
-    const auto &refInpList = m_pModule->getConfigData()->m_refInpList;
+    const auto &refInpList = m_pModule->getConfigData()->m_refConfigs.m_refInpList;
     qint32 refInCountLeftToCheck = refInpList.count();
     QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
     for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
@@ -793,7 +793,7 @@ void cSpm1ModuleMeasProgram::pcbServerConnect()
 
 void cSpm1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
-    if (m_pModule->getConfigData()->m_nRefInpCount > 0) {
+    if (m_pModule->getConfigData()->m_refConfigs.m_nRefInpCount > 0) {
         connect(&m_refConstantObserver, &RefPowerConstantObserver::sigRegistrationFinished, this, [this](bool ok) {
             if(ok) {
                 actualizeRefConstant();
@@ -900,7 +900,7 @@ void cSpm1ModuleMeasProgram::setMasterMux()
 
 void cSpm1ModuleMeasProgram::setSlaveMux()
 {
-    QString refPowerName = m_pModule->getConfigData()->m_sRefInput.m_sValue;
+    QString refPowerName = m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_slaveErrCalcName, refPowerName)] = setslavemux;
 }
 
@@ -1034,7 +1034,7 @@ void cSpm1ModuleMeasProgram::setRating()
 {
     if (getStatus() & ECALCSTATUS::READY) {
         const cSpm1ModuleConfigData *configData = m_pModule->getConfigData();
-        if ( (m_fResult >= configData->m_fLowerLimit.m_fValue) && (m_fResult <= configData->m_fUpperLimit.m_fValue))
+        if ( (m_fResult >= configData->m_limitConfigs.m_fLowerLimit.m_fValue) && (m_fResult <= configData->m_limitConfigs.m_fUpperLimit.m_fValue))
             m_eRating = ECALCRESULT::RESULT_PASSED;
         else
             m_eRating = ECALCRESULT::RESULT_FAILED;
@@ -1091,7 +1091,7 @@ void cSpm1ModuleMeasProgram::newRefConstant(QVariant refconst)
 void cSpm1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
     QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refinput.toString());
-    m_pModule->getConfigData()->m_sRefInput.m_sValue = refPowerName;
+    m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue = refPowerName;
     actualizeRefConstant();
     setInterfaceComponents();
 
@@ -1147,7 +1147,7 @@ void cSpm1ModuleMeasProgram::newUnit(QVariant unit)
 
 void cSpm1ModuleMeasProgram::newUpperLimit(QVariant limit)
 {
-    m_pModule->getConfigData()->m_fUpperLimit.m_fValue = limit.toDouble();
+    m_pModule->getConfigData()->m_limitConfigs.m_fUpperLimit.m_fValue = limit.toDouble();
     setRating();
     setInterfaceComponents();
 
@@ -1156,7 +1156,7 @@ void cSpm1ModuleMeasProgram::newUpperLimit(QVariant limit)
 
 void cSpm1ModuleMeasProgram::newLowerLimit(QVariant limit)
 {
-    m_pModule->getConfigData()->m_fLowerLimit.m_fValue = limit.toDouble();
+    m_pModule->getConfigData()->m_limitConfigs.m_fLowerLimit.m_fValue = limit.toDouble();
     setRating();
     setInterfaceComponents();
 

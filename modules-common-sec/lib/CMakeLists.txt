@@ -17,6 +17,7 @@ target_link_libraries(modules-common-sec
     PUBLIC
     module-tasks
     vf-moduleinterface
+    zera-basemodule
     PRIVATE
     Zera::zera-tasks-base
     Zera::service-interfaces

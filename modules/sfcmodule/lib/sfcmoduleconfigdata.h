@@ -1,7 +1,7 @@
 #ifndef SFCMODULECONFIGDATA_H
 #define SFCMODULECONFIGDATA_H
 
-#include "configtypes.h"
+#include "secconfigdatacommon.h"
 #include <QList>
 
 namespace SFCMODULE
@@ -10,9 +10,7 @@ namespace SFCMODULE
 class cSfcModuleConfigData
 {
 public:
-    quint8 m_nDutInpCount = 0;
-    QList<QString> m_dutInpList;
-    stringParameter m_sDutInput;
+    TSecCommonDutConfigs m_dutConfigs;
 };
 
 }

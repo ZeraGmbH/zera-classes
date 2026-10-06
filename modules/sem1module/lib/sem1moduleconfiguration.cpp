@@ -48,7 +48,7 @@ void cSem1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 
 QByteArray cSem1ModuleConfiguration::exportConfiguration() const
 {
-    const stringParameter* paramRefInput = &m_configData.m_sRefInput;
+    const stringParameter* paramRefInput = &m_configData.m_refConfigs.m_sRefInput;
     m_pXMLReader->setValue(paramRefInput->m_sKey, paramRefInput->m_sValue);
 
     const boolParameter* paramTargeted = &m_configData.m_bTargeted;
@@ -57,10 +57,10 @@ QByteArray cSem1ModuleConfiguration::exportConfiguration() const
     const intParameter* paramMeasTime = &m_configData.m_nMeasTime;
     m_pXMLReader->setValue(paramMeasTime->m_sKey, QString("%1").arg(paramMeasTime->m_nValue));
 
-    const doubleParameter* paramUpperLimit = &m_configData.m_fUpperLimit;
+    const doubleParameter* paramUpperLimit = &m_configData.m_limitConfigs.m_fUpperLimit;
     m_pXMLReader->setValue(paramUpperLimit->m_sKey, QString("%1").arg(paramUpperLimit->m_fValue));
 
-    const doubleParameter* paramLowerLimit = &m_configData.m_fLowerLimit;
+    const doubleParameter* paramLowerLimit = &m_configData.m_limitConfigs.m_fLowerLimit;
     m_pXMLReader->setValue(paramLowerLimit->m_sKey, QString("%1").arg(paramLowerLimit->m_fValue));
 
     return m_pXMLReader->getXMLConfig().toUtf8();
@@ -84,36 +84,36 @@ void cSem1ModuleConfiguration::configXMLInfo(const QString &key)
         switch (cmd)
         {
         case setRefInputCount:
-            m_configData.m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_configData.m_nRefInpCount; i++) {
+            m_configData.m_refConfigs.m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_configData.m_refConfigs.m_nRefInpCount; i++) {
                 m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
-                m_configData.m_refInpList.append(TRefInput());
+                m_configData.m_refConfigs.m_refInpList.append(TRefInput());
             }
             break;
         case setActiveUnitCount:
-            m_configData.m_nActiveUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_configData.m_nActiveUnitCount; i++) {
+            m_configData.m_unitConfigs.m_nActiveUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_configData.m_unitConfigs.m_nActiveUnitCount; i++) {
                 m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:activeunits:unit%1").arg(i+1)] = setActiveUnit1Name+i;
-                m_configData.m_ActiveUnitList.append(QString());
+                m_configData.m_unitConfigs.m_ActiveUnitList.append(QString());
             }
             break;
         case setReactiveUnitCount:
-            m_configData.m_nReactiveUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_configData.m_nReactiveUnitCount; i++) {
+            m_configData.m_unitConfigs.m_nReactiveUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_configData.m_unitConfigs.m_nReactiveUnitCount; i++) {
                 m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:reactiveunits:unit%1").arg(i+1)] = setReactiveUnit1Name+i;
-                m_configData.m_ReactiveUnitList.append(QString());
+                m_configData.m_unitConfigs.m_ReactiveUnitList.append(QString());
             }
             break;
         case setApparentUnitCount:
-            m_configData.m_nApparentUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_configData.m_nApparentUnitCount; i++) {
+            m_configData.m_unitConfigs.m_nApparentUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_configData.m_unitConfigs.m_nApparentUnitCount; i++) {
                 m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:apparentunits:unit%1").arg(i+1)] = setApparentUnit1Name+i;
-                m_configData.m_ApparentUnitList.append(QString());
+                m_configData.m_unitConfigs.m_ApparentUnitList.append(QString());
             }
             break;
         case setRefInput:
-            m_configData.m_sRefInput.m_sKey = key;
-            m_configData.m_sRefInput.m_sValue = m_pXMLReader->getValue(key);
+            m_configData.m_refConfigs.m_sRefInput.m_sKey = key;
+            m_configData.m_refConfigs.m_sRefInput.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setTargeted:
             m_configData.m_bTargeted.m_sKey = key;
@@ -124,12 +124,12 @@ void cSem1ModuleConfiguration::configXMLInfo(const QString &key)
             m_configData.m_nMeasTime.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setUpperLimit:
-            m_configData.m_fUpperLimit.m_sKey = key;
-            m_configData.m_fUpperLimit.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_limitConfigs.m_fUpperLimit.m_sKey = key;
+            m_configData.m_limitConfigs.m_fUpperLimit.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setLowerLimit:
-            m_configData.m_fLowerLimit.m_sKey = key;
-            m_configData.m_fLowerLimit.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
+            m_configData.m_limitConfigs.m_fLowerLimit.m_sKey = key;
+            m_configData.m_limitConfigs.m_fLowerLimit.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
 
         default:
@@ -144,23 +144,23 @@ void cSem1ModuleConfiguration::configXMLInfo(const QString &key)
                     TRefInput refInput;
                     refInput.inputName = refInputFNameAndAlias[0];
                     refInput.alias = refInputFNameAndAlias[1];
-                    m_configData.m_refInpList.replace(cmd, refInput);
+                    m_configData.m_refConfigs.m_refInpList.replace(cmd, refInput);
                 }
             }
             else if ((cmd >= setActiveUnit1Name) && (cmd < setActiveUnit1Name + 16)) {
                 cmd -= setActiveUnit1Name;
                 QString name = m_pXMLReader->getValue(key);
-                m_configData.m_ActiveUnitList.replace(cmd, name);
+                m_configData.m_unitConfigs.m_ActiveUnitList.replace(cmd, name);
             }
             else if ((cmd >= setReactiveUnit1Name) && (cmd < setReactiveUnit1Name + 16)) {
                 cmd -= setReactiveUnit1Name;
                 QString name = m_pXMLReader->getValue(key);
-                m_configData.m_ReactiveUnitList.replace(cmd, name);
+                m_configData.m_unitConfigs.m_ReactiveUnitList.replace(cmd, name);
             }
             else if ((cmd >= setApparentUnit1Name) && (cmd < setApparentUnit1Name + 16)) {
                 cmd -= setApparentUnit1Name;
                 QString name = m_pXMLReader->getValue(key);
-                m_configData.m_ApparentUnitList.replace(cmd, name);
+                m_configData.m_unitConfigs.m_ApparentUnitList.replace(cmd, name);
             }
             break;
         }

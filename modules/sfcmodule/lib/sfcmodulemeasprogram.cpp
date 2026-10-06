@@ -111,7 +111,7 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     connect(&m_freeECalculatorState, &QState::entered, this, &cSfcModuleMeasProgram::freeECalculator);
     connect(&m_deactivationDoneState, &QState::entered, this, &cSfcModuleMeasProgram::deactivationDone);
 
-    m_resourceTypeList.addTypesFromConfig(m_pModule->getConfigData()->m_dutInpList);
+    m_resourceTypeList.addTypesFromConfig(m_pModule->getConfigData()->m_dutConfigs.m_dutInpList);
 }
 
 void cSfcModuleMeasProgram::start()
@@ -195,7 +195,7 @@ void cSfcModuleMeasProgram::readResource()
 
 void cSfcModuleMeasProgram::testSecInputs()
 {
-    const auto dutInplist = m_pModule->getConfigData()->m_dutInpList;
+    const auto dutInplist = m_pModule->getConfigData()->m_dutConfigs.m_dutInpList;
     QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
     qint32 dutInputCountLeftToCheck = dutInplist.count();
     for (int dutInputNo = 0; dutInputNo < dutInplist.count(); dutInputNo++) {
@@ -266,7 +266,7 @@ void cSfcModuleMeasProgram::setsecINTNotifier()
 
 void cSfcModuleMeasProgram::setMasterMux()
 {
-    const QString &dutInputName = m_pModule->getConfigData()->m_sDutInput.m_sValue;
+    const QString &dutInputName = m_pModule->getConfigData()->m_dutConfigs.m_sDutInput.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_masterErrCalcName, dutInputName)] = setmastermux;
 }
 

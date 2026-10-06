@@ -146,8 +146,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     connect(&m_FinalState, &QState::entered, this, &cSec1ModuleMeasProgram::checkForRestart);
 
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
-    m_resourceTypeList.addTypesFromConfig(configData->m_refInpList);
-    m_resourceTypeList.addTypesFromConfig(configData->m_dutInpList);
+    m_resourceTypeList.addTypesFromConfig(configData->m_refConfigs.m_refInpList);
+    m_resourceTypeList.addTypesFromConfig(configData->m_dutConfigs.m_dutInpList);
 }
 
 void cSec1ModuleMeasProgram::start()
@@ -392,13 +392,13 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
                                             QString("Actual frequency input (internal)"),
-                                            QVariant(configData->m_sRefInput.m_sValue));
+                                            QVariant(configData->m_refConfigs.m_sRefInput.m_sValue));
     m_pModule->m_veinModuleParameterMap[key] = m_pRefFreqInput; // and for the modules interface
 
     m_pUpperLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("PAR_Uplimit"),
                                                 QString("Error limit: upper"),
-                                                QVariant(configData->m_fUpperLimit.m_fValue));
+                                                QVariant(configData->m_limitConfigs.m_fUpperLimit.m_fValue));
     m_pUpperLimitPar->setScpiInfo("CALCULATE",  QString("%1:UPLIMIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pUpperLimitPar->setValidator(new cDoubleValidator(-100.0, 100.0, 1e-6));
     m_pUpperLimitPar->setUnit("%");
@@ -407,7 +407,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pLowerLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 key = QString("PAR_Lolimit"),
                                                 QString("Error limit: lower"),
-                                                QVariant(configData->m_fLowerLimit.m_fValue));
+                                                QVariant(configData->m_limitConfigs.m_fLowerLimit.m_fValue));
     m_pLowerLimitPar->setScpiInfo("CALCULATE",  QString("%1:LOLIMIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pLowerLimitPar->setValidator(new cDoubleValidator(-100.0, 100.0, 1e-6));
     m_pLowerLimitPar->setUnit("%");
@@ -751,7 +751,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
 
 void cSec1ModuleMeasProgram::actualizeRefConstant()
 {
-    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_sRefInput.m_sValue);
+    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
     m_pRefConstantPar->setValue(QVariant(constant));
     newRefConstant(QVariant(constant));
 }
@@ -816,7 +816,7 @@ void cSec1ModuleMeasProgram::updateDemoMeasurementResults()
 
 void cSec1ModuleMeasProgram::onRefConstantChanged(const QString &refPowerName)
 {
-    if(m_pModule->getConfigData()->m_sRefInput.m_sValue == refPowerName) {
+    if(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue == refPowerName) {
         stopMeasurement(true);
         actualizeRefConstant();
     }
@@ -827,16 +827,16 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
     computeDependencies(); // dependant on mode we calculate parameters by ourself
 
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
-    m_pDutInputPar->setValue(m_dutInputDictionary.getAlias(configData->m_sDutInput.m_sValue));
-    m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_sRefInput.m_sValue));
+    m_pDutInputPar->setValue(m_dutInputDictionary.getAlias(configData->m_dutConfigs.m_sDutInput.m_sValue));
+    m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_refConfigs.m_sRefInput.m_sValue));
     m_pDutConstantPar->setValue(configData->m_fDutConstant.m_fValue);
     m_pRefConstantPar->setValue(configData->m_fRefConstant.m_fValue);
     m_pMRatePar->setValue(configData->m_nMRate.m_nValue);
     m_pTargetPar->setValue(configData->m_nTarget.m_nValue);
     m_pEnergyPar->setValue(configData->m_fEnergy.m_fValue);
     m_pProgressAct->setValue(double(0.0));
-    m_pUpperLimitPar->setValue(configData->m_fUpperLimit.m_fValue);
-    m_pLowerLimitPar->setValue(configData->m_fLowerLimit.m_fValue);
+    m_pUpperLimitPar->setValue(configData->m_limitConfigs.m_fUpperLimit.m_fValue);
+    m_pLowerLimitPar->setValue(configData->m_limitConfigs.m_fLowerLimit.m_fValue);
     m_pResultUnit->setValue(configData->m_sResultUnit.m_sValue);
 }
 
@@ -861,7 +861,7 @@ void cSec1ModuleMeasProgram::setValidators()
 void cSec1ModuleMeasProgram::setReferenceAliases()
 {
     const cSec1ModuleConfigData *confData = m_pModule->getConfigData();
-    const QList<TRefInput> refInputList = confData->m_refInpList;
+    const QList<TRefInput> refInputList = confData->m_refConfigs.m_refInpList;
     for(const TRefInput &refInput : refInputList)
         m_refInputDictionary.setAlias(refInput.inputName, refInput.alias);
 }
@@ -869,7 +869,7 @@ void cSec1ModuleMeasProgram::setReferenceAliases()
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 {
     QStringList sl;
-    QString powType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_sRefInput.m_sValue); // This won't work for PQS
+    QString powType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue); // This won't work for PQS
     if (powType.contains('P'))
         sl << QString("I/kWh") << QString("Wh/I");
     if (powType.contains('Q'))
@@ -882,7 +882,7 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 
 QString cSec1ModuleMeasProgram::getEnergyUnit()
 {
-    QString powerType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_sRefInput.m_sValue);
+    QString powerType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
     return cUnitHelper::getNewEnergyUnit(powerType, QString('k'), 3600);
 }
 
@@ -1029,7 +1029,7 @@ void cSec1ModuleMeasProgram::readResource()
 
 void cSec1ModuleMeasProgram::testSecInputs()
 {
-    const auto refInpList = m_pModule->getConfigData()->m_refInpList;
+    const auto refInpList = m_pModule->getConfigData()->m_refConfigs.m_refInpList;
     qint32 refInCountLeftToCheck = refInpList.count();
     QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
     for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
@@ -1044,7 +1044,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
         }
     }
 
-    const auto dutInplist = m_pModule->getConfigData()->m_dutInpList;
+    const auto dutInplist = m_pModule->getConfigData()->m_dutConfigs.m_dutInpList;
     qint32 dutInputCountLeftToCheck = dutInplist.count();
     for (int dutInputNo = 0; dutInputNo < dutInplist.count(); dutInputNo++) {
         QString dutInputName = dutInplist[dutInputNo];
@@ -1108,7 +1108,7 @@ void cSec1ModuleMeasProgram::readDUTInputDone()
 
 void cSec1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
-    if (m_pModule->getConfigData()->m_nRefInpCount > 0) {
+    if (m_pModule->getConfigData()->m_refConfigs.m_nRefInpCount > 0) {
         connect(&m_refConstantObserver, &RefPowerConstantObserver::sigRegistrationFinished, this, [this](bool ok) {
             if(ok) {
                 actualizeRefConstant();
@@ -1229,14 +1229,14 @@ void cSec1ModuleMeasProgram::setMeaspulses()
 
 void cSec1ModuleMeasProgram::setMasterMux()
 {
-    QString dutInputName = m_pModule->getConfigData()->m_sDutInput.m_sValue;
+    QString dutInputName = m_pModule->getConfigData()->m_dutConfigs.m_sDutInput.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_masterErrCalcName, dutInputName)] = setmastermux;
 }
 
 
 void cSec1ModuleMeasProgram::setSlaveMux()
 {
-    QString refPowerName = m_pModule->getConfigData()->m_sRefInput.m_sValue;
+    QString refPowerName = m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_slaveErrCalcName, refPowerName)] = setslavemux;
 }
 
@@ -1373,8 +1373,8 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
             const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
             m_multipleResultHelper.append(m_fResult,
                                           m_eRating,
-                                          configData->m_fLowerLimit.m_fValue,
-                                          configData->m_fUpperLimit.m_fValue,
+                                          configData->m_limitConfigs.m_fLowerLimit.m_fValue,
+                                          configData->m_limitConfigs.m_fUpperLimit.m_fValue,
                                           getUnitFactor(),
                                           m_pMeasStartTime->getValue().toString(),
                                           m_pMeasEndTime->getValue().toString(),
@@ -1436,7 +1436,7 @@ void cSec1ModuleMeasProgram::setRating()
 {
     if (getStatus() & ECALCSTATUS::READY) {
         const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
-        if ( (m_fResult >= configData->m_fLowerLimit.m_fValue) && (m_fResult <= configData->m_fUpperLimit.m_fValue))
+        if ( (m_fResult >= configData->m_limitConfigs.m_fLowerLimit.m_fValue) && (m_fResult <= configData->m_limitConfigs.m_fUpperLimit.m_fValue))
             m_eRating = ECALCRESULT::RESULT_PASSED;
         else
             m_eRating = ECALCRESULT::RESULT_FAILED;
@@ -1569,7 +1569,7 @@ void cSec1ModuleMeasProgram::newRefConstant(const QVariant &refconst)
 void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 {
     QString dutInputName = m_dutInputDictionary.getInputFNameFromAlias(dutinput.toString());
-    m_pModule->getConfigData()->m_sDutInput.m_sValue = dutInputName;
+    m_pModule->getConfigData()->m_dutConfigs.m_sDutInput.m_sValue = dutInputName;
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1579,7 +1579,7 @@ void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
 {
     QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refinput.toString());
-    m_pModule->getConfigData()->m_sRefInput.m_sValue = refPowerName;
+    m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue = refPowerName;
     actualizeRefConstant();
     setInterfaceComponents();
 
@@ -1631,7 +1631,7 @@ void cSec1ModuleMeasProgram::newEnergy(const QVariant &energy)
 
 void cSec1ModuleMeasProgram::newUpperLimit(const QVariant &limit)
 {
-    m_pModule->getConfigData()->m_fUpperLimit.m_fValue = limit.toDouble();
+    m_pModule->getConfigData()->m_limitConfigs.m_fUpperLimit.m_fValue = limit.toDouble();
     setInterfaceComponents();
     setRating();
 
@@ -1641,7 +1641,7 @@ void cSec1ModuleMeasProgram::newUpperLimit(const QVariant &limit)
 
 void cSec1ModuleMeasProgram::newLowerLimit(const QVariant &limit)
 {
-    m_pModule->getConfigData()->m_fLowerLimit.m_fValue = limit.toDouble();
+    m_pModule->getConfigData()->m_limitConfigs.m_fLowerLimit.m_fValue = limit.toDouble();
     setInterfaceComponents();
     setRating();
 
