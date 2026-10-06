@@ -89,7 +89,6 @@ private slots:
 private:
     void setInterfaceComponents();
     void setValidators();
-    void setReferenceAliases();
     void setUnits();
     void setEMResult();
 

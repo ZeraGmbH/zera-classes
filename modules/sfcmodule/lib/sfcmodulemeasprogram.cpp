@@ -16,6 +16,8 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
+    m_resourceTypeList.addTypesFromConfig(m_pModule->getConfigData()->m_dutConfigs);
+
     m_IdentifyState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourcesState);
     m_readResourcesState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
     m_readResourceState.addTransition(this, &cSfcModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
@@ -110,8 +112,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     connect(&m_stopECalculatorState, &QState::entered, this, &cSfcModuleMeasProgram::stopECCalculator);
     connect(&m_freeECalculatorState, &QState::entered, this, &cSfcModuleMeasProgram::freeECalculator);
     connect(&m_deactivationDoneState, &QState::entered, this, &cSfcModuleMeasProgram::deactivationDone);
-
-    m_resourceTypeList.addTypesFromConfig(m_pModule->getConfigData()->m_dutConfigs.m_dutInpList);
 }
 
 void cSfcModuleMeasProgram::start()

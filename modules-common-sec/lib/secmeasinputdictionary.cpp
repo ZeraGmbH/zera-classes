@@ -14,6 +14,13 @@ void SecMeasInputDictionary::setAlias(const QString &inputName, const QString &a
     m_reverseAliasHash[alias] = inputName;
 }
 
+void SecMeasInputDictionary::setAliasesFromReferenceConfig(const TSecCommonReferenceConfigs &refConfig)
+{
+    const QList<TRefInput> refInputList = refConfig.m_refInpList;
+    for(const TRefInput &refInput : refInputList)
+        setAlias(refInput.inputName, refInput.alias);
+}
+
 QString SecMeasInputDictionary::getResource(const QString &inputName) const
 {
     Q_ASSERT(m_resourceHash.contains(inputName));

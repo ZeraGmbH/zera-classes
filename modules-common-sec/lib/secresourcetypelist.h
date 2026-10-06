@@ -7,10 +7,11 @@
 class SecResourceTypeList
 {
 public:
-    void addTypesFromConfig(const QList<TRefInput> &refInputList);
-    void addTypesFromConfig(const QStringList &inputList);
+    void addTypesFromConfig(const TSecCommonReferenceConfigs &refConfig);
+    void addTypesFromConfig(const TSecCommonDutConfigs &dutConfig);
     const QStringList &getResourceTypeList() const;
 private:
+    void addTypesFromList(const QStringList &inputList);
     void addToListNoDoubles(const QStringList &resourceTypeListToAdd);
     static bool found(const QList<QString>& list, QString searched);
     QStringList m_resourceTypeList;

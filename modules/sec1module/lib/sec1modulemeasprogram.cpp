@@ -23,7 +23,10 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    setReferenceAliases();
+    const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
+    m_refInputDictionary.setAliasesFromReferenceConfig(configData->m_refConfigs);
+    m_resourceTypeList.addTypesFromConfig(configData->m_refConfigs);
+    m_resourceTypeList.addTypesFromConfig(configData->m_dutConfigs);
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -144,10 +147,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     connect(&m_readMTCountactState, &QState::entered, this, &cSec1ModuleMeasProgram::readMTCountact);
     connect(&m_calcResultAndResetIntState, &QState::entered, this, &cSec1ModuleMeasProgram::setECResultAndResetInt);
     connect(&m_FinalState, &QState::entered, this, &cSec1ModuleMeasProgram::checkForRestart);
-
-    const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
-    m_resourceTypeList.addTypesFromConfig(configData->m_refConfigs.m_refInpList);
-    m_resourceTypeList.addTypesFromConfig(configData->m_dutConfigs.m_dutInpList);
 }
 
 void cSec1ModuleMeasProgram::start()
@@ -161,9 +160,7 @@ void cSec1ModuleMeasProgram::stop()
 void cSec1ModuleMeasProgram::generateVeinInterface()
 {
     QString key;
-
     QString modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
-    const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
 
     m_pDutInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("PAR_DutInput"),
@@ -389,6 +386,8 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pResultAct->setScpiInfo("CALCULATE",  QString("%1:RESULT").arg(modNr), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pResultAct; // and for the modules interface
 
+
+    const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
                                             QString("Actual frequency input (internal)"),
@@ -856,14 +855,6 @@ void cSec1ModuleMeasProgram::setValidators()
     m_pEnergyAct->setUnit(s);
     m_pEnergyFinalAct->setUnit(s);
     m_pEnergyPar->setUnit(s);
-}
-
-void cSec1ModuleMeasProgram::setReferenceAliases()
-{
-    const cSec1ModuleConfigData *confData = m_pModule->getConfigData();
-    const QList<TRefInput> refInputList = confData->m_refConfigs.m_refInpList;
-    for(const TRefInput &refInput : refInputList)
-        m_refInputDictionary.setAlias(refInput.inputName, refInput.alias);
 }
 
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()

@@ -1,6 +1,7 @@
 #ifndef SECMEASINPUTDICTIONARY_H
 #define SECMEASINPUTDICTIONARY_H
 
+#include "secconfigdatacommon.h"
 #include <QHash>
 #include <QMap>
 
@@ -14,6 +15,7 @@ public:
     QStringList getInputAliasList() const;
 
     void setAlias(const QString &inputName, const QString &alias);
+    void setAliasesFromReferenceConfig(const TSecCommonReferenceConfigs &refConfig);
     QString getAlias(const QString &inputName) const;
 
     void setNotificationId(const QString &inputName, int notificationId);

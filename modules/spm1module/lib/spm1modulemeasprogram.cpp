@@ -21,7 +21,9 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module) :
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
-    setReferenceAliases();
+    const cSpm1ModuleConfigData *configData = m_pModule->getConfigData();
+    m_refInputDictionary.setAliasesFromReferenceConfig(configData->m_refConfigs);
+    m_resourceTypeList.addTypesFromConfig(configData->m_refConfigs);
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -156,7 +158,6 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module) :
     m_unitFactorHash["VA"] = 0.001;
 
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
-    m_resourceTypeList.addTypesFromConfig(m_pModule->getConfigData()->m_refConfigs.m_refInpList);
 }
 
 void cSpm1ModuleMeasProgram::start()
@@ -600,14 +601,6 @@ void cSpm1ModuleMeasProgram::setValidators()
     m_pRefInputPar->setValidator(sValidator);
     sValidator = new cStringValidator(getPowerUnitValidator());
     m_pInputUnitPar->setValidator(sValidator);
-}
-
-void SPM1MODULE::cSpm1ModuleMeasProgram::setReferenceAliases()
-{
-    const cSpm1ModuleConfigData *confData = m_pModule->getConfigData();
-    const QList<TRefInput> refInputList = confData->m_refConfigs.m_refInpList;
-    for(const TRefInput &refInput : refInputList)
-        m_refInputDictionary.setAlias(refInput.inputName, refInput.alias);
 }
 
 void cSpm1ModuleMeasProgram::setUnits()

@@ -1,14 +1,19 @@
 #include "secresourcetypelist.h"
 
-void SecResourceTypeList::addTypesFromConfig(const QList<TRefInput> &refInputList)
+void SecResourceTypeList::addTypesFromConfig(const TSecCommonReferenceConfigs &refConfig)
 {
     QStringList inputNames;
-    for(const auto &input : refInputList)
+    for(const auto &input : refConfig.m_refInpList)
         inputNames.append(input.inputName);
-    addTypesFromConfig(inputNames);
+    addTypesFromList(inputNames);
 }
 
-void SecResourceTypeList::addTypesFromConfig(const QStringList &inputList)
+void SecResourceTypeList::addTypesFromConfig(const TSecCommonDutConfigs &dutConfig)
+{
+    addTypesFromList(dutConfig.m_dutInpList);
+}
+
+void SecResourceTypeList::addTypesFromList(const QStringList &inputList)
 {
     QStringList resourceTypeListToAdd;
     // REF
