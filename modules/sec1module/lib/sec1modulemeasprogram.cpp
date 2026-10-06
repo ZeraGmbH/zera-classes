@@ -2,6 +2,7 @@
 #include "sec1module.h"
 #include "sec1moduleconfigdata.h"
 #include "secdatetimehelper.h"
+#include "secpowermodulefinder.h"
 #include "unithelper.h"
 #include "errormessages.h"
 #include <proxy.h>
@@ -388,10 +389,18 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 
 
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
+    const QString refInputName = configData->m_refConfigs.m_sRefInput.m_sValue;
+
+    m_pPowerModuleEntityId = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                   key = QString("ACT_PowerModuleEntityId"),
+                                                   QString("Power module entity ID generating reference input"),
+                                                   SecPowerModuleFinder::findEntity(refInputName, m_pModule->getStorageDb()));
+    m_pModule->m_veinModuleParameterMap[key] = m_pPowerModuleEntityId; // and for the modules interface
+
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
                                             QString("Actual frequency input (internal)"),
-                                            QVariant(configData->m_refConfigs.m_sRefInput.m_sValue));
+                                            refInputName);
     m_pModule->m_veinModuleParameterMap[key] = m_pRefFreqInput; // and for the modules interface
 
     m_pUpperLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -1569,8 +1578,11 @@ void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 
 void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
 {
-    QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refinput.toString());
+    const QString refInputName = refinput.toString();
+
+    QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refInputName);
     m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue = refPowerName;
+
     actualizeRefConstant();
     setInterfaceComponents();
 
@@ -1586,6 +1598,7 @@ void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
     m_pEnergyAct->setValue(0.0);
     m_pEnergyFinalAct->setValue(0.0);
     m_pResultAct->setValue(0.0);
+    m_pPowerModuleEntityId->setValue(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
     m_pRefFreqInput->setValue(refPowerName);
     m_pModule->exportMetaData();
 

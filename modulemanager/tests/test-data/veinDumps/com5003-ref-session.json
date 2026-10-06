@@ -1249,6 +1249,7 @@
             "values": [
             ]
         },
+        "ACT_PowerModuleEntityId": 1070,
         "ACT_Progress": 0,
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
@@ -1282,6 +1283,9 @@
                     "Description": "<skipped>"
                 },
                 "ACT_MulResult": {
+                    "Description": "<skipped>"
+                },
+                "ACT_PowerModuleEntityId": {
                     "Description": "<skipped>"
                 },
                 "ACT_Progress": {

@@ -4868,6 +4868,7 @@
             "values": [
             ]
         },
+        "ACT_PowerModuleEntityId": 1070,
         "ACT_Progress": 0,
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
@@ -4901,6 +4902,9 @@
                     "Description": "<skipped>"
                 },
                 "ACT_MulResult": {
+                    "Description": "<skipped>"
+                },
+                "ACT_PowerModuleEntityId": {
                     "Description": "<skipped>"
                 },
                 "ACT_Progress": {
@@ -5931,6 +5935,7 @@
         "ACT_EstimEndTime": "",
         "ACT_MeasTime": 0,
         "ACT_Power": 0,
+        "ACT_PowerModuleEntityId": 1070,
         "ACT_Rating": -1,
         "ACT_RefFreqInput": "fo0",
         "ACT_Result": 0,
@@ -5956,6 +5961,9 @@
                 "ACT_Power": {
                     "Description": "<skipped>",
                     "Unit": "kW"
+                },
+                "ACT_PowerModuleEntityId": {
+                    "Description": "<skipped>"
                 },
                 "ACT_Rating": {
                     "Description": "<skipped>"

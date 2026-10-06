@@ -2,6 +2,7 @@
 #include "spm1module.h"
 #include "errormessages.h"
 #include "secdatetimehelper.h"
+#include "secpowermodulefinder.h"
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <scpi.h>
@@ -173,7 +174,6 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     QString key;
 
     QString modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
-    const cSpm1ModuleConfigData *configData = m_pModule->getConfigData();
 
     m_pRefInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_RefInput"),
@@ -289,6 +289,15 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_pResultAct->setScpiInfo("CALCULATE", QString("%1:RESULT").arg(modNr), SCPI::isQuery);
     m_pResultAct->setUnit("%");
     m_pModule->m_veinModuleParameterMap[key] = m_pResultAct; // and for the modules interface
+
+    const cSpm1ModuleConfigData *configData = m_pModule->getConfigData();
+    const QString refInputName = configData->m_refConfigs.m_sRefInput.m_sValue;
+
+    m_pPowerModuleEntityId = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                   key = QString("ACT_PowerModuleEntityId"),
+                                                   QString("Power module entity ID generating reference input"),
+                                                   SecPowerModuleFinder::findEntity(refInputName, m_pModule->getStorageDb()));
+    m_pModule->m_veinModuleParameterMap[key] = m_pPowerModuleEntityId; // and for the modules interface
 
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
@@ -1083,14 +1092,18 @@ void cSpm1ModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void cSpm1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refinput.toString());
+    const QString refInputName = refinput.toString();
+
+    QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refInputName);
     m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue = refPowerName;
+
     actualizeRefConstant();
     setInterfaceComponents();
 
     // if the reference input changes P <-> Q <-> S it is necessary to change energyunit and powerunit and their validators
     setValidators();
     setUnits();
+    m_pPowerModuleEntityId->setValue(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
     m_pRefFreqInput->setValue(refPowerName);
 
     emit m_pModule->parameterChanged();

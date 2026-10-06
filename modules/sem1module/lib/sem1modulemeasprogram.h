@@ -185,6 +185,7 @@ private:
     VfModuleParameter* m_pEnergyAct = nullptr;
     VfModuleParameter* m_pPowerAct = nullptr;
     VfModuleParameter* m_pResultAct = nullptr;
+    VfModuleParameter* m_pPowerModuleEntityId = nullptr;
     VfModuleParameter* m_pRefFreqInput = nullptr;
     VfModuleParameter* m_pUpperLimitPar = nullptr;
     VfModuleParameter* m_pLowerLimitPar = nullptr;
