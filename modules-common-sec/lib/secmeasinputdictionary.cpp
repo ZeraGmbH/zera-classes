@@ -1,37 +1,37 @@
 #include "secmeasinputdictionary.h"
 
-void SecMeasInputDictionary::addReferenceInput(const QString &inputFName, const QString &resource)
+void SecMeasInputDictionary::addReferenceInput(const QString &inputName, const QString &resource)
 {
-    Q_ASSERT(!m_resourceHash.contains(inputFName));
-    m_resourceHash[inputFName] = resource;
+    Q_ASSERT(!m_resourceHash.contains(inputName));
+    m_resourceHash[inputName] = resource;
 }
 
-void SecMeasInputDictionary::setAlias(const QString &inputFName, const QString &alias)
+void SecMeasInputDictionary::setAlias(const QString &inputName, const QString &alias)
 {
-    Q_ASSERT(!m_aliasMap.contains(inputFName));
-    m_aliasMap[inputFName] = alias;
+    Q_ASSERT(!m_aliasMap.contains(inputName));
+    m_aliasMap[inputName] = alias;
     Q_ASSERT(!m_reverseAliasHash.contains(alias));
-    m_reverseAliasHash[alias] = inputFName;
+    m_reverseAliasHash[alias] = inputName;
 }
 
-QString SecMeasInputDictionary::getResource(const QString &inputFName) const
+QString SecMeasInputDictionary::getResource(const QString &inputName) const
 {
-    Q_ASSERT(m_resourceHash.contains(inputFName));
-    return m_resourceHash[inputFName];
+    Q_ASSERT(m_resourceHash.contains(inputName));
+    return m_resourceHash[inputName];
 }
 
-QString SecMeasInputDictionary::getAlias(const QString &inputFName) const
+QString SecMeasInputDictionary::getAlias(const QString &inputName) const
 {
-    if(m_aliasMap.contains(inputFName))
-        return m_aliasMap[inputFName];
-    qWarning("Alias for input name %s not found", qPrintable(inputFName));
+    if(m_aliasMap.contains(inputName))
+        return m_aliasMap[inputName];
+    qWarning("Alias for input name %s not found", qPrintable(inputName));
     return QString("P");
 }
 
-void SecMeasInputDictionary::setNotificationId(const QString &inputFName, int notificationId)
+void SecMeasInputDictionary::setNotificationId(const QString &inputName, int notificationId)
 {
     Q_ASSERT(!m_notificationIdMap.contains(notificationId));
-    m_notificationIdMap[notificationId] = inputFName;
+    m_notificationIdMap[notificationId] = inputName;
 }
 
 QString SecMeasInputDictionary::getInputNameFromNotificationId(int notificationId) const

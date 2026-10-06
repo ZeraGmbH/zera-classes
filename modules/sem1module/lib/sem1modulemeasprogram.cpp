@@ -26,7 +26,7 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
     const cSem1ModuleConfigData *confData = m_pModule->getConfigData();
     const QList<TRefInput> refInputList = confData->m_refInpList;
     for(const TRefInput &refInput : refInputList)
-        m_refInputDictionary.setAlias(refInput.inputFName, refInput.alias);
+        m_refInputDictionary.setAlias(refInput.inputName, refInput.alias);
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -748,7 +748,7 @@ void cSem1ModuleMeasProgram::testSemInputs()
     qint32 refInCountLeftToCheck = refInpList.count();
     QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
     for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
-        QString refPowerName = refInpList[refInputNo].inputFName;
+        QString refPowerName = refInpList[refInputNo].inputName;
         for (int resourceTypeNo = 0; resourceTypeNo < resourceTypeList.count(); resourceTypeNo++) {
             QString resourcelist = m_ResourceHash[resourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refPowerName)) {

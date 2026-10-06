@@ -142,7 +142,7 @@ void cSem1ModuleConfiguration::configXMLInfo(const QString &key)
                 }
                 else {
                     TRefInput refInput;
-                    refInput.inputFName = refInputFNameAndAlias[0];
+                    refInput.inputName = refInputFNameAndAlias[0];
                     refInput.alias = refInputFNameAndAlias[1];
                     m_configData.m_refInpList.replace(cmd, refInput);
                 }

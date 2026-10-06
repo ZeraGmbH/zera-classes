@@ -5,7 +5,7 @@
 
 struct TRefInput
 {
-    QString inputFName;
+    QString inputName;
     QString alias;
 };
 
