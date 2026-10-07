@@ -9,7 +9,7 @@ class cBaseMeasModule : public BaseModule
 {
     Q_OBJECT
 public:
-    cBaseMeasModule(const ModuleFactoryParam &moduleParam);
+    explicit cBaseMeasModule(const ModuleFactoryParam &moduleParam);
     VfEventSytemModuleParam *getValidatorEventSystem();
 protected slots:
     void activationFinished() override;
