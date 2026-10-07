@@ -46,7 +46,7 @@ QString SecMeasInputDictionary::getAlias(const QString &inputName) const
 {
     if(m_aliasMap.contains(inputName))
         return m_aliasMap[inputName];
-    qWarning("Alias for input name %s not found", qPrintable(inputName));
+    qCritical("Alias for input name %s not found", qPrintable(inputName));
     return QString("P");
 }
 
