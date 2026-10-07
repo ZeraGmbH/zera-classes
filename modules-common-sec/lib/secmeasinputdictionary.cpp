@@ -56,7 +56,7 @@ QString SecMeasInputDictionary::getInputFNameFromAlias(const QString &alias) con
     return m_reverseAliasHash[alias];
 }
 
-QStringList SecMeasInputDictionary::getInputNameList() const
+const QStringList &SecMeasInputDictionary::getInputNameList() const
 {
     return m_inputsOrderedByConfig;
 }

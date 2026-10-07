@@ -16,7 +16,7 @@ public:
     QString getResource(const QString &inputName) const;
     const QStringList &getResourceTypeList() const;
 
-    QStringList getInputNameList() const;
+    const QStringList &getInputNameList() const;
     QStringList getInputAliasList() const;
 
     void setAlias(const QString &inputName, const QString &alias);
