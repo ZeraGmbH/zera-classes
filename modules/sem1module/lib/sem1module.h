@@ -1,7 +1,7 @@
 #ifndef SEM1MODULE_H
 #define SEM1MODULE_H
 
-#include "sem1moduleconfiguration.h"
+#include "semspmmoduleconfiguration.h"
 #include "sem1modulemeasprogram.h"
 #include <basemeasmodule.h>
 
@@ -27,7 +27,7 @@ private:
     void stopMeas() override;
 
     cSem1ModuleMeasProgram *m_pMeasProgram = nullptr;
-    cSem1ModuleConfiguration m_configuration;
+    SemSpmModuleConfiguration m_configuration;
 };
 
 }

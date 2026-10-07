@@ -2,7 +2,7 @@
 #define SPM1MODULE_H
 
 #include "spm1modulemeasprogram.h"
-#include "spm1moduleconfiguration.h"
+#include "semspmmoduleconfiguration.h"
 #include <basemeasmodule.h>
 
 namespace SPM1MODULE
@@ -27,7 +27,7 @@ private:
     void stopMeas() override;
 
     cSpm1ModuleMeasProgram *m_pMeasProgram = nullptr;
-    cSpm1ModuleConfiguration m_configuration;
+    SemSpmModuleConfiguration m_configuration;
 };
 
 }

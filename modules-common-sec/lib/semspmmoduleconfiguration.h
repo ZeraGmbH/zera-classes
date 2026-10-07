@@ -1,17 +1,14 @@
-#ifndef SEM1MODULECONFIGURATION_H
-#define SEM1MODULECONFIGURATION_H
+#ifndef SEMSPMMODULECONFIGURATION_H
+#define SEMSPMMODULECONFIGURATION_H
 
 #include "basemoduleconfiguration.h"
 #include "semspmmoduleconfigdata.h"
 
-namespace SEM1MODULE
-{
-
-class cSem1ModuleConfiguration: public BaseModuleConfiguration
+class SemSpmModuleConfiguration : public BaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    explicit cSem1ModuleConfiguration(const QByteArray& xmlString);
+    explicit SemSpmModuleConfiguration(const QByteArray& xmlString);
 
     QByteArray exportConfiguration() const override;
     SemSpmModuleConfigData* getConfigData();
@@ -24,6 +21,4 @@ private:
     SemSpmModuleConfigData m_configData;
 };
 
-}
-
-#endif // SEM1MODULCONFIGURATION_H
+#endif // SEMSPMMODULECONFIGURATION_H

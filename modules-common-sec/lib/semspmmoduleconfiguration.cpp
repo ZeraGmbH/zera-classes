@@ -1,9 +1,6 @@
-#include "spm1moduleconfiguration.h"
+#include "semspmmoduleconfiguration.h"
 
-namespace SPM1MODULE
-{
-
-cSpm1ModuleConfiguration::cSpm1ModuleConfiguration(const QByteArray &xmlString)
+SemSpmModuleConfiguration::SemSpmModuleConfiguration(const QByteArray &xmlString)
 {
     setConfiguration(xmlString);
 }
@@ -27,7 +24,7 @@ enum moduleconfigstate
     setApparentUnit1Name = 96
 };
 
-void cSpm1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
+void SemSpmModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_ConfigXMLMap["confpar:configuration:measure:refinput:n"] = setRefInputCount;
     m_ConfigXMLMap["confpar:configuration:measure:activeunits:n"] = setActiveUnitCount;
@@ -40,13 +37,13 @@ void cSpm1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
     m_ConfigXMLMap["confpar:parameter:measure:upperlimit"] = setUpperLimit;
     m_ConfigXMLMap["confpar:parameter:measure:lowerlimit"] = setLowerLimit;
 
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSpm1ModuleConfiguration::configXMLInfo);
-    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSpm1ModuleConfiguration::completeConfiguration);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &SemSpmModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &SemSpmModuleConfiguration::completeConfiguration);
     m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
 }
 
 
-QByteArray cSpm1ModuleConfiguration::exportConfiguration() const
+QByteArray SemSpmModuleConfiguration::exportConfiguration() const
 {
     const stringParameter* paramRefInput = &m_configData.m_refConfigs.m_sRefInput;
     m_pXMLReader->setValue(paramRefInput->m_sKey, paramRefInput->m_sValue);
@@ -66,12 +63,12 @@ QByteArray cSpm1ModuleConfiguration::exportConfiguration() const
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-SemSpmModuleConfigData *cSpm1ModuleConfiguration::getConfigData()
+SemSpmModuleConfigData *SemSpmModuleConfiguration::getConfigData()
 {
     return &m_configData;
 }
 
-void cSpm1ModuleConfiguration::configXMLInfo(const QString &key)
+void SemSpmModuleConfiguration::configXMLInfo(const QString &key)
 {
     if (m_ConfigXMLMap.contains(key)) {
         bool ok = true;
@@ -167,10 +164,7 @@ void cSpm1ModuleConfiguration::configXMLInfo(const QString &key)
 }
 
 
-void cSpm1ModuleConfiguration::completeConfiguration(bool ok)
+void SemSpmModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
 }
-
-}
-
