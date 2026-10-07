@@ -33,11 +33,7 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
 
-    m_IdentifyState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_readResourcesState);
-    m_readResourcesState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
-    m_readResourceState.addTransition(this, &cSem1ModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
-    m_readResourceState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_testSemInputsState); // go on if done
-    m_testSemInputsState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_ecalcServerConnectState); // test all configured Inputs
+    m_IdentifyState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_ecalcServerConnectState);
     //m_ecalcServerConnectState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_fetchECalcUnitsState); // connect to ecalc server
     //transition from this state to m_fetch....is done in ecalcServerConnect
     m_fetchECalcUnitsState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_pcbServerConnectState); // connect to pcbserver
@@ -47,9 +43,6 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
 
     m_activationMachine.addState(&resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_readResourcesState);
-    m_activationMachine.addState(&m_readResourceState);
-    m_activationMachine.addState(&m_testSemInputsState);
     m_activationMachine.addState(&m_ecalcServerConnectState);
     m_activationMachine.addState(&m_fetchECalcUnitsState);
     m_activationMachine.addState(&m_pcbServerConnectState);
@@ -61,9 +54,6 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
 
     connect(&resourceManagerConnectState, &QState::entered, this, &cSem1ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSem1ModuleMeasProgram::sendRMIdent);
-    connect(&m_readResourcesState, &QState::entered, this, &cSem1ModuleMeasProgram::readResources);
-    connect(&m_readResourceState, &QState::entered, this, &cSem1ModuleMeasProgram::readResource);
-    connect(&m_testSemInputsState, &QState::entered, this, &cSem1ModuleMeasProgram::testSemInputs);
     connect(&m_ecalcServerConnectState, &QState::entered, this, &cSem1ModuleMeasProgram::ecalcServerConnect);
     connect(&m_fetchECalcUnitsState, &QState::entered, this, &cSem1ModuleMeasProgram::fetchECalcUnits);
     connect(&m_pcbServerConnectState, &QState::entered, this, &cSem1ModuleMeasProgram::pcbServerConnect);
@@ -378,7 +368,6 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
 enum sem1moduleCmds
 {
     sendrmident,
-    readresource,
     fetchecalcunits,
     setsecintnotifier,
 
@@ -421,20 +410,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit activationContinue();
                 else
                     notifyError(rmidentErrMSG);
-                break;
-
-            case readresource:
-                if (reply == ack) {
-                    QStringList resourceTypeList = m_refInputDictionary.getResourceTypeList();
-                    m_ResourceHash[resourceTypeList.at(m_nIt)] = answer.toString();
-                    m_nIt++;
-                    if (m_nIt < resourceTypeList.count())
-                        emit activationLoop();
-                    else
-                        emit activationContinue();
-                }
-                else
-                    notifyError(resourceErrMsg);
                 break;
 
             case fetchecalcunits:
@@ -735,40 +710,6 @@ void cSem1ModuleMeasProgram::resourceManagerConnect()
 void cSem1ModuleMeasProgram::sendRMIdent()
 {
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Sem1Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
-}
-
-void cSem1ModuleMeasProgram::readResources()
-{
-    m_nIt = 0; // we want to read all resources from resourcetypelist
-    emit activationContinue();
-}
-
-void cSem1ModuleMeasProgram::readResource()
-{
-    QString resourcetype = m_refInputDictionary.getResourceTypeList().at(m_nIt);
-    m_MsgNrCmdList[m_rmInterface.getResources(resourcetype)] = readresource;
-}
-
-void cSem1ModuleMeasProgram::testSemInputs()
-{
-    const auto &refInpList = m_pModule->getConfigData()->m_refConfigs.m_refInpList;
-    qint32 refInCountLeftToCheck = refInpList.count();
-    QStringList resourceTypeList = m_refInputDictionary.getResourceTypeList();
-    for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
-        QString refPowerName = refInpList[refInputNo].inputName;
-        for (int resourceTypeNo = 0; resourceTypeNo < resourceTypeList.count(); resourceTypeNo++) {
-            QString resourcelist = m_ResourceHash[resourceTypeList[resourceTypeNo]];
-            if (resourcelist.contains(refPowerName)) {
-                refInCountLeftToCheck--;
-                m_refInputDictionary.addReferenceInput(refPowerName, resourceTypeList[resourceTypeNo]);
-                break;
-            }
-        }
-    }
-    if (refInCountLeftToCheck == 0) // we found all our configured Inputs
-        emit activationContinue(); // so lets go on
-    else
-        notifyError(resourceErrMsg);
 }
 
 void cSem1ModuleMeasProgram::ecalcServerConnect()

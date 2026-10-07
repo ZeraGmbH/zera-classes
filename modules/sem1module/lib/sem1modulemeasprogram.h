@@ -37,9 +37,6 @@ private slots:
     void onRefConstantChanged(const QString &refPowerName);
     void resourceManagerConnect();
     void sendRMIdent();
-    void readResources();
-    void readResource();
-    void testSemInputs();
     void ecalcServerConnect();
     void fetchECalcUnits();
     void pcbServerConnect();
@@ -116,15 +113,9 @@ private:
     // statemachine for activating gets the following states
     QState resourceManagerConnectState; // connect to resource manager
     QState m_IdentifyState; // identify to resource manager
-    QState m_readResourcesState; // init to read all resource information for each type
-    QState m_readResourceState; // read for 1 type
-
-    QState m_testSemInputsState; // here we test if all our configured Inputs are present, we don't set them because we only get information from here
-
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 3 error calc units from sec server
     QState m_pcbServerConnectState; // connect to pcb server
-
     QState m_setpcbREFConstantNotifierState; // we get notified on refconstant changes
     QState m_setsecINTNotifierState; // we get notified on sec interrupts
 
@@ -158,12 +149,9 @@ private:
     QState m_readFinalTimeCounterState;
     QFinalState m_setEMResultState;
 
-    QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
     RefPowerConstantObserver m_refConstantObserver;
     QHash<QString, double> m_unitFactorHash;
-
-    qint32 m_nIt = 0;
 
     QString m_masterErrCalcName;
     QString m_slaveErrCalcName;
