@@ -1,15 +1,15 @@
 #include "spm1modulemeasprogram.h"
 #include "spm1module.h"
-#include "errormessages.h"
 #include "secdatetimehelper.h"
 #include "secpowermodulefinder.h"
+#include <errormessages.h>
+#include <scpi.h>
+#include <unithelper.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
-#include <scpi.h>
 #include <stringvalidator.h>
 #include <reply.h>
 #include <proxy.h>
-#include <unithelper.h>
 #include <math.h>
 #include <timerfactoryqt.h>
 
@@ -23,29 +23,23 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module) :
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
     const cSpm1ModuleConfigData *configData = m_pModule->getConfigData();
+    if (!SecPowerModuleFinder::testConfiguredRefInputs(configData->m_refConfigs, m_pModule->getStorageDb()))
+        qCritical("SPM module has invalid configuration!");
     m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
-    m_resourceTypeList.addTypesFromConfig(configData->m_refConfigs);
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
 
-    m_IdentifyState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readResourcesState);
-    m_readResourcesState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
-    m_readResourceState.addTransition(this, &cSpm1ModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
-    m_readResourceState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_testSpmInputsState); // go on if done
-    m_testSpmInputsState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_ecalcServerConnectState); // test all configured Inputs
+    m_IdentifyState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_ecalcServerConnectState);
+    //transition from this state to m_fetch....is done in ecalcServerConnect
     m_fetchECalcUnitsState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_pcbServerConnectState); // connect to pcbserver
     m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_setpcbREFConstantNotifierState);
-
     m_setpcbREFConstantNotifierState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
     m_setsecINTNotifierState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_readResourcesState);
-    m_activationMachine.addState(&m_readResourceState);
-    m_activationMachine.addState(&m_testSpmInputsState);
     m_activationMachine.addState(&m_ecalcServerConnectState);
     m_activationMachine.addState(&m_fetchECalcUnitsState);
     m_activationMachine.addState(&m_pcbServerConnectState);
@@ -57,9 +51,6 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module) :
 
     connect(&resourceManagerConnectState, &QState::entered, this, &cSpm1ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cSpm1ModuleMeasProgram::sendRMIdent);
-    connect(&m_readResourcesState, &QState::entered, this, &cSpm1ModuleMeasProgram::readResources);
-    connect(&m_readResourceState, &QState::entered, this, &cSpm1ModuleMeasProgram::readResource);
-    connect(&m_testSpmInputsState, &QState::entered, this, &cSpm1ModuleMeasProgram::testSpmInputs);
     connect(&m_ecalcServerConnectState, &QState::entered, this, &cSpm1ModuleMeasProgram::ecalcServerConnect);
     connect(&m_fetchECalcUnitsState, &QState::entered, this, &cSpm1ModuleMeasProgram::fetchECalcUnits);
     connect(&m_pcbServerConnectState, &QState::entered, this, &cSpm1ModuleMeasProgram::pcbServerConnect);
@@ -82,7 +73,6 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module) :
     connect(&m_deactivationDoneState, &QState::entered, this, &cSpm1ModuleMeasProgram::deactivationDone);
 
     // setting up statemachine used when starting a measurement
-
     m_setsyncState.addTransition(this, &cSpm1ModuleMeasProgram::setupContinue, &m_setsync2State);
     m_setsync2State.addTransition(this, &cSpm1ModuleMeasProgram::setupContinue, &m_setMeaspulsesState);
     m_setMeaspulsesState.addTransition(this, &cSpm1ModuleMeasProgram::setupContinue, &m_setMasterMuxState);
@@ -145,7 +135,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module) :
     connect(&m_resetIntRegisterState, &QState::entered, this, &cSpm1ModuleMeasProgram::resetIntRegister);
     connect(&m_readFinalEnergyCounterState, &QState::entered, this, &cSpm1ModuleMeasProgram::readVICountact);
     connect(&m_readFinalTimeCounterState, &QState::entered, this, &cSpm1ModuleMeasProgram::readTCountact);
-    connect(&m_setEMResultState, &QState::entered, this, &cSpm1ModuleMeasProgram::onEMResult);
+    connect(&m_setEMResultState, &QState::entered, this, &cSpm1ModuleMeasProgram::onEMResultState);
 
     // we need a hash for our different power input units
     m_unitFactorHash["MW"] = 1000.0;
@@ -374,7 +364,6 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 enum spm1moduleCmds
 {
     sendrmident,
-    readresource,
     fetchecalcunits,
     setsecintnotifier,
 
@@ -399,7 +388,6 @@ enum spm1moduleCmds
     resetintregister,
     readvicount,
     readtcount
-
 };
 
 
@@ -409,8 +397,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
         // we must fetch the measured impuls count, compute the error and set corresponding entity
         handleSECInterrupt();
     else {
-        if (m_MsgNrCmdList.contains(msgnr))
-        {
+        if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
@@ -419,20 +406,6 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit activationContinue();
                 else
                     notifyError(rmidentErrMSG);
-                break;
-
-            case readresource:
-                if (reply == ack) {
-                    QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
-                    m_ResourceHash[resourceTypeList.at(m_nIt)] = answer.toString();
-                    m_nIt++;
-                    if (m_nIt < resourceTypeList.count())
-                        emit activationLoop();
-                    else
-                        emit activationContinue();
-                }
-                else
-                    notifyError(resourceErrMsg);
                 break;
 
             case fetchecalcunits:
@@ -471,7 +444,6 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(readsecregisterErrMsg);
                 break;
             }
-
 
             case actualizepower:
             {
@@ -587,9 +559,16 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
-
             }
         }
+    }
+}
+
+void cSpm1ModuleMeasProgram::onRefConstantChanged(const QString &refPowerName)
+{
+    if(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue == refPowerName) {
+        stopMeasurement(true);
+        actualizeRefConstant();
     }
 }
 
@@ -614,48 +593,18 @@ void cSpm1ModuleMeasProgram::setValidators()
 
 void cSpm1ModuleMeasProgram::setUnits()
 {
-    QString s;
-
-    s = getPowerUnit();
+    m_pEnergyAct->setUnit(getEnergyUnit());
+    QString s = getPowerUnit();
     m_pPowerAct->setUnit(s);
     m_pT0InputPar->setUnit(s);
     m_pT1InputPar->setUnit(s);
     m_pInputUnitPar->setValue(s);
-
-    s = getEnergyUnit();
-    m_pEnergyAct->setUnit(s);
     // In case measurement is running, values are updated properly on next
     // interrupt (tested with vf-debugger). For a measuremnt finished we have to
     // recalc results with new units
-    if(m_bActive && getStatus() & ECALCSTATUS::READY) {
+    if(m_bActive && getStatus() & ECALCSTATUS::READY)
         setEMResult();
-    }
     m_pModule->exportMetaData();
-}
-
-void cSpm1ModuleMeasProgram::actualizeRefConstant()
-{
-    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
-    m_pRefConstantPar->setValue(QVariant(constant));
-    newRefConstant(QVariant(constant));
-}
-
-quint32 cSpm1ModuleMeasProgram::getStatus()
-{
-    return m_pStatusAct->getValue().toUInt();
-}
-
-void cSpm1ModuleMeasProgram::setStatus(quint32 status)
-{
-    m_pStatusAct->setValue(QVariant::fromValue<quint32>(status));
-}
-
-void cSpm1ModuleMeasProgram::onRefConstantChanged(const QString &refPowerName)
-{
-    if(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue == refPowerName) {
-        stopMeasurement(true);
-        actualizeRefConstant();
-    }
 }
 
 QStringList cSpm1ModuleMeasProgram::getEnergyUnitValidator()
@@ -671,6 +620,13 @@ QString cSpm1ModuleMeasProgram::getEnergyUnit()
     QString s = getPowerUnit();
     s.append("h");
     return s;
+}
+
+void cSpm1ModuleMeasProgram::actualizeRefConstant()
+{
+    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
+    m_pRefConstantPar->setValue(QVariant(constant));
+    newRefConstant(QVariant(constant));
 }
 
 QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator() // This won't work for PQS
@@ -694,6 +650,16 @@ QString cSpm1ModuleMeasProgram::getPowerUnit()
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
 }
 
+quint32 cSpm1ModuleMeasProgram::getStatus()
+{
+    return m_pStatusAct->getValue().toUInt();
+}
+
+void cSpm1ModuleMeasProgram::setStatus(quint32 status)
+{
+    m_pStatusAct->setValue(QVariant::fromValue<quint32>(status));
+}
+
 void cSpm1ModuleMeasProgram::handleSECInterrupt()
 {
     if (!m_finalResultStateMachine.isRunning()) {
@@ -709,11 +675,8 @@ void cSpm1ModuleMeasProgram::updateDemoMeasurementResults()
 
     m_uint32BitExpander.setFinal32(rand() % 10); //random value between 0 and 9
     m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
-
     newRefConstant(QVariant(3600000));
-
     setEMResult();
-    stopMeasurement(false);
 }
 
 void cSpm1ModuleMeasProgram::calculateMeasTime()
@@ -737,40 +700,6 @@ void cSpm1ModuleMeasProgram::sendRMIdent()
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Spm1Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
-void cSpm1ModuleMeasProgram::readResources()
-{
-    m_nIt = 0; // we want to read all resources from resourcetypelist
-    emit activationContinue();
-}
-
-void cSpm1ModuleMeasProgram::readResource()
-{
-    QString resourcetype = m_resourceTypeList.getResourceTypeList().at(m_nIt);
-    m_MsgNrCmdList[m_rmInterface.getResources(resourcetype)] = readresource;
-}
-
-void cSpm1ModuleMeasProgram::testSpmInputs()
-{
-    const auto &refInpList = m_pModule->getConfigData()->m_refConfigs.m_refInpList;
-    qint32 refInCountLeftToCheck = refInpList.count();
-    QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
-    for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
-        QString refPowerName = refInpList[refInputNo].inputName;
-        for (int resourceTypeNo = 0; resourceTypeNo < resourceTypeList.count(); resourceTypeNo++) {
-            QString resourcelist = m_ResourceHash[resourceTypeList[resourceTypeNo]];
-            if (resourcelist.contains(refPowerName)) {
-                refInCountLeftToCheck--;
-                m_refInputDictionary.addReferenceInput(refPowerName, resourceTypeList[resourceTypeNo]);
-                break;
-            }
-        }
-    }
-    if (refInCountLeftToCheck == 0) // we found all our configured Inputs
-        emit activationContinue(); // so lets go on
-    else
-        notifyError(resourceErrMsg);
-}
-
 void cSpm1ModuleMeasProgram::ecalcServerConnect()
 {
     m_secInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_secServiceConnectionInfo,
@@ -780,18 +709,15 @@ void cSpm1ModuleMeasProgram::ecalcServerConnect()
     Zera::Proxy::getInstance()->startConnectionSmart(m_secInterface->getClientSmart());
 }
 
-
 void cSpm1ModuleMeasProgram::fetchECalcUnits()
 {
     m_MsgNrCmdList[m_secInterface->setECalcUnit(3)] = fetchecalcunits; // we need 3 ecalc units to cascade
 }
 
-
 void cSpm1ModuleMeasProgram::pcbServerConnect()
 {
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
 }
-
 
 void cSpm1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
@@ -817,7 +743,6 @@ void cSpm1ModuleMeasProgram::setsecINTNotifier()
     m_MsgNrCmdList[m_secInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterErrCalcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
 }
 
-
 void cSpm1ModuleMeasProgram::activationDone()
 {
     connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &cSpm1ModuleMeasProgram::Actualize);
@@ -833,7 +758,7 @@ void cSpm1ModuleMeasProgram::activationDone()
     connect(m_pUpperLimitPar, &VfModuleParameter::sigValueChanged, this, &cSpm1ModuleMeasProgram::newUpperLimit);
     connect(m_pLowerLimitPar, &VfModuleParameter::sigValueChanged, this, &cSpm1ModuleMeasProgram::newLowerLimit);
 
-    setInterfaceComponents(); // actualize interface components
+    setInterfaceComponents();
     setValidators();
     setUnits();
 
@@ -846,42 +771,35 @@ void cSpm1ModuleMeasProgram::stopECCalculator()
     stopMeasurement(true);
 }
 
-
 void cSpm1ModuleMeasProgram::freeECalculator()
 {
     m_bActive = false;
     m_MsgNrCmdList[m_secInterface->freeECalcUnits()] = freeecalcunits;
 }
 
-
 void cSpm1ModuleMeasProgram::deactivationDone()
 {
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_secInterface.get(), 0, this, 0);
     disconnect(m_pcbInterface.get(), 0, this, 0);
-
     disconnect(m_pStartStopPar, 0, this, 0);
     disconnect(m_pTargetedPar, 0, this, 0);
     disconnect(m_pRefInputPar, 0, this, 0);
     disconnect(m_pMeasTimePar, 0, this, 0);
     disconnect(m_pT0InputPar, 0, this, 0);
     disconnect(m_pT1InputPar, 0, this, 0);
-
     emit deactivated();
 }
-
 
 void cSpm1ModuleMeasProgram::setSync()
 {
     m_MsgNrCmdList[m_secInterface->setSync(m_slaveErrCalcName, m_masterErrCalcName)] = setsync;
 }
 
-
 void cSpm1ModuleMeasProgram::setSync2()
 {
     m_MsgNrCmdList[m_secInterface->setSync(m_slave2ErrCalcName, m_masterErrCalcName)] = setsync;
 }
-
 
 void cSpm1ModuleMeasProgram::setMeaspulses()
 {
@@ -893,12 +811,10 @@ void cSpm1ModuleMeasProgram::setMeaspulses()
     m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nTimerCountStart)] = setmeaspulses;
 }
 
-
 void cSpm1ModuleMeasProgram::setMasterMux()
 {
     m_MsgNrCmdList[m_secInterface->setMux(m_masterErrCalcName, QString("t1ms"))] = setmastermux; // to be discussed
 }
-
 
 void cSpm1ModuleMeasProgram::setSlaveMux()
 {
@@ -906,30 +822,25 @@ void cSpm1ModuleMeasProgram::setSlaveMux()
     m_MsgNrCmdList[m_secInterface->setMux(m_slaveErrCalcName, refPowerName)] = setslavemux;
 }
 
-
 void cSpm1ModuleMeasProgram::setSlave2Mux()
 {
     m_MsgNrCmdList[m_secInterface->setMux(m_slave2ErrCalcName, QString("t1ms"))] = setslavemux;
 }
-
 
 void cSpm1ModuleMeasProgram::setMasterMeasMode()
 {
     m_MsgNrCmdList[m_secInterface->setCmdid(m_masterErrCalcName, ECALCCMDID::SINGLEERRORMASTER)] = setmastermeasmode;
 }
 
-
 void cSpm1ModuleMeasProgram::setSlaveMeasMode()
 {
     m_MsgNrCmdList[m_secInterface->setCmdid(m_slaveErrCalcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
 }
 
-
 void cSpm1ModuleMeasProgram::setSlave2MeasMode()
 {
     m_MsgNrCmdList[m_secInterface->setCmdid(m_slave2ErrCalcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
 }
-
 
 void cSpm1ModuleMeasProgram::enableInterrupt()
 {
@@ -938,7 +849,6 @@ void cSpm1ModuleMeasProgram::enableInterrupt()
     // so we program enable int. in any case
     m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
 }
-
 
 void cSpm1ModuleMeasProgram::startMeasurement()
 {
@@ -951,36 +861,32 @@ void cSpm1ModuleMeasProgram::startMeasurement()
     if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
+    m_uint32BitExpander.reset();
+    m_fEnergy = 0.0;
+    m_pEnergyAct->setValue(m_fEnergy);
+    m_fPower = 0.0;
+    m_pPowerAct->setValue(m_fPower);
     if(m_pModule->getDemo()) {
         updateDemoMeasurementResults();
         emit setupContinue();
     }
 }
 
-
 void cSpm1ModuleMeasProgram::startMeasurementDone()
 {
     Actualize(); // we actualize at once after started
     m_ActualizeTimer->start(); // and after current interval
-    m_uint32BitExpander.reset();
-    m_fEnergy = 0.0;
-    m_pEnergyAct->setValue(m_fEnergy);
-    m_fPower = 0.0;
-    m_pPowerAct->setValue(m_fPower);
 }
-
 
 void cSpm1ModuleMeasProgram::readIntRegister()
 {
     m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::INTREG)] = readintregister;
 }
 
-
 void cSpm1ModuleMeasProgram::resetIntRegister()
 {
     m_MsgNrCmdList[m_secInterface->intAck(m_masterErrCalcName, 0xF)] = resetintregister; // we reset all here
 }
-
 
 void cSpm1ModuleMeasProgram::readVICountact()
 {
@@ -991,14 +897,13 @@ void cSpm1ModuleMeasProgram::readTCountact()
 {
     m_MsgNrCmdList[m_secInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTfin)] = readtcount;
     // non targeted has been stopped already in newStartStop()
-    if(m_pModule->getConfigData()->m_bTargeted.m_nActive) {
+    if(m_pModule->getConfigData()->m_bTargeted.m_nActive)
         m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
-    }
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
     setStatus(ECALCSTATUS::READY);
 }
 
-void cSpm1ModuleMeasProgram::onEMResult()
+void cSpm1ModuleMeasProgram::onEMResultState()
 {
     SecDateTimeHelper::setDateTimeNow(m_measEndDateTime, m_pMeasEndTime);
     calculateMeasTime();
@@ -1031,7 +936,6 @@ void cSpm1ModuleMeasProgram::setEMResult()
     m_pPowerAct->setValue(QVariant(m_fPower));
 }
 
-
 void cSpm1ModuleMeasProgram::setRating()
 {
     if (getStatus() & ECALCSTATUS::READY) {
@@ -1043,17 +947,13 @@ void cSpm1ModuleMeasProgram::setRating()
     }
     else
         m_eRating = ECALCRESULT::RESULT_UNFINISHED;
-
     m_pRatingAct->setValue(int(m_eRating));
 }
 
-
 void cSpm1ModuleMeasProgram::newStartStop(QVariant startstop)
 {
-    bool ok;
-    int ss = startstop.toInt(&ok);
-    if (ss > 0) // we get started
-    {
+    int ss = startstop.toInt();
+    if (ss > 0) { // we get started
         if (!m_startMeasurementMachine.isRunning())
             m_startMeasurementMachine.start();
         // setsync
@@ -1063,11 +963,9 @@ void cSpm1ModuleMeasProgram::newStartStop(QVariant startstop)
         // meas mode setzen + arm
         // m_ActualizeTimer.start();
     }
-    else
-    {
-        if (m_pModule->getConfigData()->m_bTargeted.m_nActive > 0) {
+    else {
+        if (m_pModule->getConfigData()->m_bTargeted.m_nActive > 0)
             stopMeasurement(true);
-        }
         else {
             m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
             m_ActualizeTimer->stop();
@@ -1080,15 +978,12 @@ void cSpm1ModuleMeasProgram::newStartStop(QVariant startstop)
     }
 }
 
-
 void cSpm1ModuleMeasProgram::newRefConstant(QVariant refconst)
 {
     m_pRefConstantPar->setValue(refconst);
     setInterfaceComponents();
-
     emit m_pModule->parameterChanged();
 }
-
 
 void cSpm1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
@@ -1105,16 +1000,13 @@ void cSpm1ModuleMeasProgram::newRefInput(QVariant refinput)
     setUnits();
     m_pPowerModuleEntityId->setValue(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
     m_pRefFreqInput->setValue(refPowerName);
-
     emit m_pModule->parameterChanged();
 }
-
 
 void cSpm1ModuleMeasProgram::newTargeted(QVariant targeted)
 {
     m_pModule->getConfigData()->m_bTargeted.m_nActive = targeted.toInt();
     setInterfaceComponents();
-
     emit m_pModule->parameterChanged();
 }
 
@@ -1122,7 +1014,6 @@ void cSpm1ModuleMeasProgram::newMeasTime(QVariant meastime)
 {
     m_pModule->getConfigData()->m_nMeasTime.m_nValue = meastime.toInt();
     setInterfaceComponents();
-
     emit m_pModule->parameterChanged();
 }
 
@@ -1130,7 +1021,6 @@ void cSpm1ModuleMeasProgram::newT0Input(QVariant t0input)
 {
     m_pT0InputPar->setValue(t0input);
     setEMResult();
-
     emit m_pModule->parameterChanged();
 }
 
@@ -1138,7 +1028,6 @@ void cSpm1ModuleMeasProgram::newT1Input(QVariant t1input)
 {
     m_pT1InputPar->setValue(t1input);
     setEMResult();
-
     emit m_pModule->parameterChanged();
 }
 
@@ -1147,25 +1036,22 @@ void cSpm1ModuleMeasProgram::newUnit(QVariant unit)
     m_pInputUnitPar->setValue(unit.toString());
     setInterfaceComponents();
     setUnits();
-
     emit m_pModule->parameterChanged();
 }
 
 void cSpm1ModuleMeasProgram::newUpperLimit(QVariant limit)
 {
     m_pModule->getConfigData()->m_limitConfigs.m_fUpperLimit.m_fValue = limit.toDouble();
-    setRating();
     setInterfaceComponents();
-
+    setRating();
     emit m_pModule->parameterChanged();
 }
 
 void cSpm1ModuleMeasProgram::newLowerLimit(QVariant limit)
 {
     m_pModule->getConfigData()->m_limitConfigs.m_fLowerLimit.m_fValue = limit.toDouble();
-    setRating();
     setInterfaceComponents();
-
+    setRating();
     emit m_pModule->parameterChanged();
 }
 

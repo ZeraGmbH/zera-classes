@@ -3,7 +3,6 @@
 
 #include "secinterface.h"
 #include "refpowerconstantobserver.h"
-#include "secresourcetypelist.h"
 #include "secmeasinputdictionary.h"
 #include "uint32bitexpander.h"
 #include <basemeasprogram.h>
@@ -90,7 +89,6 @@ private:
     void setEMResult();
 
     QStringList getEnergyUnitValidator();
-    void setInputUnitValidator();
     QString getEnergyUnit();
     QStringList getPowerUnitValidator();
     QString getPowerUnit();
@@ -183,8 +181,6 @@ private:
     VfModuleParameter* m_pMeasDurationMs = nullptr;
     VfModuleParameter* m_pClientNotifierPar = nullptr;
     ClientActiveComponent m_ClientActiveNotifier;
-
-    static constexpr quint32 m_nRequestTimer = 2500;
 
     // vars dealing with error measurement
     TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue

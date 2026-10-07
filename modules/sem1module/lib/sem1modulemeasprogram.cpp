@@ -1,6 +1,5 @@
 #include "sem1modulemeasprogram.h"
 #include "sem1module.h"
-#include "sem1moduleconfigdata.h"
 #include "secdatetimehelper.h"
 #include "secpowermodulefinder.h"
 #include <errormessages.h>
@@ -9,7 +8,6 @@
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <stringvalidator.h>
-#include <vf-cpp-rpc-signature.h>
 #include <reply.h>
 #include <proxy.h>
 #include <math.h>
@@ -34,7 +32,6 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
 
     m_IdentifyState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_ecalcServerConnectState);
-    //m_ecalcServerConnectState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_fetchECalcUnitsState); // connect to ecalc server
     //transition from this state to m_fetch....is done in ecalcServerConnect
     m_fetchECalcUnitsState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_pcbServerConnectState); // connect to pcbserver
     m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_setpcbREFConstantNotifierState);
@@ -76,7 +73,6 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
     connect(&m_deactivationDoneState, &QState::entered, this, &cSem1ModuleMeasProgram::deactivationDone);
 
     // setting up statemachine used when starting a measurement
-
     m_setsyncState.addTransition(this, &cSem1ModuleMeasProgram::setupContinue, &m_setsync2State);
     m_setsync2State.addTransition(this, &cSem1ModuleMeasProgram::setupContinue, &m_setMeaspulsesState);
     m_setMeaspulsesState.addTransition(this, &cSem1ModuleMeasProgram::setupContinue, &m_setMasterMuxState);
@@ -391,7 +387,7 @@ enum sem1moduleCmds
     readintregister,
     resetintregister,
     readvicount,
-    readtcount,
+    readtcount
 };
 
 
@@ -466,7 +462,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             }
 
             case actualizestatus:
-            {
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
                     quint32 status = getStatus();
@@ -478,7 +473,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
-            }
 
             case setsync:
                 if (reply == ack)
@@ -545,8 +539,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(writesecregisterErrMsg);
                 break;
             case readvicount:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     // Although we do not have high frequency measurements,
                     // incorporate still running check as we learned from sec1
                     // see cSec1ModuleMeasProgram::catchInterfaceAnswer /
@@ -559,7 +552,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(readsecregisterErrMsg);
                 break;
             case readtcount:
-                if (reply == ack) {// we only continue if sec server acknowledges
+                if (reply == ack) {
                     m_fTimeSecondsFinal = double(answer.toLongLong()) * 0.001;
                     emit interruptContinue();
                 }
@@ -589,17 +582,13 @@ void cSem1ModuleMeasProgram::setInterfaceComponents()
     m_pLowerLimitPar->setValue(configData->m_limitConfigs.m_fLowerLimit.m_fValue);
 }
 
-void cSem1ModuleMeasProgram::setInputUnitValidator()
-{
-    cStringValidator *sValidator = new cStringValidator(getEnergyUnitValidator());
-    m_pInputUnitPar->setValidator(sValidator);
-}
-
 void cSem1ModuleMeasProgram::setValidators()
 {
-    cStringValidator *sValidator = new cStringValidator(m_refInputDictionary.getInputAliasList());
+    cStringValidator *sValidator;
+    sValidator = new cStringValidator(m_refInputDictionary.getInputAliasList());
     m_pRefInputPar->setValidator(sValidator);
-    setInputUnitValidator();
+    sValidator = new cStringValidator(getEnergyUnitValidator());
+    m_pInputUnitPar->setValidator(sValidator);
 }
 
 void cSem1ModuleMeasProgram::setUnits()
@@ -634,6 +623,13 @@ QString cSem1ModuleMeasProgram::getEnergyUnit()
     return cUnitHelper::getNewEnergyUnit(powerType, currentPowerUnit, 3600);
 }
 
+void cSem1ModuleMeasProgram::actualizeRefConstant()
+{
+    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
+    m_pRefConstantPar->setValue(QVariant(constant));
+    newRefConstant(QVariant(constant));
+}
+
 QStringList cSem1ModuleMeasProgram::getPowerUnitValidator()
 {
     QStringList sl;
@@ -653,13 +649,6 @@ QString cSem1ModuleMeasProgram::getPowerUnit()
     QString powerType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
     QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
-}
-
-void cSem1ModuleMeasProgram::actualizeRefConstant()
-{
-    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
-    m_pRefConstantPar->setValue(QVariant(constant));
-    newRefConstant(QVariant(constant));
 }
 
 quint32 cSem1ModuleMeasProgram::getStatus()
@@ -718,7 +707,6 @@ void cSem1ModuleMeasProgram::ecalcServerConnect()
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_ecalcServerConnectState.addTransition(m_secInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
     connect(m_secInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
-    // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnectionSmart(m_secInterface->getClientSmart());
 }
 
@@ -772,7 +760,6 @@ void cSem1ModuleMeasProgram::activationDone()
     connect(m_pLowerLimitPar, &VfModuleParameter::sigValueChanged, this, &cSem1ModuleMeasProgram::newLowerLimit);
 
     setInterfaceComponents();
-
     setValidators();
     setUnits();
 
@@ -1040,7 +1027,6 @@ void cSem1ModuleMeasProgram::newT1Input(QVariant t1input)
 {
     m_pT1InputPar->setValue(t1input);
     setEMResult();
-
     emit m_pModule->parameterChanged();
 }
 
@@ -1057,7 +1043,6 @@ void cSem1ModuleMeasProgram::newUpperLimit(QVariant limit)
     m_pModule->getConfigData()->m_limitConfigs.m_fUpperLimit.m_fValue = limit.toDouble();
     setInterfaceComponents();
     setRating();
-
     emit m_pModule->parameterChanged();
 }
 
