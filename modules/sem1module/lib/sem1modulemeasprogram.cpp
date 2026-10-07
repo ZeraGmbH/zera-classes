@@ -16,11 +16,12 @@
 namespace SEM1MODULE
 {
 
-cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
+cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, const QHash<QString, double> &unitfactors) :
     cBaseMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
-    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
+    m_unitFactorHash(unitfactors)
 {
     const cSem1ModuleConfigData *configData = m_pModule->getConfigData();
     if (!SecPowerModuleFinder::testConfiguredRefInputs(configData->m_refConfigs, m_pModule->getStorageDb()))
@@ -136,17 +137,6 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
     connect(&m_readFinalEnergyCounterState, &QState::entered, this, &cSem1ModuleMeasProgram::readVICountact);
     connect(&m_readFinalTimeCounterState, &QState::entered, this, &cSem1ModuleMeasProgram::readTCountact);
     connect(&m_setEMResultState, &QState::entered, this, &cSem1ModuleMeasProgram::onEMResultState);
-
-    // we need a hash for our different energy input units
-    m_unitFactorHash["MWh"] = 1000.0;
-    m_unitFactorHash["kWh"] = 1.0;
-    m_unitFactorHash["Wh"] = 0.001;
-    m_unitFactorHash["MVarh"] = 1000.0;
-    m_unitFactorHash["kVarh"] = 1.0;
-    m_unitFactorHash["Varh"] = 0.001;
-    m_unitFactorHash["MVAh"] = 1000.0;
-    m_unitFactorHash["kVAh"] = 1.0;
-    m_unitFactorHash["VAh"] = 0.001;
 
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
 }
@@ -436,7 +426,8 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         m_uint32BitExpander.setActual32(answer.toUInt());
-                        m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / (m_pRefConstantPar->getValue().toDouble() * m_unitFactorHash[m_pInputUnitPar->getValue().toString()]);
+                        const double unitFactor = m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
+                        m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / (m_pRefConstantPar->getValue().toDouble() * unitFactor);
                         m_pEnergyAct->setValue(m_fEnergy); // in MWh, kWh, Wh depends on selected unit for user input
                     }
                 }
@@ -916,7 +907,8 @@ void cSem1ModuleMeasProgram::setEMResult()
     const double energyCounterFinal = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getFinalExpanded64());
     double WRef =  energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
     double time = m_fTimeSecondsFinal;
-    double WDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
+    const double unitFactor = m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
+    double WDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * unitFactor;
     if (WRef == 0) {
         m_fResult = qQNaN();
         m_eRating = ECALCRESULT::RESULT_UNFINISHED;

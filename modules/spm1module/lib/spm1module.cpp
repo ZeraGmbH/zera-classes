@@ -1,5 +1,5 @@
 #include "spm1module.h"
-#include "spm1moduleconfiguration.h"
+#include "unithelper.h"
 
 namespace SPM1MODULE
 {
@@ -29,7 +29,7 @@ void cSpm1Module::setupModule()
     cBaseMeasModule::setupModule();
 
     // we only have this activist
-    m_pMeasProgram = new cSpm1ModuleMeasProgram(this);
+    m_pMeasProgram = new cSpm1ModuleMeasProgram(this, cUnitHelper::getPowerUnitFactorHash());
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cSpm1ModuleMeasProgram::activated, this, &cSpm1Module::activationContinue);
     connect(m_pMeasProgram, &cSpm1ModuleMeasProgram::deactivated, this, &cSpm1Module::deactivationContinue);

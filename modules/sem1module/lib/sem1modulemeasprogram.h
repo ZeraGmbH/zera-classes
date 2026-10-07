@@ -21,7 +21,7 @@ class cSem1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    explicit cSem1ModuleMeasProgram(cSem1Module* module);
+    explicit cSem1ModuleMeasProgram(cSem1Module* module, const QHash<QString, double> &unitfactors);
     void generateVeinInterface() override;
 signals:
     void setupContinue();

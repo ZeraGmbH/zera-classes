@@ -1,4 +1,5 @@
 #include "sem1module.h"
+#include "unithelper.h"
 
 namespace SEM1MODULE
 {
@@ -29,7 +30,7 @@ void cSem1Module::setupModule()
     cBaseMeasModule::setupModule();
 
     // we only have this activist
-    m_pMeasProgram = new cSem1ModuleMeasProgram(this);
+    m_pMeasProgram = new cSem1ModuleMeasProgram(this, cUnitHelper::getEnergyUnitFactorHash());
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cSem1ModuleMeasProgram::activated, this, &cSem1Module::activationContinue);
     connect(m_pMeasProgram, &cSem1ModuleMeasProgram::deactivated, this, &cSem1Module::deactivationContinue);

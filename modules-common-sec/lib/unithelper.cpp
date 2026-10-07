@@ -37,3 +37,37 @@ QString cUnitHelper::getNewEnergyUnit(const QString &powerType, const QString &c
     }
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit) + postFix;
 }
+
+const QHash<QString, double> cUnitHelper::m_powerUnitFactors = {
+    { "MW",   1000.0 },
+    { "kW",   1.0 },
+    { "W",    0.001 },
+    { "MVar", 1000.0 },
+    { "kVar", 1.0 },
+    { "Var",  0.001 },
+    { "MVA", 1000.0 },
+    { "kVA", 1.0 },
+    { "VA", 0.001 }
+};
+
+const QHash<QString, double> &cUnitHelper::getPowerUnitFactorHash()
+{
+    return m_powerUnitFactors;
+}
+
+const QHash<QString, double> cUnitHelper::m_energyUnitFactors = {
+    { "MWh",   1000.0 },
+    { "kWh",   1.0 },
+    { "Wh",    0.001 },
+    { "MVarh", 1000.0 },
+    { "kVarh", 1.0 },
+    { "Varh",  0.001 },
+    { "MVAh", 1000.0 },
+    { "kVAh", 1.0 },
+    { "VAh", 0.001 }
+};
+
+const QHash<QString, double> &cUnitHelper::getEnergyUnitFactorHash()
+{
+    return m_energyUnitFactors;
+}

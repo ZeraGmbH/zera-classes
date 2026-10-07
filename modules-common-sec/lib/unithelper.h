@@ -2,6 +2,7 @@
 #define CUNITHELPER_H
 
 #include <QString>
+#include <QHash>
 
 /**
  * @brief The cUnitHelper class is a tiny static helper class for unit calculations
@@ -24,6 +25,13 @@ public:
      * @return
      */
     static QString getNewEnergyUnit(const QString &powerType, const QString &currentPowerUnit, int powerToEnergyTimeSeconds=3600);
+
+    static const QHash<QString /*unit e.g kW*/, double /*factor e.g 1000*/> &getPowerUnitFactorHash();
+    static const QHash<QString /*unit e.g kWh*/, double /*factor e.g 1000*/> &getEnergyUnitFactorHash();
+
+private:
+    static const QHash<QString, double> m_powerUnitFactors;
+    static const QHash<QString, double> m_energyUnitFactors;
 };
 
 #endif // CUNITHELPER_H

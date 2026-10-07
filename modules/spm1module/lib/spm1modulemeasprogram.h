@@ -2,7 +2,6 @@
 #define SPM1MODULEMEASPROGRAM_H
 
 #include "refpowerconstantobserver.h"
-#include "secresourcetypelist.h"
 #include <basemeasprogram.h>
 #include <clientactivecomponent.h>
 #include "secmeasinputdictionary.h"
@@ -22,7 +21,7 @@ class cSpm1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    explicit cSpm1ModuleMeasProgram(cSpm1Module* module);
+    explicit cSpm1ModuleMeasProgram(cSpm1Module* module, const QHash<QString, double> &unitfactors);
     void generateVeinInterface() override;
 signals:
     void setupContinue();
