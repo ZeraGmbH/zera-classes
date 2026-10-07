@@ -18,7 +18,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "PM01";
 
     explicit cSpm1Module(const ModuleFactoryParam &moduleParam);
-    cSpm1ModuleConfigData *getConfigData();
+    SemSpmModuleConfigData *getConfigData();
     QByteArray getConfigXml() const override;
 
 private:

@@ -66,7 +66,7 @@ QByteArray cSpm1ModuleConfiguration::exportConfiguration() const
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-cSpm1ModuleConfigData *cSpm1ModuleConfiguration::getConfigData()
+SemSpmModuleConfigData *cSpm1ModuleConfiguration::getConfigData()
 {
     return &m_configData;
 }

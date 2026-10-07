@@ -23,7 +23,7 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, const QHash<
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
     m_unitFactorHash(unitfactors)
 {
-    const cSem1ModuleConfigData *configData = m_pModule->getConfigData();
+    const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
     if (!SecPowerModuleFinder::testConfiguredRefInputs(configData->m_refConfigs, m_pModule->getStorageDb()))
         qCritical("SEM module has invalid configuration!");
     m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
@@ -270,7 +270,7 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pResultAct->setUnit("%");
     m_pModule->m_veinModuleParameterMap[key] = m_pResultAct; // and for the modules interface
 
-    const cSem1ModuleConfigData *configData = m_pModule->getConfigData();
+    const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
     const QString refInputName = configData->m_refConfigs.m_sRefInput.m_sValue;
 
     m_pPowerModuleEntityId = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -565,7 +565,7 @@ void cSem1ModuleMeasProgram::onRefConstantChanged(const QString &refPowerName)
 
 void cSem1ModuleMeasProgram::setInterfaceComponents()
 {
-    const cSem1ModuleConfigData *configData = m_pModule->getConfigData();
+    const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
     m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_refConfigs.m_sRefInput.m_sValue));
     m_pTargetedPar->setValue(configData->m_bTargeted.m_nActive);
     m_pMeasTimePar->setValue(configData->m_nMeasTime.m_nValue);
@@ -624,7 +624,7 @@ void cSem1ModuleMeasProgram::actualizeRefConstant()
 QStringList cSem1ModuleMeasProgram::getPowerUnitValidator()
 {
     QStringList sl;
-    const cSem1ModuleConfigData *configData = m_pModule->getConfigData(); // This won't work for PQS
+    const SemSpmModuleConfigData *configData = m_pModule->getConfigData(); // This won't work for PQS
     QString powType = m_refInputDictionary.getAlias(configData->m_refConfigs.m_sRefInput.m_sValue);
     if (powType.contains('P'))
         sl = configData->m_unitConfigs.m_ActiveUnitList;
@@ -930,7 +930,7 @@ void cSem1ModuleMeasProgram::setEMResult()
 void cSem1ModuleMeasProgram::setRating()
 {
     if (getStatus() & ECALCSTATUS::READY) {
-        const cSem1ModuleConfigData *configData = m_pModule->getConfigData();
+        const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
         if ( (m_fResult >= configData->m_limitConfigs.m_fLowerLimit.m_fValue) && (m_fResult <= configData->m_limitConfigs.m_fUpperLimit.m_fValue))
             m_eRating = ECALCRESULT::RESULT_PASSED;
         else

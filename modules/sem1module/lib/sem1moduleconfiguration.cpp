@@ -67,7 +67,7 @@ QByteArray cSem1ModuleConfiguration::exportConfiguration() const
 }
 
 
-cSem1ModuleConfigData *cSem1ModuleConfiguration::getConfigData()
+SemSpmModuleConfigData *cSem1ModuleConfiguration::getConfigData()
 {
     return &m_configData;
 }

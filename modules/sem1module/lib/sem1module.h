@@ -18,7 +18,7 @@ public:
     static constexpr const char* BaseSCPIModuleName = "EM01";
 
     explicit cSem1Module(const ModuleFactoryParam &moduleParam);
-    cSem1ModuleConfigData *getConfigData();
+    SemSpmModuleConfigData *getConfigData();
     QByteArray getConfigXml() const override;
 
 private:

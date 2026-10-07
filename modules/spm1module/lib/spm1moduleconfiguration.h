@@ -2,7 +2,7 @@
 #define SPM1MODULECONFIGURATION_H
 
 #include "basemoduleconfiguration.h"
-#include "spm1moduleconfigdata.h"
+#include "semspmmoduleconfigdata.h"
 
 namespace SPM1MODULE
 {
@@ -14,14 +14,14 @@ public:
     explicit cSpm1ModuleConfiguration(const QByteArray& xmlString);
 
     QByteArray exportConfiguration() const override;
-    cSpm1ModuleConfigData* getConfigData();
+    SemSpmModuleConfigData* getConfigData();
 
 private slots:
     void configXMLInfo(const QString &key) override;
     void completeConfiguration(bool ok);
 private:
     void setConfiguration(const QByteArray& xmlString);
-    cSpm1ModuleConfigData m_configData;
+    SemSpmModuleConfigData m_configData;
 };
 
 }

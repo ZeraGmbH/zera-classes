@@ -13,7 +13,7 @@ cSpm1Module::cSpm1Module(const ModuleFactoryParam &moduleParam) :
     m_sSCPIModuleName = QString(BaseSCPIModuleName);
 }
 
-cSpm1ModuleConfigData *cSpm1Module::getConfigData()
+SemSpmModuleConfigData *cSpm1Module::getConfigData()
 {
     return m_configuration.getConfigData();
 }
