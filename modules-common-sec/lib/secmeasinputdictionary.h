@@ -21,9 +21,6 @@ public:
     void setAlias(const QString &inputName, const QString &alias);
     QString getAlias(const QString &inputName) const;
 
-    void setNotificationId(const QString &inputName, int notificationId);
-    QString getInputNameFromNotificationId(int notificationId) const;
-
     QString getInputFNameFromAlias(const QString &alias) const;
 private:
     // input name: "f0" / "f1"... or DUT ec0
@@ -31,7 +28,6 @@ private:
     QHash<QString /* inputName */, QString /* resource */> m_resourceHash;
     QMap<QString /* inputName */, QString /* alias */> m_aliasMap;
     QHash<QString /* alias */, QString /* inputName */> m_reverseAliasHash;
-    QMap<int /* notifyId */, QString /* refPowerName */> m_notificationIdMap;
 
     SecResourceTypeList m_resourceTypeList;
 };

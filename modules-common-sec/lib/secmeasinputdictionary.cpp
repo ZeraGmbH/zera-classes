@@ -42,18 +42,6 @@ QString SecMeasInputDictionary::getAlias(const QString &inputName) const
     return QString("P");
 }
 
-void SecMeasInputDictionary::setNotificationId(const QString &inputName, int notificationId)
-{
-    Q_ASSERT(!m_notificationIdMap.contains(notificationId));
-    m_notificationIdMap[notificationId] = inputName;
-}
-
-QString SecMeasInputDictionary::getInputNameFromNotificationId(int notificationId) const
-{
-    Q_ASSERT(m_notificationIdMap.contains(notificationId));
-    return m_notificationIdMap[notificationId];
-}
-
 QString SecMeasInputDictionary::getInputFNameFromAlias(const QString &alias) const
 {
     Q_ASSERT(m_reverseAliasHash.contains(alias));
