@@ -4,9 +4,14 @@
 namespace SEM1MODULE
 {
 
+static const char* ModuleName = "SEM1Module";
+
 ZeraModules::VirtualModule* Sem1ModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
-    return new cSem1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
+    return new cSem1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()),
+                           "This module provides a configurable energy error calculator",
+                           ModuleName,
+                           "EM01");
 }
 
 void Sem1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
@@ -17,7 +22,7 @@ void Sem1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 
 QString Sem1ModuleFactory::getFactoryName() const
 {
-    return QString(cSem1Module::BaseModuleName).toLower();
+    return QString(ModuleName).toLower();
 }
 
 }

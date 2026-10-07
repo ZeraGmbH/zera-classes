@@ -4,9 +4,14 @@
 namespace SPM1MODULE
 {
 
+static const char* ModuleName = "SPM1Module";
+
 ZeraModules::VirtualModule* Spm1ModuleFactory::createModule(const ModuleFactoryParam &moduleParam)
 {
-    return new cSpm1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()));
+    return new cSpm1Module(moduleParam.getAdjustedParam(m_moduleGroupNumerator.get()),
+                           "This module provides a configurable power error calculator",
+                           ModuleName,
+                           "PM01");
 }
 
 void Spm1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
@@ -17,7 +22,7 @@ void Spm1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 
 QString Spm1ModuleFactory::getFactoryName() const
 {
-    return QString(cSpm1Module::BaseModuleName).toLower();
+    return QString(ModuleName).toLower();
 }
 
 }

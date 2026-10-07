@@ -1,33 +1,21 @@
 #ifndef SEM1MODULE_H
 #define SEM1MODULE_H
 
-#include "semspmmoduleconfiguration.h"
-#include "sem1modulemeasprogram.h"
-#include <basemeasmodule.h>
+#include "semspmmodule.h"
 
 namespace SEM1MODULE
 {
-class cSem1Module : public cBaseMeasModule
+class cSem1Module : public SemSpmModule
 {
     Q_OBJECT
 public:
-    static constexpr const char* BaseModuleName = "SEM1Module";
-    // shortcut of scpi module name is only first 4 characters
-    // so we will provide energy measurement type EM01 .. EM99
-    // and each energy measurement  will have an additional scpi parent with its number 0001 .. 9999
-    static constexpr const char* BaseSCPIModuleName = "EM01";
-
-    explicit cSem1Module(const ModuleFactoryParam &moduleParam);
-    SemSpmModuleConfigData *getConfigData();
-    QByteArray getConfigXml() const override;
+    explicit cSem1Module(const ModuleFactoryParam &moduleParam,
+                         const QString &moduleDescription,
+                         const QString &moduleName,
+                         const QString &scpiModuleName);
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
-    void startMeas() override; // we make the measuring program start here
-    void stopMeas() override;
-
-    cSem1ModuleMeasProgram *m_pMeasProgram = nullptr;
-    SemSpmModuleConfiguration m_configuration;
 };
 
 }
