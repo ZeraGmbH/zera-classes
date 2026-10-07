@@ -171,7 +171,7 @@
     </xs:complexType>
 	
 
-    <xs:element name="sem1modconfpar">
+    <xs:element name="confpar">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="configuration">

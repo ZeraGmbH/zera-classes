@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<sem1modconfpar>
+<confpar>
     <configuration>
         <measure>
             <refinput>
@@ -38,4 +38,4 @@
             <lowerlimit>-10.0</lowerlimit>
         </measure>
     </parameter>
-</sem1modconfpar>
+</confpar>

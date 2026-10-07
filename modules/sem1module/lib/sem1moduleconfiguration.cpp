@@ -29,16 +29,16 @@ enum moduleconfigstate
 
 void cSem1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
-    m_ConfigXMLMap["sem1modconfpar:configuration:measure:refinput:n"] = setRefInputCount;
-    m_ConfigXMLMap["sem1modconfpar:configuration:measure:activeunits:n"] = setActiveUnitCount;
-    m_ConfigXMLMap["sem1modconfpar:configuration:measure:reactiveunits:n"] = setReactiveUnitCount;
-    m_ConfigXMLMap["sem1modconfpar:configuration:measure:apparentunits:n"] = setApparentUnitCount;
+    m_ConfigXMLMap["confpar:configuration:measure:refinput:n"] = setRefInputCount;
+    m_ConfigXMLMap["confpar:configuration:measure:activeunits:n"] = setActiveUnitCount;
+    m_ConfigXMLMap["confpar:configuration:measure:reactiveunits:n"] = setReactiveUnitCount;
+    m_ConfigXMLMap["confpar:configuration:measure:apparentunits:n"] = setApparentUnitCount;
 
-    m_ConfigXMLMap["sem1modconfpar:parameter:measure:refinput"] = setRefInput;
-    m_ConfigXMLMap["sem1modconfpar:parameter:measure:targeted"] = setTargeted;
-    m_ConfigXMLMap["sem1modconfpar:parameter:measure:meastime"] = setMeasTime;
-    m_ConfigXMLMap["sem1modconfpar:parameter:measure:upperlimit"] = setUpperLimit;
-    m_ConfigXMLMap["sem1modconfpar:parameter:measure:lowerlimit"] = setLowerLimit;
+    m_ConfigXMLMap["confpar:parameter:measure:refinput"] = setRefInput;
+    m_ConfigXMLMap["confpar:parameter:measure:targeted"] = setTargeted;
+    m_ConfigXMLMap["confpar:parameter:measure:meastime"] = setMeasTime;
+    m_ConfigXMLMap["confpar:parameter:measure:upperlimit"] = setUpperLimit;
+    m_ConfigXMLMap["confpar:parameter:measure:lowerlimit"] = setLowerLimit;
 
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSem1ModuleConfiguration::configXMLInfo);
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSem1ModuleConfiguration::completeConfiguration);
@@ -86,28 +86,28 @@ void cSem1ModuleConfiguration::configXMLInfo(const QString &key)
         case setRefInputCount:
             m_configData.m_refConfigs.m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_configData.m_refConfigs.m_nRefInpCount; i++) {
-                m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
+                m_ConfigXMLMap[QString("confpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
                 m_configData.m_refConfigs.m_refInpList.append(TRefInput());
             }
             break;
         case setActiveUnitCount:
             m_configData.m_unitConfigs.m_nActiveUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_configData.m_unitConfigs.m_nActiveUnitCount; i++) {
-                m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:activeunits:unit%1").arg(i+1)] = setActiveUnit1Name+i;
+                m_ConfigXMLMap[QString("confpar:configuration:measure:activeunits:unit%1").arg(i+1)] = setActiveUnit1Name+i;
                 m_configData.m_unitConfigs.m_ActiveUnitList.append(QString());
             }
             break;
         case setReactiveUnitCount:
             m_configData.m_unitConfigs.m_nReactiveUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_configData.m_unitConfigs.m_nReactiveUnitCount; i++) {
-                m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:reactiveunits:unit%1").arg(i+1)] = setReactiveUnit1Name+i;
+                m_ConfigXMLMap[QString("confpar:configuration:measure:reactiveunits:unit%1").arg(i+1)] = setReactiveUnit1Name+i;
                 m_configData.m_unitConfigs.m_ReactiveUnitList.append(QString());
             }
             break;
         case setApparentUnitCount:
             m_configData.m_unitConfigs.m_nApparentUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_configData.m_unitConfigs.m_nApparentUnitCount; i++) {
-                m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:apparentunits:unit%1").arg(i+1)] = setApparentUnit1Name+i;
+                m_ConfigXMLMap[QString("confpar:configuration:measure:apparentunits:unit%1").arg(i+1)] = setApparentUnit1Name+i;
                 m_configData.m_unitConfigs.m_ApparentUnitList.append(QString());
             }
             break;
