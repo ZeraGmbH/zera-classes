@@ -25,6 +25,8 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
     const cSem1ModuleConfigData *configData = m_pModule->getConfigData();
+    if (!SecPowerModuleFinder::testConfiguredRefInputs(configData->m_refConfigs, m_pModule->getStorageDb()))
+        qCritical("SEM module has invalid configuration!");
     m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
