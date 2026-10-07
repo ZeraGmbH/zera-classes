@@ -26,6 +26,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
 {
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
     m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
+    m_dutInputDictionary.fillFromDutConfig(configData->m_dutConfigs);
     m_resourceTypeList.addTypesFromConfig(configData->m_refConfigs);
     m_resourceTypeList.addTypesFromConfig(configData->m_dutConfigs);
 

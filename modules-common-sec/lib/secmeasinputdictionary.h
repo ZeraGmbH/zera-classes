@@ -10,6 +10,7 @@ class SecMeasInputDictionary
 {
 public:
     void fillFromReferenceConfig(const TSecCommonReferenceConfigs &refConfig);
+    void fillFromDutConfig(const TSecCommonDutConfigs &dutConfig);
 
     void addReferenceInput(const QString &inputName, const QString &resource);
     QString getResource(const QString &inputName) const;
@@ -23,6 +24,7 @@ public:
 
     QString getInputFNameFromAlias(const QString &alias) const;
 private:
+    QStringList m_inputsOrderedByConfig; // changing config sequence shall make it into GUI
     // input name: "f0" / "f1"... or DUT ec0
     // alias "P" / "Q" / "P AC" / "P DC"...
     QHash<QString /* inputName */, QString /* resource */> m_resourceHash;

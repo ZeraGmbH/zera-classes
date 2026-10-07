@@ -16,6 +16,9 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
+    const cSfcModuleConfigData *configData = m_pModule->getConfigData();
+    m_dutInputDictionary.fillFromDutConfig(configData->m_dutConfigs);
+
     m_resourceTypeList.addTypesFromConfig(m_pModule->getConfigData()->m_dutConfigs);
 
     m_IdentifyState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourcesState);

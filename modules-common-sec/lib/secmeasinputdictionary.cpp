@@ -3,10 +3,18 @@
 void SecMeasInputDictionary::fillFromReferenceConfig(const TSecCommonReferenceConfigs &refConfig)
 {
     const QList<TRefInput> refInputList = refConfig.m_refInpList;
-    for(const TRefInput &refInput : refInputList)
+    for(const TRefInput &refInput : refInputList) {
+        m_inputsOrderedByConfig.append(refInput.inputName);
         setAlias(refInput.inputName, refInput.alias);
+    }
 
     m_resourceTypeList.addTypesFromConfig(refConfig);
+}
+
+void SecMeasInputDictionary::fillFromDutConfig(const TSecCommonDutConfigs &dutConfig)
+{
+    for(const QString &refInput : dutConfig.m_dutInpList)
+        m_inputsOrderedByConfig.append(refInput);
 }
 
 void SecMeasInputDictionary::addReferenceInput(const QString &inputName, const QString &resource)
@@ -50,7 +58,7 @@ QString SecMeasInputDictionary::getInputFNameFromAlias(const QString &alias) con
 
 QStringList SecMeasInputDictionary::getInputNameList() const
 {
-    return m_resourceHash.keys();
+    return m_inputsOrderedByConfig;
 }
 
 QStringList SecMeasInputDictionary::getInputAliasList() const
