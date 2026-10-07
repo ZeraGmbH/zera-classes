@@ -158,7 +158,6 @@ private:
     QState m_readFinalTimeCounterState;
     QFinalState m_setEMResultState;
 
-    SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
     RefPowerConstantObserver m_refConstantObserver;

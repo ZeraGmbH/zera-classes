@@ -25,7 +25,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
-    m_refInputDictionary.setAliasesFromReferenceConfig(configData->m_refConfigs);
+    m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
     m_resourceTypeList.addTypesFromConfig(configData->m_refConfigs);
     m_resourceTypeList.addTypesFromConfig(configData->m_dutConfigs);
 

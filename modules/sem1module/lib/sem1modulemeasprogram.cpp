@@ -25,8 +25,7 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module) :
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
 {
     const cSem1ModuleConfigData *configData = m_pModule->getConfigData();
-    m_refInputDictionary.setAliasesFromReferenceConfig(configData->m_refConfigs);
-    m_resourceTypeList.addTypesFromConfig(configData->m_refConfigs);
+    m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -424,7 +423,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
             case readresource:
                 if (reply == ack) {
-                    QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
+                    QStringList resourceTypeList = m_refInputDictionary.getResourceTypeList();
                     m_ResourceHash[resourceTypeList.at(m_nIt)] = answer.toString();
                     m_nIt++;
                     if (m_nIt < resourceTypeList.count())
@@ -744,7 +743,7 @@ void cSem1ModuleMeasProgram::readResources()
 
 void cSem1ModuleMeasProgram::readResource()
 {
-    QString resourcetype = m_resourceTypeList.getResourceTypeList().at(m_nIt);
+    QString resourcetype = m_refInputDictionary.getResourceTypeList().at(m_nIt);
     m_MsgNrCmdList[m_rmInterface.getResources(resourcetype)] = readresource;
 }
 
@@ -752,7 +751,7 @@ void cSem1ModuleMeasProgram::testSemInputs()
 {
     const auto &refInpList = m_pModule->getConfigData()->m_refConfigs.m_refInpList;
     qint32 refInCountLeftToCheck = refInpList.count();
-    QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
+    QStringList resourceTypeList = m_refInputDictionary.getResourceTypeList();
     for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
         QString refPowerName = refInpList[refInputNo].inputName;
         for (int resourceTypeNo = 0; resourceTypeNo < resourceTypeList.count(); resourceTypeNo++) {

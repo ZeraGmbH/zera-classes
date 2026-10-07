@@ -1,5 +1,14 @@
 #include "secmeasinputdictionary.h"
 
+void SecMeasInputDictionary::fillFromReferenceConfig(const TSecCommonReferenceConfigs &refConfig)
+{
+    const QList<TRefInput> refInputList = refConfig.m_refInpList;
+    for(const TRefInput &refInput : refInputList)
+        setAlias(refInput.inputName, refInput.alias);
+
+    m_resourceTypeList.addTypesFromConfig(refConfig);
+}
+
 void SecMeasInputDictionary::addReferenceInput(const QString &inputName, const QString &resource)
 {
     Q_ASSERT(!m_resourceHash.contains(inputName));
@@ -14,17 +23,15 @@ void SecMeasInputDictionary::setAlias(const QString &inputName, const QString &a
     m_reverseAliasHash[alias] = inputName;
 }
 
-void SecMeasInputDictionary::setAliasesFromReferenceConfig(const TSecCommonReferenceConfigs &refConfig)
-{
-    const QList<TRefInput> refInputList = refConfig.m_refInpList;
-    for(const TRefInput &refInput : refInputList)
-        setAlias(refInput.inputName, refInput.alias);
-}
-
 QString SecMeasInputDictionary::getResource(const QString &inputName) const
 {
     Q_ASSERT(m_resourceHash.contains(inputName));
     return m_resourceHash[inputName];
+}
+
+const QStringList &SecMeasInputDictionary::getResourceTypeList() const
+{
+    return m_resourceTypeList.getResourceTypeList();
 }
 
 QString SecMeasInputDictionary::getAlias(const QString &inputName) const
