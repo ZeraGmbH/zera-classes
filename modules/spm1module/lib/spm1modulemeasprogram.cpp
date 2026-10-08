@@ -621,10 +621,10 @@ void cSpm1ModuleMeasProgram::actualizeRefConstant()
     newRefConstant(QVariant(constant));
 }
 
-QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator() // This won't work for PQS
+QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator()
 {
     QStringList sl;
-    const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
+    const SemSpmModuleConfigData *configData = m_pModule->getConfigData(); // This won't work for PQS
     QString powType = m_refInputDictionary.getAlias(configData->m_refConfigs.m_sRefInput.m_sValue);
     if (powType.contains('P'))
         sl = configData->m_unitConfigs.m_ActiveUnitList;
