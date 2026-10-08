@@ -609,10 +609,9 @@ QStringList cSem1ModuleMeasProgram::getEnergyUnitValidator()
 
 QString cSem1ModuleMeasProgram::getEnergyUnit()
 {
-    const QString &powerRefName = m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue;
-    QString powerType = m_refInputDictionary.getAlias(powerRefName);
-    QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
-    return cUnitHelper::getNewEnergyUnit(powerType, currentPowerUnit, 3600);
+    QString s = getPowerUnit();
+    s.append("h");
+    return s;
 }
 
 void cSem1ModuleMeasProgram::actualizeRefConstant()
