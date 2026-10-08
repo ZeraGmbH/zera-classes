@@ -1,9 +1,11 @@
 file(GLOB SOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    *.cpp
+    semspm-module/*.cpp
     )
 
 file(GLOB HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    *.h
+    semspm-module/*.h
     )
 
 find_package(Qt5 REQUIRED COMPONENTS Core)
@@ -30,6 +32,7 @@ target_include_directories(modules-common-sec
     PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/modules-common-sec>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/semspm-module>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     )
 
