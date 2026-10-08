@@ -3,10 +3,11 @@
     <configuration>
         <measure>
             <refinput>
-                <n>3</n>
+                <n>4</n>
                 <inp1>fo1,P</inp1>
                 <inp2>fo2,Q</inp2>
                 <inp3>fo3,S</inp3>
+                <inp4>fo0,PQS</inp4>
             </refinput>
         </measure>
     </configuration>
