@@ -17,12 +17,12 @@
 namespace SEM1MODULE
 {
 
-cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(SemSpmModule *module, const QHash<QString, double> &unitfactors) :
+cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(SemSpmModule *module, std::unique_ptr<AbstractSemSpmFunctions> semSpmFunctions) :
     cBaseMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
     m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
-    m_unitFactorHash(unitfactors)
+    m_semSpmFunctions(std::move(semSpmFunctions))
 {
     const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
     if (!SecPowerModuleFinder::testConfiguredRefInputs(configData->m_refConfigs, m_pModule->getStorageDb()))
@@ -427,7 +427,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         m_uint32BitExpander.setActual32(answer.toUInt());
-                        const double unitFactor = m_unitFactorHash[m_pInputUnitPar->getValue().toString()]; // 1 / kilo / Mega
+                        const double unitFactor = m_semSpmFunctions->getUnitFactorHash()[m_pInputUnitPar->getValue().toString()]; // 1 / kilo / Mega
                         m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / (m_pRefConstantPar->getValue().toDouble() * unitFactor);
                         m_pEnergyAct->setValue(m_fEnergy);
                     }
@@ -908,12 +908,12 @@ void cSem1ModuleMeasProgram::setEMResult()
     double WRef = energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
     double time = m_fTimeSecondsFinal;
 
-    const double unitFactor = m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
+    const double unitFactor = m_semSpmFunctions->getUnitFactorHash()[m_pInputUnitPar->getValue().toString()];
     double dutValue = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * unitFactor;
 
     evaluateResult(WRef, dutValue);
 
-    m_fEnergy = WRef / m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
+    m_fEnergy = WRef / m_semSpmFunctions->getUnitFactorHash()[m_pInputUnitPar->getValue().toString()];
     m_fPower = m_fEnergy * 3600.0 / time;
 
     m_pTimeAct->setValue(QVariant(time));

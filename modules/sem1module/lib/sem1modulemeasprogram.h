@@ -2,6 +2,7 @@
 #define SEM1MODULEMEASPROGRAM_H
 
 #include "secinterface.h"
+#include "abstractsemspmfunctions.h"
 #include "refpowerconstantobserver.h"
 #include "secmeasinputdictionary.h"
 #include "uint32bitexpander.h"
@@ -21,7 +22,7 @@ class cSem1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    explicit cSem1ModuleMeasProgram(SemSpmModule* module, const QHash<QString, double> &unitfactors);
+    explicit cSem1ModuleMeasProgram(SemSpmModule* module, std::unique_ptr<AbstractSemSpmFunctions> semSpmFunctions);
     void generateVeinInterface() override;
 signals:
     void setupContinue();
@@ -150,7 +151,7 @@ private:
 
     SecMeasInputDictionary m_refInputDictionary;
     RefPowerConstantObserver m_refConstantObserver;
-    QHash<QString, double> m_unitFactorHash;
+    std::unique_ptr<AbstractSemSpmFunctions> m_semSpmFunctions;
 
     QString m_masterErrCalcName;
     QString m_slaveErrCalcName;
