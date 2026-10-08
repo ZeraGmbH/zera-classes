@@ -193,7 +193,7 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
 
     m_pT0InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                           key = QString("PAR_T0Input"),
-                                          QString("Energy register: Start value"),
+                                          QString("%1 register: Start value").arg(m_semSpmFunctions->getMeasuredValueLabel()),
                                           QVariant((double)0.0));
     m_pT0InputPar->setScpiInfo("CALCULATE", QString("%1:T0INPUT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pT0InputPar->setValidator(new cDoubleValidator(0.0, 1.0e7, 1e-7));
@@ -201,7 +201,7 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
 
     m_pT1InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                           key = QString("PAR_T1input"),
-                                          QString("Energy register: End value"),
+                                          QString("%1 register: End value").arg(m_semSpmFunctions->getMeasuredValueLabel()),
                                           QVariant((double)0.0));
     m_pT1InputPar->setScpiInfo("CALCULATE", QString("%1:T1INPUT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pT1InputPar->setValidator(new cDoubleValidator(0.0, 1.0e7, 1e-7));
@@ -209,11 +209,7 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
 
     m_pInputUnitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("PAR_TXUNIT"),
-                                            QString("Energy unit:\n"
-                                                    "Valid values depend on power type selected:\n"
-                                                    "* Active power (P): 'MWh', 'kWh', 'Wh'\n"
-                                                    "* Reactive power (Q): 'MVarh', 'kVarh', 'Varh'\n"
-                                                    "* Apparent power (S): 'MVAh', 'kVAh', 'VAh'"),
+                                            m_semSpmFunctions->getUnitSelectDescription(),
                                             QVariant("Unknown"));
     m_pInputUnitPar->setScpiInfo("CALCULATE", QString("%1:TXUNIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pModule->m_veinModuleParameterMap[key] = m_pInputUnitPar; // for modules use
@@ -579,18 +575,19 @@ void cSem1ModuleMeasProgram::setValidators()
     cStringValidator *sValidator;
     sValidator = new cStringValidator(m_refInputDictionary.getInputAliasList());
     m_pRefInputPar->setValidator(sValidator);
-    sValidator = new cStringValidator(getEnergyUnitValidator());
+    sValidator = new cStringValidator(m_semSpmFunctions->getUnitValidator(getEnergyUnitValidator(), getPowerUnitValidator()));
     m_pInputUnitPar->setValidator(sValidator);
 }
 
 void cSem1ModuleMeasProgram::setUnits()
 {
+    m_pEnergyAct->setUnit(getEnergyUnit());
     m_pPowerAct->setUnit(getPowerUnit());
-    QString s = getEnergyUnit();
-    m_pEnergyAct->setUnit(s);
-    m_pT0InputPar->setUnit(s);
-    m_pT1InputPar->setUnit(s);
-    m_pInputUnitPar->setValue(s);
+
+    const QString mainUnit = m_semSpmFunctions->getMainUnit(getEnergyUnit(), getPowerUnit());
+    m_pT0InputPar->setUnit(mainUnit);
+    m_pT1InputPar->setUnit(mainUnit);
+    m_pInputUnitPar->setValue(mainUnit);
     // In case measurement is running, values are updated properly on next
     // interrupt (tested with vf-debugger). For a measuremnt finished we have to
     // recalc results with new units
@@ -905,21 +902,21 @@ void cSem1ModuleMeasProgram::onEMResultState()
 void cSem1ModuleMeasProgram::setEMResult()
 {
     const double energyCounterFinal = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getFinalExpanded64());
-    double WRef = energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
-    double time = m_fTimeSecondsFinal;
+    const double WRef = energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
 
-    const double unitFactor = m_semSpmFunctions->getUnitFactorHash()[m_pInputUnitPar->getValue().toString()];
-    double dutValue = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * unitFactor;
+    const QHash<QString, double> &unitHash = m_semSpmFunctions->getUnitFactorHash();
+    const double unitFactor = unitHash[m_pInputUnitPar->getValue().toString()];
+    const double dutValue = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * unitFactor;
 
-    evaluateResult(WRef, dutValue);
+    evaluateResult(m_semSpmFunctions->adjustReferenceValue(WRef, m_fTimeSecondsFinal), dutValue);
 
-    m_fEnergy = WRef / m_semSpmFunctions->getUnitFactorHash()[m_pInputUnitPar->getValue().toString()];
-    m_fPower = m_fEnergy * 3600.0 / time;
+    m_fEnergy = WRef / unitFactor;
+    m_fPower = m_fEnergy * 3600.0 / m_fTimeSecondsFinal;
 
-    m_pTimeAct->setValue(QVariant(time));
-    m_pResultAct->setValue(QVariant(m_fResult));
-    m_pEnergyAct->setValue(QVariant(m_fEnergy));
-    m_pPowerAct->setValue(QVariant(m_fPower));
+    m_pTimeAct->setValue(m_fTimeSecondsFinal);
+    m_pResultAct->setValue(m_fResult);
+    m_pEnergyAct->setValue(m_fEnergy);
+    m_pPowerAct->setValue(m_fPower);
 }
 
 void cSem1ModuleMeasProgram::evaluateResult(const double refValue, const double dutValue)

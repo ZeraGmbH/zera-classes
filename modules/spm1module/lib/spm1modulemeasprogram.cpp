@@ -193,7 +193,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
     m_pT0InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                           key = QString("PAR_T0Input"),
-                                          QString("Power register: Start value"),
+                                          QString("%1 register: Start value").arg(m_semSpmFunctions->getMeasuredValueLabel()),
                                           QVariant((double)0.0));
     m_pT0InputPar->setScpiInfo("CALCULATE", QString("%1:T0INPUT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pT0InputPar->setValidator(new cDoubleValidator(0.0, 1.0e7, 1e-7));
@@ -201,7 +201,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
     m_pT1InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                           key = QString("PAR_T1input"),
-                                          QString("Power register: End value"),
+                                          QString("%1 register: End value").arg(m_semSpmFunctions->getMeasuredValueLabel()),
                                           QVariant((double)0.0));
     m_pT1InputPar->setScpiInfo("CALCULATE", QString("%1:T1INPUT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pT1InputPar->setValidator(new cDoubleValidator(0.0, 1.0e7, 1e-7));
@@ -209,11 +209,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
 
     m_pInputUnitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("PAR_TXUNIT"),
-                                            QString("Power unit:\n"
-                                                    "Valid values depend on power type selected:\n"
-                                                    "* Active power (P): 'MW', 'kW', 'W'\n"
-                                                    "* Reactive power (Q): 'MVar', 'kVar', 'Var'\n"
-                                                    "* Apparent power (S): 'MVA', 'kVA', 'VA'"),
+                                            m_semSpmFunctions->getUnitSelectDescription(),
                                             QVariant("Unknown"));
     m_pInputUnitPar->setScpiInfo("CALCULATE", QString("%1:TXUNIT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pModule->m_veinModuleParameterMap[key] = m_pInputUnitPar; // for modules use
@@ -443,7 +439,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         m_fTimeSecondsActual = double(answer.toUInt()) * 0.001;
-                        m_fPower = m_fEnergy * 3600.0 / (m_fTimeSecondsActual); // 1 / kilo / Mega - see unitFactor->m_fEnergy above
+                        m_fPower = m_fEnergy * 3600.0 / m_fTimeSecondsActual; // 1 / kilo / Mega - see unitFactor->m_fEnergy above
                         m_pPowerAct->setValue(m_fPower);
                         m_pTimeAct->setValue(m_fTimeSecondsActual);
                     }
@@ -579,18 +575,19 @@ void cSpm1ModuleMeasProgram::setValidators()
     cStringValidator *sValidator;
     sValidator = new cStringValidator(m_refInputDictionary.getInputAliasList());
     m_pRefInputPar->setValidator(sValidator);
-    sValidator = new cStringValidator(getPowerUnitValidator());
+    sValidator = new cStringValidator(m_semSpmFunctions->getUnitValidator(getEnergyUnitValidator(), getPowerUnitValidator()));
     m_pInputUnitPar->setValidator(sValidator);
 }
 
 void cSpm1ModuleMeasProgram::setUnits()
 {
     m_pEnergyAct->setUnit(getEnergyUnit());
-    QString s = getPowerUnit();
-    m_pPowerAct->setUnit(s);
-    m_pT0InputPar->setUnit(s);
-    m_pT1InputPar->setUnit(s);
-    m_pInputUnitPar->setValue(s);
+    m_pPowerAct->setUnit(getPowerUnit());
+
+    const QString mainUnit = m_semSpmFunctions->getMainUnit(getEnergyUnit(), getPowerUnit());
+    m_pT0InputPar->setUnit(mainUnit);
+    m_pT1InputPar->setUnit(mainUnit);
+    m_pInputUnitPar->setValue(mainUnit);
     // In case measurement is running, values are updated properly on next
     // interrupt (tested with vf-debugger). For a measuremnt finished we have to
     // recalc results with new units
@@ -905,22 +902,21 @@ void cSpm1ModuleMeasProgram::onEMResultState()
 void cSpm1ModuleMeasProgram::setEMResult()
 {
     const double energyCounterFinal = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getFinalExpanded64());
-    double WRef = energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
-    double time = m_fTimeSecondsFinal;
+    const double WRef = energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
 
-    const double unitFactor = m_semSpmFunctions->getUnitFactorHash()[m_pInputUnitPar->getValue().toString()];
-    double dutValue = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * unitFactor;
+    const QHash<QString, double> &unitHash = m_semSpmFunctions->getUnitFactorHash();
+    const double unitFactor = unitHash[m_pInputUnitPar->getValue().toString()];
+    const double dutValue = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * unitFactor;
 
-    double PRef = WRef * 3600.0 / time;
-    evaluateResult(PRef, dutValue);
+    evaluateResult(m_semSpmFunctions->adjustReferenceValue(WRef, m_fTimeSecondsFinal), dutValue);
 
-    m_fEnergy = WRef / m_semSpmFunctions->getUnitFactorHash()[m_pInputUnitPar->getValue().toString()];
-    m_fPower = m_fEnergy * 3600.0 / time;
+    m_fEnergy = WRef / unitFactor;
+    m_fPower = m_fEnergy * 3600.0 / m_fTimeSecondsFinal;
 
-    m_pTimeAct->setValue(QVariant(time));
-    m_pResultAct->setValue(QVariant(m_fResult));
-    m_pEnergyAct->setValue(QVariant(m_fEnergy));
-    m_pPowerAct->setValue(QVariant(m_fPower));
+    m_pTimeAct->setValue(m_fTimeSecondsFinal);
+    m_pResultAct->setValue(m_fResult);
+    m_pEnergyAct->setValue(m_fEnergy);
+    m_pPowerAct->setValue(m_fPower);
 }
 
 void cSpm1ModuleMeasProgram::evaluateResult(const double refValue, const double dutValue)
