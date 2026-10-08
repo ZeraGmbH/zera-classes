@@ -86,6 +86,7 @@ private:
     void setValidators();
     void setUnits();
     void setEMResult();
+    void evaluateResult(const double refValue, const double dutValue);
 
     QStringList getEnergyUnitValidator();
     QString getEnergyUnit();

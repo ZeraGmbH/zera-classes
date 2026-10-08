@@ -352,7 +352,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasDurationMs; // and for the modules interface
 }
 
-enum spm1moduleCmds
+enum moduleCmds
 {
     sendrmident,
     fetchecalcunits,
@@ -427,9 +427,9 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         m_uint32BitExpander.setActual32(answer.toUInt());
-                        const double unitFactor = m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
+                        const double unitFactor = m_unitFactorHash[m_pInputUnitPar->getValue().toString()]; // 1 / kilo / Mega
                         m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / (m_pRefConstantPar->getValue().toDouble() * unitFactor);
-                        m_pEnergyAct->setValue(m_fEnergy); // in kWh
+                        m_pEnergyAct->setValue(m_fEnergy);
                     }
                 }
                 else
@@ -443,7 +443,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         m_fTimeSecondsActual = double(answer.toUInt()) * 0.001;
-                        m_fPower = m_fEnergy * 3600.0 / (m_fTimeSecondsActual); // in kW
+                        m_fPower = m_fEnergy * 3600.0 / (m_fTimeSecondsActual); // 1 / kilo / Mega - see unitFactor->m_fEnergy above
                         m_pPowerAct->setValue(m_fPower);
                         m_pTimeAct->setValue(m_fTimeSecondsActual);
                     }
@@ -927,6 +927,18 @@ void cSpm1ModuleMeasProgram::setEMResult()
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pEnergyAct->setValue(QVariant(m_fEnergy));
     m_pPowerAct->setValue(QVariant(m_fPower));
+}
+
+void cSpm1ModuleMeasProgram::evaluateResult(const double refValue, const double dutValue)
+{
+    if (refValue == 0) {
+        m_fResult = qQNaN();
+        m_eRating = ECALCRESULT::RESULT_UNFINISHED;
+    }
+    else {
+        m_fResult = (dutValue - refValue) * 100.0 / refValue;
+        setRating();
+    }
 }
 
 void cSpm1ModuleMeasProgram::setRating()

@@ -120,7 +120,7 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(SemSpmModule *module, const QHash
     // * for interrupt handling (Interrupt is thrown on measurement finished)
     // mode non targeted (Start/Stop):
     // * on user stop this machine is started.
-    m_readIntRegisterState.addTransition(this, &cSem1ModuleMeasProgram::interruptContinue, &m_resetIntRegisterState); // targeted: initial state
+    m_readIntRegisterState.addTransition(this, &cSem1ModuleMeasProgram::interruptContinue, &m_resetIntRegisterState);
     m_resetIntRegisterState.addTransition(this, &cSem1ModuleMeasProgram::interruptContinue, &m_readFinalEnergyCounterState);
     m_readFinalEnergyCounterState.addTransition(this, &cSem1ModuleMeasProgram::interruptContinue, &m_readFinalTimeCounterState);
     m_readFinalTimeCounterState.addTransition(this, &cSem1ModuleMeasProgram::interruptContinue, &m_setEMResultState);
@@ -352,7 +352,7 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasDurationMs; // and for the modules interface
 }
 
-enum sem1moduleCmds
+enum moduleCmds
 {
     sendrmident,
     fetchecalcunits,
@@ -427,9 +427,9 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         m_uint32BitExpander.setActual32(answer.toUInt());
-                        const double unitFactor = m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
+                        const double unitFactor = m_unitFactorHash[m_pInputUnitPar->getValue().toString()]; // 1 / kilo / Mega
                         m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / (m_pRefConstantPar->getValue().toDouble() * unitFactor);
-                        m_pEnergyAct->setValue(m_fEnergy); // in MWh, kWh, Wh depends on selected unit for user input
+                        m_pEnergyAct->setValue(m_fEnergy);
                     }
                 }
                 else
@@ -443,7 +443,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         m_fTimeSecondsActual = double(answer.toUInt()) * 0.001;
-                        m_fPower = m_fEnergy * 3600.0 / m_fTimeSecondsActual; // in MW, kW, W depends on selected unit for user input
+                        m_fPower = m_fEnergy * 3600.0 / m_fTimeSecondsActual; // 1 / kilo / Mega - see unitFactor->m_fEnergy above
                         m_pPowerAct->setValue(m_fPower);
                         m_pTimeAct->setValue(m_fTimeSecondsActual);
                     }
@@ -925,6 +925,18 @@ void cSem1ModuleMeasProgram::setEMResult()
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pEnergyAct->setValue(QVariant(m_fEnergy));
     m_pPowerAct->setValue(QVariant(m_fPower));
+}
+
+void cSem1ModuleMeasProgram::evaluateResult(const double refValue, const double dutValue)
+{
+    if (refValue == 0) {
+        m_fResult = qQNaN();
+        m_eRating = ECALCRESULT::RESULT_UNFINISHED;
+    }
+    else {
+        m_fResult = (dutValue - refValue) * 100.0 / refValue;
+        setRating();
+    }
 }
 
 void cSem1ModuleMeasProgram::setRating()
