@@ -23,7 +23,7 @@
     <IL2 Type="Node">
      <INVERTPHASE Type="Query,Command+Par" ScpiPath="CONFIGURATION:RNG1:IL2:INVERTPHASE" Min="0" DataType="BOOL" Description="Inverted Phase" Max="1"/>
     </IL2>
-    <RNGTIMER Type="Query,Command+Par" ScpiPath="CONFIGURATION:RNG1:RNGTIMER" Min="0" DataType="INTEGER" Description="Range timer for range decrease" Max="600000"/>
+    <RNGTIMER Type="Query,Command+Par" ScpiPath="CONFIGURATION:RNG1:RNGTIMER" Min="0" Unit="ms" DataType="INTEGER" Description="Range timer for range decrease" Max="600000"/>
     <UL2 Type="Node">
      <INVERTPHASE Type="Query,Command+Par" ScpiPath="CONFIGURATION:RNG1:UL2:INVERTPHASE" Min="0" DataType="BOOL" Description="Inverted Phase" Max="1"/>
     </UL2>

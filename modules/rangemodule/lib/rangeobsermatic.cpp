@@ -13,6 +13,7 @@
 #include <scpi.h>
 #include <timerfactoryqt.h>
 #include <QRegularExpression>
+#include <uintvalidator.h>
 
 namespace RANGEMODULE
 {
@@ -208,14 +209,14 @@ void cRangeObsermatic::generateVeinInterface()
     m_pParRangeTimer = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                       QString("PAR_RangeTimer"),
                                                       QString("Range timer for range decrease"),
-                                                      QVariant(0));
+                                                      m_ConfPar.m_time.m_nValue);
 
     m_pModule->m_veinModuleParameterMap["PAR_RangeTimer"] = m_pParRangeTimer; // for modules use
-    m_pParRangeTimer->setValue(m_ConfPar.m_time.m_nValue);
-    m_pParRangeTimer->setValidator(new cIntValidator(0, 600000)); // set to 10mins max
+    m_pParRangeTimer->setUnit("ms");
+    m_pParRangeTimer->setValidator(new UintValidator(0, 600000)); // set to 10mins max
     m_pParRangeTimer->setScpiInfo("CONFIGURATION", "RNGTIMER", SCPI::isQuery|SCPI::isCmdwP);
     connect(m_pParRangeTimer, &VfModuleParameter::sigValueChanged, this, [this](const QVariant& value){
-        m_ConfPar.m_time.m_nValue = value.toInt();
+        m_ConfPar.m_time.m_nValue = value.toUInt();
         m_timerForRangeDecrease = TimerFactoryQt::createSingleShot(m_ConfPar.m_time.m_nValue);
         emit m_pModule->parameterChanged();
     });

@@ -644,6 +644,7 @@
                 },
                 "PAR_RangeTimer": {
                     "Description": "<skipped>",
+                    "Unit": "ms",
                     "Validation": {
                         "Data": [
                             0,

@@ -38,7 +38,7 @@
     <UL1 Type="Node">
      <INVERTPHASE Min="0" DataType="BOOL" Description="Inverted Phase" ScpiPath="CONFIGURATION:RNG1:UL1:INVERTPHASE" Max="1" Type="Query,Command+Par"/>
     </UL1>
-    <RNGTIMER Min="0" DataType="INTEGER" Description="Range timer for range decrease" ScpiPath="CONFIGURATION:RNG1:RNGTIMER" Max="600000" Type="Query,Command+Par"/>
+    <RNGTIMER Min="0" DataType="INTEGER" Description="Range timer for range decrease" Unit="ms" ScpiPath="CONFIGURATION:RNG1:RNGTIMER" Max="600000" Type="Query,Command+Par"/>
     <IL2 Type="Node">
      <INVERTPHASE Min="0" DataType="BOOL" Description="Inverted Phase" ScpiPath="CONFIGURATION:RNG1:IL2:INVERTPHASE" Max="1" Type="Query,Command+Par"/>
     </IL2>

@@ -512,6 +512,7 @@
                 },
                 "PAR_RangeTimer": {
                     "Description": "Range timer for range decrease",
+                    "Unit": "ms",
                     "Validation": {
                         "Data": [
                             0,
