@@ -905,22 +905,16 @@ void cSpm1ModuleMeasProgram::onEMResultState()
 void cSpm1ModuleMeasProgram::setEMResult()
 {
     const double energyCounterFinal = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getFinalExpanded64());
-    m_fEnergy = energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
+    double WRef = energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
     double time = m_fTimeSecondsFinal;
 
-    double PRef = m_fEnergy * 3600.0 / time;
     const double unitFactor = m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
-    double PDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * unitFactor;
-    if (PRef == 0) {
-        m_fResult = qQNaN();
-        m_eRating = ECALCRESULT::RESULT_UNFINISHED;
-    }
-    else {
-        m_fResult = (PDut - PRef) * 100.0 / PRef;
-        setRating();
-    }
+    double dutValue = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * unitFactor;
 
-    m_fEnergy /=  m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
+    double PRef = WRef * 3600.0 / time;
+    evaluateResult(PRef, dutValue);
+
+    m_fEnergy = WRef / m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
     m_fPower = m_fEnergy * 3600.0 / time;
 
     m_pTimeAct->setValue(QVariant(time));

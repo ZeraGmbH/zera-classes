@@ -905,18 +905,13 @@ void cSem1ModuleMeasProgram::onEMResultState()
 void cSem1ModuleMeasProgram::setEMResult()
 {
     const double energyCounterFinal = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getFinalExpanded64());
-    double WRef =  energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
+    double WRef = energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
     double time = m_fTimeSecondsFinal;
+
     const double unitFactor = m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
-    double WDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * unitFactor;
-    if (WRef == 0) {
-        m_fResult = qQNaN();
-        m_eRating = ECALCRESULT::RESULT_UNFINISHED;
-    }
-    else {
-        m_fResult = (WDut - WRef) * 100.0 / WRef;
-        setRating();
-    }
+    double dutValue = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * unitFactor;
+
+    evaluateResult(WRef, dutValue);
 
     m_fEnergy = WRef / m_unitFactorHash[m_pInputUnitPar->getValue().toString()];
     m_fPower = m_fEnergy * 3600.0 / time;
