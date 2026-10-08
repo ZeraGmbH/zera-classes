@@ -690,7 +690,7 @@ void cSem1ModuleMeasProgram::resourceManagerConnect()
 
 void cSem1ModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Sem1Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(m_pModule->getVeinModuleName())] = sendrmident;
 }
 
 void cSem1ModuleMeasProgram::ecalcServerConnect()

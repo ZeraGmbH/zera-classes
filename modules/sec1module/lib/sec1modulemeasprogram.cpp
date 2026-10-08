@@ -1013,7 +1013,7 @@ void cSec1ModuleMeasProgram::resourceManagerConnect()
 
 void cSec1ModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Sec1Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(m_pModule->getVeinModuleName())] = sendrmident;
 }
 
 void cSec1ModuleMeasProgram::readResources()

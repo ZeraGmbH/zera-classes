@@ -667,7 +667,7 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
 
 void cPower1ModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Power1Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(m_pModule->getVeinModuleName())] = sendrmident;
 }
 
 void cPower1ModuleMeasProgram::claimResourcesSource()
