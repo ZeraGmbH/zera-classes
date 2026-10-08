@@ -4,6 +4,7 @@
 #include "secpowermodulefinder.h"
 #include <errormessages.h>
 #include <scpi.h>
+#include <uintvalidator.h>
 #include <unithelper.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
@@ -184,11 +185,11 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
     m_pMeasTimePar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_MeasTime"),
                                            QString("Measurement time set"),
-                                           QVariant((quint32)10));
+                                           QVariant(quint32(10)));
     m_pMeasTimePar->setScpiInfo("CALCULATE", QString("%1:MTIME").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
-    m_pMeasTimePar->setValidator(new cIntValidator(1, Zera::cSECInterface::maxSecCounterInitVal / 1000, 1)); // counter in ms
-    m_pMeasTimePar->setUnit("s");
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasTimePar; // for modules use
+    m_pMeasTimePar->setValidator(new UintValidator(1, Zera::cSECInterface::maxSecCounterInitVal / 1000, 1)); // counter in ms
+    m_pMeasTimePar->setUnit("s");
 
     m_pT0InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                           key = QString("PAR_T0Input"),
@@ -202,7 +203,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
                                           key = QString("PAR_T1input"),
                                           QString("Power register: End value"),
                                           QVariant((double)0.0));
-    m_pT1InputPar->setScpiInfo("CALCULATE",  QString("%1:T1INPUT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
+    m_pT1InputPar->setScpiInfo("CALCULATE", QString("%1:T1INPUT").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pT1InputPar->setValidator(new cDoubleValidator(0.0, 1.0e7, 1e-7));
     m_pModule->m_veinModuleParameterMap[key] = m_pT1InputPar; // for modules use
 
@@ -236,7 +237,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
                                                  "4: Ready\n"
                                                  "8: Aborted"),
                                          QVariant((quint32)0) );
-    m_pStatusAct->setScpiInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), SCPI::isQuery);
+    m_pStatusAct->setScpiInfo("CALCULATE", QString("%1:STATUS").arg(modNr), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] =  m_pStatusAct; // and for the modules interface
 
     m_pTimeAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -333,21 +334,21 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
                                            key = QString("ACT_EndTime"),
                                            QString("Last measurement End time (dd-MM-yyyy HH:mm:ss)"),
                                            QString());
-    m_pMeasEndTime->setScpiInfo("CALCULATE",  QString("%1:ENDTIME").arg(modNr), SCPI::isQuery);
+    m_pMeasEndTime->setScpiInfo("CALCULATE", QString("%1:ENDTIME").arg(modNr), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasEndTime; // and for the modules interface
 
     m_pMeasEstimatedEndTime = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                     key = QString("ACT_EstimEndTime"),
                                                     QString("Estimated End time (dd-MM-yyyy HH:mm:ss)"),
                                                     QString());
-    m_pMeasEstimatedEndTime->setScpiInfo("CALCULATE",  QString("%1:ESTENDTIME").arg(modNr), SCPI::isQuery);
+    m_pMeasEstimatedEndTime->setScpiInfo("CALCULATE", QString("%1:ESTENDTIME").arg(modNr), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasEstimatedEndTime; // and for the modules interface
 
     m_pMeasDurationMs = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("ACT_MeasTime"),
                                               QString("Last measurement Duration [ms]"),
                                               QVariant((int)0));
-    m_pMeasDurationMs->setScpiInfo("CALCULATE",  QString("%1:MMEASTIME").arg(modNr), SCPI::isQuery);
+    m_pMeasDurationMs->setScpiInfo("CALCULATE", QString("%1:MMEASTIME").arg(modNr), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasDurationMs; // and for the modules interface
 }
 

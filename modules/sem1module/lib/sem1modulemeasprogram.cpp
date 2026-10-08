@@ -7,6 +7,7 @@
 #include <unithelper.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
+#include <uintvalidator.h>
 #include <stringvalidator.h>
 #include <reply.h>
 #include <proxy.h>
@@ -184,10 +185,10 @@ void cSem1ModuleMeasProgram::generateVeinInterface()
     m_pMeasTimePar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_MeasTime"),
                                            QString("Measurement time set"),
-                                           QVariant((uint)10));
+                                           QVariant(quint32(10)));
     m_pMeasTimePar->setScpiInfo("CALCULATE", QString("%1:MTIME").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasTimePar; // for modules use
-    m_pMeasTimePar->setValidator(new cIntValidator(1, Zera::cSECInterface::maxSecCounterInitVal / 1000, 1)); // counter in ms
+    m_pMeasTimePar->setValidator(new UintValidator(1, Zera::cSECInterface::maxSecCounterInitVal / 1000, 1)); // counter in ms
     m_pMeasTimePar->setUnit("s");
 
     m_pT0InputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
