@@ -5233,8 +5233,8 @@
                     "Description": "<skipped>",
                     "Validation": {
                         "Data": [
-                            "HK1",
-                            "SC1"
+                            "SC1",
+                            "HK1"
                         ],
                         "Type": "STRING"
                     }

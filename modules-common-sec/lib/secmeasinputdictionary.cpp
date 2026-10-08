@@ -63,5 +63,8 @@ const QStringList &SecMeasInputDictionary::getInputNameList() const
 
 QStringList SecMeasInputDictionary::getInputAliasList() const
 {
-    return m_aliasMap.values();
+    QStringList orderedAliases;
+    for (const QString &input : m_inputsOrderedByConfig)
+        orderedAliases.append(m_aliasMap[input]);
+    return orderedAliases;
 }
