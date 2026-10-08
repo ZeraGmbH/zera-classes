@@ -12,16 +12,16 @@
 #include <QDateTime>
 #include <QFinalState>
 
+class SemSpmModule;
+
 namespace SEM1MODULE
 {
-
-class cSem1Module;
 
 class cSem1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    explicit cSem1ModuleMeasProgram(cSem1Module* module, const QHash<QString, double> &unitfactors);
+    explicit cSem1ModuleMeasProgram(SemSpmModule* module, const QHash<QString, double> &unitfactors);
     void generateVeinInterface() override;
 signals:
     void setupContinue();
@@ -103,7 +103,7 @@ private:
 
     qint8 getEmobLockState();
 
-    cSem1Module* m_pModule = nullptr; // the module we live in
+    SemSpmModule* m_pModule = nullptr; // the module we live in
     Zera::cRMInterface m_rmInterface;
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;

@@ -12,16 +12,16 @@
 #include <QDateTime>
 #include <QFinalState>
 
+class SemSpmModule;
+
 namespace SPM1MODULE
 {
-
-class cSpm1Module;
 
 class cSpm1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    explicit cSpm1ModuleMeasProgram(cSpm1Module* module, const QHash<QString, double> &unitfactors);
+    explicit cSpm1ModuleMeasProgram(SemSpmModule* module, const QHash<QString, double> &unitfactors);
     void generateVeinInterface() override;
 signals:
     void setupContinue();
@@ -100,7 +100,7 @@ private:
 
     void calculateMeasTime();
 
-    cSpm1Module* m_pModule = nullptr; // the module we live in
+    SemSpmModule* m_pModule = nullptr; // the module we live in
     Zera::cRMInterface m_rmInterface;
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;

@@ -1,13 +1,13 @@
 #include "sem1modulemeasprogram.h"
-#include "sem1module.h"
+#include "semspmmodule.h"
 #include "secdatetimehelper.h"
 #include "secpowermodulefinder.h"
 #include <errormessages.h>
 #include <scpi.h>
 #include <unithelper.h>
+#include <uintvalidator.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
-#include <uintvalidator.h>
 #include <stringvalidator.h>
 #include <reply.h>
 #include <proxy.h>
@@ -17,7 +17,7 @@
 namespace SEM1MODULE
 {
 
-cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, const QHash<QString, double> &unitfactors) :
+cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(SemSpmModule *module, const QHash<QString, double> &unitfactors) :
     cBaseMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>()),

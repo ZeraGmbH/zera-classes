@@ -16,7 +16,6 @@ public:
 
 private:
     void setupModule() override; // after xml configuration we can setup and export our module
-
 };
 
 }
