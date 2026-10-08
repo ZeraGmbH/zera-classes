@@ -25,7 +25,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, const QHash<
 {
     const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
     if (!SecPowerModuleFinder::testConfiguredRefInputs(configData->m_refConfigs, m_pModule->getStorageDb()))
-        qCritical("SPM module has invalid configuration!");
+        qCritical("%s module has invalid configuration!", qPrintable(m_pModule->getVeinModuleName()));
     m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
@@ -400,7 +400,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
             case fetchecalcunits:
             {
-                qInfo("SPM: Units fetched: %s", qPrintable(answer.toString()));
+                qInfo("%s: Units fetched: %s", qPrintable(m_pModule->getVeinModuleName()), qPrintable(answer.toString()));
                 QStringList sl = answer.toString().split(';');
                 if ((reply == ack) && (sl.length() >= 3)) {
                     m_masterErrCalcName = sl.at(0);
