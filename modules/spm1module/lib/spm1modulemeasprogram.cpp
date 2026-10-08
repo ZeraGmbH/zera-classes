@@ -17,7 +17,7 @@
 namespace SPM1MODULE
 {
 
-cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(SemSpmModule* module, std::unique_ptr<AbstractSemSpmFunctions> semSpmFunctions) :
+cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(SemSpmModule *module, std::unique_ptr<AbstractSemSpmFunctions> semSpmFunctions) :
     cBaseMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
@@ -234,7 +234,7 @@ void cSpm1ModuleMeasProgram::generateVeinInterface()
                                                  "8: Aborted"),
                                          QVariant((quint32)0) );
     m_pStatusAct->setScpiInfo("CALCULATE", QString("%1:STATUS").arg(modNr), SCPI::isQuery);
-    m_pModule->m_veinModuleParameterMap[key] =  m_pStatusAct; // and for the modules interface
+    m_pModule->m_veinModuleParameterMap[key] = m_pStatusAct; // and for the modules interface
 
     m_pTimeAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                        key = QString("ACT_Time"),

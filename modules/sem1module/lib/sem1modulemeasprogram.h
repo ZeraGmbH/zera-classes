@@ -22,7 +22,7 @@ class cSem1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    explicit cSem1ModuleMeasProgram(SemSpmModule* module, std::unique_ptr<AbstractSemSpmFunctions> semSpmFunctions);
+    explicit cSem1ModuleMeasProgram(SemSpmModule *module, std::unique_ptr<AbstractSemSpmFunctions> semSpmFunctions);
     void generateVeinInterface() override;
 signals:
     void setupContinue();
