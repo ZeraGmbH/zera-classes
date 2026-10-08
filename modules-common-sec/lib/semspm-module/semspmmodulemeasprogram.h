@@ -1,5 +1,5 @@
-#ifndef SEM1MODULEMEASPROGRAM_H
-#define SEM1MODULEMEASPROGRAM_H
+#ifndef SEMSPMMODULEMEASPROGRAM_H
+#define SEMSPMMODULEMEASPROGRAM_H
 
 #include "secinterface.h"
 #include "abstractsemspmfunctions.h"
@@ -15,14 +15,11 @@
 
 class SemSpmModule;
 
-namespace SEM1MODULE
-{
-
-class cSem1ModuleMeasProgram: public cBaseMeasProgram
+class SemSpmModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    explicit cSem1ModuleMeasProgram(SemSpmModule *module, std::unique_ptr<AbstractSemSpmFunctions> semSpmFunctions);
+    explicit SemSpmModuleMeasProgram(SemSpmModule *module, std::unique_ptr<AbstractSemSpmFunctions> semSpmFunctions);
     void generateVeinInterface() override;
 signals:
     void setupContinue();
@@ -202,6 +199,5 @@ private:
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
     static constexpr quint32 m_nActualizeIntervallHighFreq = 50;
 };
-}
 
-#endif // SEM1MODULEMEASPROGRAM_H
+#endif // SEMSPMMODULEMEASPROGRAM_H

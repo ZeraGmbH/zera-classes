@@ -1,5 +1,5 @@
 #include "spm1module.h"
-#include "spm1modulemeasprogram.h"
+#include "semspmmodulemeasprogram.h"
 #include "spmfunctions.h"
 
 namespace SPM1MODULE
@@ -22,7 +22,7 @@ void cSpm1Module::setupModule()
     cBaseMeasModule::setupModule();
 
     // we only have this activist
-    m_pMeasProgram = new cSpm1ModuleMeasProgram(this, std::make_unique<SpmFunctions>());
+    m_pMeasProgram = new SemSpmModuleMeasProgram(this, std::make_unique<SpmFunctions>());
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cBaseMeasProgram::activated, this, &cSpm1Module::activationContinue);
     connect(m_pMeasProgram, &cBaseMeasProgram::deactivated, this, &cSpm1Module::deactivationContinue);
