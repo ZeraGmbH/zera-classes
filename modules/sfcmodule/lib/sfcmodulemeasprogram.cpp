@@ -521,7 +521,7 @@ void cSfcModuleMeasProgram::enableInterrupt()
 
 void cSfcModuleMeasProgram::startMeasurement()
 {
-    m_pFlankCountAct->setValue(m_measuredFlanks);
+    m_pFlankCountAct->setValue(0);
     if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::CMD, ECALCCMDID::ARM + ECALCCMDID::COUNTEDGE)] = startmeasurement;
 }

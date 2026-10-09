@@ -42,7 +42,6 @@ private:
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;
 
-    QList<VfModuleComponent *> m_veinActValueList; // the list of actual values we work on
     qint32 m_nIt = 0;
     QString m_sIt;
     QString m_masterErrCalcName;
@@ -51,8 +50,6 @@ private:
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_dutInputDictionary;
     bool m_bMeasurementRunning = false;
-    quint32 m_nDUTPulseCounterStart = 0;
-    quint32 m_measuredFlanks = 0;
 
     TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
