@@ -32,7 +32,7 @@ const QStringList &FunctionsSpm::getUnitValidator(const QStringList &energyValid
     return powerValidator;
 }
 
-double FunctionsSpm::adjustReferenceValue(const double &refValue, const double &time)
+double FunctionsSpm::adjustReferenceValue(const double &refValue, const double &measDurationSeconds)
 {
-    return refValue * 3600.0 / time;
+    return refValue * 3600.0 / measDurationSeconds;
 }

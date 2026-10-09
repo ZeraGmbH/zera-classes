@@ -32,8 +32,8 @@ const QStringList &FunctionsSem::getUnitValidator(const QStringList &energyValid
     return energyValidator;
 }
 
-double FunctionsSem::adjustReferenceValue(const double &refValue, const double &time)
+double FunctionsSem::adjustReferenceValue(const double &refValue, const double &measDurationSeconds)
 {
-    Q_UNUSED(time);
+    Q_UNUSED(measDurationSeconds);
     return refValue;
 }

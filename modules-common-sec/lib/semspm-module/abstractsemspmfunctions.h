@@ -17,7 +17,7 @@ public:
     virtual const QString &getMainUnit(const QString &energyUnit, const QString &powerUnit) const = 0;
     virtual const QStringList &getUnitValidator(const QStringList &energyValidator, const QStringList &powerValidator) = 0;
 
-    virtual double adjustReferenceValue(const double &refValue, const double &time) = 0;
+    virtual double adjustReferenceValue(const double &refValue, const double &measDurationSeconds) = 0;
 };
 
 #endif // ABSTRACTSEMSPMFUNCTIONS_H

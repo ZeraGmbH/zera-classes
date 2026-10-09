@@ -14,7 +14,7 @@ public:
     const QString &getMainUnit(const QString &energyUnit, const QString &powerUnit) const override;
     const QStringList &getUnitValidator(const QStringList &energyValidator, const QStringList &powerValidator) override;
 
-    double adjustReferenceValue(const double &refValue, const double &time) override;
+    double adjustReferenceValue(const double &refValue, const double &measDurationSeconds) override;
 };
 
 #endif // FUNCTIONSSPM_H
