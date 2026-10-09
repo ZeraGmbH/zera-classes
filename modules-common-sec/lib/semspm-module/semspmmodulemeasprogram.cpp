@@ -69,7 +69,7 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
 
     connect(&m_stopECalculatorState, &QState::entered, this, &SemSpmModuleMeasProgram::stopECCalculator);
     connect(&m_freeECalculatorState, &QState::entered, this, &SemSpmModuleMeasProgram::freeECalculator);
-    connect(&m_deactivationDoneState, &QState::entered, this, &SemSpmModuleMeasProgram::deactivationDone);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cModuleActivist::deactivated);
 
     // setting up statemachine used when starting a measurement
     m_setsyncState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_setsync2State);
@@ -761,20 +761,6 @@ void SemSpmModuleMeasProgram::freeECalculator()
 {
     m_bActive = false;
     m_MsgNrCmdList[m_secInterface->freeECalcUnits()] = freeecalcunits;
-}
-
-void SemSpmModuleMeasProgram::deactivationDone()
-{
-    disconnect(&m_rmInterface, 0, this, 0);
-    disconnect(m_secInterface.get(), 0, this, 0);
-    disconnect(m_pcbInterface.get(), 0, this, 0);
-    disconnect(m_pStartStopPar, 0, this, 0);
-    disconnect(m_pTargetedPar, 0, this, 0);
-    disconnect(m_pRefInputPar, 0, this, 0);
-    disconnect(m_pMeasTimePar, 0, this, 0);
-    disconnect(m_pT0InputPar, 0, this, 0);
-    disconnect(m_pT1InputPar, 0, this, 0);
-    emit deactivated();
 }
 
 void SemSpmModuleMeasProgram::setSync()
