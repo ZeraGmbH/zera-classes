@@ -114,7 +114,7 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
 
     connect(&m_stopECalculatorState, &QState::entered, this, &cSfcModuleMeasProgram::stopECCalculator);
     connect(&m_freeECalculatorState, &QState::entered, this, &cSfcModuleMeasProgram::freeECalculator);
-    connect(&m_deactivationDoneState, &QState::entered, this, &cSfcModuleMeasProgram::deactivationDone);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cModuleActivist::deactivated);
 }
 
 void cSfcModuleMeasProgram::start()
@@ -512,15 +512,6 @@ void cSfcModuleMeasProgram::freeECalculator()
     m_ContinousTimer->stop();
     m_bActive = false;
     m_MsgNrCmdList[m_secInterface->freeECalcUnits()] = freeecalcunits;
-}
-
-void cSfcModuleMeasProgram::deactivationDone()
-{
-    disconnect(&m_rmInterface, 0, this, 0);
-    disconnect(m_secInterface.get(), 0, this, 0);
-    disconnect(m_pcbInterface.get(), 0, this, 0);
-
-    emit deactivated();
 }
 
 void cSfcModuleMeasProgram::enableInterrupt()

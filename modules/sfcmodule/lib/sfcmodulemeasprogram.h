@@ -131,7 +131,6 @@ private slots:
 
     void stopECCalculator();
     void freeECalculator();
-    void deactivationDone();
 
     void setMasterMux();
     void setMasterMeasMode();
