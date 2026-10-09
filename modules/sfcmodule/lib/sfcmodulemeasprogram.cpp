@@ -426,6 +426,8 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 }
                 else
                     notifyError(readsecregisterErrMsg);
+                // no break intended?
+
             case actualizeprogress:
             {
                 if (reply == ack) {

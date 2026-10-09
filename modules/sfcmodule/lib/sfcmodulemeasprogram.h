@@ -123,7 +123,7 @@ private slots:
     void onStartStopChanged(QVariant newValue);
 
     void readIntRegister();
-    void resetIntRegister();
+    void resetIntRegister(); // This is never used which looks very odd
     void checkForRestart();
 
     void stopECCalculator();
