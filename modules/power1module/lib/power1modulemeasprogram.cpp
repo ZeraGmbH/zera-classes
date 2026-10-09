@@ -1,6 +1,5 @@
 #include "power1modulemeasprogram.h"
 #include "power1module.h"
-#include "power1moduleconfiguration.h"
 #include "power1dspmodefunctioncatalog.h"
 #include "veinvalidatorphasestringgenerator.h"
 #include "measmodephasepersistency.h"
