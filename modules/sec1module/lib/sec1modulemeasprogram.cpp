@@ -95,7 +95,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
 
     connect(&m_stopECalculatorState, &QState::entered, this, &cSec1ModuleMeasProgram::stopECCalculator);
     connect(&m_freeECalculatorState, &QState::entered, this, &cSec1ModuleMeasProgram::freeECalculator);
-    connect(&m_deactivationDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::deactivationDone);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cModuleActivist::deactivated);
 
     // setting up statemachine used when starting a measurement
 
@@ -549,7 +549,6 @@ enum sec1moduleCmds
    readvicount
 };
 
-
 void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
 {
     if (msgnr == 0) // 0 was reserved for async. messages
@@ -849,7 +848,6 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
     m_pResultUnit->setValue(configData->m_sResultUnit.m_sValue);
 }
 
-
 void cSec1ModuleMeasProgram::setValidators()
 {
     cStringValidator *sValidator = new cStringValidator(m_dutInputDictionary.getInputAliasList());
@@ -880,13 +878,11 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
     return sl;
 }
 
-
 QString cSec1ModuleMeasProgram::getEnergyUnit()
 {
     QString powerType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
     return cUnitHelper::getNewEnergyUnit(powerType, QString('k'), 3600);
 }
-
 
 void cSec1ModuleMeasProgram::initDutConstantUnit(const QStringList &sl)
 {
@@ -904,19 +900,16 @@ void cSec1ModuleMeasProgram::initDutConstantUnit(const QStringList &sl)
     m_pDutConstantUnitPar->setValue(m_sDutConstantUnit);
 }
 
-
 void cSec1ModuleMeasProgram::initDutConstantUnit()
 {
     initDutConstantUnit(getDutConstUnitValidator());
 }
-
 
 void cSec1ModuleMeasProgram::handleSECInterrupt()
 {
     if (!m_InterrupthandlingStateMachine.isRunning())
         m_InterrupthandlingStateMachine.start();
 }
-
 
 void cSec1ModuleMeasProgram::computeDependencies()
 {
@@ -1090,13 +1083,11 @@ void cSec1ModuleMeasProgram::readDUTInputs()
     emit activationContinue();
 }
 
-
 void cSec1ModuleMeasProgram::readDUTInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
     m_MsgNrCmdList[m_pcbInterface->resourceAliasQuery(m_dutInputDictionary.getResource(m_sIt), m_sIt)] = readdutInputalias;
 }
-
 
 void cSec1ModuleMeasProgram::readDUTInputDone()
 {
@@ -1105,7 +1096,6 @@ void cSec1ModuleMeasProgram::readDUTInputDone()
     else
         emit activationLoop();
 }
-
 
 void cSec1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
@@ -1126,12 +1116,10 @@ void cSec1ModuleMeasProgram::setpcbREFConstantNotifier()
         emit activationContinue(); // if no ref constant notifier (standalone error calc) we directly go on
 }
 
-
 void cSec1ModuleMeasProgram::setsecINTNotifier()
 {
     m_MsgNrCmdList[m_secInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterErrCalcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
 }
-
 
 void cSec1ModuleMeasProgram::activationDone()
 {
@@ -1184,38 +1172,16 @@ void cSec1ModuleMeasProgram::stopECCalculator()
     stopMeasurement(true);
 }
 
-
 void cSec1ModuleMeasProgram::freeECalculator()
 {
     m_bActive = false;
     m_MsgNrCmdList[m_secInterface->freeECalcUnits()] = freeecalcunits;
 }
 
-
-void cSec1ModuleMeasProgram::deactivationDone()
-{
-    disconnect(&m_rmInterface, 0, this, 0);
-    disconnect(m_secInterface.get(), 0, this, 0);
-    disconnect(m_pcbInterface.get(), 0, this, 0);
-
-    disconnect(m_pStartStopPar, 0, this, 0);
-    disconnect(m_pDutConstantPar, 0, this, 0);
-    disconnect(m_pRefConstantPar, 0, this, 0);
-    disconnect(m_pDutInputPar, 0, this, 0);
-    disconnect(m_pRefInputPar, 0, this, 0);
-    disconnect(m_pMRatePar, 0, this, 0);
-    disconnect(m_pTargetPar, 0, this, 0);
-    disconnect(m_pEnergyPar, 0, this, 0);
-
-    emit deactivated();
-}
-
-
 void cSec1ModuleMeasProgram::setSync()
 {
     m_MsgNrCmdList[m_secInterface->setSync(m_slaveErrCalcName, m_masterErrCalcName)] = setsync;
 }
-
 
 void cSec1ModuleMeasProgram::setMeaspulses()
 {
@@ -1227,20 +1193,17 @@ void cSec1ModuleMeasProgram::setMeaspulses()
         m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nDUTPulseCounterStart)] = setmeaspulses;
 }
 
-
 void cSec1ModuleMeasProgram::setMasterMux()
 {
     QString dutInputName = m_pModule->getConfigData()->m_dutConfigs.m_sDutInput.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_masterErrCalcName, dutInputName)] = setmastermux;
 }
 
-
 void cSec1ModuleMeasProgram::setSlaveMux()
 {
     QString refPowerName = m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_slaveErrCalcName, refPowerName)] = setslavemux;
 }
-
 
 void cSec1ModuleMeasProgram::setMasterMeasMode()
 {
@@ -1250,19 +1213,16 @@ void cSec1ModuleMeasProgram::setMasterMeasMode()
         m_MsgNrCmdList[m_secInterface->setCmdid(m_masterErrCalcName, ECALCCMDID::CONTERRORMASTER)] = setmastermeasmode;
 }
 
-
 void cSec1ModuleMeasProgram::setSlaveMeasMode()
 {
     m_MsgNrCmdList[m_secInterface->setCmdid(m_slaveErrCalcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
 
 }
 
-
 void cSec1ModuleMeasProgram::enableInterrupt()
 {
     m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
 }
-
 
 void cSec1ModuleMeasProgram::startMeasurement()
 {
@@ -1288,31 +1248,26 @@ void cSec1ModuleMeasProgram::startMeasurement()
     }
 }
 
-
 void cSec1ModuleMeasProgram::startMeasurementDone() // final state of m_startMeasurementMachine
 {
     Actualize(); // we acualize at once after started
     m_ActualizeTimer->start(); // and after current interval
 }
 
-
 void cSec1ModuleMeasProgram::readIntRegister()
 {
     m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::INTREG)] = readintregister;
 }
-
 
 void cSec1ModuleMeasProgram::resetIntRegister()
 {
     m_MsgNrCmdList[m_secInterface->intAck(m_masterErrCalcName, 0xF)] = resetintregister; // we reset all here
 }
 
-
 void cSec1ModuleMeasProgram::readMTCountact()
 {
     m_MsgNrCmdList[m_secInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTfin)] = readvicount;
 }
-
 
 void cSec1ModuleMeasProgram::setECResult()
 {
@@ -1448,7 +1403,6 @@ void cSec1ModuleMeasProgram::setRating()
     m_pRatingAct->setValue(int(m_eRating));
 }
 
-
 void cSec1ModuleMeasProgram::newStartStop(const QVariant &startstop)
 {
     bool ok;
@@ -1474,7 +1428,6 @@ void cSec1ModuleMeasProgram::newStartStop(const QVariant &startstop)
         stopMeasurement(true);
     }
 }
-
 
 void cSec1ModuleMeasProgram::newDutConstant(const QVariant &dutconst)
 {
@@ -1541,7 +1494,6 @@ void cSec1ModuleMeasProgram::newDutConstantScale(const QVariant &value)
 
 }
 
-
 void cSec1ModuleMeasProgram::newDutConstantUnit(const QVariant &dutconstunit)
 {
     m_sDutConstantUnit = dutconstunit.toString();
@@ -1557,7 +1509,6 @@ void cSec1ModuleMeasProgram::newDutConstantUnit(const QVariant &dutconstunit)
     emit m_pModule->parameterChanged();
 }
 
-
 void cSec1ModuleMeasProgram::newRefConstant(const QVariant &refconst)
 {
     m_pModule->getConfigData()->m_fRefConstant.m_fValue = refconst.toDouble();
@@ -1565,7 +1516,6 @@ void cSec1ModuleMeasProgram::newRefConstant(const QVariant &refconst)
 
     emit m_pModule->parameterChanged();
 }
-
 
 void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 {
@@ -1575,7 +1525,6 @@ void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 
     emit m_pModule->parameterChanged();
 }
-
 
 void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
 {
@@ -1606,7 +1555,6 @@ void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
     emit m_pModule->parameterChanged();
 }
 
-
 void cSec1ModuleMeasProgram::newMRate(const QVariant &mrate)
 {
     m_pModule->getConfigData()->m_nMRate.m_nValue = mrate.toInt();
@@ -1614,7 +1562,6 @@ void cSec1ModuleMeasProgram::newMRate(const QVariant &mrate)
 
     emit m_pModule->parameterChanged();
 }
-
 
 void cSec1ModuleMeasProgram::newTarget(const QVariant &target)
 {
@@ -1624,7 +1571,6 @@ void cSec1ModuleMeasProgram::newTarget(const QVariant &target)
     emit m_pModule->parameterChanged();
 }
 
-
 void cSec1ModuleMeasProgram::newEnergy(const QVariant &energy)
 {
     m_pModule->getConfigData()->m_fEnergy.m_fValue = energy.toDouble();
@@ -1632,7 +1578,6 @@ void cSec1ModuleMeasProgram::newEnergy(const QVariant &energy)
 
     emit m_pModule->parameterChanged();
 }
-
 
 void cSec1ModuleMeasProgram::newUpperLimit(const QVariant &limit)
 {
@@ -1643,7 +1588,6 @@ void cSec1ModuleMeasProgram::newUpperLimit(const QVariant &limit)
     emit m_pModule->parameterChanged();
 }
 
-
 void cSec1ModuleMeasProgram::newLowerLimit(const QVariant &limit)
 {
     m_pModule->getConfigData()->m_limitConfigs.m_fLowerLimit.m_fValue = limit.toDouble();
@@ -1652,7 +1596,6 @@ void cSec1ModuleMeasProgram::newLowerLimit(const QVariant &limit)
 
     emit m_pModule->parameterChanged();
 }
-
 
 void cSec1ModuleMeasProgram::Actualize()
 {

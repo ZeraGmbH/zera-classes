@@ -51,7 +51,6 @@ private slots:
 
     void stopECCalculator();
     void freeECalculator();
-    void deactivationDone();
 
     void setSync();
     void setMeaspulses();
