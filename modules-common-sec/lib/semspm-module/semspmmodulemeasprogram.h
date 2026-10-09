@@ -100,8 +100,6 @@ private:
 
     void calculateMeasTime();
 
-    qint8 getEmobLockState();
-
     SemSpmModule* m_pModule = nullptr; // the module we live in
     Zera::cRMInterface m_rmInterface;
     Zera::cSECInterfacePtr m_secInterface;
