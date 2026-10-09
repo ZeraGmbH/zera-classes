@@ -4,18 +4,9 @@
 #include <QString>
 #include <QHash>
 
-/**
- * @brief The cUnitHelper class is a tiny static helper class for unit calculations
- */
 class cUnitHelper
 {
 public:
-    /**
-     * @brief getNewPowerUnit Helper on change of powerType
-     * @param powerType string containing 'P' / 'Q' / 'S'
-     * @param currentPowerUnit If set, getPowerUnit tries to keep 10³ prefix in new unit
-     * @return unit string
-     */
     static QString getNewPowerUnit(const QString &powerType, const QString &currentPowerUnit);
     /**
      * @brief getEnergyUnit Helper on change of powerType
@@ -29,7 +20,12 @@ public:
     static const QHash<QString /*unit e.g kW*/, double /*factor e.g 1000*/> &getPowerUnitFactorHash();
     static const QHash<QString /*unit e.g kWh*/, double /*factor e.g 1000*/> &getEnergyUnitFactorHash();
 
+    static const QStringList &getPowerUnits(const QString &powerType);
+
 private:
+    static const QStringList m_activePowerUnits;
+    static const QStringList m_reactivePowerUnits;
+    static const QStringList m_apparentPowerUnits;
     static const QHash<QString, double> m_powerUnitFactors;
     static const QHash<QString, double> m_energyUnitFactors;
 };

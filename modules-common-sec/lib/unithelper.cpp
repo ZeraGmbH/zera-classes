@@ -40,7 +40,48 @@ QString cUnitHelper::getNewEnergyUnit(const QString &powerType, const QString &c
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit) + postFix;
 }
 
-const QHash<QString, double> cUnitHelper::m_powerUnitFactors = {
+const QHash<QString, double> &cUnitHelper::getPowerUnitFactorHash()
+{
+    return m_powerUnitFactors;
+}
+
+const QHash<QString, double> &cUnitHelper::getEnergyUnitFactorHash()
+{
+    return m_energyUnitFactors;
+}
+
+const QStringList &cUnitHelper::getPowerUnits(const QString &powerType)
+{
+    if (powerType == "P")
+        return m_activePowerUnits;
+    if (powerType == "Q")
+        return m_reactivePowerUnits;
+    if (powerType == "S")
+        return m_apparentPowerUnits;
+
+    qCritical("No power units found for power tye %s", qPrintable(powerType));
+    return m_activePowerUnits;
+}
+
+const QStringList cUnitHelper::m_activePowerUnits {
+    "MW",
+    "kW",
+    "W"
+};
+
+const QStringList cUnitHelper::m_reactivePowerUnits {
+    "MVar",
+    "kVar",
+    "Var"
+};
+
+const QStringList cUnitHelper::m_apparentPowerUnits {
+    "MVA",
+    "kVA",
+    "VA"
+};
+
+const QHash<QString, double> cUnitHelper::m_powerUnitFactors {
     { "MW",   1000.0 },
     { "kW",   1.0 },
     { "W",    0.001 },
@@ -51,13 +92,7 @@ const QHash<QString, double> cUnitHelper::m_powerUnitFactors = {
     { "kVA", 1.0 },
     { "VA", 0.001 }
 };
-
-const QHash<QString, double> &cUnitHelper::getPowerUnitFactorHash()
-{
-    return m_powerUnitFactors;
-}
-
-const QHash<QString, double> cUnitHelper::m_energyUnitFactors = {
+const QHash<QString, double> cUnitHelper::m_energyUnitFactors {
     { "MWh",   1000.0 },
     { "kWh",   1.0 },
     { "Wh",    0.001 },
@@ -69,7 +104,3 @@ const QHash<QString, double> cUnitHelper::m_energyUnitFactors = {
     { "VAh", 0.001 }
 };
 
-const QHash<QString, double> &cUnitHelper::getEnergyUnitFactorHash()
-{
-    return m_energyUnitFactors;
-}

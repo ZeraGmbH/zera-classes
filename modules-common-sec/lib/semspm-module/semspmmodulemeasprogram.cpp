@@ -625,17 +625,7 @@ QString SemSpmModuleMeasProgram::getPowerTypeFromPowerModule() const
 QStringList SemSpmModuleMeasProgram::getPowerUnitValidator()
 {
     const QString powerType = getPowerTypeFromPowerModule();
-    QStringList validPowerUnits;
-    if (!powerType.isEmpty()) {
-        const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
-        if (powerType.contains('P'))
-            validPowerUnits = configData->m_unitConfigs.m_ActiveUnitList;
-        if (powerType.contains('Q'))
-            validPowerUnits = configData->m_unitConfigs.m_ReactiveUnitList;
-        if (powerType.contains('S'))
-            validPowerUnits = configData->m_unitConfigs.m_ApparentUnitList;
-    }
-    return validPowerUnits;
+    return cUnitHelper::getPowerUnits(powerType);
 }
 
 QString SemSpmModuleMeasProgram::getPowerUnit()

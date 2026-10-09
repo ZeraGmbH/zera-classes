@@ -31,14 +31,4 @@ struct TSecCommonLimitConfigs
     doubleParameter m_fLowerLimit;
 };
 
-struct TSecCommonUnitConfigs
-{
-    quint8 m_nActiveUnitCount = 0;
-    QList<QString> m_ActiveUnitList;
-    quint8 m_nReactiveUnitCount = 0;
-    QList<QString> m_ReactiveUnitList;
-    quint8 m_nApparentUnitCount = 0;
-    QList<QString> m_ApparentUnitList;
-};
-
 #endif // SECCONFIGDATACOMMON_H

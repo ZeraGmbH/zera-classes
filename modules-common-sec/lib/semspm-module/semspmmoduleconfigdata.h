@@ -8,7 +8,6 @@ class SemSpmModuleConfigData
 public:
     TSecCommonReferenceConfigs m_refConfigs;
     TSecCommonLimitConfigs m_limitConfigs;
-    TSecCommonUnitConfigs m_unitConfigs;
 
     intParameter m_nMeasTime;
     boolParameter m_bTargeted;

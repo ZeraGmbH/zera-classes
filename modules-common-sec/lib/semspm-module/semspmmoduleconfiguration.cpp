@@ -8,9 +8,6 @@ SemSpmModuleConfiguration::SemSpmModuleConfiguration(const QByteArray &xmlString
 enum moduleconfigstate
 {
     setRefInputCount,
-    setActiveUnitCount,
-    setReactiveUnitCount,
-    setApparentUnitCount,
 
     setRefInput,
     setTargeted,
@@ -19,17 +16,11 @@ enum moduleconfigstate
     setLowerLimit,
 
     setRefInput1Name = 32,
-    setActiveUnit1Name = 64,
-    setReactiveUnit1Name = 80,
-    setApparentUnit1Name = 96
 };
 
 void SemSpmModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 {
     m_ConfigXMLMap["confpar:configuration:measure:refinput:n"] = setRefInputCount;
-    m_ConfigXMLMap["confpar:configuration:measure:activeunits:n"] = setActiveUnitCount;
-    m_ConfigXMLMap["confpar:configuration:measure:reactiveunits:n"] = setReactiveUnitCount;
-    m_ConfigXMLMap["confpar:configuration:measure:apparentunits:n"] = setApparentUnitCount;
 
     m_ConfigXMLMap["confpar:parameter:measure:refinput"] = setRefInput;
     m_ConfigXMLMap["confpar:parameter:measure:targeted"] = setTargeted;
@@ -82,27 +73,6 @@ void SemSpmModuleConfiguration::configXMLInfo(const QString &key)
                 m_configData.m_refConfigs.m_refInpList.append(TRefInput());
             }
             break;
-        case setActiveUnitCount:
-            m_configData.m_unitConfigs.m_nActiveUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_configData.m_unitConfigs.m_nActiveUnitCount; i++) {
-                m_ConfigXMLMap[QString("confpar:configuration:measure:activeunits:unit%1").arg(i+1)] = setActiveUnit1Name+i;
-                m_configData.m_unitConfigs.m_ActiveUnitList.append(QString());
-            }
-            break;
-        case setReactiveUnitCount:
-            m_configData.m_unitConfigs.m_nReactiveUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_configData.m_unitConfigs.m_nReactiveUnitCount; i++) {
-                m_ConfigXMLMap[QString("confpar:configuration:measure:reactiveunits:unit%1").arg(i+1)] = setReactiveUnit1Name+i;
-                m_configData.m_unitConfigs.m_ReactiveUnitList.append(QString());
-            }
-            break;
-        case setApparentUnitCount:
-            m_configData.m_unitConfigs.m_nApparentUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_configData.m_unitConfigs.m_nApparentUnitCount; i++) {
-                m_ConfigXMLMap[QString("confpar:configuration:measure:apparentunits:unit%1").arg(i+1)] = setApparentUnit1Name+i;
-                m_configData.m_unitConfigs.m_ApparentUnitList.append(QString());
-            }
-            break;
         case setRefInput:
             m_configData.m_refConfigs.m_sRefInput.m_sKey = key;
             m_configData.m_refConfigs.m_sRefInput.m_sValue = m_pXMLReader->getValue(key);
@@ -138,21 +108,6 @@ void SemSpmModuleConfiguration::configXMLInfo(const QString &key)
                     refInput.alias = refInputFNameAndAlias[1];
                     m_configData.m_refConfigs.m_refInpList.replace(cmd, refInput);
                 }
-            }
-            else if ((cmd >= setActiveUnit1Name) && (cmd < setActiveUnit1Name + 16)) {
-                cmd -= setActiveUnit1Name;
-                QString name = m_pXMLReader->getValue(key);
-                m_configData.m_unitConfigs.m_ActiveUnitList.replace(cmd, name);
-            }
-            else if ((cmd >= setReactiveUnit1Name) && (cmd < setReactiveUnit1Name + 16)) {
-                cmd -= setReactiveUnit1Name;
-                QString name = m_pXMLReader->getValue(key);
-                m_configData.m_unitConfigs.m_ReactiveUnitList.replace(cmd, name);
-            }
-            else if ((cmd >= setApparentUnit1Name) && (cmd < setApparentUnit1Name + 16)) {
-                cmd -= setApparentUnit1Name;
-                QString name = m_pXMLReader->getValue(key);
-                m_configData.m_unitConfigs.m_ApparentUnitList.replace(cmd, name);
             }
             break;
         }

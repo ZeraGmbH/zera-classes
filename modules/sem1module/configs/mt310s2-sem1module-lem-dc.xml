@@ -9,24 +9,6 @@
                 <inp3>fo2,P 3</inp3>
                 <inp4>fo3,P AUX</inp4>
             </refinput>
-            <activeunits>
-                <n>3</n>
-                <unit1>MW</unit1>
-                <unit2>kW</unit2>
-                <unit3>W</unit3>
-            </activeunits>
-            <reactiveunits>
-                <n>3</n>
-                <unit1>MVar</unit1>
-                <unit2>kVar</unit2>
-                <unit3>Var</unit3>
-            </reactiveunits>
-            <apparentunits>
-                <n>3</n>
-                <unit1>MVA</unit1>
-                <unit2>kVA</unit2>
-                <unit3>VA</unit3>
-            </apparentunits>
         </measure>
     </configuration>
     <parameter>
