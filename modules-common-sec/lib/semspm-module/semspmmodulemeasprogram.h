@@ -88,6 +88,7 @@ private:
 
     QStringList getEnergyUnitValidator();
     QString getEnergyUnit();
+    QString getPowerTypeFromPowerModule() const;
     QStringList getPowerUnitValidator();
     QString getPowerUnit();
     void actualizeRefConstant();

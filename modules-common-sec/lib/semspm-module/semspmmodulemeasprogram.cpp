@@ -615,24 +615,33 @@ void SemSpmModuleMeasProgram::actualizeRefConstant()
     newRefConstant(QVariant(constant));
 }
 
+QString SemSpmModuleMeasProgram::getPowerTypeFromPowerModule() const
+{
+    const VeinStorage::AbstractDatabase *veinDb = m_pModule->getStorageDb();
+    const int poweModuleEntityId = m_pPowerModuleEntityId->getValue().toInt();
+    return veinDb->getStoredValue(poweModuleEntityId, "ACT_PowerDisplayName").toString();
+}
+
 QStringList SemSpmModuleMeasProgram::getPowerUnitValidator()
 {
-    QStringList sl;
-    const SemSpmModuleConfigData *configData = m_pModule->getConfigData(); // This won't work for PQS
-    QString powType = m_refInputDictionary.getAlias(configData->m_refConfigs.m_sRefInput.m_sValue);
-    if (powType.contains('P'))
-        sl = configData->m_unitConfigs.m_ActiveUnitList;
-    if (powType.contains('Q'))
-        sl = configData->m_unitConfigs.m_ReactiveUnitList;
-    if (powType.contains('S'))
-        sl = configData->m_unitConfigs.m_ApparentUnitList;
-    return sl;
+    const QString powerType = getPowerTypeFromPowerModule();
+    QStringList validPowerUnits;
+    if (!powerType.isEmpty()) {
+        const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
+        if (powerType.contains('P'))
+            validPowerUnits = configData->m_unitConfigs.m_ActiveUnitList;
+        if (powerType.contains('Q'))
+            validPowerUnits = configData->m_unitConfigs.m_ReactiveUnitList;
+        if (powerType.contains('S'))
+            validPowerUnits = configData->m_unitConfigs.m_ApparentUnitList;
+    }
+    return validPowerUnits;
 }
 
 QString SemSpmModuleMeasProgram::getPowerUnit()
 {
-    QString powerType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
-    QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
+    const QString powerType = getPowerTypeFromPowerModule();
+    const QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
 }
 
@@ -966,9 +975,11 @@ void SemSpmModuleMeasProgram::newRefConstant(QVariant refconst)
 void SemSpmModuleMeasProgram::newRefInput(QVariant refinput)
 {
     const QString refInputName = refinput.toString();
-
     QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refInputName);
     m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue = refPowerName;
+
+    m_pPowerModuleEntityId->setValue(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
+    m_pRefFreqInput->setValue(refPowerName);
 
     actualizeRefConstant();
     setInterfaceComponents();
@@ -976,8 +987,6 @@ void SemSpmModuleMeasProgram::newRefInput(QVariant refinput)
     // if the reference input changes P <-> Q <-> S it is necessary to change energyunit and powerunit and their validators
     setValidators();
     setUnits();
-    m_pPowerModuleEntityId->setValue(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
-    m_pRefFreqInput->setValue(refPowerName);
     emit m_pModule->parameterChanged();
 }
 
