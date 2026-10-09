@@ -1,9 +1,9 @@
-#ifndef SEMFUNCTIONS_H
-#define SEMFUNCTIONS_H
+#ifndef FUNCTIONSSEM_H
+#define FUNCTIONSSEM_H
 
 #include "abstractsemspmfunctions.h"
 
-class SemFunctions : public AbstractSemSpmFunctions
+class FunctionsSem : public AbstractSemSpmFunctions
 {
 public:
     const QHash<QString, double> &getUnitFactorHash() const override;
@@ -17,4 +17,4 @@ public:
     double adjustReferenceValue(const double &refValue, const double &time) override;
 };
 
-#endif // SEMFUNCTIONS_H
+#endif // FUNCTIONSSEM_H

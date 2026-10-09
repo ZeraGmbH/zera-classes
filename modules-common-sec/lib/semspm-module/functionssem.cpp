@@ -1,17 +1,17 @@
-#include "semfunctions.h"
+#include "functionssem.h"
 #include "unithelper.h"
 
-const QHash<QString, double> &SemFunctions::getUnitFactorHash() const
+const QHash<QString, double> &FunctionsSem::getUnitFactorHash() const
 {
     return cUnitHelper::getEnergyUnitFactorHash();
 }
 
-const QString SemFunctions::getMeasuredValueLabel() const
+const QString FunctionsSem::getMeasuredValueLabel() const
 {
     return "Energy";
 }
 
-const QString SemFunctions::getUnitSelectDescription() const
+const QString FunctionsSem::getUnitSelectDescription() const
 {
     return QString("Energy unit:\n"
                    "Valid values depend on power type selected:\n"
@@ -20,19 +20,19 @@ const QString SemFunctions::getUnitSelectDescription() const
                    "* Apparent power (S): 'MVAh', 'kVAh', 'VAh'");
 }
 
-const QString &SemFunctions::getMainUnit(const QString &energyUnit, const QString &powerUnit) const
+const QString &FunctionsSem::getMainUnit(const QString &energyUnit, const QString &powerUnit) const
 {
     Q_UNUSED(powerUnit)
     return energyUnit;
 }
 
-const QStringList &SemFunctions::getUnitValidator(const QStringList &energyValidator, const QStringList &powerValidator)
+const QStringList &FunctionsSem::getUnitValidator(const QStringList &energyValidator, const QStringList &powerValidator)
 {
     Q_UNUSED(powerValidator)
     return energyValidator;
 }
 
-double SemFunctions::adjustReferenceValue(const double &refValue, const double &time)
+double FunctionsSem::adjustReferenceValue(const double &refValue, const double &time)
 {
     Q_UNUSED(time);
     return refValue;

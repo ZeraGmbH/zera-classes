@@ -1,6 +1,6 @@
 #include "sem1module.h"
 #include "semspmmodulemeasprogram.h"
-#include "semfunctions.h"
+#include "functionssem.h"
 
 namespace SEM1MODULE
 {
@@ -22,7 +22,7 @@ void cSem1Module::setupModule()
     cBaseMeasModule::setupModule();
 
     // we only have this activist
-    m_pMeasProgram = new SemSpmModuleMeasProgram(this, std::make_unique<SemFunctions>());
+    m_pMeasProgram = new SemSpmModuleMeasProgram(this, std::make_unique<FunctionsSem>());
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cBaseMeasProgram::activated, this, &cSem1Module::activationContinue);
     connect(m_pMeasProgram, &cBaseMeasProgram::deactivated, this, &cSem1Module::deactivationContinue);
