@@ -1,6 +1,5 @@
 #include "dftmodulemeasprogram.h"
 #include "dftmodule.h"
-#include "dftmoduleconfiguration.h"
 #include "dftmoduleconfigdata.h"
 #include "servicechannelnamehelper.h"
 #include "taskdspdataacquisition.h"
