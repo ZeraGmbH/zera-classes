@@ -63,6 +63,34 @@ const QStringList &cUnitHelper::getPowerUnits(const QString &powerType)
     return m_activePowerUnits;
 }
 
+const QStringList &cUnitHelper::getDUTConstantUnits(const QString &powerType)
+{
+    if (powerType == "P")
+        return m_activeDutConstantUnits;
+    if (powerType == "Q")
+        return m_reactiveDutConstantUnits;
+    if (powerType == "S")
+        return m_apparentDutConstantUnits;
+
+    qCritical("No DUT constant units found for power tye %s", qPrintable(powerType));
+    return m_activeDutConstantUnits;
+}
+
+const QStringList cUnitHelper::m_activeDutConstantUnits {
+    "I/kWh",
+    "Wh/I"
+};
+
+const QStringList cUnitHelper::m_reactiveDutConstantUnits {
+    "I/kVarh",
+    "Varh/I"
+};
+
+const QStringList cUnitHelper::m_apparentDutConstantUnits {
+    "I/kVAh",
+    "VAh/I"
+};
+
 const QStringList cUnitHelper::m_activePowerUnits {
     "MW",
     "kW",
