@@ -2,7 +2,7 @@
 
 // As long as we deal with hour (kWh - attow all error calculators just support hour) this
 // implementation is robust for energy unit in currentPowerUnit
-QString cUnitHelper::deduceMatchingPowerUnit(const QString &powerType, const QString &currentPowerUnit)
+QString UnitHelper::deduceMatchingPowerUnit(const QString &powerType, const QString &currentPowerUnit)
 {
     QString newUnit;
     // base unit - we assume powerType set
@@ -25,17 +25,17 @@ QString cUnitHelper::deduceMatchingPowerUnit(const QString &powerType, const QSt
     return newUnit;
 }
 
-const QHash<QString, double> &cUnitHelper::getPowerUnitFactorHash()
+const QHash<QString, double> &UnitHelper::getPowerUnitFactorHash()
 {
     return m_powerUnitFactors;
 }
 
-const QHash<QString, double> &cUnitHelper::getEnergyUnitFactorHash()
+const QHash<QString, double> &UnitHelper::getEnergyUnitFactorHash()
 {
     return m_energyUnitFactors;
 }
 
-const QStringList &cUnitHelper::getPowerUnits(const QString &powerType)
+const QStringList &UnitHelper::getPowerUnits(const QString &powerType)
 {
     if (powerType == "P")
         return m_activePowerUnits;
@@ -48,7 +48,7 @@ const QStringList &cUnitHelper::getPowerUnits(const QString &powerType)
     return m_activePowerUnits;
 }
 
-const QStringList &cUnitHelper::getDUTConstantUnits(const QString &powerType)
+const QStringList &UnitHelper::getDUTConstantUnits(const QString &powerType)
 {
     if (powerType == "P")
         return m_activeDutConstantUnits;
@@ -61,40 +61,40 @@ const QStringList &cUnitHelper::getDUTConstantUnits(const QString &powerType)
     return m_activeDutConstantUnits;
 }
 
-const QStringList cUnitHelper::m_activeDutConstantUnits {
+const QStringList UnitHelper::m_activeDutConstantUnits {
     "I/kWh",
     "Wh/I"
 };
 
-const QStringList cUnitHelper::m_reactiveDutConstantUnits {
+const QStringList UnitHelper::m_reactiveDutConstantUnits {
     "I/kVarh",
     "Varh/I"
 };
 
-const QStringList cUnitHelper::m_apparentDutConstantUnits {
+const QStringList UnitHelper::m_apparentDutConstantUnits {
     "I/kVAh",
     "VAh/I"
 };
 
-const QStringList cUnitHelper::m_activePowerUnits {
+const QStringList UnitHelper::m_activePowerUnits {
     "MW",
     "kW",
     "W"
 };
 
-const QStringList cUnitHelper::m_reactivePowerUnits {
+const QStringList UnitHelper::m_reactivePowerUnits {
     "MVar",
     "kVar",
     "Var"
 };
 
-const QStringList cUnitHelper::m_apparentPowerUnits {
+const QStringList UnitHelper::m_apparentPowerUnits {
     "MVA",
     "kVA",
     "VA"
 };
 
-const QHash<QString, double> cUnitHelper::m_powerUnitFactors {
+const QHash<QString, double> UnitHelper::m_powerUnitFactors {
     { "MW",   1000.0 },
     { "kW",   1.0 },
     { "W",    0.001 },
@@ -105,7 +105,7 @@ const QHash<QString, double> cUnitHelper::m_powerUnitFactors {
     { "kVA", 1.0 },
     { "VA", 0.001 }
 };
-const QHash<QString, double> cUnitHelper::m_energyUnitFactors {
+const QHash<QString, double> UnitHelper::m_energyUnitFactors {
     { "MWh",   1000.0 },
     { "kWh",   1.0 },
     { "Wh",    0.001 },

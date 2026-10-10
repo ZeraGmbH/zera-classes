@@ -3,7 +3,7 @@
 
 const QHash<QString, double> &FunctionsSem::getUnitFactorHash() const
 {
-    return cUnitHelper::getEnergyUnitFactorHash();
+    return UnitHelper::getEnergyUnitFactorHash();
 }
 
 const QString FunctionsSem::getMeasuredValueLabel() const

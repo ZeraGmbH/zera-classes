@@ -1,10 +1,10 @@
-#ifndef CUNITHELPER_H
-#define CUNITHELPER_H
+#ifndef UNITHELPER_H
+#define UNITHELPER_H
 
 #include <QString>
 #include <QHash>
 
-class cUnitHelper
+class UnitHelper
 {
 public:
     static QString deduceMatchingPowerUnit(const QString &powerType, const QString &currentPowerUnit);
@@ -28,4 +28,4 @@ private:
     static const QHash<QString, double> m_energyUnitFactors;
 };
 
-#endif // CUNITHELPER_H
+#endif // UNITHELPER_H
