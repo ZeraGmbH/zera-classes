@@ -93,6 +93,7 @@ private:
     void setInterfaceComponents();
     void setValidators();
 
+    QString getPowerTypeFromPowerModule() const;
     QStringList getDutConstUnitValidator();
     QString getEnergyUnit();
     void initDutConstantUnit(const QStringList &sl);

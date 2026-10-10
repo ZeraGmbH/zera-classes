@@ -865,22 +865,30 @@ void cSec1ModuleMeasProgram::setValidators()
     m_pEnergyPar->setUnit(s);
 }
 
+QString cSec1ModuleMeasProgram::getPowerTypeFromPowerModule() const
+{
+    const VeinStorage::AbstractDatabase *veinDb = m_pModule->getStorageDb();
+    const int poweModuleEntityId = m_pPowerModuleEntityId->getValue().toInt();
+    return veinDb->getStoredValue(poweModuleEntityId, "ACT_PowerDisplayName").toString();
+}
+
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 {
-    QStringList sl;
-    QString powType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue); // This won't work for PQS
-    if (powType.contains('P'))
-        sl << QString("I/kWh") << QString("Wh/I");
-    if (powType.contains('Q'))
-        sl << QString("I/kVarh") << QString("Varh/I");
-    if (powType.contains('S'))
-        sl << QString("I/kVAh") << QString("VAh/I");
-    return sl;
+    // see comment on COM5003 reference session in getEnergyUnit()
+    if (m_pModule->getConfigData()->m_sMode.m_sValue == "target")
+        return QStringList();
+
+    QString powerType = getPowerTypeFromPowerModule();
+    return cUnitHelper::getDUTConstantUnits(powerType);
 }
 
 QString cSec1ModuleMeasProgram::getEnergyUnit()
 {
-    QString powerType = m_refInputDictionary.getAlias(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
+    QString powerType;
+    // Not clear yet how we handle this: COM5003 reference session reports 'kh' as unit.
+    // But that is how it was for long time and see later how to solve properly...
+    if (m_pModule->getConfigData()->m_sMode.m_sValue != "target")
+        powerType = getPowerTypeFromPowerModule();
     return cUnitHelper::getNewEnergyUnit(powerType, QString('k'), 3600);
 }
 
@@ -1529,9 +1537,11 @@ void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
 {
     const QString refInputName = refinput.toString();
-
     QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refInputName);
     m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue = refPowerName;
+
+    m_pPowerModuleEntityId->setValue(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
+    m_pRefFreqInput->setValue(refPowerName);
 
     actualizeRefConstant();
     setInterfaceComponents();
@@ -1548,8 +1558,6 @@ void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
     m_pEnergyAct->setValue(0.0);
     m_pEnergyFinalAct->setValue(0.0);
     m_pResultAct->setValue(0.0);
-    m_pPowerModuleEntityId->setValue(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
-    m_pRefFreqInput->setValue(refPowerName);
     m_pModule->exportMetaData();
 
     emit m_pModule->parameterChanged();
