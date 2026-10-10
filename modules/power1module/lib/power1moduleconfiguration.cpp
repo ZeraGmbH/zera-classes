@@ -211,11 +211,12 @@ void cPower1ModuleConfiguration::configXMLInfo(const QString &key)
             m_configData.m_sMeasuringMode.m_sKey = key;
             m_configData.m_sMeasuringMode.m_sValue = m_pXMLReader->getValue(key);
             break;
-        case setModePhaseCount:
-            m_configData.m_measmodePhaseCount = m_pXMLReader->getValue(key).toInt();
-            for (int i = 0; i < m_configData.m_measmodePhaseCount; i++)
+        case setModePhaseCount: {
+            int measmodePhaseCount = m_pXMLReader->getValue(key).toInt();
+            for (int i = 0; i < measmodePhaseCount; i++)
                 m_ConfigXMLMap[QString("pow1modconfpar:parameter:modePhases:m%1").arg(i+1)] = setMeasModePhases1+i;
             break;
+        }
         case setMeasureIntervalTime:
             m_configData.m_fMeasIntervalTime.m_sKey = key;
             m_configData.m_fMeasIntervalTime.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);

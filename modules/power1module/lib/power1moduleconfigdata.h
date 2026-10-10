@@ -35,7 +35,6 @@ public:
 
     quint8 m_nMeasModeCount = 0;      // how many measurement modes do we support
     QStringList m_sMeasmodeList;      // a list of our measurement modes
-    int m_measmodePhaseCount = 0;
     QStringList m_measmodePhaseList;  // a list comma separated measurement mode / phase e.g XLW,001
     QStringList m_sMeasSystemList;    // our measuring systems "m0,m1"
     QString m_sIntegrationMode;       // we integrate over time or periods
@@ -46,7 +45,6 @@ public:
     QList<freqoutconfiguration> m_FreqOutputConfList; // a list of configuration values for each frequency output
 
     stringParameter m_sMeasuringMode;
-    stringParameter m_sXMeasModePhases;
     doubleParameter m_fMeasIntervalTime; // measuring interval 0.1 .. 100.0 sec.
     intParameter m_nMeasIntervalPeriod;  // measuring periods 1 .. 10000
     double m_fmovingwindowInterval = 0;

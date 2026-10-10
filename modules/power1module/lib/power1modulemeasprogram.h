@@ -116,7 +116,6 @@ private:
     VfModuleComponent *m_MModeCanChangePhaseMask = nullptr;
     VfModuleComponent *m_MModePowerDisplayName = nullptr;
     VfModuleComponent *m_MModeMaxMeasSysCount = nullptr;
-    VfModuleParameter* m_pConstantParameter = nullptr;
     VfModuleComponent* m_pMeasureSignal = nullptr;
     VfModuleComponent* m_freqOuts = nullptr;
     VfModuleComponent *m_MModesTypes = nullptr;
