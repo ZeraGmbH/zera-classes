@@ -25,21 +25,6 @@ QString cUnitHelper::getNewPowerUnit(const QString &powerType, const QString &cu
     return newUnit;
 }
 
-QString cUnitHelper::getNewEnergyUnit(const QString &powerType, const QString &currentPowerUnit, int powerToEnergyTimeSeconds)
-{
-    QString postFix;
-    switch(powerToEnergyTimeSeconds) {
-    case 1:
-        postFix = "s";
-        break;
-    case 3600:
-    default:
-        postFix = "h";
-        break;
-    }
-    return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit) + postFix;
-}
-
 const QHash<QString, double> &cUnitHelper::getPowerUnitFactorHash()
 {
     return m_powerUnitFactors;
