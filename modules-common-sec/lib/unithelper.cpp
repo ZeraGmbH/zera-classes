@@ -2,7 +2,7 @@
 
 // As long as we deal with hour (kWh - attow all error calculators just support hour) this
 // implementation is robust for energy unit in currentPowerUnit
-QString cUnitHelper::getNewPowerUnit(const QString &powerType, const QString &currentPowerUnit)
+QString cUnitHelper::deduceMatchingPowerUnit(const QString &powerType, const QString &currentPowerUnit)
 {
     QString newUnit;
     // base unit - we assume powerType set

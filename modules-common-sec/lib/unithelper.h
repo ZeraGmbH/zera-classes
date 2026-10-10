@@ -7,7 +7,7 @@
 class cUnitHelper
 {
 public:
-    static QString getNewPowerUnit(const QString &powerType, const QString &currentPowerUnit);
+    static QString deduceMatchingPowerUnit(const QString &powerType, const QString &currentPowerUnit);
 
     static const QHash<QString /*unit e.g kW*/, double /*factor e.g 1000*/> &getPowerUnitFactorHash();
     static const QHash<QString /*unit e.g kWh*/, double /*factor e.g 1000*/> &getEnergyUnitFactorHash();

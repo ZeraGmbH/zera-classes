@@ -889,7 +889,7 @@ QString cSec1ModuleMeasProgram::getEnergyUnit()
     // But that is how it was for long time and see later how to solve properly...
     if (m_pModule->getConfigData()->m_sMode.m_sValue != "target")
         powerType = getPowerTypeFromPowerModule();
-    return cUnitHelper::getNewPowerUnit(powerType, "kW") + "h";
+    return cUnitHelper::deduceMatchingPowerUnit(powerType, "kW") + "h";
 }
 
 void cSec1ModuleMeasProgram::initDutConstantUnit(const QStringList &sl)

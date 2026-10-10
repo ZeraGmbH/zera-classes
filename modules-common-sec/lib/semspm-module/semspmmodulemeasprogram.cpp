@@ -632,7 +632,7 @@ QString SemSpmModuleMeasProgram::getPowerUnit()
 {
     const QString powerType = getPowerTypeFromPowerModule();
     const QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
-    return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
+    return cUnitHelper::deduceMatchingPowerUnit(powerType, currentPowerUnit);
 }
 
 quint32 SemSpmModuleMeasProgram::getStatus()
