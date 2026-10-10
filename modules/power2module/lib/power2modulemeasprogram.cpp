@@ -568,22 +568,6 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                     notifyError(dspactiveErrMsg);
                 break;
 
-            case readresourcetypes:
-                ok = false;
-                if ((reply == ack) && (answer.toString().contains("SENSE"))) { // we need sense  at least
-                    if (m_pModule->getConfigData()->m_nFreqOutputCount > 0) {
-                        if (answer.toString().contains("SOURCE")) // maybe we also need source
-                            ok = true;
-                    }
-                    else
-                        ok = true;
-                }
-                if (ok)
-                    emit activationContinue();
-                else
-                    notifyError(resourcetypeErrMsg);
-                break;
-
             case claimresourcesource:
                 if (reply == ack)
                     emit activationContinue();
@@ -813,20 +797,6 @@ void cPower2ModuleMeasProgram::pcbserverConnect4freqChannels()
     }
     else
         emit activationContinue();
-}
-
-void cPower2ModuleMeasProgram::readSenseChannelInformation()
-{
-    infoReadList = m_measChannelInfoHash.keys(); // we have to read information for all channels in this list
-    emit activationContinue();
-}
-
-void cPower2ModuleMeasProgram::readSenseChannelInformationDone()
-{
-    if (infoReadList.isEmpty())
-        emit activationContinue();
-    else
-        emit activationLoop();
 }
 
 void cPower2ModuleMeasProgram::readSourceChannelInformation()

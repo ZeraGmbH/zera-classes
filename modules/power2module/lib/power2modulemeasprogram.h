@@ -17,8 +17,6 @@ namespace POWER2MODULE
 enum power2moduleCmds
 {
     sendrmident,
-    readresourcetypes,
-
     claimresourcesource,
 
     readsourcechannelalias,
@@ -168,8 +166,6 @@ private slots:
 
     void pcbserverConnect4measChannels();
     void pcbserverConnect4freqChannels();
-    void readSenseChannelInformation();
-    void readSenseChannelInformationDone();
 
     void readSourceChannelInformation();
     void readSourceChannelAlias();
