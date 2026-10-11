@@ -184,7 +184,6 @@ void cRangeModuleConfiguration::configXMLInfo(const QString &key)
                 cmd -= setSenseChannel1;
                 // it is command for setting channel name
                 QString senseChannel = m_pXMLReader->getValue(key);
-                m_configData.m_senseChannelList.append(senseChannel); // for configuration of our engine
                 m_ConfigXMLMap[QString("rangemodconfpar:parameter:sense:%1:range").arg(senseChannel)] = setDefaultRange1+cmd;
                 m_ConfigXMLMap[QString("rangemodconfpar:parameter:sense:%1:invert").arg(senseChannel)] = setInvertChannel1+cmd;
             }

@@ -118,7 +118,6 @@ private:
     void setRanges(bool force = false); // here we really set ranges
     QList<int> getGroupAliasIdxListForChannel(int channelIdx);
     bool requiresOverloadReset(int channel);
-    void startOverloadReset(int channel);
     double getPreScale(int channelIdx);
     void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
     void setOverloadVeinComponent(bool overloadOn);

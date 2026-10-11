@@ -38,7 +38,6 @@ class cRangeModuleConfigData
 public:
     stringParameter m_session;
     quint8 m_nChannelCount = 0;     // how many measurment channels
-    QStringList m_senseChannelList; // a list of channel system names we work on
     quint8 m_nSubDCCount = 0;       // how many channels for subtract dc
     QStringList m_subdcChannelList; // a list for which channels we have to subtract dc
     quint8 m_nGroupCount = 0;       // the number of groups holded

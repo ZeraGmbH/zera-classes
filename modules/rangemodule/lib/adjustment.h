@@ -41,7 +41,6 @@ public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
 signals:
     void repeatStateMachine();
-    void finishStateMachine();
 private:
     double getIgnoreRmsCorrFactor();
 
