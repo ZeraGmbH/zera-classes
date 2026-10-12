@@ -225,6 +225,9 @@
         "ACT_PP4": "",
         "ACT_PowerDisplayName": "P",
         "INF_FreqOuts": "fo0;fo1;fo2",
+        "PAR_FOUTConstant0": 2500000,
+        "PAR_FOUTConstant1": 2500000,
+        "PAR_FOUTConstant2": 2500000,
         "PAR_Interval": 200,
         "PAR_MeasuringMode": "4LW",
         "SIG_Measuring": 1

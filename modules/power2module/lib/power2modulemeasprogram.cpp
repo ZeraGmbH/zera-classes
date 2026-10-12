@@ -185,6 +185,7 @@ void cPower2ModuleMeasProgram::stop()
 
 void cPower2ModuleMeasProgram::generateVeinInterface()
 {
+    QString key;
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
         VfModuleComponent *pActvalue;
         pActvalue = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -212,10 +213,23 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
 
     }
     const cPower2ModuleConfigData *configData = m_pModule->getConfigData();
+    VfModuleParameter* pFoutParameter;
+    bool foutDisplayNameFound = false;
     QStringList frequencyOutNames;
     for (int i = 0; i < configData->m_nFreqOutputCount; i++) {
         const freqoutconfiguration &freqOutConfig = configData->m_FreqOutputConfList.at(i);
         frequencyOutNames.append(freqOutConfig.m_sName);
+
+        // Note: Although components are 'PAR_' they are not changable currently
+        pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                               key = QString("PAR_FOUTConstant%1").arg(i),
+                                               QString("Frequency output constant"),
+                                               QVariant(0.0));
+        //if(configData->m_enableScpiCommands)
+            pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), SCPI::isQuery);
+
+        m_FoutConstParameterList.append(pFoutParameter);
+        m_pModule->m_veinModuleParameterMap[key] = pFoutParameter; // for modules use
     }
 
     m_pPQSCountInfo = new VfModuleMetaData(QString("PQSCount"), QVariant(3*(MeasPhaseCount+SumValueCount)));
@@ -225,7 +239,6 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
     m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(configData->m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
 
-    QString key;
     // our parameters we deal with
     m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                          key = QString("PAR_MeasuringMode"),
@@ -680,10 +693,32 @@ quint8 cPower2ModuleMeasProgram::cmpActualValIndex(const freqoutconfiguration &f
     return actvalueIndex;
 }
 
+void cPower2ModuleMeasProgram::setNominalPowerForQref()
+{
+    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    RangeMaxVals maxVals = calcMaxRangeValues(mode);
+    double pmax = maxVals.maxU * maxVals.maxI; // MQREF
+    /*const cPower2ModuleConfigData *configData = m_pModule->getConfigData();
+    if (configData->supportsVariableQrefFrequency()) {
+        constexpr double nominalFrequencyKhz = 200;
+        pmax = pmax * configData->m_qrefFrequency.m_fValue / nominalFrequencyKhz;
+    }*/
+    QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 9);
+    m_pNomPower->setVarData(datalist);
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pNomPower)] = setqrefnominalpower;
+}
+
 void cPower2ModuleMeasProgram::setSCPIMeasInfo()
 {
     for (int i = 0; i < 12; i++)
         m_veinActValueList.at(i)->setScpiInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), SCPI::isCmdwP);
+}
+
+void cPower2ModuleMeasProgram::setFoutMetaInfo()
+{
+    const cPower2ModuleConfigData *configData = m_pModule->getConfigData();
+    for (int i = 0; i < configData->m_FreqOutputConfList.count(); i++)
+        m_FoutConstParameterList.at(i)->setChannelName(m_FoutInfoMap[configData->m_FreqOutputConfList.at(i).m_sName].alias);
 }
 
 void cPower2ModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
@@ -889,6 +924,7 @@ void cPower2ModuleMeasProgram::activateDSPdone()
     m_bActive = true;
     setActualValuesNames();
     setSCPIMeasInfo();
+    setFoutMetaInfo();
     m_pMeasureSignal->setValue(QVariant(1));
 
     if (m_pModule->getConfigData()->m_sIntegrationMode == "time")
@@ -1014,7 +1050,10 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
-    double constantImpulsePerWs = m_pModule->getConfigData()->m_nNominalFrequency / (cfak * maxVals.maxU * maxVals.maxI);
+    const cPower2ModuleConfigData *configData = m_pModule->getConfigData();
+    double nomFrequency = configData->m_nNominalFrequency;
+    double constantImpulsePerWs = nomFrequency / (cfak * maxVals.maxU * maxVals.maxI);
+
     bool isValidConstant = !isinf(constantImpulsePerWs);
     if (isValidConstant && m_pModule->getConfigData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
         QString datalist = "FREQSCALE:";
@@ -1023,10 +1062,12 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
             cFoutInfo fi = m_FoutInfoMap[m_pModule->getConfigData()->m_FreqOutputConfList.at(i).m_sName];
             frScale = fi.formFactor * constantImpulsePerWs;
 
-            /*if(m_pScalingInputs.length() > i){
-                if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
-                    double scale=m_pScalingInputs.at(i).first->value().toDouble()*m_pScalingInputs.at(i).second->value().toDouble();
-                    frScale=frScale*scale;
+            /*if(m_scalingInputs.length() > i) {
+                if(m_scalingInputs.at(i).first && m_scalingInputs.at(i).second) {
+                    double scaleU = m_scalingInputs.at(i).first->getValue().toDouble();
+                    double scaleI = m_scalingInputs.at(i).second->getValue().toDouble();
+                    double scaleTotal = scaleU * scaleI;
+                    frScale = frScale * scaleTotal;
                 }
             }*/
             datalist += QString("%1,").arg(frScale, 0, 'g', 9);
@@ -1039,26 +1080,24 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
     double constantImpulsePerKwh = 3600.0 * 1000.0 * constantImpulsePerWs; // imp./kwh
     for (int i = 0; i < m_pModule->getConfigData()->m_nFreqOutputCount; i++) {
         // calculate prescaling factor for Fout
-        /*if(m_pScalingInputs.length() > i){
-            if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
-                double scale = m_pScalingInputs.at(i).first->value().toDouble() * m_pScalingInputs.at(i).second->value().toDouble();
-                constantImpulsePerKwh = constantImpulsePerKwh * scale;
+        /*if(m_scalingInputs.length() > i) {
+            if(m_scalingInputs.at(i).first && m_scalingInputs.at(i).second){
+                double scaleU = m_scalingInputs.at(i).first->getValue().toDouble();
+                double scaleI = m_scalingInputs.at(i).second->getValue().toDouble();
+                double scaleTotal = scaleU * scaleI;
+                constantImpulsePerKwh = constantImpulsePerKwh * scaleTotal;
             }
         }*/
         QString key = m_pModule->getConfigData()->m_FreqOutputConfList.at(i).m_sName;
         cFoutInfo fi = m_FoutInfoMap[key];
         if(isValidConstant) {
             m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constantImpulsePerKwh)] = writeparameter;
-            //m_FoutConstParameterList.at(i)->setValue(constantImpulsePerKwh);
+            m_FoutConstParameterList.at(i)->setValue(constantImpulsePerKwh);
         }
-        /*else
-            m_FoutConstParameterList.at(i)->setValue(0.0);*/
+        else
+            m_FoutConstParameterList.at(i)->setValue(0.0);
     }
-
-    double pmax = maxVals.maxU * maxVals.maxI; // MQREF
-    QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 9);
-    m_pNomPower->setVarData(datalist);
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pNomPower)] = setqrefnominalpower;
+    setNominalPowerForQref();
 }
 
 void cPower2ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)

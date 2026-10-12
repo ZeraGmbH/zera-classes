@@ -3061,6 +3061,18 @@
                 "INF_ModuleInterface": {
                     "Description": "<skipped>"
                 },
+                "PAR_FOUTConstant0": {
+                    "ChannelName": "Fout1",
+                    "Description": "<skipped>"
+                },
+                "PAR_FOUTConstant1": {
+                    "ChannelName": "Fout2",
+                    "Description": "<skipped>"
+                },
+                "PAR_FOUTConstant2": {
+                    "ChannelName": "Fout3",
+                    "Description": "<skipped>"
+                },
                 "PAR_Interval": {
                     "Description": "<skipped>",
                     "Unit": "period",
@@ -3181,6 +3193,27 @@
                     ],
                     [
                         "CONFIGURATION",
+                        "M0CONSTANT",
+                        "2",
+                        "PAR_FOUTConstant0",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M1CONSTANT",
+                        "2",
+                        "PAR_FOUTConstant1",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "M2CONSTANT",
+                        "2",
+                        "PAR_FOUTConstant2",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
                         "TPERIOD",
                         "10",
                         "PAR_Interval",
@@ -3197,6 +3230,9 @@
                 "Name": "PW21"
             }
         },
+        "PAR_FOUTConstant0": 2500000,
+        "PAR_FOUTConstant1": 2500000,
+        "PAR_FOUTConstant2": 2500000,
         "PAR_Interval": 200,
         "PAR_MeasuringMode": "4LW",
         "SIG_Measuring": 1

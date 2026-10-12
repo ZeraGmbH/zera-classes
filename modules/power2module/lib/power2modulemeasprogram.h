@@ -57,6 +57,7 @@ private:
     void dspSetParamsTiMModePhase(int tiTimeOrPeriods);
 
     void setActualValuesNames();
+    void setFoutMetaInfo();
 
     void handleMovingWindowIntTimeChange();
     void handleMModeParamChange();
@@ -72,6 +73,8 @@ private:
     RangeMaxVals calcMaxRangeValues(std::shared_ptr<MeasMode> mode);
     quint8 cmpActualValIndex(const freqoutconfiguration &frconf);
 
+    void setNominalPowerForQref();
+
     cPower2Module* m_pModule;
     Zera::cRMInterface m_rmInterface;
     MeasModeSelector m_measModeSelector;
@@ -80,6 +83,7 @@ private:
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
 
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
+    QList<VfModuleParameter*> m_FoutConstParameterList; // a list of foutconstant parameter
     VfModuleMetaData* m_pPQSCountInfo = nullptr; // the number of values we produce
     VfModuleMetaData* m_pFoutCount = nullptr; // number of our frequence outputs
     VfModuleMetaData* m_pNomFrequencyInfo = nullptr; // the modules nominal frequency
