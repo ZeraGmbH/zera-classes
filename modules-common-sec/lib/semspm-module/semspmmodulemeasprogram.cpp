@@ -18,7 +18,7 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
     cBaseMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
-    m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
+    m_powerModuleObserver(m_pModule->getStorageDb()),
     m_semSpmFunctions(std::move(semSpmFunctions))
 {
     const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
@@ -26,23 +26,15 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
         qCritical("%s module has invalid configuration!", qPrintable(m_pModule->getVeinModuleName()));
     m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
 
-    m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &SemSpmModuleMeasProgram::catchInterfaceAnswer);
-
     m_IdentifyState.addTransition(this, &SemSpmModuleMeasProgram::activationContinue, &m_ecalcServerConnectState);
     //transition from this state to m_fetch....is done in ecalcServerConnect
-    m_fetchECalcUnitsState.addTransition(this, &SemSpmModuleMeasProgram::activationContinue, &m_pcbServerConnectState); // connect to pcbserver
-    m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_setpcbREFConstantNotifierState);
-    m_setpcbREFConstantNotifierState.addTransition(this, &SemSpmModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
+    m_fetchECalcUnitsState.addTransition(this, &SemSpmModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
     m_setsecINTNotifierState.addTransition(this, &SemSpmModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_ecalcServerConnectState);
     m_activationMachine.addState(&m_fetchECalcUnitsState);
-    m_activationMachine.addState(&m_pcbServerConnectState);
-    m_activationMachine.addState(&m_setpcbREFConstantNotifierState);
     m_activationMachine.addState(&m_setsecINTNotifierState);
     m_activationMachine.addState(&m_activationDoneState);
 
@@ -52,8 +44,6 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
     connect(&m_IdentifyState, &QState::entered, this, &SemSpmModuleMeasProgram::sendRMIdent);
     connect(&m_ecalcServerConnectState, &QState::entered, this, &SemSpmModuleMeasProgram::ecalcServerConnect);
     connect(&m_fetchECalcUnitsState, &QState::entered, this, &SemSpmModuleMeasProgram::fetchECalcUnits);
-    connect(&m_pcbServerConnectState, &QState::entered, this, &SemSpmModuleMeasProgram::pcbServerConnect);
-    connect(&m_setpcbREFConstantNotifierState, &QState::entered, this, &SemSpmModuleMeasProgram::setpcbREFConstantNotifier);
     connect(&m_setsecINTNotifierState, &QState::entered, this, &SemSpmModuleMeasProgram::setsecINTNotifier);
     connect(&m_activationDoneState, &QState::entered, this, &SemSpmModuleMeasProgram::activationDone);
 
@@ -164,7 +154,7 @@ void SemSpmModuleMeasProgram::generateVeinInterface()
     m_pRefConstantPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("PAR_RefConstant"),
                                               QString("Reference meter constant"),
-                                              QVariant((double)0.0));
+                                              double(0.0));
     m_pRefConstantPar->setScpiInfo("CALCULATE", QString("%1:REFCONSTANT").arg(modNr ), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pRefConstantPar; // for modules use
 
@@ -265,12 +255,11 @@ void SemSpmModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pResultAct; // and for the modules interface
 
     const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
-    const QString refInputName = configData->m_refConfigs.m_sRefInput.m_sValue;
 
     m_pPowerModuleEntityId = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("ACT_PowerModuleEntityId"),
                                                    QString("Power module entity ID generating reference input"),
-                                                   SecPowerModuleFinder::findEntity(refInputName, m_pModule->getStorageDb()));
+                                                   m_powerModuleObserver.getPowerModulentityId());
     m_pModule->m_veinModuleParameterMap[key] = m_pPowerModuleEntityId; // and for the modules interface
 
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -549,16 +538,23 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
     }
 }
 
-void SemSpmModuleMeasProgram::onRefConstantChanged(const QString &refPowerName)
+void SemSpmModuleMeasProgram::onPowerModuleValuesChanged()
 {
-    if(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue == refPowerName) {
-        stopMeasurement(true);
-        actualizeRefConstant();
-    }
+    stopECCalculator();
+
+    actualizeRefConstant();
+    setInterfaceComponents();
+
+    // if the reference input changes P <-> Q <-> S it is necessary to change energyunit and powerunit and their validators
+    setValidators();
+    setUnits();
+    emit m_pModule->parameterChanged();
 }
 
 void SemSpmModuleMeasProgram::setInterfaceComponents()
 {
+    m_pPowerModuleEntityId->setValue(m_powerModuleObserver.getPowerModulentityId());
+
     const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
     m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_refConfigs.m_sRefInput.m_sValue));
     m_pTargetedPar->setValue(configData->m_bTargeted.m_nActive);
@@ -610,33 +606,28 @@ QString SemSpmModuleMeasProgram::getEnergyUnit()
 
 void SemSpmModuleMeasProgram::actualizeRefConstant()
 {
-    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
-    m_pRefConstantPar->setValue(QVariant(constant));
-    newRefConstant(QVariant(constant));
-}
-
-QString SemSpmModuleMeasProgram::getPowerTypeFromPowerModule() const
-{
-    const VeinStorage::AbstractDatabase *veinDb = m_pModule->getStorageDb();
-    const int poweModuleEntityId = m_pPowerModuleEntityId->getValue().toInt();
-    return veinDb->getStoredValue(poweModuleEntityId, "ACT_PowerDisplayName").toString();
+    const double constant = m_powerModuleObserver.getConstant();
+    m_pRefConstantPar->setValue(constant);
+    newRefConstant(constant);
 }
 
 QStringList SemSpmModuleMeasProgram::getPowerUnitValidator()
 {
-    const QString powerType = getPowerTypeFromPowerModule();
+    const QString powerType = m_powerModuleObserver.getPowerType();
     return UnitHelper::getPowerUnits(powerType);
 }
 
 QString SemSpmModuleMeasProgram::getPowerUnit()
 {
-    const QString powerType = getPowerTypeFromPowerModule();
+    const QString powerType = m_powerModuleObserver.getPowerType();
     const QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
     return UnitHelper::deduceMatchingPowerUnit(powerType, currentPowerUnit);
 }
 
 quint32 SemSpmModuleMeasProgram::getStatus()
 {
+    if (m_pStatusAct == nullptr)
+        return 0;
     return m_pStatusAct->getValue().toUInt();
 }
 
@@ -699,30 +690,6 @@ void SemSpmModuleMeasProgram::fetchECalcUnits()
     m_MsgNrCmdList[m_secInterface->setECalcUnit(3)] = fetchecalcunits; // we need 3 ecalc units to cascade
 }
 
-void SemSpmModuleMeasProgram::pcbServerConnect()
-{
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
-}
-
-void SemSpmModuleMeasProgram::setpcbREFConstantNotifier()
-{
-    if (m_pModule->getConfigData()->m_refConfigs.m_nRefInpCount > 0) {
-        connect(&m_refConstantObserver, &RefPowerConstantObserver::sigRegistrationFinished, this, [this](bool ok) {
-            if(ok) {
-                actualizeRefConstant();
-                connect(&m_refConstantObserver, &RefPowerConstantObserver::sigRefConstantChanged,
-                        this, &SemSpmModuleMeasProgram::onRefConstantChanged);
-                emit activationContinue();
-            }
-            else
-                notifyError(registerpcbnotifierErrMsg);
-        });
-        m_refConstantObserver.registerNofifications(m_pcbInterface, m_refInputDictionary.getInputNameList());
-    }
-    else
-        emit activationContinue(); // if no ref constant notifier (standalone error calc) we directly go on
-}
-
 void SemSpmModuleMeasProgram::setsecINTNotifier()
 {
     m_MsgNrCmdList[m_secInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterErrCalcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
@@ -743,9 +710,12 @@ void SemSpmModuleMeasProgram::activationDone()
     connect(m_pUpperLimitPar, &VfModuleParameter::sigValueChanged, this, &SemSpmModuleMeasProgram::newUpperLimit);
     connect(m_pLowerLimitPar, &VfModuleParameter::sigValueChanged, this, &SemSpmModuleMeasProgram::newLowerLimit);
 
-    setInterfaceComponents();
-    setValidators();
-    setUnits();
+    const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
+    connect(&m_powerModuleObserver, &SecPowerModuleObserver::sigPowerModuleValuesChanged,
+            this, &SemSpmModuleMeasProgram::onPowerModuleValuesChanged);
+    const QString refInputName = configData->m_refConfigs.m_sRefInput.m_sValue;
+    m_powerModuleObserver.setPowerModulentityId(SecPowerModuleFinder::findEntity(refInputName, m_pModule->getStorageDb()));
+    // -> onPowerModuleValuesChanged
 
     m_bActive = true;
     emit activated();
@@ -753,7 +723,13 @@ void SemSpmModuleMeasProgram::activationDone()
 
 void SemSpmModuleMeasProgram::stopECCalculator()
 {
-    stopMeasurement(true);
+    quint32 status = getStatus();
+    if (status & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED))
+        setStatus(ECALCSTATUS::ABORT);
+
+    m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
+    m_pStartStopPar->setValue(QVariant(0));
+    m_ActualizeTimer->stop();
 }
 
 void SemSpmModuleMeasProgram::freeECalculator()
@@ -942,7 +918,7 @@ void SemSpmModuleMeasProgram::newStartStop(QVariant startstop)
     }
     else {
         if (m_pModule->getConfigData()->m_bTargeted.m_nActive > 0)
-            stopMeasurement(true);
+            stopECCalculator();
         else {
             m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
             m_ActualizeTimer->stop();
@@ -964,20 +940,12 @@ void SemSpmModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void SemSpmModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    const QString refInputName = refinput.toString();
-    QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refInputName);
+    QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refinput.toString());
     m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue = refPowerName;
-
-    m_pPowerModuleEntityId->setValue(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
     m_pRefFreqInput->setValue(refPowerName);
 
-    actualizeRefConstant();
-    setInterfaceComponents();
-
-    // if the reference input changes P <-> Q <-> S it is necessary to change energyunit and powerunit and their validators
-    setValidators();
-    setUnits();
-    emit m_pModule->parameterChanged();
+    // -> onPowerModuleValuesChanged
+    m_powerModuleObserver.setPowerModulentityId(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
 }
 
 void SemSpmModuleMeasProgram::newTargeted(QVariant targeted)
@@ -1048,13 +1016,3 @@ void SemSpmModuleMeasProgram::clientActivationChanged(bool bActive)
     connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &SemSpmModuleMeasProgram::Actualize);
     m_ActualizeTimer->start();
 }
-
-void SemSpmModuleMeasProgram::stopMeasurement(bool bAbort)
-{
-    if(bAbort)
-        setStatus(ECALCSTATUS::ABORT);
-    m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
-    m_pStartStopPar->setValue(QVariant(0));
-    m_ActualizeTimer->stop();
-}
-

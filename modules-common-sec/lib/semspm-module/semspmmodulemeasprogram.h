@@ -3,7 +3,7 @@
 
 #include "secinterface.h"
 #include "abstractsemspmfunctions.h"
-#include "refpowerconstantobserver.h"
+#include "secpowermoduleobserver.h"
 #include "secmeasinputdictionary.h"
 #include "uint32bitexpander.h"
 #include <basemeasprogram.h>
@@ -31,13 +31,12 @@ public slots:
 
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void onRefConstantChanged(const QString &refPowerName);
+    void onPowerModuleValuesChanged();
+
     void resourceManagerConnect();
     void sendRMIdent();
     void ecalcServerConnect();
     void fetchECalcUnits();
-    void pcbServerConnect();
-    void setpcbREFConstantNotifier();
     void setsecINTNotifier();
     void activationDone();
 
@@ -77,7 +76,6 @@ private slots:
 
     void Actualize();
     void clientActivationChanged(bool bActive);
-    void stopMeasurement(bool bAbort);
 
 private:
     void setInterfaceComponents();
@@ -88,7 +86,6 @@ private:
 
     QStringList getEnergyUnitValidator();
     QString getEnergyUnit();
-    QString getPowerTypeFromPowerModule() const;
     QStringList getPowerUnitValidator();
     QString getPowerUnit();
     void actualizeRefConstant();
@@ -103,15 +100,12 @@ private:
     SemSpmModule* m_pModule = nullptr; // the module we live in
     Zera::cRMInterface m_rmInterface;
     Zera::cSECInterfacePtr m_secInterface;
-    Zera::PcbInterfacePtr m_pcbInterface;
 
     // statemachine for activating gets the following states
     QState resourceManagerConnectState; // connect to resource manager
     QState m_IdentifyState; // identify to resource manager
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 3 error calc units from sec server
-    QState m_pcbServerConnectState; // connect to pcb server
-    QState m_setpcbREFConstantNotifierState; // we get notified on refconstant changes
     QState m_setsecINTNotifierState; // we get notified on sec interrupts
 
     QFinalState m_activationDoneState; // and then we have finished
@@ -145,7 +139,7 @@ private:
     QFinalState m_setEMResultState;
 
     SecMeasInputDictionary m_refInputDictionary;
-    RefPowerConstantObserver m_refConstantObserver;
+    SecPowerModuleObserver m_powerModuleObserver;
     std::unique_ptr<AbstractSemSpmFunctions> m_semSpmFunctions;
 
     QString m_masterErrCalcName;
