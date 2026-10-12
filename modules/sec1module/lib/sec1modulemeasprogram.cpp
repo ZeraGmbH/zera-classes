@@ -183,7 +183,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pRefConstantPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  key = QString("PAR_RefConstant"),
                                                  QString("Reference meter constant"),
-                                                 QVariant((double)0.0));
+                                                 double(0.0));
     m_pRefConstantPar->setScpiInfo("CALCULATE", QString("%1:REFCONSTANT").arg(modNr ), SCPI::isQuery|SCPI::isCmdwP);
     m_pModule->m_veinModuleParameterMap[key] = m_pRefConstantPar; // for modules use
 
@@ -759,9 +759,9 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
 
 void cSec1ModuleMeasProgram::actualizeRefConstant()
 {
-    double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
-    m_pRefConstantPar->setValue(QVariant(constant));
-    newRefConstant(QVariant(constant));
+    const double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
+    m_pRefConstantPar->setValue(constant);
+    newRefConstant(constant);
 }
 
 quint32 cSec1ModuleMeasProgram::getStatus()
