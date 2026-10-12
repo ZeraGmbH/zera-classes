@@ -1,0 +1,19 @@
+{
+    "modules" : [
+        {
+            "name" : "rangemodule",
+            "configFile" : "mt310s2-rangemodule.xml",
+            "id": 1020
+        },
+        {
+          "name" : "power1module",
+          "configFile" : ":/mt310s2-power1module4.xml",
+          "id": 1073
+        },
+        {
+          "name" : "power2module",
+          "configFile" : "mt310s2-power2moduleCED.xml",
+          "id": 1090
+        }
+    ]
+}

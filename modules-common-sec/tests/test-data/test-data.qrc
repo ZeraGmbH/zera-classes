@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>mt310s2-power1module4.xml</file>
+        <file>sessions/session-minimal.json</file>
+    </qresource>
+</RCC>
