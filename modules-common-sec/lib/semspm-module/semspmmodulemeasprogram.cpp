@@ -103,9 +103,9 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
     connect(&m_startMeasurementDoneState, &QState::entered, this, &SemSpmModuleMeasProgram::startMeasurementDone);
 
     // setting up statemachine m_finalResultStateMachine
-    // mode targeted:
+    // mode stopMode:
     // * for interrupt handling (Interrupt is thrown on measurement finished)
-    // mode non targeted (Start/Stop):
+    // mode non stopMode (Start/Stop):
     // * on user stop this machine is started.
     m_readIntRegisterState.addTransition(this, &SemSpmModuleMeasProgram::interruptContinue, &m_resetIntRegisterState);
     m_resetIntRegisterState.addTransition(this, &SemSpmModuleMeasProgram::interruptContinue, &m_readFinalEnergyCounterState);
@@ -158,16 +158,16 @@ void SemSpmModuleMeasProgram::generateVeinInterface()
     m_pRefConstantPar->setScpiInfo("CALCULATE", QString("%1:REFCONSTANT").arg(modNr ), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pRefConstantPar; // for modules use
 
-    m_pTargetedPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                           key = QString("PAR_Targeted"),
+    m_pStopModePar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                           key = QString("PAR_Targeted"), // the cat is out: better would be PAR_StopMode
                                            QString(
                                                "Stop mode:\n"
                                                "0: Start/Stop (stop manually)\n"
                                                "1: Duration (stop automatic)"),
-                                           QVariant((int)0));
-    m_pTargetedPar->setScpiInfo("CALCULATE", QString("%1:MODE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
-    m_pTargetedPar->setValidator(new cIntValidator(0,1,1));
-    m_pModule->m_veinModuleParameterMap[key] = m_pTargetedPar; // for modules use
+                                           QVariant((quint32)0));
+    m_pStopModePar->setScpiInfo("CALCULATE", QString("%1:MODE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
+    m_pStopModePar->setValidator(new UintValidator(SemSpmModuleConfigData::StopModeStartStop, SemSpmModuleConfigData::StopModeTimed, 1));
+    m_pModule->m_veinModuleParameterMap[key] = m_pStopModePar; // for modules use
 
     m_pMeasTimePar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_MeasTime"),
@@ -557,7 +557,7 @@ void SemSpmModuleMeasProgram::setInterfaceComponents()
 
     const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
     m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_refConfigs.m_sRefInput.m_sValue));
-    m_pTargetedPar->setValue(configData->m_bTargeted.m_nActive);
+    m_pStopModePar->setValue(configData->m_stopMode.m_nValue);
     m_pMeasTimePar->setValue(configData->m_nMeasTime.m_nValue);
     m_pUpperLimitPar->setValue(configData->m_limitConfigs.m_fUpperLimit.m_fValue);
     m_pLowerLimitPar->setValue(configData->m_limitConfigs.m_fLowerLimit.m_fValue);
@@ -702,7 +702,7 @@ void SemSpmModuleMeasProgram::activationDone()
     connect(m_pStartStopPar, &VfModuleParameter::sigValueChanged, this, &SemSpmModuleMeasProgram::newStartStop);
     connect(m_pRefInputPar, &VfModuleParameter::sigValueChanged, this, &SemSpmModuleMeasProgram::newRefInput);
 
-    connect(m_pTargetedPar, &VfModuleParameter::sigValueChanged, this , &SemSpmModuleMeasProgram::newTargeted);
+    connect(m_pStopModePar, &VfModuleParameter::sigValueChanged, this , &SemSpmModuleMeasProgram::newStopMode);
     connect(m_pMeasTimePar, &VfModuleParameter::sigValueChanged, this , &SemSpmModuleMeasProgram::newMeasTime);
     connect(m_pT0InputPar, &VfModuleParameter::sigValueChanged, this , &SemSpmModuleMeasProgram::newT0Input);
     connect(m_pT1InputPar, &VfModuleParameter::sigValueChanged, this , &SemSpmModuleMeasProgram::newT1Input);
@@ -750,7 +750,7 @@ void SemSpmModuleMeasProgram::setSync2()
 
 void SemSpmModuleMeasProgram::setMeaspulses()
 {
-    if (m_pTargetedPar->getValue().toInt() == 0)
+    if (m_pStopModePar->getValue().toInt() == 0)
         m_nTimerCountStart = Zera::cSECInterface::maxSecCounterInitVal; // we simply set max. time -> approx. 50 days
     else
         m_nTimerCountStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
@@ -791,8 +791,8 @@ void SemSpmModuleMeasProgram::setSlave2MeasMode()
 
 void SemSpmModuleMeasProgram::enableInterrupt()
 {
-    // in case of targeted mode we want an interrupt when ready
-    // in case of not targeted mode we set the time to maximum and the user will stop the measurement by pressing stop
+    // in case of StopModeTimed mode we want an interrupt when ready
+    // in case of not StopModeStartStop mode we set the time to maximum and the user will stop the measurement by pressing stop
     // so we program enable int. in any case
     m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
 }
@@ -843,8 +843,8 @@ void SemSpmModuleMeasProgram::readVICountact()
 void SemSpmModuleMeasProgram::readTCountact()
 {
     m_MsgNrCmdList[m_secInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTfin)] = readtcount;
-    // non targeted has been stopped already in newStartStop()
-    if(m_pModule->getConfigData()->m_bTargeted.m_nActive)
+    // non stopMode has been stopped already in newStartStop()
+    if(m_pModule->getConfigData()->m_stopMode.m_nValue)
         m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
     setStatus(ECALCSTATUS::READY);
@@ -917,17 +917,18 @@ void SemSpmModuleMeasProgram::newStartStop(QVariant startstop)
         // m_ActualizeTimer.start();
     }
     else {
-        if (m_pModule->getConfigData()->m_bTargeted.m_nActive > 0)
+        if (m_pModule->getConfigData()->m_stopMode.m_nValue == SemSpmModuleConfigData::StopModeTimed)
             stopECCalculator();
-        else {
+        else if (m_pModule->getConfigData()->m_stopMode.m_nValue == SemSpmModuleConfigData::StopModeStartStop) {
+            // In "Start/Stop" mode we handle pressing stop as if the
+            // measurement became ready and an interrupt occured
             m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
             m_ActualizeTimer->stop();
-            // if we are not "targeted" we handle pressing stop as if the
-            // measurement became ready and an interrupt occured
-            if (!m_finalResultStateMachine.isRunning()) {
+            if (!m_finalResultStateMachine.isRunning())
                 m_finalResultStateMachine.start();
-            }
         }
+        else
+            qCritical("Unknown Start/Stop mdoe");
     }
 }
 
@@ -948,9 +949,9 @@ void SemSpmModuleMeasProgram::newRefInput(QVariant refinput)
     m_powerModuleObserver.setPowerModulentityId(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
 }
 
-void SemSpmModuleMeasProgram::newTargeted(QVariant targeted)
+void SemSpmModuleMeasProgram::newStopMode(QVariant stopMode)
 {
-    m_pModule->getConfigData()->m_bTargeted.m_nActive = targeted.toInt();
+    m_pModule->getConfigData()->m_stopMode.m_nValue = stopMode.toInt();
     setInterfaceComponents();
     emit m_pModule->parameterChanged();
 }

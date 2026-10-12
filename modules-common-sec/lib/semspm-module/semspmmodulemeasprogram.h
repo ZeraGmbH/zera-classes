@@ -66,7 +66,7 @@ private slots:
     void newStartStop(QVariant startstop);
     void newRefConstant(QVariant refconst);
     void newRefInput(QVariant refinput);
-    void newTargeted(QVariant targeted);
+    void newStopMode(QVariant stopMode);
     void newMeasTime(QVariant meastime);
     void newT0Input(QVariant t0input);
     void newT1Input(QVariant t1input);
@@ -148,7 +148,7 @@ private:
 
     VfModuleParameter* m_pRefInputPar = nullptr;
     VfModuleParameter* m_pRefConstantPar = nullptr;
-    VfModuleParameter* m_pTargetedPar = nullptr;
+    VfModuleParameter* m_pStopModePar = nullptr;
     VfModuleParameter* m_pMeasTimePar = nullptr;
 
     VfModuleParameter* m_pT0InputPar = nullptr;

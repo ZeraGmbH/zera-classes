@@ -10,7 +10,7 @@ enum moduleconfigstate
     setRefInputCount,
 
     setRefInput,
-    setTargeted,
+    setStopMode,
     setMeasTime,
     setUpperLimit,
     setLowerLimit,
@@ -23,7 +23,7 @@ void SemSpmModuleConfiguration::setConfiguration(const QByteArray& xmlString)
     m_ConfigXMLMap["confpar:configuration:measure:refinput:n"] = setRefInputCount;
 
     m_ConfigXMLMap["confpar:parameter:measure:refinput"] = setRefInput;
-    m_ConfigXMLMap["confpar:parameter:measure:targeted"] = setTargeted;
+    m_ConfigXMLMap["confpar:parameter:measure:stopmode"] = setStopMode;
     m_ConfigXMLMap["confpar:parameter:measure:meastime"] = setMeasTime;
     m_ConfigXMLMap["confpar:parameter:measure:upperlimit"] = setUpperLimit;
     m_ConfigXMLMap["confpar:parameter:measure:lowerlimit"] = setLowerLimit;
@@ -39,8 +39,8 @@ QByteArray SemSpmModuleConfiguration::exportConfiguration() const
     const stringParameter* paramRefInput = &m_configData.m_refConfigs.m_sRefInput;
     m_pXMLReader->setValue(paramRefInput->m_sKey, paramRefInput->m_sValue);
 
-    const boolParameter* paramTargeted = &m_configData.m_bTargeted;
-    m_pXMLReader->setValue(paramTargeted->m_sKey, QString("%1").arg(paramTargeted->m_nActive));
+    const intParameter* paramStopMode = &m_configData.m_stopMode;
+    m_pXMLReader->setValue(paramStopMode->m_sKey, QString("%1").arg(paramStopMode->m_nValue));
 
     const intParameter* paramMeasTime = &m_configData.m_nMeasTime;
     m_pXMLReader->setValue(paramMeasTime->m_sKey, QString("%1").arg(paramMeasTime->m_nValue));
@@ -77,9 +77,9 @@ void SemSpmModuleConfiguration::configXMLInfo(const QString &key)
             m_configData.m_refConfigs.m_sRefInput.m_sKey = key;
             m_configData.m_refConfigs.m_sRefInput.m_sValue = m_pXMLReader->getValue(key);
             break;
-        case setTargeted:
-            m_configData.m_bTargeted.m_sKey = key;
-            m_configData.m_bTargeted.m_nActive = m_pXMLReader->getValue(key).toInt();
+        case setStopMode:
+            m_configData.m_stopMode.m_sKey = key;
+            m_configData.m_stopMode.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setMeasTime:
             m_configData.m_nMeasTime.m_sKey = key;

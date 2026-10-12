@@ -34,6 +34,14 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="stopmodetype">
+        <xs:restriction base="xs:integer">
+            <!-- see SemSpmModuleConfigData StopMode... definitions -->
+            <xs:maxInclusive value="1"/>
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="inputsignaltype">
         <xs:restriction base="xs:string">
             <xs:enumeration value="fo0"/>
@@ -93,7 +101,7 @@
     <xs:complexType name="parametermeasuretype">
         <xs:sequence>
             <xs:element name="refinput" type="inputsignaltype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="targeted" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="stopmode" type="stopmodetype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="meastime" type="impulstype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="upperlimit" type="errorlimitvaltype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="lowerlimit" type="errorlimitvaltype" minOccurs="1" maxOccurs="1"/>

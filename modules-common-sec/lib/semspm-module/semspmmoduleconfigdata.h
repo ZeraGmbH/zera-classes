@@ -10,7 +10,10 @@ public:
     TSecCommonLimitConfigs m_limitConfigs;
 
     intParameter m_nMeasTime;
-    boolParameter m_bTargeted;
+
+    static constexpr int StopModeStartStop = 0;
+    static constexpr int StopModeTimed = 1;
+    intParameter m_stopMode;
 };
 
 #endif // SEMSPMMODULECONFIGDATA_H

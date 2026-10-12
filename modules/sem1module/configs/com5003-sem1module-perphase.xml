@@ -13,7 +13,7 @@
     <parameter>
         <measure>
             <refinput>fo0</refinput>
-            <targeted>1</targeted>
+            <stopmode>1</stopmode>
             <meastime>120</meastime>
             <upperlimit>10.0</upperlimit>
             <lowerlimit>-10.0</lowerlimit>
