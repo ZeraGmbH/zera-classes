@@ -2435,7 +2435,7 @@
             }
         },
         "PAR_FOUT0": "fOUT1",
-        "PAR_FOUTConstant0": 7500000.000000001,
+        "PAR_FOUTConstant0": 7500000,
         "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "100",
@@ -2648,7 +2648,7 @@
             }
         },
         "PAR_FOUT0": "fOUT2",
-        "PAR_FOUTConstant0": 7500000.000000001,
+        "PAR_FOUTConstant0": 7500000,
         "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "010",
@@ -2861,7 +2861,7 @@
             }
         },
         "PAR_FOUT0": "fOUT3",
-        "PAR_FOUTConstant0": 7500000.000000001,
+        "PAR_FOUTConstant0": 7500000,
         "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "001",
@@ -3077,7 +3077,7 @@
             }
         },
         "PAR_FOUT0": "fOUT4",
-        "PAR_FOUTConstant0": 7500000.000000001,
+        "PAR_FOUTConstant0": 7500000,
         "PAR_FOUT_NOMINAL_FREQ": 200000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "001",
