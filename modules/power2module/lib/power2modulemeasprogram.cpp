@@ -224,7 +224,7 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
         pFoutParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("PAR_FOUTConstant%1").arg(i),
                                                QString("Frequency output constant"),
-                                               QVariant(0.0));
+                                               double(0.0));
         //if(configData->m_enableScpiCommands)
             pFoutParameter->setScpiInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), SCPI::isQuery);
 
