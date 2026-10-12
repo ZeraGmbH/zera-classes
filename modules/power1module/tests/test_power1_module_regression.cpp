@@ -28,8 +28,7 @@ void test_power1_module_regression::initTestCase()
 void test_power1_module_regression::minimalSession()
 {
     ModuleManagerTestRunner testRunner(":/sessions/session-minimal.json");
-    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
-    VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
+    VeinStorage::AbstractDatabase *storageDb = testRunner.getVeinStorageDb();
 
     QList<int> entityList = storageDb->getEntityList();
     QCOMPARE(entityList.count(), 2);
