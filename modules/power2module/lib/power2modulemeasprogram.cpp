@@ -1049,10 +1049,10 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
-    double cfak = mode->getActiveMeasSysCount();
+    double actMeasSystemCount = mode->getActiveMeasSysCount();
     const cPower2ModuleConfigData *configData = m_pModule->getConfigData();
     double nomFrequency = configData->m_nNominalFrequency;
-    double constantImpulsePerWs = nomFrequency / (cfak * maxVals.maxU * maxVals.maxI);
+    double constantImpulsePerWs = nomFrequency / (actMeasSystemCount * maxVals.maxU * maxVals.maxI);
 
     bool isValidConstant = !isinf(constantImpulsePerWs);
     if (isValidConstant && m_pModule->getConfigData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
