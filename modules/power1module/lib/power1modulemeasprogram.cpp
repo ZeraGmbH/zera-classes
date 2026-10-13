@@ -1215,9 +1215,9 @@ void cPower1ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> m
 
 void cPower1ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode)
 {
+    setPhaseMaskValidator(mode);
     QString newPhaseMask = mode->getCurrentMask();
     const cMeasModeInfo modeInfo = MeasModeCatalog::getInfo(m_pModule->getConfigData()->m_sMeasuringMode.m_sValue);
-    setPhaseMaskValidator(mode);
     m_pMModePhaseSelectParameter->setValue(newPhaseMask);
     m_MModeCanChangePhaseMask->setValue(canChangePhaseMask(mode));
     m_MModeMaxMeasSysCount->setValue(mode->getMaxMeasSysCount());
