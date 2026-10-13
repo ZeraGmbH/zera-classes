@@ -254,13 +254,13 @@ void SemSpmModuleMeasProgram::generateVeinInterface()
     m_pResultAct->setUnit("%");
     m_pModule->m_veinModuleParameterMap[key] = m_pResultAct; // and for the modules interface
 
-    const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
-
     m_pPowerModuleEntityId = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("ACT_PowerModuleEntityId"),
                                                    QString("Power module entity ID generating reference input"),
                                                    m_powerModuleObserver.getPowerModulentityId());
     m_pModule->m_veinModuleParameterMap[key] = m_pPowerModuleEntityId; // and for the modules interface
+
+    const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
 
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
