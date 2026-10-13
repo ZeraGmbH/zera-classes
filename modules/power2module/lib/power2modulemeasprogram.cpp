@@ -1093,10 +1093,8 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
         }*/
         QString key = m_pModule->getConfigData()->m_FreqOutputConfList.at(i).m_sName;
         cFoutInfo fi = m_FoutInfoMap[key];
-        if(isValidConstant) {
-            m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constantImpulsePerKwh)] = writeparameter;
+        if(isValidConstant)
             m_FoutConstParameterList.at(i)->setValue(constantImpulsePerKwh);
-        }
         else
             m_FoutConstParameterList.at(i)->setValue(0.0);
     }
