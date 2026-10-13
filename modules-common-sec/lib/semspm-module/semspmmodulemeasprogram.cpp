@@ -750,7 +750,7 @@ void SemSpmModuleMeasProgram::setSync2()
 
 void SemSpmModuleMeasProgram::setMeaspulses()
 {
-    if (m_pStopModePar->getValue().toInt() == 0)
+    if (m_pStopModePar->getValue().toInt() == SemSpmModuleConfigData::StopModeStartStop)
         m_nTimerCountStart = Zera::cSECInterface::maxSecCounterInitVal; // we simply set max. time -> approx. 50 days
     else
         m_nTimerCountStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
