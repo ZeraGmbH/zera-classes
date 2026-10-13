@@ -29,8 +29,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     if (!SecPowerModuleFinder::testConfiguredRefInputs(configData->m_refConfigs, m_pModule->getStorageDb()))
         qCritical("%s module has invalid configuration!", qPrintable(m_pModule->getVeinModuleName()));
     m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
+
     m_dutInputDictionary.fillFromDutConfig(configData->m_dutConfigs);
-    m_resourceTypeList.addTypesFromConfig(configData->m_refConfigs);
     m_resourceTypeList.addTypesFromConfig(configData->m_dutConfigs);
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
