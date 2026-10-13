@@ -802,9 +802,13 @@ void SemSpmModuleMeasProgram::startMeasurement()
     SecDateTimeHelper::setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
     m_pMeasDurationMs->setValue(0);
     m_measEndDateTime = QDateTime();
-    SecDateTimeHelper::setDateTime(m_measEndDateTime, m_pMeasEndTime);
-    QDateTime estimatedEndTime = m_measStartDateTime.addSecs(m_pMeasTimePar->getValue().toUInt());
-    SecDateTimeHelper::setDateTime(estimatedEndTime, m_pMeasEstimatedEndTime);
+    if (m_pModule->getConfigData()->m_stopMode.m_nValue != SemSpmModuleConfigData::StopModeStartStop) {
+        SecDateTimeHelper::setDateTime(m_measEndDateTime, m_pMeasEndTime);
+        QDateTime estimatedEndTime = m_measStartDateTime.addSecs(m_pMeasTimePar->getValue().toUInt());
+        SecDateTimeHelper::setDateTime(estimatedEndTime, m_pMeasEstimatedEndTime);
+    }
+    else
+        m_pMeasEstimatedEndTime->setValue("");
     if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
