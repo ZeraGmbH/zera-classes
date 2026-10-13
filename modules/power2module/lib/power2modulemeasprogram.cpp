@@ -922,6 +922,8 @@ void cPower2ModuleMeasProgram::activateDSP()
 void cPower2ModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
+    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    updatePhaseMaskVeinComponents(mode);
     setActualValuesNames();
     setSCPIMeasInfo();
     setFoutMetaInfo();
@@ -1180,6 +1182,8 @@ void cPower2ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> m
 void cPower2ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode)
 {
     setPhaseMaskValidator(mode);
+    const cMeasModeInfo modeInfo = MeasModeCatalog::getInfo(m_pModule->getConfigData()->m_sMeasuringMode.m_sValue);
+    m_MModePowerDisplayName->setValue(modeInfo.getActvalName());
 }
 
 void cPower2ModuleMeasProgram::onModeTransactionOk()
