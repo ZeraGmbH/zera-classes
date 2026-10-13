@@ -57,7 +57,7 @@ const QStringList &UnitHelper::getDUTConstantUnits(const QString &powerType)
     if (powerType == "S")
         return m_apparentDutConstantUnits;
 
-    qCritical("No DUT constant units found for power tye %s", qPrintable(powerType));
+    qCritical("No DUT constant units found for power type %s", qPrintable(powerType));
     return m_activeDutConstantUnits;
 }
 
