@@ -5,8 +5,8 @@
 #include "clientactivecomponent.h"
 #include "multipleresulthelper.h"
 #include "secmeasinputdictionary.h"
+#include "secpowermoduleobserver.h"
 #include "secresourcetypelist.h"
-#include "refpowerconstantobserver.h"
 #include "uint32bitexpander.h"
 #include <rminterface.h>
 #include <doublevalidator.h>
@@ -33,7 +33,8 @@ public slots:
     void stop() override;
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
-    void onRefConstantChanged(const QString &refPowerName);
+    void onPowerModuleValuesChanged();
+
     void resourceManagerConnect();
     void sendRMIdent();
     void readResources();
@@ -45,7 +46,6 @@ private slots:
     void readDUTInputs();
     void readDUTInputAlias();
     void readDUTInputDone();
-    void setpcbREFConstantNotifier();
     void setsecINTNotifier();
     void activationDone();
 
@@ -92,16 +92,14 @@ private slots:
 private:
     void setInterfaceComponents();
     void setValidators();
+    void setUnits();
 
-    QString getPowerTypeFromPowerModule() const;
     QStringList getDutConstUnitValidator();
     QString getEnergyUnit();
-    void initDutConstantUnit(const QStringList &sl);
     void initDutConstantUnit();
 
     void handleSECInterrupt();
     void computeDependencies();
-    void stopMeasurement(bool bAbort);
 
     const QString multiResultToJson();
     void multiResultToVein();
@@ -137,7 +135,6 @@ private:
     QState m_readDUTInputAliasState; // read for 1 Input
     QState m_readDUTInputDoneState;
 
-    QState m_setpcbREFConstantNotifierState; // we get notified on refconstant changes
     QState m_setsecINTNotifierState; // we get notified on sec interrupts
 
     QFinalState m_activationDoneState; // and then we have finished
@@ -169,8 +166,8 @@ private:
     SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
+    SecPowerModuleObserver m_powerModuleObserver;
     SecMeasInputDictionary m_dutInputDictionary;
-    RefPowerConstantObserver m_refConstantObserver;
 
     qint32 m_nIt = 0;
     QList<QString> m_sItList; // for interation over x Input hash

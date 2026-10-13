@@ -22,7 +22,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     cBaseMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>()),
-    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
+    m_powerModuleObserver(m_pModule->getStorageDb())
 {
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
     m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
@@ -47,8 +48,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     m_readDUTInputsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputAliasState);
     m_readDUTInputAliasState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputDoneState);
     m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readDUTInputAliasState);
-    m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setpcbREFConstantNotifierState);
-    m_setpcbREFConstantNotifierState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
+    m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
     m_setsecINTNotifierState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&resourceManagerConnectState);
@@ -62,7 +62,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     m_activationMachine.addState(&m_readDUTInputsState);
     m_activationMachine.addState(&m_readDUTInputAliasState);
     m_activationMachine.addState(&m_readDUTInputDoneState);
-    m_activationMachine.addState(&m_setpcbREFConstantNotifierState);
     m_activationMachine.addState(&m_setsecINTNotifierState);
     m_activationMachine.addState(&m_activationDoneState);
 
@@ -79,7 +78,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     connect(&m_readDUTInputsState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputs);
     connect(&m_readDUTInputAliasState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputAlias);
     connect(&m_readDUTInputDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputDone);
-    connect(&m_setpcbREFConstantNotifierState, &QState::entered, this, &cSec1ModuleMeasProgram::setpcbREFConstantNotifier);
     connect(&m_setsecINTNotifierState, &QState::entered, this, &cSec1ModuleMeasProgram::setsecINTNotifier);
     connect(&m_activationDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::activationDone);
 
@@ -389,19 +387,18 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pResultAct; // and for the modules interface
 
 
-    const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
-    const QString refInputName = configData->m_refConfigs.m_sRefInput.m_sValue;
-
     m_pPowerModuleEntityId = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                    key = QString("ACT_PowerModuleEntityId"),
                                                    QString("Power module entity ID generating reference input"),
-                                                   SecPowerModuleFinder::findEntity(refInputName, m_pModule->getStorageDb()));
+                                                   m_powerModuleObserver.getPowerModulentityId());
     m_pModule->m_veinModuleParameterMap[key] = m_pPowerModuleEntityId; // and for the modules interface
+
+    const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
 
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
                                             QString("Actual frequency input (internal)"),
-                                            refInputName);
+                                            configData->m_refConfigs.m_sRefInput.m_sValue);
     m_pModule->m_veinModuleParameterMap[key] = m_pRefFreqInput; // and for the modules interface
 
     m_pUpperLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -757,9 +754,31 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
     }
 }
 
+void cSec1ModuleMeasProgram::onPowerModuleValuesChanged()
+{
+    stopECCalculator();
+
+    actualizeRefConstant();
+    setInterfaceComponents();
+
+    // if the reference input changes P <-> Q <-> S it is necessary to change energyunit and powerunit and their validators
+    setValidators();
+    setUnits();
+
+    initDutConstantUnit();
+    QStringList sl = getDutConstUnitValidator();
+    m_pDutConstanstUnitValidator->setValidator(sl);
+    m_pEnergyAct->setValue(0.0);
+    m_pEnergyFinalAct->setValue(0.0);
+    m_pResultAct->setValue(0.0);
+    m_pModule->exportMetaData();
+
+    emit m_pModule->parameterChanged();
+}
+
 void cSec1ModuleMeasProgram::actualizeRefConstant()
 {
-    const double constant = m_refConstantObserver.getConstant(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue);
+    const double constant = m_powerModuleObserver.getConstant();
     m_pRefConstantPar->setValue(constant);
     newRefConstant(constant);
 }
@@ -822,16 +841,9 @@ void cSec1ModuleMeasProgram::updateDemoMeasurementResults()
     updateProgress(dUTPulseCounterActual);
 }
 
-void cSec1ModuleMeasProgram::onRefConstantChanged(const QString &refPowerName)
-{
-    if(m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue == refPowerName) {
-        stopMeasurement(true);
-        actualizeRefConstant();
-    }
-}
-
 void cSec1ModuleMeasProgram::setInterfaceComponents()
 {
+    m_pPowerModuleEntityId->setValue(m_powerModuleObserver.getPowerModulentityId());
     computeDependencies(); // dependant on mode we calculate parameters by ourself
 
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
@@ -858,18 +870,16 @@ void cSec1ModuleMeasProgram::setValidators()
 
     m_pDutConstanstUnitValidator = new cStringValidator(getDutConstUnitValidator());
     m_pDutConstantUnitPar->setValidator(m_pDutConstanstUnitValidator);
+}
 
+void cSec1ModuleMeasProgram::setUnits()
+{
     QString s = getEnergyUnit();
     m_pEnergyAct->setUnit(s);
     m_pEnergyFinalAct->setUnit(s);
     m_pEnergyPar->setUnit(s);
-}
 
-QString cSec1ModuleMeasProgram::getPowerTypeFromPowerModule() const
-{
-    const VeinStorage::AbstractDatabase *veinDb = m_pModule->getStorageDb();
-    const int poweModuleEntityId = m_pPowerModuleEntityId->getValue().toInt();
-    return veinDb->getStoredValue(poweModuleEntityId, "ACT_PowerDisplayName").toString();
+    m_pModule->exportMetaData();
 }
 
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
@@ -878,7 +888,7 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
     if (m_pModule->getConfigData()->m_sMode.m_sValue == "target")
         return QStringList();
 
-    QString powerType = getPowerTypeFromPowerModule();
+    QString powerType = m_powerModuleObserver.getPowerType();
     return UnitHelper::getDUTConstantUnits(powerType);
 }
 
@@ -888,29 +898,23 @@ QString cSec1ModuleMeasProgram::getEnergyUnit()
     // Not clear yet how we handle this: COM5003 reference session reports 'kh' as unit.
     // But that is how it was for long time and see later how to solve properly...
     if (m_pModule->getConfigData()->m_sMode.m_sValue != "target")
-        powerType = getPowerTypeFromPowerModule();
+        powerType = m_powerModuleObserver.getPowerType();
     return UnitHelper::deduceMatchingPowerUnit(powerType, "kW") + "h";
-}
-
-void cSec1ModuleMeasProgram::initDutConstantUnit(const QStringList &sl)
-{
-    if(sl.isEmpty())
-        m_sDutConstantUnit.clear();
-    else {
-        QString lastDutUnit = m_pModule->getConfigData()->m_sDutConstantUnit.m_sValue;
-        if(lastDutUnit.isEmpty() || !sl.contains(lastDutUnit)) {
-            m_sDutConstantUnit = sl.at(0);
-        }
-        else {
-            m_sDutConstantUnit = lastDutUnit;
-        }
-    }
-    m_pDutConstantUnitPar->setValue(m_sDutConstantUnit);
 }
 
 void cSec1ModuleMeasProgram::initDutConstantUnit()
 {
-    initDutConstantUnit(getDutConstUnitValidator());
+    const QStringList dutUnitValidator = getDutConstUnitValidator();
+    if(dutUnitValidator.isEmpty())
+        m_sDutConstantUnit.clear();
+    else {
+        QString lastDutUnit = m_pModule->getConfigData()->m_sDutConstantUnit.m_sValue;
+        if(lastDutUnit.isEmpty() || !dutUnitValidator.contains(lastDutUnit))
+            m_sDutConstantUnit = dutUnitValidator.at(0);
+        else
+            m_sDutConstantUnit = lastDutUnit;
+    }
+    m_pDutConstantUnitPar->setValue(m_sDutConstantUnit);
 }
 
 void cSec1ModuleMeasProgram::handleSECInterrupt()
@@ -1105,25 +1109,6 @@ void cSec1ModuleMeasProgram::readDUTInputDone()
         emit activationLoop();
 }
 
-void cSec1ModuleMeasProgram::setpcbREFConstantNotifier()
-{
-    if (m_pModule->getConfigData()->m_refConfigs.m_nRefInpCount > 0) {
-        connect(&m_refConstantObserver, &RefPowerConstantObserver::sigRegistrationFinished, this, [this](bool ok) {
-            if(ok) {
-                actualizeRefConstant();
-                connect(&m_refConstantObserver, &RefPowerConstantObserver::sigRefConstantChanged,
-                        this, &cSec1ModuleMeasProgram::onRefConstantChanged);
-                emit activationContinue();
-            }
-            else
-                notifyError(registerpcbnotifierErrMsg);
-        });
-        m_refConstantObserver.registerNofifications(m_pcbInterface, m_refInputDictionary.getInputNameList());
-    }
-    else
-        emit activationContinue(); // if no ref constant notifier (standalone error calc) we directly go on
-}
-
 void cSec1ModuleMeasProgram::setsecINTNotifier()
 {
     m_MsgNrCmdList[m_secInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterErrCalcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
@@ -1165,11 +1150,11 @@ void cSec1ModuleMeasProgram::activationDone()
     connect(m_pUpperLimitPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newUpperLimit);
     connect(m_pLowerLimitPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newLowerLimit);
 
-
-    initDutConstantUnit();
-    setInterfaceComponents(); // actualize interface components
-
-    setValidators();
+    connect(&m_powerModuleObserver, &SecPowerModuleObserver::sigPowerModuleValuesChanged,
+            this, &cSec1ModuleMeasProgram::onPowerModuleValuesChanged);
+    const QString refInputName = m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue;
+    m_powerModuleObserver.setPowerModulentityId(SecPowerModuleFinder::findEntity(refInputName, m_pModule->getStorageDb()));
+    // -> onPowerModuleValuesChanged
 
     m_bActive = true;
     emit activated();
@@ -1177,7 +1162,16 @@ void cSec1ModuleMeasProgram::activationDone()
 
 void cSec1ModuleMeasProgram::stopECCalculator()
 {
-    stopMeasurement(true);
+    // Do not post-abort a measurement finished properly e.g by changing
+    // ranges...
+    if(m_bMeasurementRunning)
+        setStatus(ECALCSTATUS::ABORT);
+    m_bMeasurementRunning = false;
+
+    m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
+    m_pStartStopPar->setValue(QVariant(0));
+    m_ActualizeTimer->stop();
+    m_WaitMultiTimer.stop();
 }
 
 void cSec1ModuleMeasProgram::freeECalculator()
@@ -1377,10 +1371,8 @@ void cSec1ModuleMeasProgram::checkForRestart()
             }
         }
     }
-    // ECALCSTATUS::ABORT: stopMeasurement(true) has stopped already -> no need to stop here again
-    if(bStopRequired) {
-        stopMeasurement(false);
-    }
+    if(bStopRequired)
+        stopECCalculator();
     else if(bRestartRequired) {
         int waitTimeMs = m_pMeasWait->getValue().toInt() * 1000;
         // No wait for HK / continuous / zero wait time
@@ -1413,10 +1405,8 @@ void cSec1ModuleMeasProgram::setRating()
 
 void cSec1ModuleMeasProgram::newStartStop(const QVariant &startstop)
 {
-    bool ok;
-    int ss = startstop.toInt(&ok);
-    if (ss > 0) // we get started
-    {
+    int ss = startstop.toInt();
+    if (ss > 0) { // we get started
         m_bFirstMeas = true; // it is the first measurement
         m_nMeasurementsToGo = m_pMeasCountPar->getValue().toInt();
         m_nMeasurementNo = 0;
@@ -1432,9 +1422,8 @@ void cSec1ModuleMeasProgram::newStartStop(const QVariant &startstop)
         // meas mode setzen + arm
         // m_ActualizeTimer.start();
     }
-    else {
-        stopMeasurement(true);
-    }
+    else
+        stopECCalculator();
 }
 
 void cSec1ModuleMeasProgram::newDutConstant(const QVariant &dutconst)
@@ -1536,31 +1525,13 @@ void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 
 void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
 {
-    const QString refInputName = refinput.toString();
-    QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refInputName);
+    QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refinput.toString());
     m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue = refPowerName;
-
-    m_pPowerModuleEntityId->setValue(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
     m_pRefFreqInput->setValue(refPowerName);
-
-    actualizeRefConstant();
-    setInterfaceComponents();
-
-    // if the reference input changes P <-> Q <-> S it is necessary to change dut constanst unit and its validator
-
-    QStringList sl = getDutConstUnitValidator();
-    initDutConstantUnit(sl);
-    m_pDutConstanstUnitValidator->setValidator(sl);
-    QString s = getEnergyUnit();
-    m_pEnergyAct->setUnit(s);
-    m_pEnergyFinalAct->setUnit(s);
-    m_pEnergyPar->setUnit(s);
-    m_pEnergyAct->setValue(0.0);
-    m_pEnergyFinalAct->setValue(0.0);
-    m_pResultAct->setValue(0.0);
-    m_pModule->exportMetaData();
-
     emit m_pModule->parameterChanged();
+
+    // -> onPowerModuleValuesChanged
+    m_powerModuleObserver.setPowerModulentityId(SecPowerModuleFinder::findEntity(refPowerName, m_pModule->getStorageDb()));
 }
 
 void cSec1ModuleMeasProgram::newMRate(const QVariant &mrate)
@@ -1635,17 +1606,5 @@ void cSec1ModuleMeasProgram::clientActivationChanged(bool bActive)
     m_ActualizeTimer->start();
 }
 
-void cSec1ModuleMeasProgram::stopMeasurement(bool bAbort)
-{
-    // Do not post-abort a measurement finished properly e.g by changing
-    // ranges...
-    if(bAbort && m_bMeasurementRunning)
-        setStatus(ECALCSTATUS::ABORT);
-    m_bMeasurementRunning = false;
-    m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
-    m_pStartStopPar->setValue(QVariant(0));
-    m_ActualizeTimer->stop();
-    m_WaitMultiTimer.stop();
-}
 
 }
