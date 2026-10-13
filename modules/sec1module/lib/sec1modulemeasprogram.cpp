@@ -26,6 +26,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     m_powerModuleObserver(m_pModule->getStorageDb())
 {
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
+    if (!SecPowerModuleFinder::testConfiguredRefInputs(configData->m_refConfigs, m_pModule->getStorageDb()))
+        qCritical("%s module has invalid configuration!", qPrintable(m_pModule->getVeinModuleName()));
     m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
     m_dutInputDictionary.fillFromDutConfig(configData->m_dutConfigs);
     m_resourceTypeList.addTypesFromConfig(configData->m_refConfigs);
@@ -1035,20 +1037,7 @@ void cSec1ModuleMeasProgram::readResource()
 
 void cSec1ModuleMeasProgram::testSecInputs()
 {
-    const auto refInpList = m_pModule->getConfigData()->m_refConfigs.m_refInpList;
-    qint32 refInCountLeftToCheck = refInpList.count();
     QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
-    for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
-        QString refPowerName = refInpList[refInputNo].inputName;
-        for (int resourceTypeNo = 0; resourceTypeNo < resourceTypeList.count(); resourceTypeNo++) {
-            QString resourcelist = m_ResourceHash[resourceTypeList[resourceTypeNo]];
-            if (resourcelist.contains(refPowerName)) {
-                refInCountLeftToCheck--;
-                m_refInputDictionary.addReferenceInput(refPowerName, resourceTypeList[resourceTypeNo]);
-                break;
-            }
-        }
-    }
 
     const auto dutInplist = m_pModule->getConfigData()->m_dutConfigs.m_dutInpList;
     qint32 dutInputCountLeftToCheck = dutInplist.count();
@@ -1064,7 +1053,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
         }
     }
 
-    if ((refInCountLeftToCheck == 0) && (dutInputCountLeftToCheck == 0)) // we found all our configured Inputs
+    if (dutInputCountLeftToCheck == 0) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
     else
         notifyError(resourceErrMsg);
