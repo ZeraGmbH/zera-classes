@@ -76,7 +76,6 @@ private slots:
     void newDutConstantAuto(const QVariant &dutConstAuto);
     void newDutConstantScale(const QVariant &uINumDenomValue);
     void newDutConstantUnit(const QVariant &dutconstunit);
-    void newRefConstant(const QVariant &refconst);
     void newDutInput(const QVariant &dutinput);
     void newRefInput(const QVariant &refinput);
     void newMRate(const QVariant &mrate);
