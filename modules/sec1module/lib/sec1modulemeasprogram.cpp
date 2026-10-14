@@ -505,7 +505,7 @@ void cSec1ModuleMeasProgram::calculateMeasTime()
 void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)
 {
     if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
-        m_fProgress = ((1.0 * m_nDUTPulseCounterStart - 1.0 * dUTPulseCounterActual)/ m_nDUTPulseCounterStart)*100.0;
+        m_fProgress = ((static_cast<double>(m_nDUTPulseCounterStart) - static_cast<double>(dUTPulseCounterActual)) / static_cast<double>(m_nDUTPulseCounterStart)) * 100.0;
         if (m_fProgress > 100.0) {
             m_fProgress = 100.0;
         }
@@ -1269,7 +1269,7 @@ void cSec1ModuleMeasProgram::setECResult()
         m_eRating = ECALCRESULT::RESULT_UNFINISHED;
     }
     else {
-        m_fResult = (1.0 * configData->m_nTarget.m_nValue - energyCounterFinalForCalc) * getUnitFactor() / energyCounterFinalForCalc;
+        m_fResult = (static_cast<double>(configData->m_nTarget.m_nValue) - energyCounterFinalForCalc) * getUnitFactor() / energyCounterFinalForCalc;
         setRating();
     }
 
