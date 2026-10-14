@@ -608,7 +608,6 @@ void SemSpmModuleMeasProgram::actualizeRefConstant()
 {
     const double constant = m_powerModuleObserver.getConstant();
     m_pRefConstantPar->setValue(constant);
-    newRefConstant(constant);
 }
 
 QStringList SemSpmModuleMeasProgram::getPowerUnitValidator()
@@ -651,7 +650,7 @@ void SemSpmModuleMeasProgram::updateDemoMeasurementResults()
 
     m_uint32BitExpander.setFinal32(rand() % 10); //random value between 0 and 9
     m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
-    newRefConstant(QVariant(3600000));
+    m_pRefConstantPar->setValue(3600000);
     setEMResult();
 }
 
@@ -934,13 +933,6 @@ void SemSpmModuleMeasProgram::newStartStop(QVariant startstop)
         else
             qCritical("Unknown Start/Stop mdoe");
     }
-}
-
-void SemSpmModuleMeasProgram::newRefConstant(QVariant refconst)
-{
-    m_pRefConstantPar->setValue(refconst);
-    setInterfaceComponents();
-    emit m_pModule->parameterChanged();
 }
 
 void SemSpmModuleMeasProgram::newRefInput(QVariant refinput)

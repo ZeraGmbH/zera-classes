@@ -64,7 +64,6 @@ private slots:
     void setRating();
 
     void newStartStop(QVariant startstop);
-    void newRefConstant(QVariant refconst);
     void newRefInput(QVariant refinput);
     void newStopMode(QVariant stopMode);
     void newMeasTime(QVariant meastime);
