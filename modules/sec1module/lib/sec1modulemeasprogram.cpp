@@ -980,8 +980,7 @@ void cSec1ModuleMeasProgram::startNext()
     // Notes on re-start:
     // * We don't need the whole start state machine here
     // * There is too much magic in startMeasurement so we cannnot use it here either
-    if(!m_pModule->getDemo())
-        m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
+    m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
     setStatus(ECALCSTATUS::ARMED | ECALCSTATUS::READY);
     if(!m_pModule->getDemo())
         m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
