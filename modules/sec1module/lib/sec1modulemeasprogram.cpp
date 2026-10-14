@@ -1574,7 +1574,8 @@ void cSec1ModuleMeasProgram::clientActivationChanged(bool bActive)
     // Adjust our m_ActualizeTimer timeout to our client's needs
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
     connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &cSec1ModuleMeasProgram::Actualize);
-    m_ActualizeTimer->start();
+    if (m_bMeasurementRunning)
+        m_ActualizeTimer->start();
 }
 
 
