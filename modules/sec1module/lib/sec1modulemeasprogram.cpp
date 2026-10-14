@@ -1331,8 +1331,7 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
     }
 
     // enable next int
-    if(!m_pModule->getDemo())
-        resetIntRegister();
+    resetIntRegister();
 }
 
 void cSec1ModuleMeasProgram::checkForRestart()
