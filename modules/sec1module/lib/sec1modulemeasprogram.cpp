@@ -1560,11 +1560,9 @@ void cSec1ModuleMeasProgram::Actualize()
 {
     if(m_bMeasurementRunning) { // still running
         if((getStatus() & ECALCSTATUS::WAIT) == 0) { // measurement: next poll
-            if(!m_pModule->getDemo()) {
-                m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
-                m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::MTCNTact)] = actualizeprogress;
-                m_MsgNrCmdList[m_secInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
-            }
+            m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
+            m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::MTCNTact)] = actualizeprogress;
+            m_MsgNrCmdList[m_secInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
         }
         else { // wait: actualize progress
             double waitTimeMs = m_pMeasWait->getValue().toInt() * 1000;
