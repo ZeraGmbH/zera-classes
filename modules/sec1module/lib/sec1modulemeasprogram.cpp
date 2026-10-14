@@ -1184,8 +1184,7 @@ void cSec1ModuleMeasProgram::setMeaspulses()
         m_nDUTPulseCounterStart = 1;
     else
         m_nDUTPulseCounterStart = m_pMRatePar->getValue().toLongLong();
-    if(!m_pModule->getDemo())
-        m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nDUTPulseCounterStart)] = setmeaspulses;
+    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nDUTPulseCounterStart)] = setmeaspulses;
 }
 
 void cSec1ModuleMeasProgram::setMasterMux()
