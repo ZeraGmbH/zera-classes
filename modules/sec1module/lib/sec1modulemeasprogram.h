@@ -92,6 +92,7 @@ private:
     void setInterfaceComponents();
     void setValidators();
     void setUnits();
+    void resetPowerAndEnergy();
 
     QStringList getDutConstUnitValidator();
     QString getEnergyUnit();
@@ -248,8 +249,7 @@ private:
 
     MultipleResultHelper m_multipleResultHelper;
     cDoubleValidator *m_dutConstValidator = nullptr;
-    UInt32BitExpander m_uint32BitExpander;
-
+    quint32 m_finalEnergyCounter = 0;
     QElapsedTimer m_demoTimeSinceStart;
 };
 }

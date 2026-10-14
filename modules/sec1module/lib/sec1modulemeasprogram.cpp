@@ -630,8 +630,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 if (reply == ack) {
                     // Still running and not waiting for next?
                     if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
-                        m_uint32BitExpander.setActual32(answer.toUInt());
-                        m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / m_powerModuleObserver.getConstant();
+                        const double actual = static_cast<double>(answer.toUInt());
+                        m_fEnergy = actual / m_powerModuleObserver.getConstant();
                         m_pEnergyAct->setValue(m_fEnergy);
                         if (m_bFirstMeas) {
                             // keep in final until a result is calculated in
@@ -743,7 +743,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                     // * Stop it (all OK up here)
                     // * Change DUT constant/unit -> Crap results
                     if(m_bMeasurementRunning) {
-                        m_uint32BitExpander.setFinal32(answer.toLongLong());
+                        m_finalEnergyCounter = answer.toUInt();
                     }
                     emit interruptContinue();
                 }
@@ -770,10 +770,6 @@ void cSec1ModuleMeasProgram::onPowerModuleValuesChanged()
     initDutConstantUnit();
     QStringList sl = getDutConstUnitValidator();
     m_pDutConstanstUnitValidator->setValidator(sl);
-    m_pEnergyAct->setValue(0.0);
-    m_pEnergyFinalAct->setValue(0.0);
-    m_pResultAct->setValue(0.0);
-    m_pModule->exportMetaData();
 
     emit m_pModule->parameterChanged();
 }
@@ -835,7 +831,7 @@ void cSec1ModuleMeasProgram::updateDemoMeasurementResults()
             setStatus(ECALCSTATUS::STARTED | ECALCSTATUS::READY);
     }
     else {
-        m_uint32BitExpander.setFinal32(rand() % 10); //random value between 0 and 9
+        m_finalEnergyCounter = rand() % 10; //random value between 0 and 9
         setECResultAndResetInt();
         checkForRestart();
     }
@@ -881,6 +877,16 @@ void cSec1ModuleMeasProgram::setUnits()
     m_pEnergyPar->setUnit(s);
 
     m_pModule->exportMetaData();
+}
+
+void cSec1ModuleMeasProgram::resetPowerAndEnergy()
+{
+    m_finalEnergyCounter = 0;
+    m_fEnergy = 0.0;
+    m_pEnergyAct->setValue(m_fEnergy);
+    m_pEnergyFinalAct->setValue(m_fEnergy);
+    m_fProgress = 0.0;
+    m_pProgressAct->setValue(m_fProgress);
 }
 
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
@@ -1217,12 +1223,6 @@ void cSec1ModuleMeasProgram::enableInterrupt()
 void cSec1ModuleMeasProgram::startMeasurement()
 {
     setStatus(ECALCSTATUS::ARMED);
-    m_uint32BitExpander.reset();
-    m_fEnergy = 0.0;
-    m_pEnergyAct->setValue(m_fEnergy);
-    m_pEnergyFinalAct->setValue(m_fEnergy);
-    m_fProgress = 0.0;
-    m_pProgressAct->setValue(QVariant(m_fProgress));
     m_bMeasurementRunning = true;
     SecDateTimeHelper::setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
     m_measEndDateTime = QDateTime();
@@ -1240,6 +1240,8 @@ void cSec1ModuleMeasProgram::startMeasurement()
 
 void cSec1ModuleMeasProgram::startMeasurementDone() // final state of m_startMeasurementMachine
 {
+    // one meas / multiple meas
+    resetPowerAndEnergy();
     Actualize(); // we acualize at once after started
     m_ActualizeTimer->start(); // and after current interval
 }
@@ -1262,9 +1264,8 @@ void cSec1ModuleMeasProgram::readMTCountact()
 void cSec1ModuleMeasProgram::setECResult()
 {
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
-    quint64 energyCounterFinal = m_uint32BitExpander.getFinalExpanded64();
-    double energyCounterFinalForCalc = UInt32BitExpander::uint64ToDbl(energyCounterFinal);
-    if (energyCounterFinal == 0) {
+    double energyCounterFinalForCalc = static_cast<double>(m_finalEnergyCounter);
+    if (m_finalEnergyCounter == 0) {
         m_fResult = qQNaN();
         m_eRating = ECALCRESULT::RESULT_UNFINISHED;
     }
@@ -1418,21 +1419,16 @@ void cSec1ModuleMeasProgram::newDutConstant(const QVariant &dutconst)
 {
     m_pModule->getConfigData()->m_fDutConstant.m_fValue = dutconst.toDouble();
     setInterfaceComponents();
-    quint64 energyContFinal = m_uint32BitExpander.getFinalExpanded64();
-    if (!m_bMeasurementRunning && energyContFinal != 0) {
+    if (!m_bMeasurementRunning && m_finalEnergyCounter != 0)
         setECResult();
-    }
-
     emit m_pModule->parameterChanged();
 }
 
 void cSec1ModuleMeasProgram::newDutConstantAuto(const QVariant &dutConstAuto)
 {
     if (dutConstAuto.toInt()) {
-        quint64 energyContFinal = m_uint32BitExpander.getFinalExpanded64();
-        if (!m_bMeasurementRunning && energyContFinal != 0) {
+        if (!m_bMeasurementRunning && m_finalEnergyCounter != 0)
             newDutConstant(calculateDutConstant());
-        }
         m_pDutConstantAuto->setValue(0);
     }
 }
