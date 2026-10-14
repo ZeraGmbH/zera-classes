@@ -848,10 +848,11 @@ void SemSpmModuleMeasProgram::readTCountact()
 {
     m_MsgNrCmdList[m_secInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTfin)] = readtcount;
     // non stopMode has been stopped already in newStartStop()
-    if(m_pModule->getConfigData()->m_stopMode.m_nValue)
+    if(m_pModule->getConfigData()->m_stopMode.m_nValue == SemSpmModuleConfigData::StopModeTimed)
         m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
     setStatus(ECALCSTATUS::READY);
+    m_bMeasurementRunning = false;
 }
 
 void SemSpmModuleMeasProgram::onEMResultState()
