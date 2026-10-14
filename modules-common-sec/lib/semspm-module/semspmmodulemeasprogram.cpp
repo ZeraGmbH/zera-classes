@@ -808,8 +808,7 @@ void SemSpmModuleMeasProgram::startMeasurement()
     }
     else
         m_pMeasEstimatedEndTime->setValue("");
-    if(!m_pModule->getDemo())
-        m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
+    m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
     m_uint32BitExpander.reset();
     m_fEnergy = 0.0;
