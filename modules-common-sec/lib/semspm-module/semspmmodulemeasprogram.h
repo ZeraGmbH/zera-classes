@@ -174,6 +174,7 @@ private:
 
     // vars dealing with error measurement
     TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
+    bool m_bMeasurementRunning = false;
     double m_fResult = 0.0; // error value in %
     ECALCRESULT::enResultTypes m_eRating = ECALCRESULT::RESULT_PASSED;
     quint32 m_nTimerCountStart = 0; // master / time counts down

@@ -722,6 +722,7 @@ void SemSpmModuleMeasProgram::activationDone()
 
 void SemSpmModuleMeasProgram::stopECCalculator()
 {
+    m_bMeasurementRunning = false;
     quint32 status = getStatus();
     if (status & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED))
         setStatus(ECALCSTATUS::ABORT);
@@ -798,6 +799,7 @@ void SemSpmModuleMeasProgram::enableInterrupt()
 
 void SemSpmModuleMeasProgram::startMeasurement()
 {
+    m_bMeasurementRunning = true;
     SecDateTimeHelper::setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
     m_pMeasDurationMs->setValue(0);
     m_measEndDateTime = QDateTime();
@@ -1010,5 +1012,6 @@ void SemSpmModuleMeasProgram::clientActivationChanged(bool bActive)
     // Adjust our m_ActualizeTimer timeout to our client's needs
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
     connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &SemSpmModuleMeasProgram::Actualize);
-    m_ActualizeTimer->start();
+    if (m_bMeasurementRunning)
+        m_ActualizeTimer->start();
 }
