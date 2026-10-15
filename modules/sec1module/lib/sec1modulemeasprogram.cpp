@@ -1403,8 +1403,9 @@ void cSec1ModuleMeasProgram::newStartStop(const QVariant &startstop)
         // m_ActualizeTimer.start();
     }
     else {
+        bool measWasRunning = m_bMeasurementRunning;
         stopECCalculator();
-        if(m_bMeasurementRunning) // Do not post-abort a measurement finished
+        if(measWasRunning) // Do not post-abort a measurement finished
             setStatus(ECALCSTATUS::ABORT);
     }
 }
