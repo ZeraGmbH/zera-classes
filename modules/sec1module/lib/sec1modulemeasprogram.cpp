@@ -1155,12 +1155,7 @@ void cSec1ModuleMeasProgram::activationDone()
 
 void cSec1ModuleMeasProgram::stopECCalculator()
 {
-    // Do not post-abort a measurement finished properly e.g by changing
-    // ranges...
-    if(m_bMeasurementRunning)
-        setStatus(ECALCSTATUS::ABORT);
     m_bMeasurementRunning = false;
-
     m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
     m_ActualizeTimer->stop();
@@ -1296,7 +1291,6 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
     //   requesting abort or changing the ranges
     if(m_bMeasurementRunning) {
         m_bFirstMeas = false;
-
         if (m_pContinuousPar->getValue().toInt() == 0)
             setStatus(ECALCSTATUS::READY);
         else
@@ -1408,8 +1402,11 @@ void cSec1ModuleMeasProgram::newStartStop(const QVariant &startstop)
         // meas mode setzen + arm
         // m_ActualizeTimer.start();
     }
-    else
+    else {
         stopECCalculator();
+        if(m_bMeasurementRunning) // Do not post-abort a measurement finished
+            setStatus(ECALCSTATUS::ABORT);
+    }
 }
 
 void cSec1ModuleMeasProgram::newDutConstant(const QVariant &dutconst)
