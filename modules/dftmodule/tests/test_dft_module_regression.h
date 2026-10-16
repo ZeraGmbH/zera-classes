@@ -1,8 +1,7 @@
 #ifndef TEST_DFT_MODULE_REGRESSION_H
 #define TEST_DFT_MODULE_REGRESSION_H
 
-#include "vf_cmd_event_handler_system.h"
-#include <QObject>
+#include "modulemanagertestrunner.h"
 
 class test_dft_module_regression : public QObject
 {
@@ -22,9 +21,7 @@ private:
     // DFT is the only module:
     // * for which GUI supports setting ref channel
     // * Expecting alias as parameter
-    void setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
-                             QString channelAliasOld, // MUST be correct - otherwise ignored
-                             QString channelAliasNew);
+    void setReferenceChannel(ModuleManagerTestRunner &modman, const QString &channelAlias);
 };
 
 #endif // TEST_DFT_MODULE_REGRESSION_H
