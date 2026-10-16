@@ -1210,7 +1210,6 @@
                 "Description": "This module measures power with configured measuring and integration modes",
                 "FOUTCount": "1",
                 "Name": "POWER1Module1",
-                "NominalFrequency": "1000000",
                 "PQSCount": "4"
             },
             "SCPIInfo": {

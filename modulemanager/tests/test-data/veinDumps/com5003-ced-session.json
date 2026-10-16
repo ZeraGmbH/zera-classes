@@ -2329,7 +2329,6 @@
                 "Description": "This module measures power with configured measuring and integration modes",
                 "FOUTCount": "0",
                 "Name": "POWER1Module1",
-                "NominalFrequency": "200000",
                 "PQSCount": "4"
             },
             "SCPIInfo": {
@@ -2504,7 +2503,6 @@
                 "Description": "This module measures power with configured measuring and integration modes",
                 "FOUTCount": "0",
                 "Name": "POWER1Module2",
-                "NominalFrequency": "200000",
                 "PQSCount": "4"
             },
             "SCPIInfo": {
@@ -2679,7 +2677,6 @@
                 "Description": "This module measures power with configured measuring and integration modes",
                 "FOUTCount": "0",
                 "Name": "POWER1Module3",
-                "NominalFrequency": "200000",
                 "PQSCount": "4"
             },
             "SCPIInfo": {
@@ -2844,7 +2841,6 @@
                 "Description": "This module measures power with configured measuring and integration modes",
                 "FOUTCount": "0",
                 "Name": "POWER1Module98",
-                "NominalFrequency": "200000",
                 "PQSCount": "4"
             },
             "SCPIInfo": {
@@ -2953,7 +2949,6 @@
                 "Description": "This module measures power with configured measuring and integration modes",
                 "FOUTCount": "0",
                 "Name": "POWER1Module99",
-                "NominalFrequency": "200000",
                 "PQSCount": "4"
             },
             "SCPIInfo": {
@@ -3102,7 +3097,6 @@
                 "Description": "This module measures +/- power with configured measuring and integration modes",
                 "FOUTCount": "3",
                 "Name": "POWER2Module1",
-                "NominalFrequency": "200000",
                 "PQSCount": "12"
             },
             "SCPIInfo": {

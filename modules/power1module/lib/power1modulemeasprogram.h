@@ -106,7 +106,6 @@ private:
     QList<VfModuleParameter*> m_FoutConstParameterList; // a list of foutconstant parameter
     VfModuleMetaData* m_pPQSCountInfo = nullptr; // the number of values we produce
     VfModuleMetaData* m_pFoutCount = nullptr; // number of our frequence outputs
-    VfModuleMetaData* m_pNomFrequencyInfo = nullptr; // the modules nominal frequency
     VfModuleParameter* m_pIntegrationParameter = nullptr;
     VfModuleParameter* m_pMeasuringmodeParameter = nullptr;
     VfModuleParameter* m_pMModePhaseSelectParameter = nullptr;
