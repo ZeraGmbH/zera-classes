@@ -22,25 +22,19 @@ void test_osci_module_regression::dumpDspSetup()
 void test_osci_module_regression::dumpDspSetReference()
 {
     ModuleManagerTestRunner testRunner(":/session-minimal.json");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m0", "m1");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m1", "m2");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m2", "m3");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m3", "m4");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m4", "m5");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m5", "m0");
+    setReferenceChannel(testRunner, "m1");
+    setReferenceChannel(testRunner, "m2");
+    setReferenceChannel(testRunner, "m3");
+    setReferenceChannel(testRunner, "m4");
+    setReferenceChannel(testRunner, "m5");
+    setReferenceChannel(testRunner, "m0");
 
     TestDspInterfacePtr osciDspInterface = testRunner.findDspInterfaceByEntityId(osciEntityId);
     QString measProgramDumped = TestLogHelpers::dump(osciDspInterface->dumpAll(true));
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-ref-UL1-to-other.json", measProgramDumped));
 }
 
-void test_osci_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, QString channelMNameOld, QString channelMNameNew)
+void test_osci_module_regression::setReferenceChannel(ModuleManagerTestRunner &modman, const QString &channelAlias)
 {
-    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(osciEntityId);
-    vfCmdEventHandlerSystem->addItem(entityItem);
-
-    VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_RefChannel", entityItem);
-    entityItem->addItem(setter);
-    setter->startSetComponent(channelMNameOld, channelMNameNew);
-    TimeMachineObject::feedEventLoop();
+    modman.setVfComponent(osciEntityId, "PAR_RefChannel", channelAlias);
 }
