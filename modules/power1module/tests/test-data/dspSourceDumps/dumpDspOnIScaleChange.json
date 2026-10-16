@@ -272,7 +272,9 @@
         "WriteNo: 0001 / Handle:Variable: QRefScale:NOMPOWER": 2500,
         "WriteNo: 0002 / Handle:Variable: FrequencyScale:FREQSCALE": 30024000,
         "WriteNo: 0003 / Handle:Variable: QRefScale:NOMPOWER": 2500,
-        "WriteNo: 0004 / Handle:Variable: FrequencyScale:FREQSCALE": 6004800,
-        "WriteNo: 0005 / Handle:Variable: QRefScale:NOMPOWER": 2500
+        "WriteNo: 0004 / Handle:Variable: FrequencyScale:FREQSCALE": 150120000,
+        "WriteNo: 0005 / Handle:Variable: QRefScale:NOMPOWER": 2500,
+        "WriteNo: 0006 / Handle:Variable: FrequencyScale:FREQSCALE": 30024000,
+        "WriteNo: 0007 / Handle:Variable: QRefScale:NOMPOWER": 2500
     }
 }

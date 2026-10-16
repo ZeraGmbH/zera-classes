@@ -155,9 +155,9 @@ void test_power1_module_regression::dumpDspOnMeasModeChange()
     ModuleManagerTestRunner testRunner(":/sessions/session-minimal.json");
     TestDspInterfacePtr power1DspInterface = testRunner.findDspInterfaceByEntityId(powerEntityId);
 
-    setMeasMode(powerEntityId, testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "3LW");
-    setMeasMode(powerEntityId, testRunner.getVfCmdEventHandlerSystemPtr(), "3LW", "2LW");
-    setMeasMode(powerEntityId, testRunner.getVfCmdEventHandlerSystemPtr(), "2LW", "4LW");
+    setMeasMode(powerEntityId, testRunner, "3LW");
+    setMeasMode(powerEntityId, testRunner, "2LW");
+    setMeasMode(powerEntityId, testRunner, "4LW");
 
     QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-measmode-change.json", measProgramDumped));
@@ -168,17 +168,17 @@ void test_power1_module_regression::dumpDspOnMeasModeChangeApparentGeom()
     ModuleManagerTestRunner testRunner(":/sessions/session-com5003-p1-p4.json", "com5003");
     TestDspInterfacePtr power1DspInterface = testRunner.findDspInterfaceByEntityId(powerEntityIdP4);
 
-    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "4LS");
-    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LS", "4LSg");
-    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LSg", "4LW");
+    setMeasMode(powerEntityIdP4, testRunner, "4LS");
+    setMeasMode(powerEntityIdP4, testRunner, "4LSg");
+    setMeasMode(powerEntityIdP4, testRunner, "4LW");
 
-    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "3LS");
-    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "3LS", "3LSg");
-    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "3LSg", "4LW");
+    setMeasMode(powerEntityIdP4, testRunner, "3LS");
+    setMeasMode(powerEntityIdP4, testRunner, "3LSg");
+    setMeasMode(powerEntityIdP4, testRunner, "4LW");
 
-    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "4LW", "2LS");
-    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "2LS", "2LSg");
-    setMeasMode(powerEntityIdP4, testRunner.getVfCmdEventHandlerSystemPtr(), "2LSg", "4LW");
+    setMeasMode(powerEntityIdP4, testRunner, "2LS");
+    setMeasMode(powerEntityIdP4, testRunner, "2LSg");
+    setMeasMode(powerEntityIdP4, testRunner, "4LW");
 
     QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-measmode-change-apparent-geometric.json", measProgramDumped));
@@ -191,24 +191,24 @@ void test_power1_module_regression::dumpDspOnScaleChange()
     VeinStorage::AbstractDatabase *storageDb = testRunner.getVeinStorageDb();
     bool allOk = true;
 
-    QByteArray veinDumpBefore = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitial.json", veinDumpBefore))
+    QByteArray veinDumpBefore = VeinStorage::DumpJson::dumpToByteArray(storageDb);
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpBeforScale.json", veinDumpBefore))
         allOk = false;
 
-    setScale(testRunner.getVfCmdEventHandlerSystemPtr(), 5, 1);
+    setScale(testRunner, 5, 1);
     QString dspDump = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpDspOnUScaleChange.json", dspDump))
         allOk = false;
-    QByteArray veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
+    QByteArray veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb);
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpAfterUScaleChange.json", veinDumpAfter)) // check PAR_FOUTConstant0
         allOk = false;
 
-    setScale(testRunner.getVfCmdEventHandlerSystemPtr(), 1, 5);
+    setScale(testRunner, 1, 5);
     dspDump = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpDspOnIScaleChange.json", dspDump))
         allOk = false;
 
-    veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
+    veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb);
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpAfterIScaleChange.json", veinDumpAfter)) // check PAR_FOUTConstant0
         allOk = false;
 
@@ -254,40 +254,19 @@ void test_power1_module_regression::scpiDumpMtPower1Module4()
 }
 
 void test_power1_module_regression::setMeasMode(int entityId,
-                                                VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
-                                                QString measModeOld,
-                                                QString measModeNew)
+                                                ModuleManagerTestRunner &modman,
+                                                QString measMode)
 {
-    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(entityId);
-    vfCmdEventHandlerSystem->addItem(entityItem);
-
-    VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_MeasuringMode", entityItem);
-    entityItem->addItem(setter);
-    setter->startSetComponent(measModeOld, measModeNew);
-    TimeMachineObject::feedEventLoop();
+    modman.setVfComponent(entityId, "PAR_MeasuringMode", measMode);
 }
 
 const int rangeEntityId = 1020;
 
-void test_power1_module_regression::setScale(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, int uScale, int iScale)
+void test_power1_module_regression::setScale(ModuleManagerTestRunner &modman, int uScale, int iScale)
 {
-    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(rangeEntityId);
-    vfCmdEventHandlerSystem->addItem(entityItem);
-
-    VfClientComponentSetterPtr setterU = VfClientComponentSetter::create("PAR_PreScalingGroup0", entityItem);
-    entityItem->addItem(setterU);
-    setterU->startSetComponent("1/1*(1)", QString("%1/1*(1)").arg(uScale));
-    VfClientComponentSetterPtr enableU = VfClientComponentSetter::create("PAR_PreScalingEnabledGroup0", entityItem);
-    entityItem->addItem(enableU);
-    enableU->startSetComponent(0, 1);
-
-    VfClientComponentSetterPtr setterI = VfClientComponentSetter::create("PAR_PreScalingGroup1", entityItem);
-    entityItem->addItem(setterI);
-    setterI->startSetComponent("1/1", QString("%1/1").arg(iScale));
-    VfClientComponentSetterPtr enableI = VfClientComponentSetter::create("PAR_PreScalingEnabledGroup1", entityItem);
-    entityItem->addItem(enableI);
-    enableI->startSetComponent(0, 1);
-
-    TimeMachineObject::feedEventLoop();
+    modman.setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", QString("%1/1*(1)").arg(uScale));
+    modman.setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", 1);
+    modman.setVfComponent(rangeEntityId, "PAR_PreScalingGroup1", QString("%1/1").arg(iScale));
+    modman.setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup1", 1);
 }
 

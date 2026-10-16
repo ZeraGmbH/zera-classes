@@ -29,6 +29,7 @@
         <file>veinDumps/dumpActual.json</file>
         <file>veinDumps/dumpAfterIScaleChange.json</file>
         <file>veinDumps/dumpAfterUScaleChange.json</file>
+        <file>veinDumps/dumpBeforScale.json</file>
         <file>veinDumps/dumpInitial.json</file>
         <file>veinDumps/dumpInitial-withoutScpi.json</file>
 

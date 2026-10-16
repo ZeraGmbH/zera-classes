@@ -1,7 +1,7 @@
 #ifndef TEST_POWER1_MODULE_REGRESSION_H
 #define TEST_POWER1_MODULE_REGRESSION_H
 
-#include "vf_cmd_event_handler_system.h"
+#include "modulemanagertestrunner.h"
 
 class test_power1_module_regression : public QObject
 {
@@ -21,13 +21,12 @@ private slots:
     void scpiDumpMtPower1Module1();
     void scpiDumpMtPower1Module4(); // ATTOW we are interested in QKHZ / unit
 private:
-    void setMeasMode(int entityId,
-                     VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
-                     QString measModeOld, // MUST be correct - otherwise ignored
-                     QString measModeNew);
-    void setScale(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
-                  int uScale,
-                  int iScale);
+    static void setMeasMode(int entityId,
+                            ModuleManagerTestRunner &modman,
+                            QString measMode);
+    static void setScale(ModuleManagerTestRunner &modman,
+                         int uScale,
+                         int iScale);
 };
 
 #endif // TEST_POWER1_MODULE_REGRESSION_H
