@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
+        <file>dspSourceDumps/dumpDspOnIScaleChange.json</file>
+        <file>dspSourceDumps/dumpDspOnUScaleChange.json</file>
         <file>dspSourceDumps/dump-measmode-change.json</file>
         <file>dspSourceDumps/dump-measmode-change-apparent-geometric.json</file>
         <file>dspSourceDumps/dumpMeasProgram.json</file>
@@ -22,10 +24,14 @@
         <file>sessions/session-power1module4-scpi.json</file>
         <file>sessions/session-power1-test.json</file>
         <file>sessions/session-power1-withoutScpi-test.json</file>
+        <file>sessions/session-range-power.json</file>
 
         <file>dumpActual.json</file>
+        <file>dumpAfterIScaleChange.json</file>
+        <file>dumpAfterUScaleChange.json</file>
         <file>dumpInitial.json</file>
         <file>dumpInitial-withoutScpi.json</file>
+
         <file>mt310s2-power1module-test.xml</file>
         <file>mt310s2-power1module-withoutScpi-test.xml</file>
     </qresource>

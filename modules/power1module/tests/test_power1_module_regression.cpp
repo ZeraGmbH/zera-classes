@@ -38,11 +38,9 @@ void test_power1_module_regression::minimalSession()
 void test_power1_module_regression::veinDumpInitial()
 {
     ModuleManagerTestRunner testRunner(":/sessions/session-power1-test.json");
+    VeinStorage::AbstractDatabase *storageDb = testRunner.getVeinStorageDb();
 
-    VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
-    VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
-
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpInitial.json", jsonDumped));
 }
 
@@ -186,6 +184,37 @@ void test_power1_module_regression::dumpDspOnMeasModeChangeApparentGeom()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-measmode-change-apparent-geometric.json", measProgramDumped));
 }
 
+void test_power1_module_regression::dumpDspOnUScaleChange()
+{
+    ModuleManagerTestRunner testRunner(":/sessions/session-range-power.json");
+    TestDspInterfacePtr power1DspInterface = testRunner.findDspInterfaceByEntityId(powerEntityId);
+    VeinStorage::AbstractDatabase *storageDb = testRunner.getVeinStorageDb();
+    bool allOk = true;
+
+    QByteArray veinDumpBefore = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpInitial.json", veinDumpBefore))
+        allOk = false;
+
+    setScale(testRunner.getVfCmdEventHandlerSystemPtr(), 5, 1);
+    QString dspDump = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpDspOnUScaleChange.json", dspDump))
+        allOk = false;
+    QByteArray veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpAfterUScaleChange.json", veinDumpAfter)) // check PAR_FOUTConstant0
+        allOk = false;
+
+    setScale(testRunner.getVfCmdEventHandlerSystemPtr(), 1, 5);
+    dspDump = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpDspOnIScaleChange.json", dspDump))
+        allOk = false;
+
+    veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpAfterIScaleChange.json", veinDumpAfter)) // check PAR_FOUTConstant0
+        allOk = false;
+
+    QVERIFY(allOk);
+}
+
 void test_power1_module_regression::scpiDumpMtPower1Module1()
 {
     ModulemanagerConfig::setDemoDevice("mt310s2");
@@ -235,6 +264,30 @@ void test_power1_module_regression::setMeasMode(int entityId,
     VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_MeasuringMode", entityItem);
     entityItem->addItem(setter);
     setter->startSetComponent(measModeOld, measModeNew);
+    TimeMachineObject::feedEventLoop();
+}
+
+const int rangeEntityId = 1020;
+
+void test_power1_module_regression::setScale(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem, int uScale, int iScale)
+{
+    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(rangeEntityId);
+    vfCmdEventHandlerSystem->addItem(entityItem);
+
+    VfClientComponentSetterPtr setterU = VfClientComponentSetter::create("PAR_PreScalingGroup0", entityItem);
+    entityItem->addItem(setterU);
+    setterU->startSetComponent("1/1*(1)", QString("%1/1*(1)").arg(uScale));
+    VfClientComponentSetterPtr enableU = VfClientComponentSetter::create("PAR_PreScalingEnabledGroup0", entityItem);
+    entityItem->addItem(enableU);
+    enableU->startSetComponent(0, 1);
+
+    VfClientComponentSetterPtr setterI = VfClientComponentSetter::create("PAR_PreScalingGroup1", entityItem);
+    entityItem->addItem(setterI);
+    setterI->startSetComponent("1/1", QString("%1/1").arg(iScale));
+    VfClientComponentSetterPtr enableI = VfClientComponentSetter::create("PAR_PreScalingEnabledGroup1", entityItem);
+    entityItem->addItem(enableI);
+    enableI->startSetComponent(0, 1);
+
     TimeMachineObject::feedEventLoop();
 }
 

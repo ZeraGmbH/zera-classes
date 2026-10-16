@@ -1,0 +1,276 @@
+{
+    "1-MemGroups": {
+        "ActualValues": {
+            "UserMemSize": 4,
+            "UserMemSizeAligned": 0,
+            "Variables": [
+                {
+                    "Name": "VALPQSF",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 4,
+                    "TypeData": "dspDataTypeFloat"
+                }
+            ]
+        },
+        "FrequencyScale": {
+            "UserMemSize": 1,
+            "UserMemSizeAligned": 0,
+            "Variables": [
+                {
+                    "Name": "FREQSCALE",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeFloat"
+                }
+            ]
+        },
+        "Parameter": {
+            "UserMemSize": 7,
+            "UserMemSizeAligned": 0,
+            "Variables": [
+                {
+                    "Name": "TIPAR",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                },
+                {
+                    "Name": "TISTART",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                },
+                {
+                    "Name": "MMODE",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                },
+                {
+                    "Name": "MMODE_SUM",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                },
+                {
+                    "Name": "XMMODEPHASE0",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                },
+                {
+                    "Name": "XMMODEPHASE1",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                },
+                {
+                    "Name": "XMMODEPHASE2",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeInt"
+                }
+            ]
+        },
+        "QRefScale": {
+            "UserMemSize": 1,
+            "UserMemSizeAligned": 0,
+            "Variables": [
+                {
+                    "Name": "NOMPOWER",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeFloat"
+                }
+            ]
+        },
+        "TmpData": {
+            "UserMemSize": 26,
+            "UserMemSizeAligned": 0,
+            "Variables": [
+                {
+                    "Name": "TMP_SAMPLES_SINGLE_1",
+                    "Segment": "moduleGlobalSegment",
+                    "Size": 504,
+                    "TypeData": "dspDataTypeFloat"
+                },
+                {
+                    "Name": "TMP_SAMPLES_SINGLE_2",
+                    "Segment": "moduleGlobalSegment",
+                    "Size": 504,
+                    "TypeData": "dspDataTypeFloat"
+                },
+                {
+                    "Name": "VALPQS",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 4,
+                    "TypeData": "dspDataTypeFloat"
+                },
+                {
+                    "Name": "VAL_APPARENT_P",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 3,
+                    "TypeData": "dspDataTypeFloat"
+                },
+                {
+                    "Name": "VAL_APPARENT_Q",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 3,
+                    "TypeData": "dspDataTypeFloat"
+                },
+                {
+                    "Name": "TEMP1",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 2,
+                    "TypeData": "dspDataTypeFloat"
+                },
+                {
+                    "Name": "TEMP2",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 2,
+                    "TypeData": "dspDataTypeFloat"
+                },
+                {
+                    "Name": "CONST_HALF",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeFloat"
+                },
+                {
+                    "Name": "CONST_1_DIV_SQRT3",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeFloat"
+                },
+                {
+                    "Name": "CONST_1_5",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 1,
+                    "TypeData": "dspDataTypeFloat"
+                },
+                {
+                    "Name": "FILTER",
+                    "Segment": "moduleLocalSegment",
+                    "Size": 9,
+                    "TypeData": "dspDataTypeFloat"
+                }
+            ]
+        }
+    },
+    "2-CmdList": [
+        "COMMENT(--- Entity 1070 / Cyclic list start ---)",
+        "COMMENT(--- getCmdsInitVars start ---)",
+        "STARTCHAIN(1,1,0x0107)",
+        "CLEARN(9,FILTER)",
+        "SETVAL(MMODE,32)",
+        "SETVAL(MMODE_SUM,0)",
+        "SETVAL(XMMODEPHASE0,1)",
+        "SETVAL(XMMODEPHASE1,1)",
+        "SETVAL(XMMODEPHASE2,1)",
+        "SETVAL(CONST_HALF,0.5)",
+        "SETVAL(CONST_1_DIV_SQRT3,0.57735027)",
+        "SETVAL(CONST_1_5,1.5)",
+        "SETVAL(TIPAR,500)",
+        "GETSTIME(TISTART)",
+        "DEACTIVATECHAIN(1,0x0107)",
+        "STOPCHAIN(1,0x0107)",
+        "COMMENT(--- getCmdsInitVars end ---)",
+        "COMMENT(--- getCmdsInitOutputVars start ---)",
+        "SETVAL(VALPQS+0,0.0)",
+        "SETVAL(VAL_APPARENT_P+0,0.0)",
+        "SETVAL(VAL_APPARENT_Q+0,0.0)",
+        "SETVAL(VALPQS+1,0.0)",
+        "SETVAL(VAL_APPARENT_P+1,0.0)",
+        "SETVAL(VAL_APPARENT_Q+1,0.0)",
+        "SETVAL(VALPQS+2,0.0)",
+        "SETVAL(VAL_APPARENT_P+2,0.0)",
+        "SETVAL(VAL_APPARENT_Q+2,0.0)",
+        "COMMENT(--- getCmdsInitOutputVars end ---)",
+        "COMMENT(--- getCmdsMModeXLW phase 0 ---)",
+        "ACTIVATECHAIN(1,0x0101)",
+        "TESTVCSKIPEQ(MMODE,32)",
+        "DEACTIVATECHAIN(1,0x0101)",
+        "TESTVCSKIPEQ(XMMODEPHASE0,1)",
+        "DEACTIVATECHAIN(1,0x0101)",
+        "STARTCHAIN(0,1,0x0101)",
+        "COPYDATA(CH0,0,TMP_SAMPLES_SINGLE_1)",
+        "COPYDATA(CH1,0,TMP_SAMPLES_SINGLE_2)",
+        "MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+0)",
+        "STOPCHAIN(1,0x0101)",
+        "COMMENT(--- getCmdsMModeXLW phase 1 ---)",
+        "ACTIVATECHAIN(1,0x0102)",
+        "TESTVCSKIPEQ(MMODE,32)",
+        "DEACTIVATECHAIN(1,0x0102)",
+        "TESTVCSKIPEQ(XMMODEPHASE1,1)",
+        "DEACTIVATECHAIN(1,0x0102)",
+        "STARTCHAIN(0,1,0x0102)",
+        "COPYDATA(CH2,0,TMP_SAMPLES_SINGLE_1)",
+        "COPYDATA(CH3,0,TMP_SAMPLES_SINGLE_2)",
+        "MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+1)",
+        "STOPCHAIN(1,0x0102)",
+        "COMMENT(--- getCmdsMModeXLW phase 2 ---)",
+        "ACTIVATECHAIN(1,0x0103)",
+        "TESTVCSKIPEQ(MMODE,32)",
+        "DEACTIVATECHAIN(1,0x0103)",
+        "TESTVCSKIPEQ(XMMODEPHASE2,1)",
+        "DEACTIVATECHAIN(1,0x0103)",
+        "STARTCHAIN(0,1,0x0103)",
+        "COPYDATA(CH4,0,TMP_SAMPLES_SINGLE_1)",
+        "COPYDATA(CH5,0,TMP_SAMPLES_SINGLE_2)",
+        "MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+2)",
+        "STOPCHAIN(1,0x0103)",
+        "COMMENT(--- getCmdsMMode3LW start ---)",
+        "ACTIVATECHAIN(1,0x0104)",
+        "TESTVCSKIPEQ(MMODE,33)",
+        "DEACTIVATECHAIN(1,0x0104)",
+        "STARTCHAIN(0,1,0x0104)",
+        "COPYDIFF(CH0,CH2,TMP_SAMPLES_SINGLE_1)",
+        "COPYDATA(CH1,0,TMP_SAMPLES_SINGLE_2)",
+        "MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS)",
+        "SETVAL(VALPQS+1,0.0)",
+        "COPYDIFF(CH4,CH2,TMP_SAMPLES_SINGLE_1)",
+        "COPYDATA(CH5,0,TMP_SAMPLES_SINGLE_2)",
+        "MULCCV(TMP_SAMPLES_SINGLE_1,TMP_SAMPLES_SINGLE_2,VALPQS+2)",
+        "STOPCHAIN(1,0x0104)",
+        "COMMENT(--- getCmdsMMode3LW end ---)",
+        "COMMENT(--- getCmdsSumAndAverage: If MMODE_SUM == sum_phasevals ---)",
+        "ACTIVATECHAIN(1,0x0105)",
+        "TESTVCSKIPEQ(MMODE_SUM,0)",
+        "DEACTIVATECHAIN(1,0x0105)",
+        "STARTCHAIN(0,1,0x0105)",
+        "ADDVVV(VALPQS+0,VALPQS+1,VALPQS+3)",
+        "ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)",
+        "STOPCHAIN(1,0x0105)",
+        "COMMENT(--- getCmdsSumAndAverage: If MMODE_SUM == sum_phase_pq_geom ---)",
+        "ACTIVATECHAIN(1,0x0106)",
+        "TESTVCSKIPEQ(MMODE_SUM,1)",
+        "DEACTIVATECHAIN(1,0x0106)",
+        "STARTCHAIN(0,1,0x0106)",
+        "ADDVVV(VAL_APPARENT_P+0,VAL_APPARENT_P+1,TEMP1)",
+        "ADDVVV(VAL_APPARENT_P+2,TEMP1,TEMP1)",
+        "ADDVVV(VAL_APPARENT_Q+0,VAL_APPARENT_Q+1,TEMP2)",
+        "ADDVVV(VAL_APPARENT_Q+2,TEMP2,TEMP2)",
+        "ADDVVG(TEMP1,TEMP2,VALPQS+3)",
+        "STOPCHAIN(1,0x0106)",
+        "AVERAGE1(4,VALPQS,FILTER)",
+        "COMMENT(--- getCmdsSumAndAverage end ---)",
+        "COMMENT(--- getCmdsFreqOutput start ---)",
+        "CMPCLK(256,VALPQS+3,FREQSCALE+0)",
+        "TESTTIMESKIPNEX(TISTART,TIPAR)",
+        "ACTIVATECHAIN(1,0x0108)",
+        "STARTCHAIN(0,1,0x0108)",
+        "GETSTIME(TISTART)",
+        "CMPAVERAGE1(4,FILTER,VALPQSF)",
+        "CLEARN(9,FILTER)",
+        "DSPINTTRIGGER(0x0,0x0)",
+        "DEACTIVATECHAIN(1,0x0108)",
+        "STOPCHAIN(1,0x0108)",
+        "COMMENT(--- getCmdsFreqOutput end ---)"
+    ],
+    "3-VarsWritten": {
+        "WriteNo: 0000 / Handle:Variable: FrequencyScale:FREQSCALE": 150120000,
+        "WriteNo: 0001 / Handle:Variable: QRefScale:NOMPOWER": 2500,
+        "WriteNo: 0002 / Handle:Variable: FrequencyScale:FREQSCALE": 30024000,
+        "WriteNo: 0003 / Handle:Variable: QRefScale:NOMPOWER": 2500
+    }
+}

@@ -17,6 +17,7 @@ private slots:
     void dumpDspSetupCom5003Pow1To4();
     void dumpDspOnMeasModeChange();
     void dumpDspOnMeasModeChangeApparentGeom();
+    void dumpDspOnUScaleChange();
     void scpiDumpMtPower1Module1();
     void scpiDumpMtPower1Module4(); // ATTOW we are interested in QKHZ / unit
 private:
@@ -24,6 +25,9 @@ private:
                      VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
                      QString measModeOld, // MUST be correct - otherwise ignored
                      QString measModeNew);
+    void setScale(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
+                  int uScale,
+                  int iScale);
 };
 
 #endif // TEST_POWER1_MODULE_REGRESSION_H
