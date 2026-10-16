@@ -41,7 +41,7 @@ void test_power1_module_regression::veinDumpInitial()
     VeinStorage::AbstractDatabase *storageDb = testRunner.getVeinStorageDb();
 
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpInitial.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitial.json", jsonDumped));
 }
 
 void test_power1_module_regression::injectActualValues()
@@ -60,7 +60,7 @@ void test_power1_module_regression::injectActualValues()
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << powerEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpActual.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpActual.json", jsonDumped));
 }
 
 void test_power1_module_regression::testScpiCommandsDisabled()
@@ -71,7 +71,7 @@ void test_power1_module_regression::testScpiCommandsDisabled()
     VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpInitial-withoutScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitial-withoutScpi.json", jsonDumped));
 
     //When we change into 'INF_ModuleInterface', we take current 'jsonDumped' and copy it to test-data.
     //So, here is an extra check to be sure that no scpi commands are introduced by accident in future.
@@ -192,7 +192,7 @@ void test_power1_module_regression::dumpDspOnUScaleChange()
     bool allOk = true;
 
     QByteArray veinDumpBefore = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpInitial.json", veinDumpBefore))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitial.json", veinDumpBefore))
         allOk = false;
 
     setScale(testRunner.getVfCmdEventHandlerSystemPtr(), 5, 1);
@@ -200,7 +200,7 @@ void test_power1_module_regression::dumpDspOnUScaleChange()
     if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpDspOnUScaleChange.json", dspDump))
         allOk = false;
     QByteArray veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpAfterUScaleChange.json", veinDumpAfter)) // check PAR_FOUTConstant0
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpAfterUScaleChange.json", veinDumpAfter)) // check PAR_FOUTConstant0
         allOk = false;
 
     setScale(testRunner.getVfCmdEventHandlerSystemPtr(), 1, 5);
@@ -209,7 +209,7 @@ void test_power1_module_regression::dumpDspOnUScaleChange()
         allOk = false;
 
     veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpAfterIScaleChange.json", veinDumpAfter)) // check PAR_FOUTConstant0
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpAfterIScaleChange.json", veinDumpAfter)) // check PAR_FOUTConstant0
         allOk = false;
 
     QVERIFY(allOk);

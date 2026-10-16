@@ -26,11 +26,11 @@
         <file>sessions/session-power1-withoutScpi-test.json</file>
         <file>sessions/session-range-power.json</file>
 
-        <file>dumpActual.json</file>
-        <file>dumpAfterIScaleChange.json</file>
-        <file>dumpAfterUScaleChange.json</file>
-        <file>dumpInitial.json</file>
-        <file>dumpInitial-withoutScpi.json</file>
+        <file>veinDumps/dumpActual.json</file>
+        <file>veinDumps/dumpAfterIScaleChange.json</file>
+        <file>veinDumps/dumpAfterUScaleChange.json</file>
+        <file>veinDumps/dumpInitial.json</file>
+        <file>veinDumps/dumpInitial-withoutScpi.json</file>
 
         <file>mt310s2-power1module-test.xml</file>
         <file>mt310s2-power1module-withoutScpi-test.xml</file>
