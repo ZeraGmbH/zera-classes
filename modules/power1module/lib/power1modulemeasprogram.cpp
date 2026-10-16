@@ -1033,8 +1033,12 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
     double constantImpulsePerWs = nomFrequency / (actMeasSystemCount * maxVals.maxU * maxVals.maxI);
 
     bool isValidConstant = !isinf(constantImpulsePerWs);
-    if (isValidConstant && configData->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
+    if (!isValidConstant)
+        for (int i = 0; i < configData->m_nFreqOutputCount; i++)
+            m_FoutConstParameterList.at(i)->setValue(0.0);
+    else if (configData->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
         QString datalist = "FREQSCALE:";
+        double constantImpulsePerKwh = 3600.0 * 1000.0 * constantImpulsePerWs; // imp./kwh
         for (int i = 0; i<configData->m_nFreqOutputCount; i++) {
             double frScale;
             cFoutInfo fi = m_FoutInfoMap[configData->m_FreqOutputConfList.at(i).m_sName];
@@ -1046,34 +1050,17 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
                     double scaleI = m_scalingInputs.at(i).second->getValue().toDouble();
                     double scaleTotal = scaleU * scaleI;
                     frScale = frScale * scaleTotal;
+                    constantImpulsePerKwh = constantImpulsePerKwh * scaleTotal;
                 }
             }
             datalist += QString("%1,").arg(frScale, 0, 'g', 9);
+            m_FoutConstParameterList.at(i)->setValue(QString::number(constantImpulsePerKwh, 'g', 9).toDouble());
         }
         datalist.resize(datalist.size()-1);
         datalist += ";";
         m_dspVars.getFreqScale()->setVarData(datalist);
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getFreqScale())] = writeparameter;
     }
-    double constantImpulsePerKwh = 3600.0 * 1000.0 * constantImpulsePerWs; // imp./kwh
-    for (int i = 0; i < configData->m_nFreqOutputCount; i++) {
-        // calculate prescaling factor for Fout
-        if(m_scalingInputs.length() > i) {
-            if(m_scalingInputs.at(i).first && m_scalingInputs.at(i).second){
-                double scaleU = m_scalingInputs.at(i).first->getValue().toDouble();
-                double scaleI = m_scalingInputs.at(i).second->getValue().toDouble();
-                double scaleTotal = scaleU * scaleI;
-                constantImpulsePerKwh = constantImpulsePerKwh * scaleTotal;
-            }
-        }
-        QString key = configData->m_FreqOutputConfList.at(i).m_sName;
-        cFoutInfo fi = m_FoutInfoMap[key];
-        if(isValidConstant)
-            m_FoutConstParameterList.at(i)->setValue(QString::number(constantImpulsePerKwh, 'g', 9).toDouble());
-        else
-            m_FoutConstParameterList.at(i)->setValue(0.0);
-    }
-
     setNominalPowerForQref();
 }
 
