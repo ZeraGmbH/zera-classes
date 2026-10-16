@@ -971,21 +971,6 @@ cPower1ModuleMeasProgram::RangeMaxVals cPower1ModuleMeasProgram::calcMaxRangeVal
     return maxVals;
 }
 
-void cPower1ModuleMeasProgram::setNominalPowerForQref()
-{
-    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-    RangeMaxVals maxVals = calcMaxRangeValues(mode);
-    double pmax = maxVals.maxU * maxVals.maxI; // MQREF
-    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
-    if (configData->supportsVariableQrefFrequency()) {
-        constexpr double nominalFrequencyKhz = 200;
-        pmax = pmax * configData->m_qrefFrequency.m_fValue / nominalFrequencyKhz;
-    }
-    QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 9);
-    m_dspVars.getNominalPower()->setVarData(datalist);
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getNominalPower())] = setqrefnominalpower;
-}
-
 void cPower1ModuleMeasProgram::generateVeinInterfaceForQrefFreq()
 {
     const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
@@ -1062,6 +1047,21 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getFreqScale())] = writeparameter;
     }
     setNominalPowerForQref();
+}
+
+void cPower1ModuleMeasProgram::setNominalPowerForQref()
+{
+    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    RangeMaxVals maxVals = calcMaxRangeValues(mode);
+    double pmax = maxVals.maxU * maxVals.maxI; // MQREF
+    const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
+    if (configData->supportsVariableQrefFrequency()) {
+        constexpr double nominalFrequencyKhz = 200;
+        pmax = pmax * configData->m_qrefFrequency.m_fValue / nominalFrequencyKhz;
+    }
+    QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 9);
+    m_dspVars.getNominalPower()->setVarData(datalist);
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getNominalPower())] = setqrefnominalpower;
 }
 
 QString cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
