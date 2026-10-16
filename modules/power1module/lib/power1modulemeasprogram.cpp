@@ -1056,7 +1056,6 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_dspVars.getFreqScale())] = writeparameter;
     }
     double constantImpulsePerKwh = 3600.0 * 1000.0 * constantImpulsePerWs; // imp./kwh
-    constantImpulsePerKwh = QString::number(constantImpulsePerKwh, 'g', 9).toDouble();
     for (int i = 0; i < configData->m_nFreqOutputCount; i++) {
         // calculate prescaling factor for Fout
         if(m_scalingInputs.length() > i) {
@@ -1070,7 +1069,7 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
         QString key = configData->m_FreqOutputConfList.at(i).m_sName;
         cFoutInfo fi = m_FoutInfoMap[key];
         if(isValidConstant)
-            m_FoutConstParameterList.at(i)->setValue(constantImpulsePerKwh);
+            m_FoutConstParameterList.at(i)->setValue(QString::number(constantImpulsePerKwh, 'g', 9).toDouble());
         else
             m_FoutConstParameterList.at(i)->setValue(0.0);
     }

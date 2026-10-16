@@ -191,7 +191,7 @@
             }
         },
         "PAR_FOUT0": "",
-        "PAR_FOUTConstant0": 3840000.000000001,
+        "PAR_FOUTConstant0": 3840000,
         "PAR_Interval": 1,
         "PAR_MeasModePhaseSelect": "111",
         "PAR_MeasuringMode": "4LW",
