@@ -17,7 +17,7 @@ private slots:
     void dumpDspSetupCom5003Pow1To4();
     void dumpDspOnMeasModeChange();
     void dumpDspOnMeasModeChangeApparentGeom();
-    void dumpDspOnUScaleChange();
+    void dumpDspOnScaleChange();
     void scpiDumpMtPower1Module1();
     void scpiDumpMtPower1Module4(); // ATTOW we are interested in QKHZ / unit
 private:

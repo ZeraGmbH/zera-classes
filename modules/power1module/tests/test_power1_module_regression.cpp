@@ -184,7 +184,7 @@ void test_power1_module_regression::dumpDspOnMeasModeChangeApparentGeom()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-measmode-change-apparent-geometric.json", measProgramDumped));
 }
 
-void test_power1_module_regression::dumpDspOnUScaleChange()
+void test_power1_module_regression::dumpDspOnScaleChange()
 {
     ModuleManagerTestRunner testRunner(":/sessions/session-range-power.json");
     TestDspInterfacePtr power1DspInterface = testRunner.findDspInterfaceByEntityId(powerEntityId);
