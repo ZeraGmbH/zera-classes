@@ -20,7 +20,6 @@ enum moduleconfigstate
     setMovingwindowBool,
     setMovingwindowTime,
     setNominalFrequency,
-    setNominalFrequencyDefault,
     setFrequencyActualizationMode,
     setFrequencyOutputCount,
     setEnableScpiCommands,
@@ -94,7 +93,6 @@ void cPower1ModuleConfiguration::setConfiguration(const QByteArray& xmlString)
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
 
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:frequency"] = setNominalFrequency;
-    m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:frequencydefault"] = setNominalFrequencyDefault;
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:frequencyact"] = setFrequencyActualizationMode;
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:output:n"] = setFrequencyOutputCount;
 
@@ -181,9 +179,6 @@ void cPower1ModuleConfiguration::configXMLInfo(const QString &key)
             m_configData.m_nNominalFrequency.m_sKey = key;
             m_configData.m_nNominalFrequency.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
             break;
-        case setNominalFrequencyDefault:
-            m_configData.m_nNominalFrequencyDefault.m_sKey = key;
-            m_configData.m_nNominalFrequencyDefault.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
         case setFrequencyActualizationMode:
             m_configData.m_sFreqActualizationMode = m_pXMLReader->getValue(key);
             break;

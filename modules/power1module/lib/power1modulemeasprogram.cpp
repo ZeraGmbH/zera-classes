@@ -1004,14 +1004,16 @@ void POWER1MODULE::cPower1ModuleMeasProgram::generateVeinInterfaceNominalFreq()
         m_pNominalFrequency->setScpiInfo("CONFIGURATION",QString("NOMINAL_FREQ"), SCPI::isQuery|SCPI::isCmdwP);
 }
 
+static constexpr double defaultFrequencyForCalcQrefHz = 200000; // Temp - we have to cleanup them mess with scling and frequency out!!!
+
 void cPower1ModuleMeasProgram::foutParamsToDsp()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double actMeasSystemCount = mode->getActiveMeasSysCount();
     const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
-    double nomFrequency = configData->m_nNominalFrequencyDefault.m_nValue;
-    if(m_pNominalFrequency && mode->getName() != "QREF")
+    double nomFrequency = defaultFrequencyForCalcQrefHz;
+    if(m_pNominalFrequency && (!configData->supportsVariableQrefFrequency() || mode->getName() != "QREF"))
         nomFrequency = m_pNominalFrequency->getValue().toDouble();
     double constantImpulsePerWs = nomFrequency / (actMeasSystemCount * maxVals.maxU * maxVals.maxI);
 
@@ -1051,10 +1053,10 @@ void cPower1ModuleMeasProgram::setNominalPowerForQref()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
-    double pmax = maxVals.maxU * maxVals.maxI; // MQREF
+    double pmax = maxVals.maxU * maxVals.maxI;
     const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
     if (configData->supportsVariableQrefFrequency()) {
-        constexpr double nominalFrequencyKhz = 200;
+        constexpr double nominalFrequencyKhz = defaultFrequencyForCalcQrefHz / 1000.0;
         pmax = pmax * configData->m_qrefFrequency.m_fValue / nominalFrequencyKhz;
     }
     QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 9);
