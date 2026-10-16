@@ -118,27 +118,19 @@ void test_fft_module_regression::dumpDspIL1ReferenceSetup()
 void test_fft_module_regression::dumpDspSetReference()
 {
     ModuleManagerTestRunner testRunner(":/sessions/from-resource.json");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m0", "m1");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m1", "m2");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m2", "m3");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m3", "m4");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m4", "m5");
-    setReferenceChannel(testRunner.getVfCmdEventHandlerSystemPtr(), "m5", "m0");
+    setReferenceChannel(testRunner, "m1");
+    setReferenceChannel(testRunner, "m2");
+    setReferenceChannel(testRunner, "m3");
+    setReferenceChannel(testRunner, "m4");
+    setReferenceChannel(testRunner, "m5");
+    setReferenceChannel(testRunner, "m0");
 
     TestDspInterfacePtr fftDspInterface = testRunner.findDspInterfaceByEntityId(fftEntityId);
     QString measProgramDumped = TestLogHelpers::dump(fftDspInterface->dumpAll(true));
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-ref-UL1-to-other.json", measProgramDumped));
 }
 
-void test_fft_module_regression::setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
-                                                     QString channelMNameOld,
-                                                     QString channelMNameNew)
+void test_fft_module_regression::setReferenceChannel(ModuleManagerTestRunner &modman, const QString &channelAlias)
 {
-    VfCmdEventItemEntityPtr entityItem = VfEntityComponentEventItem::create(fftEntityId);
-    vfCmdEventHandlerSystem->addItem(entityItem);
-
-    VfClientComponentSetterPtr setter = VfClientComponentSetter::create("PAR_RefChannel", entityItem);
-    entityItem->addItem(setter);
-    setter->startSetComponent(channelMNameOld, channelMNameNew);
-    TimeMachineObject::feedEventLoop();
+    modman.setVfComponent(fftEntityId, "PAR_RefChannel", channelAlias);
 }

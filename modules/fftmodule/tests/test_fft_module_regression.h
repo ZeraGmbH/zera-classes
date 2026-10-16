@@ -1,7 +1,7 @@
 #ifndef TEST_FFT_MODULE_REGRESSION_H
 #define TEST_FFT_MODULE_REGRESSION_H
 
-#include "vf_cmd_event_handler_system.h"
+#include "modulemanagertestrunner.h"
 
 class test_fft_module_regression : public QObject
 {
@@ -17,9 +17,7 @@ private slots:
     void dumpDspSetReference();
 private:
      // we expect channel m-Name!!!
-    void setReferenceChannel(VfCmdEventHandlerSystemPtr vfCmdEventHandlerSystem,
-                             QString channelMNameOld, // MUST be correct - otherwise ignored
-                             QString channelMNameNew);
+    void setReferenceChannel(ModuleManagerTestRunner &modman, const QString &channelAlias);
 };
 
 #endif // TEST_FFT_MODULE_REGRESSION_H
