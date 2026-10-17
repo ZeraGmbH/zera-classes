@@ -223,12 +223,8 @@ void test_power1_module_regression::scpiDumpMtPower1Module1()
     ScpiModuleNetClientBlocked client;
     QString dumped = client.sendReceive("dev:iface?", false);
 
-    QFile ifaceBaseXmlFile("://scpiDumps/session-power1module1-scpi.xml");
-    QVERIFY(ifaceBaseXmlFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
-    QString expected = ifaceBaseXmlFile.readAll();
-
     XmlDocumentCompare compare;
-    bool ok = compare.compareXml(dumped, expected);
+    bool ok = compare.compareXml(dumped, TestLogHelpers::loadFile("://scpiDumps/session-power1module1-scpi.xml"));
     if(!ok)
         TestLogHelpers::compareAndLogOnDiffFile("://scpiDumps/session-power1module1-scpi.xml", dumped);
     QVERIFY(ok);
@@ -242,12 +238,8 @@ void test_power1_module_regression::scpiDumpMtPower1Module4()
     ScpiModuleNetClientBlocked client;
     QString dumped = client.sendReceive("dev:iface?", false);
 
-    QFile ifaceBaseXmlFile("://scpiDumps/session-power1module4-scpi.xml");
-    QVERIFY(ifaceBaseXmlFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
-    QString expected = ifaceBaseXmlFile.readAll();
-
     XmlDocumentCompare compare;
-    bool ok = compare.compareXml(dumped, expected);
+    bool ok = compare.compareXml(dumped, TestLogHelpers::loadFile("://scpiDumps/session-power1module4-scpi.xml"));
     if(!ok)
         TestLogHelpers::compareAndLogOnDiffFile("://scpiDumps/session-power1module4-scpi.xml", dumped);
     QVERIFY(ok);

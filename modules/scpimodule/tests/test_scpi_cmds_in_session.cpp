@@ -56,14 +56,11 @@ void test_scpi_cmds_in_session::minScpiDevIface()
 
     QString dumped = sendReceive(client, "dev:iface?", false);
 
-    QFile ifaceBaseXmlFile("://dev-iface-basic.xml");
-    QVERIFY(ifaceBaseXmlFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
     XmlDocumentCompare compare;
-    bool ok = compare.compareXml(dumped, ifaceBaseXmlFile.readAll(), true);
+    bool ok = compare.compareXml(dumped, TestLogHelpers::loadFile("://dev-iface-basic.xml"), true);
     if(!ok)
         TestLogHelpers::compareAndLogOnDiffFile("://dev-iface-basic.xml", dumped);
     QVERIFY(ok);
-
 }
 
 void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()

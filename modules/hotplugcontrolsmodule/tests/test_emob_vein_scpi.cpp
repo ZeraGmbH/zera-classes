@@ -256,20 +256,14 @@ void test_emob_vein_scpi::dischargeOnOffNoParamOneEmob()
     QString status = m_scpiClient->sendReceive("EMOB:HOTP1:ONDISCHARGE;|*stb?");
     QCOMPARE(status, "+0");
 
-    QFile file(":/vein-event-dumps/dumpSetEmobSwitchToOnWithParamScpi.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    QByteArray jsonExpected = file.readAll();
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpSetEmobSwitchToOnWithParamScpi.json", jsonDumped));
 
     status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFDISCHARGE;|*stb?");
     QCOMPARE(status, "+0");
 
-    file.setFileName(":/vein-event-dumps/dumpSetEmobSwitchToOffWithParamScpi.json");
-    QVERIFY(file.open(QFile::ReadOnly));
-    jsonExpected = file.readAll();
     jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJson(jsonExpected, jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpSetEmobSwitchToOffWithParamScpi.json", jsonDumped));
 }
 
 void test_emob_vein_scpi::dischargeOnOffWithParamScpiOneEmob()

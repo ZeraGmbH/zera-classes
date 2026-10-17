@@ -6,9 +6,9 @@
 // Check all deviceinfos for validity by loading them into ZeraJsonParamsStructure
 TEST(TEST_DEVICEINFO, ALL_VALID) {
     QDir dir(QStringLiteral("://deviceinfo"));
-    QFileInfoList fileInfoList = dir.entryInfoList();
+    const QFileInfoList fileInfoList = dir.entryInfoList();
     EXPECT_FALSE(fileInfoList.isEmpty());
-    for(auto fileInfo : fileInfoList) {
+    for(const auto &fileInfo : fileInfoList) {
         QString diFileName = fileInfo.absoluteFilePath();
         QFile diFile(diFileName);
         bool diOpened = diFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
@@ -16,9 +16,9 @@ TEST(TEST_DEVICEINFO, ALL_VALID) {
         if(diOpened) {
             QJsonObject diStructure = QJsonDocument::fromJson(diFile.readAll()).object();
             ZeraJsonParamsStructure jsonParamStructure;
-            ZeraJsonParamsStructure::ErrList errListStructure = jsonParamStructure.setJson(diStructure);
+            const ZeraJsonParamsStructure::ErrList errListStructure = jsonParamStructure.setJson(diStructure);
             QString errorInfoTxt;
-            for(auto errInfo: errListStructure) {
+            for(auto errInfo : errListStructure) {
                 errorInfoTxt += "\n" + errInfo.strID() + ": " + errInfo.m_strInfo;
             }
             EXPECT_EQ(errListStructure.length(), 0) << "Deviceinfo invalid: " <<
