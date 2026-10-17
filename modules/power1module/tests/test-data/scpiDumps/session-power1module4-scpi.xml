@@ -59,7 +59,7 @@
     </SESSION>
    </SYST>
    <POW1 Type="Node">
-    <FIXFREQ Min="0.001" DataType="DOUBLE" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:FIXFREQ" Max="200" Description="Fixed frequency output mode (QREF): frequency value" Unit="kHz"/>
+    <FIXFREQ Min="0.001" DataType="DOUBLE" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:FIXFREQ" Max="20000" Description="Fixed frequency output mode (QREF): frequency value" Unit="kHz"/>
     <TINTEGRATION Min="1" DataType="DOUBLE" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:TINTEGRATION" Max="100" Description="Integration time" Unit="s"/>
     <M0OUT Type="Query" ScpiPath="CONFIGURATION:POW1:M0OUT" Description="Frequency output name"/>
     <MEASMODEPHASESELECT DataType="STRING" ValidPar="000,100,010,110,001,101,011,111" Type="Query,Command+Par" ScpiPath="CONFIGURATION:POW1:MEASMODEPHASESELECT" Description="Active phases selection mask"/>
