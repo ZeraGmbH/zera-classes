@@ -177,13 +177,7 @@ void test_adj_module_gain_dc_com5003_ref::checkCalculatedAdjValuesPerChannel()
     QCOMPARE(m_scpiClient->sendReceive(send), "+0");
 
     QString dumped = XmlHelperForTest::removeTimeDependentEntriesFromXml(m_scpiClient->sendReceive("CALC:ADJ1:PCB?"));
-    QString fileNameExpected = QString(":/adj-dump/dump-calc-adj-values-%1.xml").arg(m_refChannel);
-    QString expected = TestLogHelpers::loadFile(fileNameExpected);
-    XmlDocumentCompare compare;
-    bool ok = compare.compareXml(dumped, expected);
-    if(!ok)
-        TestLogHelpers::compareAndLogOnDiffFile(fileNameExpected, XmlHelperForTest::prettify(dumped));
-    QVERIFY(ok);
+    QVERIFY(XmlDocumentCompare::compareXmlFile(QString(":/adj-dump/dump-calc-adj-values-%1.xml").arg(m_refChannel), dumped));
 }
 
 void test_adj_module_gain_dc_com5003_ref::checkCalculatedAdjValuesAccumulatedSequence()
@@ -210,13 +204,7 @@ void test_adj_module_gain_dc_com5003_ref::checkCalculatedAdjValuesAccumulatedSeq
     QCOMPARE(m_scpiClient->sendReceive(send), "+0");
 
     QString dumped = XmlHelperForTest::removeTimeDependentEntriesFromXml(m_scpiClient->sendReceive("CALC:ADJ1:PCB?"));
-    QString fileNameExpected = QString(":/adj-dump/dump-calc-adj-values-accumulated-%1.xml").arg(m_refChannel);
-    QString expected = TestLogHelpers::loadFile(fileNameExpected);
-    XmlDocumentCompare compare;
-    bool ok = compare.compareXml(dumped, expected);
-    if(!ok)
-        TestLogHelpers::compareAndLogOnDiffFile(fileNameExpected, XmlHelperForTest::prettify(dumped));
-    QVERIFY(ok);
+    QVERIFY(XmlDocumentCompare::compareXmlFile(QString(":/adj-dump/dump-calc-adj-values-accumulated-%1.xml").arg(m_refChannel), dumped));
 }
 
 

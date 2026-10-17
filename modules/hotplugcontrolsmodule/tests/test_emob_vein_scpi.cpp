@@ -337,12 +337,7 @@ void test_emob_vein_scpi::readPruefGroessenStateScpiNoDevice()
 void test_emob_vein_scpi::dumpDevIface()
 {
     QString dumped = m_scpiClient->sendReceive("dev:iface?", false);
-    QString expected = TestLogHelpers::loadFile("://scpi-dump.xml");
-    XmlDocumentCompare compare;
-    bool ok = compare.compareXml(dumped, expected);
-    if(!ok)
-        TestLogHelpers::compareAndLogOnDiffFile("://scpi-dump.xml", dumped);
-    QVERIFY(ok);
+    QVERIFY(XmlDocumentCompare::compareXmlFile("://scpi-dump.xml", dumped));
 }
 
 void test_emob_vein_scpi::dumpVeinInfModuleInterface()

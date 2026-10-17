@@ -55,12 +55,7 @@ void test_scpi_cmds_in_session::minScpiDevIface()
     SCPIMODULE::ScpiTestClient client(getScpiModule());
 
     QString dumped = sendReceive(client, "dev:iface?", false);
-
-    XmlDocumentCompare compare;
-    bool ok = compare.compareXml(dumped, TestLogHelpers::loadFile("://dev-iface-basic.xml"), true);
-    if(!ok)
-        TestLogHelpers::compareAndLogOnDiffFile("://dev-iface-basic.xml", dumped);
-    QVERIFY(ok);
+    QVERIFY(XmlDocumentCompare::compareXmlFile("://dev-iface-basic.xml", dumped));
 }
 
 void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
@@ -120,13 +115,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
     SCPIMODULE::ScpiTestClient client(getScpiModule());
 
     QString dumped = sendReceive(client, "dev:iface?", false);
-    QString expected = TestLogHelpers::loadFile(":/dev-iface-three.xml");
-
-    XmlDocumentCompare compare;
-    bool ok = compare.compareXml(expected, dumped);
-    if(!ok)
-        TestLogHelpers::compareAndLogOnDiffFile(":/dev-iface-three.xml", dumped);
-    QVERIFY(ok);
+    QVERIFY(XmlDocumentCompare::compareXmlFile(":/dev-iface-three.xml", dumped));
 }
 
 void test_scpi_cmds_in_session::closeSocketOnPendingWriteStbQueryNoCrasher()

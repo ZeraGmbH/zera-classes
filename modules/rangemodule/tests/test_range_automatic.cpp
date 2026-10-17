@@ -456,25 +456,20 @@ void test_range_automatic::checkPersitency()
 {
     // At the time of writing range module writes config file on change of
     // range-grouping, change of range-automatic and user changing range
-    XmlDocumentCompare compare;
     fireNewActualValues(4, withIaux); // necessary to get reproducible results on range automatic on below
 
     QCOMPARE(getVfComponent(rangeEntityId, RangeGroupingComponent), 1);
     setVfComponent(rangeEntityId, RangeGroupingComponent, 0); // this causes config save
-    QByteArray expected = TestLogHelpers::loadFile(":/configDumps/dumpGroupingSet.xml");
     QByteArray dumped = TestLogHelpers::loadFile(tmpConf);
-    if(!compare.compareXml(dumped, expected))
-        QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlFile(":/configDumps/dumpGroupingSet.xml", dumped));
 
     fireNewActualValues(4, withIaux); // necessary to get reproducible results on range automatic on
     processDecreaseDelay();
     QCOMPARE(getVfComponent(rangeEntityId, RangeAutomaticComponent), 0);
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1); // this causes config save
     processDecreaseDelay();
-    expected = TestLogHelpers::loadFile(":/configDumps/dumpAutomaticSet.xml");
     dumped = TestLogHelpers::loadFile(tmpConf);
-    if(!compare.compareXml(dumped, expected))
-        QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlFile(":/configDumps/dumpAutomaticSet.xml", dumped));
 
     // Following is about range alias "--" / name "0A" insanity:
     // shipped configuration has "0A" / config stored gets "--"
@@ -491,26 +486,20 @@ void test_range_automatic::checkPersitency()
     // set valid / unset valid "--"
     setVfComponent(rangeEntityId, IAUXRangeComponent, "C50A");
     QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "C50A");
-    expected = TestLogHelpers::loadFile(":/configDumps/dumpIAUXSet.xml");
     dumped = TestLogHelpers::loadFile(tmpConf);
-    if(!compare.compareXml(dumped, expected))
-        QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlFile(":/configDumps/dumpIAUXSet.xml", dumped));
     setVfComponent(rangeEntityId, IAUXRangeComponent, "--");
     QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "--");
-    expected = TestLogHelpers::loadFile(":/configDumps/dumpIAUXUnset.xml");
     dumped = TestLogHelpers::loadFile(tmpConf);
-    if(!compare.compareXml(dumped, expected))
-        QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlFile(":/configDumps/dumpIAUXUnset.xml", dumped));
 
     // set valid / unset invalid "0A"
     setVfComponent(rangeEntityId, IAUXRangeComponent, "C50A");
     QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "C50A");
     setVfComponent(rangeEntityId, IAUXRangeComponent, "0A");
     QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "C50A");
-    expected = TestLogHelpers::loadFile(":/configDumps/dumpIAUXSet.xml"); // Still set
     dumped = TestLogHelpers::loadFile(tmpConf);
-    if(!compare.compareXml(dumped, expected))
-        QVERIFY(TestLogHelpers::compareAndLogOnDiff(expected, dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlFile(":/configDumps/dumpIAUXSet.xml", dumped));
 }
 
 void test_range_automatic::normalSineRmsOverloadWithRangeAutomatic()

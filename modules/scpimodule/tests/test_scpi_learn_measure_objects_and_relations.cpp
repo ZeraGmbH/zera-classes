@@ -107,12 +107,8 @@ void test_scpi_learn_measure_objects_and_relations::devIfaceTwoOsci()
     client.sendScpiCmds("dev:iface?");
     TimeMachineObject::feedEventLoop();
 
-    const QString expectedFileName = "://dev-iface-two-osci.xml";
     QString dumped = client.getResponsesNotSorted()[0].getStr();
-    QString expected = TestLogHelpers::loadFile(expectedFileName);
-    XmlDocumentCompare compare;
-    if (!compare.compareXml(dumped, expected))
-        QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(expectedFileName, dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlFile("://dev-iface-two-osci.xml", dumped));
 }
 
 void test_scpi_learn_measure_objects_and_relations::sortingChangesBehaviourOnQueries()
