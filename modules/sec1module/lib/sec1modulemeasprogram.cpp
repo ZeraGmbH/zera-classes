@@ -451,7 +451,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
                                                QString("Multiple measurements: Count stored\n"
                                                        "Maximum storage count is limited to %1.\n"
                                                        "=> contiuous measurement count can exceed count stored").arg(m_nMulMeasStoredMax),
-                                               QVariant((int) 0));
+                                               quint32(0));
     m_pMulCountAct->setScpiInfo("CALCULATE", QString("%1:MULCOUNT").arg(modNr), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pMulCountAct; // and for the modules interface
 
