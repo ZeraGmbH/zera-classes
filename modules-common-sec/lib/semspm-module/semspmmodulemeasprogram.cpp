@@ -12,7 +12,6 @@
 #include <reply.h>
 #include <proxy.h>
 #include <math.h>
-#include <timerfactoryqt.h>
 
 SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::unique_ptr<AbstractSemSpmFunctions> semSpmFunctions) :
     cBaseMeasProgram(module->getVeinModuleName()),
@@ -648,7 +647,8 @@ void SemSpmModuleMeasProgram::updateDemoMeasurementResults()
 {
     setStatus(ECALCSTATUS::READY); //still need more thoughts on this
 
-    m_uint32BitExpander.setFinal32(rand() % 10); //random value between 0 and 9
+    quint32 randVal = rand() % 10;
+    m_uint32BitExpander.setFinal32(randVal); //random value between 0 and 9
     m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
     m_pRefConstantPar->setValue(3600000);
     setEMResult();
@@ -812,7 +812,7 @@ void SemSpmModuleMeasProgram::startMeasurement()
         m_pMeasEstimatedEndTime->setValue("");
     m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
-    m_uint32BitExpander.reset();
+    m_uint32BitExpander.resetForNextPeriod();
     m_fEnergy = 0.0;
     m_pEnergyAct->setValue(m_fEnergy);
     m_fPower = 0.0;
@@ -1010,9 +1010,11 @@ void SemSpmModuleMeasProgram::Actualize()
 
 void SemSpmModuleMeasProgram::clientActivationChanged(bool bActive)
 {
-    // Adjust our m_ActualizeTimer timeout to our client's needs
-    m_ActualizeTimer = TimerFactoryQt::createPeriodic(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
-    connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &SemSpmModuleMeasProgram::Actualize);
-    if (m_bMeasurementRunning)
-        m_ActualizeTimer->start();
+    if (!m_startMeasurementMachine.isRunning()) {
+        // Adjust our m_ActualizeTimer timeout to our client's needs
+        m_ActualizeTimer = TimerFactoryQt::createPeriodic(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
+        connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &SemSpmModuleMeasProgram::Actualize);
+        if (m_bMeasurementRunning)
+            m_ActualizeTimer->start();
+    }
 }

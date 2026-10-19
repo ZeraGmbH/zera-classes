@@ -1,11 +1,24 @@
 #include "test_uint32expander.h"
 #include "uint32bitexpander.h"
+#include <timerfactoryqtfortest.h>
+#include <timemachinefortest.h>
 #include <QTest>
 
 QTEST_MAIN(test_uint32expander)
 
+void test_uint32expander::initTestCase()
+{
+    TimerFactoryQtForTest::enableTest();
+}
+
+void test_uint32expander::init()
+{
+    TimeMachineForTest::reset();
+}
+
 void test_uint32expander::initZero()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     QCOMPARE(expander.getActualExpanded64(), 0);
@@ -13,6 +26,7 @@ void test_uint32expander::initZero()
 
 void test_uint32expander::setValueOnce()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(42);
@@ -21,6 +35,7 @@ void test_uint32expander::setValueOnce()
 
 void test_uint32expander::setValueTwiceWithoutOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(1);
@@ -30,6 +45,7 @@ void test_uint32expander::setValueTwiceWithoutOverflow()
 
 void test_uint32expander::setValueTwiceWithoutOverflowEqual()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(42);
@@ -39,6 +55,7 @@ void test_uint32expander::setValueTwiceWithoutOverflowEqual()
 
 void test_uint32expander::setValueTwiceWithOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(42);
@@ -50,6 +67,7 @@ void test_uint32expander::setValueTwiceWithOverflow()
 
 void test_uint32expander::setValueMultipleOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(42);
@@ -63,6 +81,7 @@ void test_uint32expander::setValueMultipleOverflow()
 
 void test_uint32expander::setValueTwiceWithOverflowThenReset()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(42);
@@ -71,7 +90,7 @@ void test_uint32expander::setValueTwiceWithOverflowThenReset()
     const quint64 expected = (1ULL << 32) + 3;
     QCOMPARE(expander.getActualExpanded64(), expected);
 
-    expander.reset();
+    expander.resetForNextPeriod();
     QCOMPARE(expander.getActualExpanded64(), 0);
 }
 
@@ -105,6 +124,7 @@ void test_uint32expander::doubleLimits()
 
 void test_uint32expander::actEqualFinalNoOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(42);
@@ -116,6 +136,7 @@ void test_uint32expander::actEqualFinalNoOverflow()
 
 void test_uint32expander::actEqualFinalWithOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32((1ULL << 32)-1);
@@ -129,6 +150,7 @@ void test_uint32expander::actEqualFinalWithOverflow()
 
 void test_uint32expander::actLessThanFinalNoOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(40);
@@ -140,6 +162,7 @@ void test_uint32expander::actLessThanFinalNoOverflow()
 
 void test_uint32expander::actLessThanFinalWithOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(5000);
@@ -155,6 +178,7 @@ void test_uint32expander::actLessThanFinalWithOverflow()
 
 void test_uint32expander::actLargerThanFinalNoOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(42);
@@ -166,6 +190,7 @@ void test_uint32expander::actLargerThanFinalNoOverflow()
 
 void test_uint32expander::actLargerThanFinalWithOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(5000);
@@ -181,6 +206,7 @@ void test_uint32expander::actLargerThanFinalWithOverflow()
 
 void test_uint32expander::actLessThanOverflowFinal()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32((1ULL << 32)-1);
@@ -195,6 +221,7 @@ void test_uint32expander::actLessThanOverflowFinal()
 
 void test_uint32expander::actLargerThanOverflowFinal()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(42);
@@ -210,6 +237,7 @@ void test_uint32expander::actLargerThanOverflowFinal()
 
 void test_uint32expander::setActOnlyNoOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(42);
@@ -223,6 +251,7 @@ void test_uint32expander::setActOnlyNoOverflow()
 
 void test_uint32expander::setActFinalActNoOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32(42);
@@ -238,6 +267,7 @@ void test_uint32expander::setActFinalActNoOverflow()
 
 void test_uint32expander::setFinalActFinalNoOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setFinal32(42);
@@ -253,6 +283,7 @@ void test_uint32expander::setFinalActFinalNoOverflow()
 
 void test_uint32expander::setActOnlyWithOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32((1ULL << 32)-1);
@@ -267,6 +298,7 @@ void test_uint32expander::setActOnlyWithOverflow()
 
 void test_uint32expander::setActFinalWithOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32((1ULL << 32)-1);
@@ -281,6 +313,7 @@ void test_uint32expander::setActFinalWithOverflow()
 
 void test_uint32expander::setFinalActWithOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setFinal32((1ULL << 32)-1);
@@ -295,6 +328,7 @@ void test_uint32expander::setFinalActWithOverflow()
 
 void test_uint32expander::setActFinalActWithOverflow1()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32((1ULL << 32)-1);
@@ -310,6 +344,7 @@ void test_uint32expander::setActFinalActWithOverflow1()
 
 void test_uint32expander::setActFinalActWithOverflow2()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32((1ULL << 32)-1);
@@ -325,6 +360,7 @@ void test_uint32expander::setActFinalActWithOverflow2()
 
 void test_uint32expander::setFinalActFinalwithOverflow()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setFinal32((1ULL << 32)-1);
@@ -340,6 +376,7 @@ void test_uint32expander::setFinalActFinalwithOverflow()
 
 void test_uint32expander::setActualSmallerFinalOverflowActual()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32((1ULL << 32)-1);
@@ -355,6 +392,7 @@ void test_uint32expander::setActualSmallerFinalOverflowActual()
 
 void test_uint32expander::setActOnlyWithOverflowImmediateRead()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32((1ULL << 32)-1);
@@ -373,6 +411,7 @@ void test_uint32expander::setActOnlyWithOverflowImmediateRead()
 
 void test_uint32expander::setActFinalWithOverflowImmediateRead()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32((1ULL << 32)-1);
@@ -388,6 +427,7 @@ void test_uint32expander::setActFinalWithOverflowImmediateRead()
 
 void test_uint32expander::setFinalActWithOverflowImmediateRead()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setFinal32((1ULL << 32)-1);
@@ -403,6 +443,7 @@ void test_uint32expander::setFinalActWithOverflowImmediateRead()
 
 void test_uint32expander::setActFinalActWithOverflow1ImmediateRead()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32((1ULL << 32)-1);
@@ -422,6 +463,7 @@ void test_uint32expander::setActFinalActWithOverflow1ImmediateRead()
 
 void test_uint32expander::setActFinalActWithOverflow2ImmediateRead()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setActual32((1ULL << 32)-1);
@@ -441,6 +483,7 @@ void test_uint32expander::setActFinalActWithOverflow2ImmediateRead()
 
 void test_uint32expander::setFinalActFinalwithOverflowImmediateRead()
 {
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
     UInt32BitExpander expander;
 
     expander.setFinal32((1ULL << 32)-1);
@@ -455,3 +498,122 @@ void test_uint32expander::setFinalActFinalwithOverflowImmediateRead()
     const quint64 expectedFinal2 = (1ULL << 32) + 44;
     QCOMPARE(expander.getFinalExpanded64(), expectedFinal2);
 }
+
+void test_uint32expander::actualHighBeforeFinalLowAfterSafeDelay()
+{
+    UInt32BitExpander expander;
+
+    expander.setActual32(1000);
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
+
+    expander.setFinal32(42);
+    QCOMPARE(expander.getActualExpanded64(), 1000);
+    QCOMPARE(expander.getFinalExpanded64(), 42);
+}
+
+void test_uint32expander::actualHighBeforeFinalLowAfterSafeDelayTwoSequences()
+{
+    UInt32BitExpander expander;
+
+    expander.setActual32(1000);
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
+
+    expander.setFinal32(42);
+    QCOMPARE(expander.getActualExpanded64(), 1000);
+    QCOMPARE(expander.getFinalExpanded64(), 42);
+
+    expander.resetForNextPeriod();
+
+    expander.setActual32(1001);
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
+
+    expander.setFinal32(43);
+    QCOMPARE(expander.getActualExpanded64(), 1001);
+    QCOMPARE(expander.getFinalExpanded64(), 43);
+}
+
+void test_uint32expander::actualHighLowBeforeFinalLowAfterSafeDelay()
+{
+    UInt32BitExpander expander;
+
+    expander.setActual32(1000);
+    expander.setActual32(41);
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
+
+    expander.setFinal32(42);
+    QCOMPARE(expander.getActualExpanded64(), 41);
+    QCOMPARE(expander.getFinalExpanded64(), 42);
+}
+
+void test_uint32expander::actualHighLowBeforeFinalLowAfterSafeDelayTwoSequences()
+{
+    UInt32BitExpander expander;
+
+    expander.setActual32(1000);
+    expander.setActual32(41);
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
+
+    expander.setFinal32(42);
+    QCOMPARE(expander.getActualExpanded64(), 41);
+    QCOMPARE(expander.getFinalExpanded64(), 42);
+
+    expander.resetForNextPeriod();
+
+    expander.setActual32(1001);
+    expander.setActual32(44);
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
+
+    expander.setFinal32(43);
+    QCOMPARE(expander.getActualExpanded64(), 44);
+    QCOMPARE(expander.getFinalExpanded64(), 43);
+}
+
+void test_uint32expander::actualHighBeforeActualHighAfterActualLowAfterSafeDelay()
+{
+    UInt32BitExpander expander;
+
+    expander.setActual32(1000);
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
+    expander.setActual32((1ULL << 32)-1);
+
+    expander.setActual32(42);
+    QCOMPARE(expander.getActualExpanded64(), (1ULL << 32) + 42);
+    QCOMPARE(expander.getFinalExpanded64(), (1ULL << 32));
+}
+
+void test_uint32expander::actualHighBeforeActualHighAfterActualLowAfterSafeDelayTwoSequences()
+{
+    UInt32BitExpander expander;
+
+    expander.setActual32(1000);
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
+    expander.setActual32((1ULL << 32)-1);
+
+    expander.setActual32(42);
+    QCOMPARE(expander.getActualExpanded64(), (1ULL << 32) + 42);
+    QCOMPARE(expander.getFinalExpanded64(), (1ULL << 32));
+
+    expander.resetForNextPeriod();
+
+    expander.setActual32(1000);
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
+    expander.setActual32((1ULL << 32)-1);
+
+    expander.setActual32(42);
+    QCOMPARE(expander.getActualExpanded64(), (1ULL << 32) + 42);
+    QCOMPARE(expander.getFinalExpanded64(), (1ULL << 32));
+}
+
+void test_uint32expander::actualHighBeforeActualHighAfterFinalLowAfterSafeDelay()
+{
+    UInt32BitExpander expander;
+
+    expander.setActual32(1000);
+    TimeMachineForTest::getInstance()->processTimers(UInt32BitExpander::SafeDelayBeforFirstWraparound);
+    expander.setActual32((1ULL << 32)-1);
+
+    expander.setFinal32(42);
+    QCOMPARE(expander.getActualExpanded64(), (1ULL << 32) -1);
+    QCOMPARE(expander.getFinalExpanded64(), (1ULL << 32) + 42);
+}
+

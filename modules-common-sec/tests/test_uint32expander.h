@@ -7,6 +7,9 @@ class test_uint32expander : public QObject
 {
     Q_OBJECT
 private slots:
+    void initTestCase();
+    void init();
+
     void initZero();
     void setValueOnce();
     void setValueTwiceWithoutOverflow();
@@ -66,6 +69,15 @@ private slots:
     void setActFinalActWithOverflow1ImmediateRead();
     void setActFinalActWithOverflow2ImmediateRead();
     void setFinalActFinalwithOverflowImmediateRead();
+
+    // safe delay
+    void actualHighBeforeFinalLowAfterSafeDelay();
+    void actualHighBeforeFinalLowAfterSafeDelayTwoSequences();
+    void actualHighLowBeforeFinalLowAfterSafeDelay();
+    void actualHighLowBeforeFinalLowAfterSafeDelayTwoSequences();
+    void actualHighBeforeActualHighAfterActualLowAfterSafeDelay();
+    void actualHighBeforeActualHighAfterActualLowAfterSafeDelayTwoSequences();
+    void actualHighBeforeActualHighAfterFinalLowAfterSafeDelay();
 };
 
 #endif // TEST_UINT32EXPANDER_H

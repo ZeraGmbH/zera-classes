@@ -1,18 +1,21 @@
 #include "uint32bitexpander.h"
 
-void UInt32BitExpander::reset()
+void UInt32BitExpander::resetForNextPeriod()
 {
     m_actualLower = 0;
     m_actualUpper = 0;
 
     m_finalLower = 0;
     m_signedOffsetFinalToActual = 0;
+
+    m_elapsedTimerForStartPeriod->start();
 }
 
 void UInt32BitExpander::setActual32(quint32 value)
 {
-    if (value < m_actualLower || (value < m_finalLower))
-        m_actualUpper++;
+    if (m_elapsedTimerForStartPeriod->getElapsedMs() >= SafeDelayBeforFirstWraparound)
+        if (value < m_actualLower || (value < m_finalLower))
+            m_actualUpper++;
     m_actualLower = value;
     adjustFinalOffsetToActual();
 }
