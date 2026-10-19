@@ -442,7 +442,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pMeasNumAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                key = QString("ACT_MeasNum"),
                                                QString("Multiple measurements: Count"),
-                                               QVariant((int) 0));
+                                               quint32(0));
     m_pMeasNumAct->setScpiInfo("CALCULATE", QString("%1:MEASNUM").arg(modNr), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasNumAct; // and for the modules interface
 
