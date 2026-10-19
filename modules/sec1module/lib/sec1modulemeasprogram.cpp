@@ -9,6 +9,7 @@
 #include <scpi.h>
 #include <regexvalidator.h>
 #include <intvalidator.h>
+#include <uintvalidator.h>
 #include <stringvalidator.h>
 #include <reply.h>
 #include <QJsonDocument>
@@ -163,6 +164,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
 {
     QString key;
     QString modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
+    const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
 
     m_pDutInputPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("PAR_DutInput"),
@@ -267,9 +269,9 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pMRatePar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key = QString("PAR_MRate"),
                                            QString("Pulses to measure"),
-                                           QVariant());
+                                           QVariant(configData->m_nMRate.m_nValue));
     m_pMRatePar->setScpiInfo("CALCULATE", QString("%1:MRATE").arg(modNr), SCPI::isQuery|SCPI::isCmdwP);
-    m_pMRatePar->setValidator(new cIntValidator(1, 4294967295, 1));
+    m_pMRatePar->setValidator(new UintValidator(1, 4294967295, 1));
     m_pModule->m_veinModuleParameterMap[key] = m_pMRatePar; // for modules use
 
     m_pTargetPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -394,8 +396,6 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
                                                    QString("Power module entity ID generating reference input"),
                                                    m_powerModuleObserver.getPowerModulentityId());
     m_pModule->m_veinModuleParameterMap[key] = m_pPowerModuleEntityId; // and for the modules interface
-
-    const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
 
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
