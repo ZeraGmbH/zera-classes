@@ -1010,11 +1010,9 @@ void SemSpmModuleMeasProgram::Actualize()
 
 void SemSpmModuleMeasProgram::clientActivationChanged(bool bActive)
 {
-    if (!m_startMeasurementMachine.isRunning()) {
-        // Adjust our m_ActualizeTimer timeout to our client's needs
-        m_ActualizeTimer = TimerFactoryQt::createPeriodic(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
-        connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &SemSpmModuleMeasProgram::Actualize);
-        if (m_bMeasurementRunning)
-            m_ActualizeTimer->start();
-    }
+    // Adjust our m_ActualizeTimer timeout to our client's needs
+    m_ActualizeTimer = TimerFactoryQt::createPeriodic(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
+    connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &SemSpmModuleMeasProgram::Actualize);
+    if (m_bMeasurementRunning)
+        m_ActualizeTimer->start();
 }
