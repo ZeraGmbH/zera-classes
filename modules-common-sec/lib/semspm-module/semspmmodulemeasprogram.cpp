@@ -403,8 +403,10 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
+                        qWarning("Actual: %u", answer.toUInt());
                         m_uint32BitExpander.setActual32(answer.toUInt());
                         const double unitFactor = m_semSpmFunctions->getUnitFactorHash()[m_pInputUnitPar->getValue().toString()]; // 1 / kilo / Mega
+                        qWarning("Long Actual: %llu", m_uint32BitExpander.getActualExpanded64());
                         m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / (m_pRefConstantPar->getValue().toDouble() * unitFactor);
                         m_pEnergyAct->setValue(m_fEnergy);
                     }
@@ -507,9 +509,11 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                     // incorporate still running check as we learned from sec1
                     // see cSec1ModuleMeasProgram::catchInterfaceAnswer /
                     // case readvicount
-                    if((getStatus() & ECALCSTATUS::ABORT) == 0)
+                    if((getStatus() & ECALCSTATUS::ABORT) == 0) {
+                        qWarning("Final: %u", answer.toUInt());
                         // no need to use uint32BitExpander 'final' functions - here we just use actual
                         m_uint32BitExpander.setActual32(answer.toUInt());
+                    }
                     emit interruptContinue();
                 }
                 else
@@ -517,6 +521,7 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 break;
             case readfinaltimecount:
                 if (reply == ack) {
+                    qWarning("Final Time: %u", answer.toUInt());
                     setEndTimeVars(answer.toUInt());
                     emit interruptContinue();
                 }
@@ -638,7 +643,8 @@ void SemSpmModuleMeasProgram::updateDemoMeasurementResults()
     setStatus(ECALCSTATUS::READY); //still need more thoughts on this
 
     quint32 randVal = rand() % 10;
-    m_uint32BitExpander.setFinal32(randVal); //random value between 0 and 9
+    qWarning("Rand Actual: %u", randVal);
+    m_uint32BitExpander.setFinal32(rand() % 10); //random value between 0 and 9
     m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
     m_pRefConstantPar->setValue(3600000);
     setEMResult(); // Demo (for search)
@@ -807,6 +813,7 @@ void SemSpmModuleMeasProgram::startMeasurement()
         m_pMeasEstimatedEndTime->setValue("");
     m_MsgNrCmdList[m_secInterface->start(m_masterEcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
+    qWarning("Reset");
     m_uint32BitExpander.resetForNextPeriod();
     m_fEnergy = 0.0;
     m_pEnergyAct->setValue(m_fEnergy);
@@ -850,6 +857,7 @@ void SemSpmModuleMeasProgram::setEMResult()
 {
     // no need to use uint32BitExpander 'final' functions - here we just use actual
     const double energyCounterFinal = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64());
+    qWarning("Long Final: %llu", m_uint32BitExpander.getActualExpanded64());
     const double WRef = energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
 
     const QHash<QString, double> &unitHash = m_semSpmFunctions->getUnitFactorHash();
