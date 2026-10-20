@@ -745,11 +745,11 @@ void SemSpmModuleMeasProgram::setSync2()
 void SemSpmModuleMeasProgram::setMeaspulses()
 {
     if (m_pStopModePar->getValue().toInt() == SemSpmModuleConfigData::StopModeStartStop)
-        m_nTimerCountStart = Zera::cSECInterface::maxSecCounterInitVal; // we simply set max. time -> approx. 50 days
+        m_masterStartCountValue = Zera::cSECInterface::maxSecCounterInitVal; // we simply set max. time -> approx. 50 days
     else
-        m_nTimerCountStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
+        m_masterStartCountValue = m_pMeasTimePar->getValue().toLongLong() * 1000;
 
-    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterEcName, ECALCREG::MTCNTin, m_nTimerCountStart)] = setmeaspulses;
+    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterEcName, ECALCREG::MTCNTin, m_masterStartCountValue)] = setmeaspulses;
 }
 
 void SemSpmModuleMeasProgram::setMasterMux()

@@ -505,7 +505,7 @@ void cSec1ModuleMeasProgram::calculateMeasTime()
 void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)
 {
     if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
-        m_fProgress = ((static_cast<double>(m_nDUTPulseCounterStart) - static_cast<double>(dUTPulseCounterActual)) / static_cast<double>(m_nDUTPulseCounterStart)) * 100.0;
+        m_fProgress = ((static_cast<double>(m_masterStartCountValue) - static_cast<double>(dUTPulseCounterActual)) / static_cast<double>(m_masterStartCountValue)) * 100.0;
         if (m_fProgress > 100.0) {
             m_fProgress = 100.0;
         }
@@ -513,7 +513,7 @@ void cSec1ModuleMeasProgram::updateProgress(quint32 dUTPulseCounterActual)
             m_fProgress = 0.0;
         }
         deduceMeasStartTime(dUTPulseCounterActual);
-        m_pDutPulsesAct->setValue(m_nDUTPulseCounterStart + 1 - dUTPulseCounterActual);
+        m_pDutPulsesAct->setValue(m_masterStartCountValue + 1 - dUTPulseCounterActual);
         m_pProgressAct->setValue(QVariant(m_fProgress));
     }
 }
@@ -822,7 +822,7 @@ double cSec1ModuleMeasProgram::calculateDutConstant()
 
 void cSec1ModuleMeasProgram::updateDemoMeasurementResults()
 {
-    int dUTPulseCounterActual = m_nDUTPulseCounterStart - m_demoTimeSinceStart.elapsed();
+    int dUTPulseCounterActual = m_masterStartCountValue - m_demoTimeSinceStart.elapsed();
 
     if(dUTPulseCounterActual >= 0) {
         if(m_nMeasurementNo == 0)
@@ -1176,10 +1176,10 @@ void cSec1ModuleMeasProgram::setSync()
 void cSec1ModuleMeasProgram::setMeaspulses()
 {
     if (m_pDutInputPar->getValue().toString().contains("HK"))
-        m_nDUTPulseCounterStart = 1;
+        m_masterStartCountValue = 1;
     else
-        m_nDUTPulseCounterStart = m_pMRatePar->getValue().toLongLong();
-    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterEcName, ECALCREG::MTCNTin, m_nDUTPulseCounterStart)] = setmeaspulses;
+        m_masterStartCountValue = m_pMRatePar->getValue().toLongLong();
+    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterEcName, ECALCREG::MTCNTin, m_masterStartCountValue)] = setmeaspulses;
 }
 
 void cSec1ModuleMeasProgram::setMasterMux()

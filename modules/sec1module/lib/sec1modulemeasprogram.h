@@ -228,7 +228,7 @@ private:
     bool m_bMeasurementRunning = false;
     double m_fResult = 0.0; // error value in %
     ECALCRESULT::enResultTypes m_eRating = ECALCRESULT::RESULT_PASSED;
-    quint32 m_nDUTPulseCounterStart = 0;
+    quint32 m_masterStartCountValue = 0; // master / dut or HK pulse counts down
     double m_fProgress = 0.0; // progress value in %
     double m_fEnergy = 0.0;
 
