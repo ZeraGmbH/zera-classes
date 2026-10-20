@@ -44,7 +44,7 @@ private:
 
     qint32 m_nIt = 0;
     QString m_sIt;
-    QString m_masterErrCalcName;
+    QString m_masterEcName;
     QList<QString> m_sItList; // for interation over x Input hash
     SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated

@@ -173,8 +173,8 @@ private:
     QList<QString> m_sItList; // for interation over x Input hash
     QString m_sIt;
 
-    QString m_masterErrCalcName;
-    QString m_slaveErrCalcName;
+    QString m_masterEcName;
+    QString m_slaveRefEnergyCounterEcName;
 
     VfModuleParameter* m_pDutInputPar = nullptr;
     VfModuleParameter* m_pRefInputPar = nullptr;

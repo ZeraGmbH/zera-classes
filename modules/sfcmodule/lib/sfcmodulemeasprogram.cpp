@@ -165,7 +165,7 @@ void cSfcModuleMeasProgram::stopMeasurement(bool bAbort)
 {
     Q_UNUSED(bAbort)
     m_bMeasurementRunning = false;
-    m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
+    m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
     m_ActualizeTimer->stop();
 }
 
@@ -264,19 +264,19 @@ void cSfcModuleMeasProgram::readDUTInputDone()
 
 void cSfcModuleMeasProgram::setsecINTNotifier()
 {
-    m_MsgNrCmdList[m_secInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterErrCalcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
+    m_MsgNrCmdList[m_secInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterEcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
 }
 
 void cSfcModuleMeasProgram::setMasterMux()
 {
     const QString &dutInputName = m_pModule->getConfigData()->m_dutConfigs.m_sDutInput.m_sValue;
-    m_MsgNrCmdList[m_secInterface->setMux(m_masterErrCalcName, dutInputName)] = setmastermux;
+    m_MsgNrCmdList[m_secInterface->setMux(m_masterEcName, dutInputName)] = setmastermux;
 }
 
 void cSfcModuleMeasProgram::setMasterMeasMode()
 {
-    //m_MsgNrCmdList[m_secInterface->setCmdid(m_masterErrCalcName, ECALCCMDID::COUNTEDGE)] = setmastermeasmode;
-    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::CMD, ECALCCMDID::COUNTEDGE)] = enableinterrupt;
+    //m_MsgNrCmdList[m_secInterface->setCmdid(m_masterEcName, ECALCCMDID::COUNTEDGE)] = setmastermeasmode;
+    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterEcName, ECALCREG::CMD, ECALCCMDID::COUNTEDGE)] = enableinterrupt;
 }
 
 void cSfcModuleMeasProgram::activationDone()
@@ -335,7 +335,7 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 QStringList sl;
                 sl = answer.toString().split(';');
                 if ((reply == ack) && (sl.length() >= 2)) {
-                    m_masterErrCalcName = sl.at(0);
+                    m_masterEcName = sl.at(0);
                     emit activationContinue();
                 }
                 else
@@ -491,12 +491,12 @@ void cSfcModuleMeasProgram::onStartStopChanged(QVariant newValue)
 
 void cSfcModuleMeasProgram::readIntRegister()
 {
-    m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::INTREG)] = readintregister;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_masterEcName, ECALCREG::INTREG)] = readintregister;
 }
 
 void cSfcModuleMeasProgram::resetIntRegister()
 {
-    m_MsgNrCmdList[m_secInterface->intAck(m_masterErrCalcName, 0xF)] = resetintregister; // we reset all here
+    m_MsgNrCmdList[m_secInterface->intAck(m_masterEcName, 0xF)] = resetintregister; // we reset all here
 }
 
 void cSfcModuleMeasProgram::checkForRestart()
@@ -506,7 +506,7 @@ void cSfcModuleMeasProgram::checkForRestart()
 
 void cSfcModuleMeasProgram::stopECCalculator()
 {
-    m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
+    m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
 }
 
 void cSfcModuleMeasProgram::freeECalculator()
@@ -518,14 +518,14 @@ void cSfcModuleMeasProgram::freeECalculator()
 
 void cSfcModuleMeasProgram::enableInterrupt()
 {
-    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
+    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterEcName, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
 }
 
 void cSfcModuleMeasProgram::startMeasurement()
 {
     m_pFlankCountAct->setValue(0);
     if(!m_pModule->getDemo())
-        m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::CMD, ECALCCMDID::ARM + ECALCCMDID::COUNTEDGE)] = startmeasurement;
+        m_MsgNrCmdList[m_secInterface->writeRegister(m_masterEcName, ECALCREG::CMD, ECALCCMDID::ARM + ECALCCMDID::COUNTEDGE)] = startmeasurement;
 }
 
 void cSfcModuleMeasProgram::startMeasurementDone()
@@ -540,14 +540,14 @@ void cSfcModuleMeasProgram::Actualize()
 {
     if(m_bMeasurementRunning) {
         if(!m_pModule->getDemo()) {
-            m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::MTCNTact)] = actualizeprogress;
+            m_MsgNrCmdList[m_secInterface->readRegister(m_masterEcName, ECALCREG::MTCNTact)] = actualizeprogress;
         }
     }
 }
 
 void cSfcModuleMeasProgram::readStatusRegister()
 {
-    m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = readstatus;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_masterEcName, ECALCREG::STATUS)] = readstatus;
 }
 
 }

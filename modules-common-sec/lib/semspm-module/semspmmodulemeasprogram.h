@@ -140,9 +140,9 @@ private:
     SecPowerModuleObserver m_powerModuleObserver;
     std::unique_ptr<AbstractSemSpmFunctions> m_semSpmFunctions;
 
-    QString m_masterErrCalcName;
-    QString m_slaveErrCalcName;
-    QString m_slave2ErrCalcName;
+    QString m_masterEcName;
+    QString m_slaveRefEnergyCounterEcName;
+    QString m_slaveTimeMeasErrEcName;
 
     VfModuleParameter* m_pRefInputPar = nullptr;
     VfModuleParameter* m_pRefConstantPar = nullptr;

@@ -385,9 +385,9 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 qInfo("%s: Units fetched: %s", qPrintable(m_pModule->getVeinModuleName()), qPrintable(answer.toString()));
                 QStringList sl = answer.toString().split(';');
                 if ((reply == ack) && (sl.length() >= 3)) {
-                    m_masterErrCalcName = sl.at(0);
-                    m_slaveErrCalcName = sl.at(1);
-                    m_slave2ErrCalcName = sl.at(2);
+                    m_masterEcName = sl.at(0);
+                    m_slaveRefEnergyCounterEcName = sl.at(1);
+                    m_slaveTimeMeasErrEcName = sl.at(2);
                     emit activationContinue();
                 }
                 else
@@ -685,7 +685,7 @@ void SemSpmModuleMeasProgram::fetchECalcUnits()
 
 void SemSpmModuleMeasProgram::setsecINTNotifier()
 {
-    m_MsgNrCmdList[m_secInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterErrCalcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
+    m_MsgNrCmdList[m_secInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterEcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
 }
 
 void SemSpmModuleMeasProgram::activationDone()
@@ -721,7 +721,7 @@ void SemSpmModuleMeasProgram::stopECCalculator()
     if (status & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED))
         setStatus(ECALCSTATUS::ABORT);
 
-    m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
+    m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
     m_ActualizeTimer->stop();
 }
@@ -734,12 +734,12 @@ void SemSpmModuleMeasProgram::freeECalculator()
 
 void SemSpmModuleMeasProgram::setSync()
 {
-    m_MsgNrCmdList[m_secInterface->setSync(m_slaveErrCalcName, m_masterErrCalcName)] = setsync;
+    m_MsgNrCmdList[m_secInterface->setSync(m_slaveRefEnergyCounterEcName, m_masterEcName)] = setsync;
 }
 
 void SemSpmModuleMeasProgram::setSync2()
 {
-    m_MsgNrCmdList[m_secInterface->setSync(m_slave2ErrCalcName, m_masterErrCalcName)] = setsync;
+    m_MsgNrCmdList[m_secInterface->setSync(m_slaveTimeMeasErrEcName, m_masterEcName)] = setsync;
 }
 
 void SemSpmModuleMeasProgram::setMeaspulses()
@@ -749,38 +749,38 @@ void SemSpmModuleMeasProgram::setMeaspulses()
     else
         m_nTimerCountStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
 
-    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nTimerCountStart)] = setmeaspulses;
+    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterEcName, ECALCREG::MTCNTin, m_nTimerCountStart)] = setmeaspulses;
 }
 
 void SemSpmModuleMeasProgram::setMasterMux()
 {
-    m_MsgNrCmdList[m_secInterface->setMux(m_masterErrCalcName, QString("t1ms"))] = setmastermux; // to be discussed
+    m_MsgNrCmdList[m_secInterface->setMux(m_masterEcName, QString("t1ms"))] = setmastermux; // to be discussed
 }
 
 void SemSpmModuleMeasProgram::setSlaveMux()
 {
     QString refPowerName = m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue;
-    m_MsgNrCmdList[m_secInterface->setMux(m_slaveErrCalcName, refPowerName)] = setslavemux;
+    m_MsgNrCmdList[m_secInterface->setMux(m_slaveRefEnergyCounterEcName, refPowerName)] = setslavemux;
 }
 
 void SemSpmModuleMeasProgram::setSlave2Mux()
 {
-    m_MsgNrCmdList[m_secInterface->setMux(m_slave2ErrCalcName, QString("t1ms"))] = setslavemux;
+    m_MsgNrCmdList[m_secInterface->setMux(m_slaveTimeMeasErrEcName, QString("t1ms"))] = setslavemux;
 }
 
 void SemSpmModuleMeasProgram::setMasterMeasMode()
 {
-    m_MsgNrCmdList[m_secInterface->setCmdid(m_masterErrCalcName, ECALCCMDID::SINGLEERRORMASTER)] = setmastermeasmode;
+    m_MsgNrCmdList[m_secInterface->setCmdid(m_masterEcName, ECALCCMDID::SINGLEERRORMASTER)] = setmastermeasmode;
 }
 
 void SemSpmModuleMeasProgram::setSlaveMeasMode()
 {
-    m_MsgNrCmdList[m_secInterface->setCmdid(m_slaveErrCalcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
+    m_MsgNrCmdList[m_secInterface->setCmdid(m_slaveRefEnergyCounterEcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
 }
 
 void SemSpmModuleMeasProgram::setSlave2MeasMode()
 {
-    m_MsgNrCmdList[m_secInterface->setCmdid(m_slave2ErrCalcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
+    m_MsgNrCmdList[m_secInterface->setCmdid(m_slaveTimeMeasErrEcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
 }
 
 void SemSpmModuleMeasProgram::enableInterrupt()
@@ -788,7 +788,7 @@ void SemSpmModuleMeasProgram::enableInterrupt()
     // in case of StopModeTimed mode we want an interrupt when ready
     // in case of not StopModeStartStop mode we set the time to maximum and the user will stop the measurement by pressing stop
     // so we program enable int. in any case
-    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterErrCalcName, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
+    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterEcName, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
 }
 
 void SemSpmModuleMeasProgram::startMeasurement()
@@ -804,7 +804,7 @@ void SemSpmModuleMeasProgram::startMeasurement()
     }
     else
         m_pMeasEstimatedEndTime->setValue("");
-    m_MsgNrCmdList[m_secInterface->start(m_masterErrCalcName)] = startmeasurement;
+    m_MsgNrCmdList[m_secInterface->start(m_masterEcName)] = startmeasurement;
     setStatus(ECALCSTATUS::ARMED);
     m_uint32BitExpander.resetForNextPeriod();
     m_fEnergy = 0.0;
@@ -825,25 +825,25 @@ void SemSpmModuleMeasProgram::startMeasurementDone()
 
 void SemSpmModuleMeasProgram::readIntRegister()
 {
-    m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::INTREG)] = readintregister;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_masterEcName, ECALCREG::INTREG)] = readintregister;
 }
 
 void SemSpmModuleMeasProgram::resetIntRegister()
 {
-    m_MsgNrCmdList[m_secInterface->intAck(m_masterErrCalcName, 0xF)] = resetintregister; // we reset all here
+    m_MsgNrCmdList[m_secInterface->intAck(m_masterEcName, 0xF)] = resetintregister; // we reset all here
 }
 
 void SemSpmModuleMeasProgram::readVICountact()
 {
-    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTfin)] = readvicount;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, ECALCREG::MTCNTfin)] = readvicount;
 }
 
 void SemSpmModuleMeasProgram::readTCountact()
 {
-    m_MsgNrCmdList[m_secInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTfin)] = readtcount;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTfin)] = readtcount;
     // non stopMode has been stopped already in newStartStop()
     if(m_pModule->getConfigData()->m_stopMode.m_nValue == SemSpmModuleConfigData::StopModeTimed)
-        m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
+        m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
     setStatus(ECALCSTATUS::READY);
     m_bMeasurementRunning = false;
@@ -927,7 +927,7 @@ void SemSpmModuleMeasProgram::newStartStop(QVariant startstop)
         else if (m_pModule->getConfigData()->m_stopMode.m_nValue == SemSpmModuleConfigData::StopModeStartStop) {
             // In "Start/Stop" mode we handle pressing stop as if the
             // measurement became ready and an interrupt occured
-            m_MsgNrCmdList[m_secInterface->stop(m_masterErrCalcName)] = stopmeas;
+            m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
             m_ActualizeTimer->stop();
             if (!m_finalResultStateMachine.isRunning())
                 m_finalResultStateMachine.start();
@@ -1002,9 +1002,9 @@ void SemSpmModuleMeasProgram::newLowerLimit(QVariant limit)
 void SemSpmModuleMeasProgram::Actualize()
 {
     if(!m_pModule->getDemo()) {
-        m_MsgNrCmdList[m_secInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
-        m_MsgNrCmdList[m_secInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
-        m_MsgNrCmdList[m_secInterface->readRegister(m_slave2ErrCalcName, ECALCREG::MTCNTact)] = actualizepower;
+        m_MsgNrCmdList[m_secInterface->readRegister(m_masterEcName, ECALCREG::STATUS)] = actualizestatus;
+        m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, ECALCREG::MTCNTact)] = actualizeenergy;
+        m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTact)] = actualizepower;
     }
 }
 
