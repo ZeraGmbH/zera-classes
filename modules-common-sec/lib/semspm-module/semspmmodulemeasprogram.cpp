@@ -526,7 +526,7 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 break;
             case readtcount:
                 if (reply == ack) {
-                    m_fTimeSecondsFinal = double(answer.toLongLong()) * 0.001;
+                    setEndTimeVars(answer.toUInt());
                     emit interruptContinue();
                 }
                 else
@@ -652,12 +652,6 @@ void SemSpmModuleMeasProgram::updateDemoMeasurementResults()
     m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
     m_pRefConstantPar->setValue(3600000);
     setEMResult();
-}
-
-void SemSpmModuleMeasProgram::calculateMeasTime()
-{
-    int measDuration = m_measStartDateTime.msecsTo(m_measEndDateTime);
-    m_pMeasDurationMs->setValue(measDuration);
 }
 
 void SemSpmModuleMeasProgram::resourceManagerConnect()
@@ -857,8 +851,6 @@ void SemSpmModuleMeasProgram::readTCountact()
 
 void SemSpmModuleMeasProgram::onEMResultState()
 {
-    SecDateTimeHelper::setDateTimeNow(m_measEndDateTime, m_pMeasEndTime);
-    calculateMeasTime();
     setEMResult();
 }
 
@@ -880,6 +872,14 @@ void SemSpmModuleMeasProgram::setEMResult()
     m_pResultAct->setValue(m_fResult);
     m_pEnergyAct->setValue(m_fEnergy);
     m_pPowerAct->setValue(m_fPower);
+}
+
+void SemSpmModuleMeasProgram::setEndTimeVars(quint32 durationMs)
+{
+    m_pMeasDurationMs->setValue(durationMs);
+    m_fTimeSecondsFinal = double(durationMs) * 0.001;
+    m_measEndDateTime = m_measStartDateTime.addMSecs(durationMs);
+    SecDateTimeHelper::setDateTime(m_measEndDateTime, m_pMeasEndTime);
 }
 
 void SemSpmModuleMeasProgram::evaluateResult(const double refValue, const double dutValue)

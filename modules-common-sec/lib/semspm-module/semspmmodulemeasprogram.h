@@ -81,6 +81,7 @@ private:
     void setValidators();
     void setUnits();
     void setEMResult();
+    void setEndTimeVars(quint32 durationMs);
     void evaluateResult(const double refValue, const double dutValue);
 
     QStringList getEnergyUnitValidator();
@@ -93,8 +94,6 @@ private:
 
     void handleSECInterrupt();
     void updateDemoMeasurementResults();
-
-    void calculateMeasTime();
 
     SemSpmModule* m_pModule = nullptr; // the module we live in
     Zera::cRMInterface m_rmInterface;
