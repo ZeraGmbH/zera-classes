@@ -82,6 +82,7 @@ private:
     void setEMResult();
     void setEndTimeVars(quint32 durationMs);
     void evaluateResult(const double refValue, const double dutValue);
+    void completeCurrentMeasurment();
 
     QStringList getEnergyUnitValidator();
     QString getEnergyUnit();

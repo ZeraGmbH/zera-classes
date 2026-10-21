@@ -828,12 +828,7 @@ void SemSpmModuleMeasProgram::readVICountact()
 void SemSpmModuleMeasProgram::readTCountact()
 {
     m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTfin)] = readtcount;
-    // Start/Stop mode has been stopped already in newStartStop()
-    if(m_pModule->getConfigData()->m_stopMode.m_nValue == SemSpmModuleConfigData::StopModeTimed)
-        m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
-    m_pStartStopPar->setValue(QVariant(0)); // restart enable
-    setStatus(ECALCSTATUS::READY);
-    m_bMeasurementRunning = false;
+    completeCurrentMeasurment();
 }
 
 void SemSpmModuleMeasProgram::onEMResultState()
@@ -879,6 +874,12 @@ void SemSpmModuleMeasProgram::evaluateResult(const double refValue, const double
         m_fResult = (dutValue - refValue) * 100.0 / refValue;
         setRating();
     }
+}
+
+void SemSpmModuleMeasProgram::completeCurrentMeasurment()
+{
+    stopECCalculator();
+    setStatus(ECALCSTATUS::READY);
 }
 
 void SemSpmModuleMeasProgram::setRating()
