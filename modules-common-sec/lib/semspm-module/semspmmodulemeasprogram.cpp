@@ -707,8 +707,9 @@ void SemSpmModuleMeasProgram::stopECCalculator()
 {
     m_bMeasurementRunning = false;
     quint32 status = getStatus();
-    if (status & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED))
-        setStatus(ECALCSTATUS::ABORT);
+    if (m_pModule->getConfigData()->m_stopMode.m_nValue != SemSpmModuleConfigData::StopModeStartStop) // no abort on start/stop
+        if (status & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED))
+            setStatus(ECALCSTATUS::ABORT);
 
     m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
@@ -906,18 +907,13 @@ void SemSpmModuleMeasProgram::newStartStop(QVariant startstop)
         // m_ActualizeTimer.start();
     }
     else {
-        if (m_pModule->getConfigData()->m_stopMode.m_nValue == SemSpmModuleConfigData::StopModeTimed)
-            stopECCalculator();
-        else if (m_pModule->getConfigData()->m_stopMode.m_nValue == SemSpmModuleConfigData::StopModeStartStop) {
+        stopECCalculator();
+        if (m_pModule->getConfigData()->m_stopMode.m_nValue == SemSpmModuleConfigData::StopModeStartStop) {
             // In "Start/Stop" mode we handle pressing stop as if the
             // measurement became ready and an interrupt occured
-            m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
-            m_ActualizeTimer->stop();
             if (!m_finalResultStateMachine.isRunning())
                 m_finalResultStateMachine.start();
         }
-        else
-            qCritical("Unknown Start/Stop mdoe");
     }
 }
 
