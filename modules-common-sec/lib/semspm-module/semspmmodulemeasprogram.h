@@ -57,7 +57,7 @@ private slots:
     void startMeasurementDone();
 
     void resetIntRegister();
-    void readVICountact(); // This one reads result from alst measurement - sometimes / after start stop????
+    void readVICountact(); // This one reads result from last measurement - sometimes / after start stop????
     void readTCountact();
     void onEMResultState();
     void setRating();
