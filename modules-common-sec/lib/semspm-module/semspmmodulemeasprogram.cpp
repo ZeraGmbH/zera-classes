@@ -705,15 +705,17 @@ void SemSpmModuleMeasProgram::activationDone()
 
 void SemSpmModuleMeasProgram::stopECCalculator()
 {
-    m_bMeasurementRunning = false;
-    quint32 status = getStatus();
-    if (m_pModule->getConfigData()->m_stopMode.m_nValue != SemSpmModuleConfigData::StopModeStartStop) // no abort on start/stop
-        if (status & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED))
-            setStatus(ECALCSTATUS::ABORT);
+    if (m_bMeasurementRunning) {
+        m_bMeasurementRunning = false;
+        quint32 status = getStatus();
+        if (m_pModule->getConfigData()->m_stopMode.m_nValue != SemSpmModuleConfigData::StopModeStartStop) // no abort on start/stop
+            if (status & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED))
+                setStatus(ECALCSTATUS::ABORT);
 
-    m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
-    m_pStartStopPar->setValue(QVariant(0));
-    m_ActualizeTimer->stop();
+        m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
+        m_pStartStopPar->setValue(QVariant(0));
+        m_ActualizeTimer->stop();
+    }
 }
 
 void SemSpmModuleMeasProgram::freeECalculator()
