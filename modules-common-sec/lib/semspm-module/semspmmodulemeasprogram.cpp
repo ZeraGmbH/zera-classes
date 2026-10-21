@@ -106,20 +106,17 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
     // * for interrupt handling (Interrupt is thrown on measurement finished)
     // mode non stopMode (Start/Stop):
     // * on user stop this machine is started.
-    m_readIntRegisterState.addTransition(this, &SemSpmModuleMeasProgram::interruptContinue, &m_resetIntRegisterState);
     m_resetIntRegisterState.addTransition(this, &SemSpmModuleMeasProgram::interruptContinue, &m_readFinalEnergyCounterState);
     m_readFinalEnergyCounterState.addTransition(this, &SemSpmModuleMeasProgram::interruptContinue, &m_readFinalTimeCounterState);
     m_readFinalTimeCounterState.addTransition(this, &SemSpmModuleMeasProgram::interruptContinue, &m_setEMResultState);
 
-    m_finalResultStateMachine.addState(&m_readIntRegisterState);
     m_finalResultStateMachine.addState(&m_resetIntRegisterState);
     m_finalResultStateMachine.addState(&m_readFinalEnergyCounterState);
     m_finalResultStateMachine.addState(&m_readFinalTimeCounterState);
     m_finalResultStateMachine.addState(&m_setEMResultState);
 
-    m_finalResultStateMachine.setInitialState(&m_readIntRegisterState);
+    m_finalResultStateMachine.setInitialState(&m_resetIntRegisterState);
 
-    connect(&m_readIntRegisterState, &QState::entered, this, &SemSpmModuleMeasProgram::readIntRegister);
     connect(&m_resetIntRegisterState, &QState::entered, this, &SemSpmModuleMeasProgram::resetIntRegister);
     connect(&m_readFinalEnergyCounterState, &QState::entered, this, &SemSpmModuleMeasProgram::readVICountact);
     connect(&m_readFinalTimeCounterState, &QState::entered, this, &SemSpmModuleMeasProgram::readTCountact);
@@ -356,7 +353,6 @@ enum moduleCmds
 
     stopmeas,
 
-    readintregister,
     resetintregister,
     readvicount,
     readtcount
@@ -499,12 +495,6 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                     notifyError(registerpcbnotifierErrMsg);
                 break;
 
-            case readintregister:
-                if (reply == ack)
-                    emit interruptContinue();
-                else
-                    notifyError(readsecregisterErrMsg);
-                break;
             case resetintregister:
                 if (reply == ack)
                     emit interruptContinue();
@@ -637,7 +627,6 @@ void SemSpmModuleMeasProgram::setStatus(quint32 status)
 void SemSpmModuleMeasProgram::handleSECInterrupt()
 {
     if (!m_finalResultStateMachine.isRunning()) {
-        m_finalResultStateMachine.setInitialState(&m_readIntRegisterState);
         m_finalResultStateMachine.start();
         m_ActualizeTimer->stop();
     }
@@ -821,11 +810,6 @@ void SemSpmModuleMeasProgram::startMeasurementDone()
 {
     Actualize(); // we actualize at once after started
     m_ActualizeTimer->start(); // and after current interval
-}
-
-void SemSpmModuleMeasProgram::readIntRegister()
-{
-    m_MsgNrCmdList[m_secInterface->readRegister(m_masterEcName, ECALCREG::INTREG)] = readintregister;
 }
 
 void SemSpmModuleMeasProgram::resetIntRegister()
