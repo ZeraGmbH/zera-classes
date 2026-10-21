@@ -150,7 +150,6 @@ enum sfcmoduleCmds
 
     readintregister,
     resetintregister,
-    readvicount,
 
     setmastermux,
     setmastermeasmode,
