@@ -651,7 +651,7 @@ void SemSpmModuleMeasProgram::updateDemoMeasurementResults()
     m_uint32BitExpander.setFinal32(randVal); //random value between 0 and 9
     m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
     m_pRefConstantPar->setValue(3600000);
-    setEMResult();
+    setEMResult(); // Demo (for search)
 }
 
 void SemSpmModuleMeasProgram::resourceManagerConnect()
@@ -841,7 +841,7 @@ void SemSpmModuleMeasProgram::readVICountact()
 void SemSpmModuleMeasProgram::readTCountact()
 {
     m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTfin)] = readtcount;
-    // non stopMode has been stopped already in newStartStop()
+    // Start/Stop mode has been stopped already in newStartStop()
     if(m_pModule->getConfigData()->m_stopMode.m_nValue == SemSpmModuleConfigData::StopModeTimed)
         m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
