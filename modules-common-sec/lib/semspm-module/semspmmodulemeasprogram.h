@@ -40,7 +40,7 @@ private slots:
     void setsecINTNotifier();
     void activationDone();
 
-    void stopECCalculator();
+    void stopECCalculatorForCleanup();
     void freeECalculator();
 
     void setSync();
@@ -82,6 +82,7 @@ private:
     void setEMResult();
     void setEndTimeVars(quint32 durationMs);
     void evaluateResult(const double refValue, const double dutValue);
+    void stopECCalculator();
 
     QStringList getEnergyUnitValidator();
     QString getEnergyUnit();

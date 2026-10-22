@@ -56,7 +56,7 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
 
     m_deactivationMachine.setInitialState(&m_stopECalculatorState);
 
-    connect(&m_stopECalculatorState, &QState::entered, this, &SemSpmModuleMeasProgram::stopECCalculator);
+    connect(&m_stopECalculatorState, &QState::entered, this, &SemSpmModuleMeasProgram::stopECCalculatorForCleanup);
     connect(&m_freeECalculatorState, &QState::entered, this, &SemSpmModuleMeasProgram::freeECalculator);
     connect(&m_deactivationDoneState, &QState::entered, this, &cModuleActivist::deactivated);
 
@@ -703,17 +703,27 @@ void SemSpmModuleMeasProgram::activationDone()
     emit activated();
 }
 
+void SemSpmModuleMeasProgram::stopECCalculatorForCleanup()
+{
+    if (m_bMeasurementRunning)
+        stopECCalculator();
+    else
+        emit deactivationContinue();
+}
+
 void SemSpmModuleMeasProgram::stopECCalculator()
 {
-    m_bMeasurementRunning = false;
-    quint32 status = getStatus();
-    if (m_pModule->getConfigData()->m_stopMode.m_nValue != SemSpmModuleConfigData::StopModeStartStop) // no abort on start/stop
-        if (status & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED))
-            setStatus(ECALCSTATUS::ABORT);
+    if (m_bMeasurementRunning) {
+        m_bMeasurementRunning = false;
+        quint32 status = getStatus();
+        if (m_pModule->getConfigData()->m_stopMode.m_nValue != SemSpmModuleConfigData::StopModeStartStop) // no abort on start/stop
+            if (status & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED))
+                setStatus(ECALCSTATUS::ABORT);
 
-    m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
-    m_pStartStopPar->setValue(QVariant(0));
-    m_ActualizeTimer->stop();
+        m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas; // This fires deactivationContinue() so unconditional for now
+        m_pStartStopPar->setValue(QVariant(0));
+        m_ActualizeTimer->stop();
+    }
 }
 
 void SemSpmModuleMeasProgram::freeECalculator()
@@ -826,12 +836,8 @@ void SemSpmModuleMeasProgram::readVICountact()
 void SemSpmModuleMeasProgram::readTCountact()
 {
     m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTfin)] = readtcount;
-    // Start/Stop mode has been stopped already in newStartStop()
-    if(m_pModule->getConfigData()->m_stopMode.m_nValue == SemSpmModuleConfigData::StopModeTimed)
-        m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
-    m_pStartStopPar->setValue(QVariant(0)); // restart enable
+    stopECCalculator();
     setStatus(ECALCSTATUS::READY);
-    m_bMeasurementRunning = false;
 }
 
 void SemSpmModuleMeasProgram::onEMResultState()
