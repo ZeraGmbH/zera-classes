@@ -825,12 +825,12 @@ void SemSpmModuleMeasProgram::startMeasurementDone()
 
 void SemSpmModuleMeasProgram::readFinalEnergyCounter()
 {
-    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, ECALCREG::MTCNTfin)] = readfinalenegrycount;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, ECALCREG::MTCNTact)] = readfinalenegrycount;
 }
 
 void SemSpmModuleMeasProgram::readFinalTimeCounter()
 {
-    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTfin)] = readfinaltimecount;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTact)] = readfinaltimecount;
     stopECCalculator();
     setStatus(ECALCSTATUS::READY);
 }
