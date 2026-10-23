@@ -508,7 +508,8 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                     // see cSec1ModuleMeasProgram::catchInterfaceAnswer /
                     // case readvicount
                     if((getStatus() & ECALCSTATUS::ABORT) == 0)
-                        m_uint32BitExpander.setFinal32(answer.toLongLong());
+                        // no need to use uint32BitExpander 'final' functions - here we just use actual
+                        m_uint32BitExpander.setActual32(answer.toUInt());
                     emit interruptContinue();
                 }
                 else
@@ -847,7 +848,8 @@ void SemSpmModuleMeasProgram::onEMResultState()
 
 void SemSpmModuleMeasProgram::setEMResult()
 {
-    const double energyCounterFinal = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getFinalExpanded64());
+    // no need to use uint32BitExpander 'final' functions - here we just use actual
+    const double energyCounterFinal = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64());
     const double WRef = energyCounterFinal / m_pRefConstantPar->getValue().toDouble();
 
     const QHash<QString, double> &unitHash = m_semSpmFunctions->getUnitFactorHash();
