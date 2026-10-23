@@ -134,17 +134,17 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     connect(&m_startMeasurementState, &QState::entered, this, &cSec1ModuleMeasProgram::startMeasurement);
     connect(&m_startMeasurementDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::startMeasurementDone);
 
-    // setting up statemachine for interrupt handling (Interrupt is thrown on measuremnt finished)
-    m_readMTCountactState.addTransition(this, &cSec1ModuleMeasProgram::interruptContinue, &m_calcResultAndResetIntState);
+    // setting up statemachine for interrupt handling (Interrupt is thrown on measurement finished)
+    m_readFinalEnergyCounterState.addTransition(this, &cSec1ModuleMeasProgram::interruptContinue, &m_calcResultAndResetIntState);
     m_calcResultAndResetIntState.addTransition(this, &cSec1ModuleMeasProgram::interruptContinue, &m_FinalState);
 
-    m_InterrupthandlingStateMachine.addState(&m_readMTCountactState);
+    m_InterrupthandlingStateMachine.addState(&m_readFinalEnergyCounterState);
     m_InterrupthandlingStateMachine.addState(&m_calcResultAndResetIntState);
     m_InterrupthandlingStateMachine.addState(&m_FinalState);
 
-    m_InterrupthandlingStateMachine.setInitialState(&m_readMTCountactState);
+    m_InterrupthandlingStateMachine.setInitialState(&m_readFinalEnergyCounterState);
 
-    connect(&m_readMTCountactState, &QState::entered, this, &cSec1ModuleMeasProgram::readMTCountact);
+    connect(&m_readFinalEnergyCounterState, &QState::entered, this, &cSec1ModuleMeasProgram::readFinalEnergyCounter);
     connect(&m_calcResultAndResetIntState, &QState::entered, this, &cSec1ModuleMeasProgram::setECResultAndResetInt);
     connect(&m_FinalState, &QState::entered, this, &cSec1ModuleMeasProgram::checkForRestart);
 }
@@ -540,8 +540,8 @@ enum sec1moduleCmds
 
    stopmeas,
 
-   resetintregister,
-   readvicount
+   readfinalenegrycounter,
+   resetintregister
 };
 
 void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
@@ -721,7 +721,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 else
                     notifyError(writesecregisterErrMsg);
                 break;
-            case readvicount:
+            case readfinalenegrycounter:
                 if (reply == ack) {
                     // On high frequency continuous measurements chances are high
                     // that an abort comes in while we fetch final energy counter.
@@ -1229,14 +1229,14 @@ void cSec1ModuleMeasProgram::startMeasurementDone() // final state of m_startMea
     m_ActualizeTimer->start(); // and after current interval
 }
 
+void cSec1ModuleMeasProgram::readFinalEnergyCounter()
+{
+    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, ECALCREG::MTCNTfin)] = readfinalenegrycounter;
+}
+
 void cSec1ModuleMeasProgram::resetIntRegister()
 {
     m_MsgNrCmdList[m_secInterface->intAck(m_masterEcName, 0xF)] = resetintregister; // we reset all here
-}
-
-void cSec1ModuleMeasProgram::readMTCountact()
-{
-    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, ECALCREG::MTCNTfin)] = readvicount;
 }
 
 void cSec1ModuleMeasProgram::setECResult()

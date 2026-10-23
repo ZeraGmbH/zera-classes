@@ -62,7 +62,7 @@ private slots:
     void startMeasurement();
     void startMeasurementDone();
 
-    void readMTCountact();
+    void readFinalEnergyCounter();
     void setECResult();
     void setRating();
     void setECResultAndResetInt();
@@ -157,7 +157,7 @@ private:
 
     // statemachine for interrupthandling;
     QStateMachine m_InterrupthandlingStateMachine;
-    QState m_readMTCountactState;
+    QState m_readFinalEnergyCounterState;
     QState m_calcResultAndResetIntState;
     QFinalState m_FinalState;
 
