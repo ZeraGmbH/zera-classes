@@ -1231,7 +1231,14 @@ void cSec1ModuleMeasProgram::startMeasurementDone() // final state of m_startMea
 
 void cSec1ModuleMeasProgram::readFinalEnergyCounter()
 {
-    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, ECALCREG::MTCNTfin)] = readfinalenegrycounter;
+    bool bContinuous = m_pContinuousPar->getValue().toInt() != 0;
+    // * latching was introduced for continuous mode
+    // * latching is not reliable
+    // => so use latched counter on continuous mode only
+    quint8 registerToRead = ECALCREG::MTCNTact;
+    if (bContinuous)
+        registerToRead = ECALCREG::MTCNTfin;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, registerToRead)] = readfinalenegrycounter;
 }
 
 void cSec1ModuleMeasProgram::resetIntRegister()
