@@ -56,9 +56,9 @@ private slots:
     void startMeasurement();
     void startMeasurementDone();
 
-    void resetIntRegister();
     void readFinalEnergyCounter(); // This one reads result from last measurement - sometimes / after start stop????
     void readFinalTimeCounter();
+    void resetIntRegister();
     void onEMResultState();
     void setRating();
 
@@ -130,9 +130,9 @@ private:
 
     // statemachine for fetchin latched final result
     QStateMachine m_finalResultStateMachine;
-    QState m_resetIntRegisterState;
     QState m_readFinalEnergyCounterState;
     QState m_readFinalTimeCounterState;
+    QState m_resetIntRegisterState;
     QFinalState m_setEMResultState;
 
     SecMeasInputDictionary m_refInputDictionary;

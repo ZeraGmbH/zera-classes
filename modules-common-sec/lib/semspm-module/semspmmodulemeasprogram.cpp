@@ -106,20 +106,20 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
     // * for interrupt handling (Interrupt is thrown on measurement finished)
     // mode non stopMode (Start/Stop):
     // * on user stop this machine is started.
-    m_resetIntRegisterState.addTransition(this, &SemSpmModuleMeasProgram::interruptContinue, &m_readFinalEnergyCounterState);
     m_readFinalEnergyCounterState.addTransition(this, &SemSpmModuleMeasProgram::interruptContinue, &m_readFinalTimeCounterState);
-    m_readFinalTimeCounterState.addTransition(this, &SemSpmModuleMeasProgram::interruptContinue, &m_setEMResultState);
+    m_readFinalTimeCounterState.addTransition(this, &SemSpmModuleMeasProgram::interruptContinue, &m_resetIntRegisterState);
+    m_resetIntRegisterState.addTransition(this, &SemSpmModuleMeasProgram::interruptContinue, &m_setEMResultState);
 
-    m_finalResultStateMachine.addState(&m_resetIntRegisterState);
     m_finalResultStateMachine.addState(&m_readFinalEnergyCounterState);
     m_finalResultStateMachine.addState(&m_readFinalTimeCounterState);
+    m_finalResultStateMachine.addState(&m_resetIntRegisterState);
     m_finalResultStateMachine.addState(&m_setEMResultState);
 
-    m_finalResultStateMachine.setInitialState(&m_resetIntRegisterState);
+    m_finalResultStateMachine.setInitialState(&m_readFinalEnergyCounterState);
 
-    connect(&m_resetIntRegisterState, &QState::entered, this, &SemSpmModuleMeasProgram::resetIntRegister);
     connect(&m_readFinalEnergyCounterState, &QState::entered, this, &SemSpmModuleMeasProgram::readFinalEnergyCounter);
     connect(&m_readFinalTimeCounterState, &QState::entered, this, &SemSpmModuleMeasProgram::readFinalTimeCounter);
+    connect(&m_resetIntRegisterState, &QState::entered, this, &SemSpmModuleMeasProgram::resetIntRegister);
     connect(&m_setEMResultState, &QState::entered, this, &SemSpmModuleMeasProgram::onEMResultState);
 
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
@@ -353,9 +353,9 @@ enum moduleCmds
 
     stopmeas,
 
-    resetintregister,
     readfinalenegrycount,
-    readfinaltimecount
+    readfinaltimecount,
+    resetintregister
 };
 
 
@@ -823,11 +823,6 @@ void SemSpmModuleMeasProgram::startMeasurementDone()
     m_ActualizeTimer->start(); // and after current interval
 }
 
-void SemSpmModuleMeasProgram::resetIntRegister()
-{
-    m_MsgNrCmdList[m_secInterface->intAck(m_masterEcName, 0xF)] = resetintregister; // we reset all here
-}
-
 void SemSpmModuleMeasProgram::readFinalEnergyCounter()
 {
     m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, ECALCREG::MTCNTfin)] = readfinalenegrycount;
@@ -838,6 +833,11 @@ void SemSpmModuleMeasProgram::readFinalTimeCounter()
     m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTfin)] = readfinaltimecount;
     stopECCalculator();
     setStatus(ECALCSTATUS::READY);
+}
+
+void SemSpmModuleMeasProgram::resetIntRegister()
+{
+    m_MsgNrCmdList[m_secInterface->intAck(m_masterEcName, 0xF)] = resetintregister; // we reset all here
 }
 
 void SemSpmModuleMeasProgram::onEMResultState()
