@@ -135,18 +135,15 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     connect(&m_startMeasurementDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::startMeasurementDone);
 
     // setting up statemachine for interrupt handling (Interrupt is thrown on measuremnt finished)
-    m_readIntRegisterState.addTransition(this, &cSec1ModuleMeasProgram::interruptContinue, &m_readMTCountactState);
     m_readMTCountactState.addTransition(this, &cSec1ModuleMeasProgram::interruptContinue, &m_calcResultAndResetIntState);
     m_calcResultAndResetIntState.addTransition(this, &cSec1ModuleMeasProgram::interruptContinue, &m_FinalState);
 
-    m_InterrupthandlingStateMachine.addState(&m_readIntRegisterState);
     m_InterrupthandlingStateMachine.addState(&m_readMTCountactState);
     m_InterrupthandlingStateMachine.addState(&m_calcResultAndResetIntState);
     m_InterrupthandlingStateMachine.addState(&m_FinalState);
 
-    m_InterrupthandlingStateMachine.setInitialState(&m_readIntRegisterState);
+    m_InterrupthandlingStateMachine.setInitialState(&m_readMTCountactState);
 
-    connect(&m_readIntRegisterState, &QState::entered, this, &cSec1ModuleMeasProgram::readIntRegister);
     connect(&m_readMTCountactState, &QState::entered, this, &cSec1ModuleMeasProgram::readMTCountact);
     connect(&m_calcResultAndResetIntState, &QState::entered, this, &cSec1ModuleMeasProgram::setECResultAndResetInt);
     connect(&m_FinalState, &QState::entered, this, &cSec1ModuleMeasProgram::checkForRestart);
@@ -543,7 +540,6 @@ enum sec1moduleCmds
 
    stopmeas,
 
-   readintregister,
    resetintregister,
    readvicount
 };
@@ -719,12 +715,6 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 break;
 
 
-            case readintregister:
-                if (reply == ack)
-                    emit interruptContinue();
-                else
-                    notifyError(readsecregisterErrMsg);
-                break;
             case resetintregister:
                 if (reply == ack)
                     emit interruptContinue();
@@ -1237,11 +1227,6 @@ void cSec1ModuleMeasProgram::startMeasurementDone() // final state of m_startMea
     resetPowerAndEnergy();
     Actualize(); // we acualize at once after started
     m_ActualizeTimer->start(); // and after current interval
-}
-
-void cSec1ModuleMeasProgram::readIntRegister()
-{
-    m_MsgNrCmdList[m_secInterface->readRegister(m_masterEcName, ECALCREG::INTREG)] = readintregister;
 }
 
 void cSec1ModuleMeasProgram::resetIntRegister()

@@ -62,7 +62,6 @@ private slots:
     void startMeasurement();
     void startMeasurementDone();
 
-    void readIntRegister();
     void resetIntRegister();
     void readMTCountact();
     void setECResult();
@@ -158,7 +157,6 @@ private:
 
     // statemachine for interrupthandling;
     QStateMachine m_InterrupthandlingStateMachine;
-    QState m_readIntRegisterState;
     QState m_readMTCountactState;
     QState m_calcResultAndResetIntState;
     QFinalState m_FinalState;
