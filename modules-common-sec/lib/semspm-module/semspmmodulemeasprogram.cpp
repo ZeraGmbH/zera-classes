@@ -325,7 +325,7 @@ void SemSpmModuleMeasProgram::generateVeinInterface()
     m_pMeasDurationMs = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               key = QString("ACT_MeasTime"),
                                               QString("Last measurement Duration [ms]"),
-                                              QVariant((int)0));
+                                              quint32(0));
     m_pMeasDurationMs->setScpiInfo("CALCULATE", QString("%1:MMEASTIME").arg(modNr), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasDurationMs; // and for the modules interface
 }
@@ -795,7 +795,7 @@ void SemSpmModuleMeasProgram::startMeasurement()
 {
     m_bMeasurementRunning = true;
     SecDateTimeHelper::setDateTimeNow(m_measStartDateTime, m_pMeasStartTime);
-    m_pMeasDurationMs->setValue(0);
+    m_pMeasDurationMs->setValue(quint32(0));
     m_measEndDateTime = QDateTime();
     if (m_pModule->getConfigData()->m_stopMode.m_nValue != SemSpmModuleConfigData::StopModeStartStop) {
         SecDateTimeHelper::setDateTime(m_measEndDateTime, m_pMeasEndTime);

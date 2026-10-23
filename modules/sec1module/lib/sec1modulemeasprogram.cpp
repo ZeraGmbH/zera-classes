@@ -480,7 +480,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pMeasDurationMs = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("ACT_MeasTime"),
                                              QString("Last measurement Duration [ms]"),
-                                             QVariant((int)0));
+                                             quint32(0));
     m_pMeasDurationMs->setScpiInfo("CALCULATE", QString("%1:MMEASTIME").arg(modNr), SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasDurationMs; // and for the modules interface
 }
@@ -498,7 +498,7 @@ void cSec1ModuleMeasProgram::deduceMeasStartTime(quint32 dUTPulseCounterActual)
 
 void cSec1ModuleMeasProgram::calculateMeasTime()
 {
-    int measDuration = m_measStartDateTime.msecsTo(m_measEndDateTime);
+    quint32 measDuration = m_measStartDateTime.msecsTo(m_measEndDateTime);
     m_pMeasDurationMs->setValue(measDuration);
 }
 
@@ -1317,7 +1317,7 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
                                           getUnitFactor(),
                                           m_pMeasStartTime->getValue().toString(),
                                           m_pMeasEndTime->getValue().toString(),
-                                          m_pMeasDurationMs->getValue().toInt());
+                                          m_pMeasDurationMs->getValue().toUInt());
             multiResultToVein();
         }
     }
