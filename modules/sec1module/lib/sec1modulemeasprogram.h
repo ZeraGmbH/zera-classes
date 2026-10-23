@@ -62,7 +62,6 @@ private slots:
     void startMeasurement();
     void startMeasurementDone();
 
-    void resetIntRegister();
     void readMTCountact();
     void setECResult();
     void setRating();
@@ -92,6 +91,7 @@ private:
     void setValidators();
     void setUnits();
     void resetPowerAndEnergy();
+    void resetIntRegister();
 
     QStringList getDutConstUnitValidator();
     QString getEnergyUnit();
