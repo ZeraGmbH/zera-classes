@@ -118,8 +118,8 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
     m_finalResultStateMachine.setInitialState(&m_resetIntRegisterState);
 
     connect(&m_resetIntRegisterState, &QState::entered, this, &SemSpmModuleMeasProgram::resetIntRegister);
-    connect(&m_readFinalEnergyCounterState, &QState::entered, this, &SemSpmModuleMeasProgram::readVICountact);
-    connect(&m_readFinalTimeCounterState, &QState::entered, this, &SemSpmModuleMeasProgram::readTCountact);
+    connect(&m_readFinalEnergyCounterState, &QState::entered, this, &SemSpmModuleMeasProgram::readFinalEnergyCounter);
+    connect(&m_readFinalTimeCounterState, &QState::entered, this, &SemSpmModuleMeasProgram::readFinalTimeCounter);
     connect(&m_setEMResultState, &QState::entered, this, &SemSpmModuleMeasProgram::onEMResultState);
 
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervallLowFreq);
@@ -354,8 +354,8 @@ enum moduleCmds
     stopmeas,
 
     resetintregister,
-    readvicount,
-    readtcount
+    readfinalenegrycount,
+    readfinaltimecount
 };
 
 
@@ -501,7 +501,7 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                     notifyError(writesecregisterErrMsg);
                 break;
-            case readvicount:
+            case readfinalenegrycount:
                 if (reply == ack) {
                     // Although we do not have high frequency measurements,
                     // incorporate still running check as we learned from sec1
@@ -514,7 +514,7 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
-            case readtcount:
+            case readfinaltimecount:
                 if (reply == ack) {
                     setEndTimeVars(answer.toUInt());
                     emit interruptContinue();
@@ -828,14 +828,14 @@ void SemSpmModuleMeasProgram::resetIntRegister()
     m_MsgNrCmdList[m_secInterface->intAck(m_masterEcName, 0xF)] = resetintregister; // we reset all here
 }
 
-void SemSpmModuleMeasProgram::readVICountact()
+void SemSpmModuleMeasProgram::readFinalEnergyCounter()
 {
-    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, ECALCREG::MTCNTfin)] = readvicount;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, ECALCREG::MTCNTfin)] = readfinalenegrycount;
 }
 
-void SemSpmModuleMeasProgram::readTCountact()
+void SemSpmModuleMeasProgram::readFinalTimeCounter()
 {
-    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTfin)] = readtcount;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTfin)] = readfinaltimecount;
     stopECCalculator();
     setStatus(ECALCSTATUS::READY);
 }

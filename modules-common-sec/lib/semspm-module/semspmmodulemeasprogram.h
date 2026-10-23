@@ -57,8 +57,8 @@ private slots:
     void startMeasurementDone();
 
     void resetIntRegister();
-    void readVICountact(); // This one reads result from last measurement - sometimes / after start stop????
-    void readTCountact();
+    void readFinalEnergyCounter(); // This one reads result from last measurement - sometimes / after start stop????
+    void readFinalTimeCounter();
     void onEMResultState();
     void setRating();
 
