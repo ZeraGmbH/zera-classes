@@ -232,7 +232,7 @@ private:
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nMulMeasStoredMax = 400;
-    static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
+    static constexpr quint32 m_nActualizeIntervallLowFreq = 500;
     static constexpr quint32 m_nActualizeIntervallHighFreq = 50;
 
     // Multiple measurements

@@ -52,7 +52,7 @@ private:
     bool m_bMeasurementRunning = false;
 
     TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
-    static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
+    static constexpr quint32 m_nActualizeIntervallLowFreq = 500;
     TimerTemplateQtPtr m_ContinousTimer;
 
     // statemachine for deactivating
