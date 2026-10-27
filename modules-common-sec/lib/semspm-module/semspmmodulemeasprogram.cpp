@@ -25,22 +25,17 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
         qCritical("%s module has invalid configuration!", qPrintable(m_pModule->getVeinModuleName()));
     m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
 
-    m_IdentifyState.addTransition(this, &SemSpmModuleMeasProgram::activationContinue, &m_ecalcServerConnectState);
     //transition from this state to m_fetch....is done in ecalcServerConnect
     m_fetchECalcUnitsState.addTransition(this, &SemSpmModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
     m_setsecINTNotifierState.addTransition(this, &SemSpmModuleMeasProgram::activationContinue, &m_activationDoneState);
 
-    m_activationMachine.addState(&resourceManagerConnectState);
-    m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_ecalcServerConnectState);
     m_activationMachine.addState(&m_fetchECalcUnitsState);
     m_activationMachine.addState(&m_setsecINTNotifierState);
     m_activationMachine.addState(&m_activationDoneState);
 
-    m_activationMachine.setInitialState(&resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_ecalcServerConnectState);
 
-    connect(&resourceManagerConnectState, &QState::entered, this, &SemSpmModuleMeasProgram::resourceManagerConnect);
-    connect(&m_IdentifyState, &QState::entered, this, &SemSpmModuleMeasProgram::sendRMIdent);
     connect(&m_ecalcServerConnectState, &QState::entered, this, &SemSpmModuleMeasProgram::ecalcServerConnect);
     connect(&m_fetchECalcUnitsState, &QState::entered, this, &SemSpmModuleMeasProgram::fetchECalcUnits);
     connect(&m_setsecINTNotifierState, &QState::entered, this, &SemSpmModuleMeasProgram::setsecINTNotifier);
@@ -332,7 +327,6 @@ void SemSpmModuleMeasProgram::generateVeinInterface()
 
 enum moduleCmds
 {
-    sendrmident,
     fetchecalcunits,
     setsecintnotifier,
 
@@ -369,13 +363,6 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case sendrmident:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(rmidentErrMSG);
-                break;
-
             case fetchecalcunits:
             {
                 qInfo("%s: Units fetched: %s", qPrintable(m_pModule->getVeinModuleName()), qPrintable(answer.toString()));
@@ -642,21 +629,6 @@ void SemSpmModuleMeasProgram::updateDemoMeasurementResults()
     m_fTimeSecondsFinal = rand() % 10 +1; //random value between 1 and 10
     m_pRefConstantPar->setValue(3600000);
     setEMResult(); // Demo (for search)
-}
-
-void SemSpmModuleMeasProgram::resourceManagerConnect()
-{
-    m_rmInterface.setClientSuperSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
-                                      m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    resourceManagerConnectState.addTransition(m_rmInterface.getClientSmart().get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &SemSpmModuleMeasProgram::catchInterfaceAnswer);
-    // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmInterface.getClientSmart());
-}
-
-void SemSpmModuleMeasProgram::sendRMIdent()
-{
-    m_MsgNrCmdList[m_rmInterface.rmIdent(m_pModule->getVeinModuleName())] = sendrmident;
 }
 
 void SemSpmModuleMeasProgram::ecalcServerConnect()

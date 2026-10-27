@@ -7,7 +7,6 @@
 #include "secmeasinputdictionary.h"
 #include "uint32bitexpander.h"
 #include <basemeasprogram.h>
-#include <rminterface.h>
 #include <clientactivecomponent.h>
 #include <timerperiodicqt.h>
 #include <QDateTime>
@@ -33,8 +32,6 @@ private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void onPowerModuleValuesChanged();
 
-    void resourceManagerConnect();
-    void sendRMIdent();
     void ecalcServerConnect();
     void fetchECalcUnits();
     void setsecINTNotifier();
@@ -96,12 +93,9 @@ private:
     void updateDemoMeasurementResults();
 
     SemSpmModule* m_pModule = nullptr; // the module we live in
-    Zera::cRMInterface m_rmInterface;
     Zera::cSECInterfacePtr m_secInterface;
 
     // statemachine for activating gets the following states
-    QState resourceManagerConnectState; // connect to resource manager
-    QState m_IdentifyState; // identify to resource manager
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 3 error calc units from sec server
     QState m_setsecINTNotifierState; // we get notified on sec interrupts
