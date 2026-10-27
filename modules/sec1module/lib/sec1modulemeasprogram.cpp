@@ -30,9 +30,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     if (!SecPowerModuleFinder::testConfiguredRefInputs(configData->m_refConfigs, m_pModule->getStorageDb()))
         qCritical("%s module has invalid configuration!", qPrintable(m_pModule->getVeinModuleName()));
     m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
-
     m_dutInputDictionary.fillFromDutConfig(configData->m_dutConfigs);
-    m_resourceTypeList.addTypesFromConfig(configData->m_dutConfigs);
 
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -564,7 +562,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
             case readresource:
             {
                 if (reply == ack) {
-                    QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
+                    QStringList resourceTypeList = m_dutInputDictionary.getResourceTypeList();
                     m_ResourceHash[resourceTypeList.at(m_nIt)] = answer.toString();
                     m_nIt++;
                     if (m_nIt < resourceTypeList.count())
@@ -1026,13 +1024,13 @@ void cSec1ModuleMeasProgram::readResources()
 
 void cSec1ModuleMeasProgram::readResource()
 {
-    QString resourcetype = m_resourceTypeList.getResourceTypeList().at(m_nIt);
+    QString resourcetype = m_dutInputDictionary.getResourceTypeList().at(m_nIt);
     m_MsgNrCmdList[m_rmInterface.getResources(resourcetype)] = readresource;
 }
 
 void cSec1ModuleMeasProgram::testSecInputs()
 {
-    QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
+    QStringList resourceTypeList = m_dutInputDictionary.getResourceTypeList();
 
     const auto dutInplist = m_pModule->getConfigData()->m_dutConfigs.m_dutInpList;
     qint32 dutInputCountLeftToCheck = dutInplist.count();

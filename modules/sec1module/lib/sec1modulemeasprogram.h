@@ -6,8 +6,6 @@
 #include "multipleresulthelper.h"
 #include "secmeasinputdictionary.h"
 #include "secpowermoduleobserver.h"
-#include "secresourcetypelist.h"
-#include "uint32bitexpander.h"
 #include <rminterface.h>
 #include <doublevalidator.h>
 #include <stringvalidator.h>
@@ -161,7 +159,6 @@ private:
     QState m_calcResultAndResetIntState;
     QFinalState m_FinalState;
 
-    SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
     SecPowerModuleObserver m_powerModuleObserver;
