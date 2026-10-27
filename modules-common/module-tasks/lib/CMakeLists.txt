@@ -7,7 +7,6 @@ file(GLOB HEADER
     pcb-server/generator/*.h
     pcb-server/ranges/*.h
     pcb-server/sec/*.h
-    resman-server/*.h
     )
 file(GLOB SOURCES
     *.cpp
@@ -18,7 +17,6 @@ file(GLOB SOURCES
     pcb-server/generator/*.cpp
     pcb-server/ranges/*.cpp
     pcb-server/sec/*.cpp
-    resman-server/*.cpp
     )
 
 add_library(module-tasks SHARED
@@ -43,7 +41,6 @@ target_include_directories(module-tasks
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/generator>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/ranges>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/pcb-server/sec>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/resman-server>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/module-tasks>
     )
 
