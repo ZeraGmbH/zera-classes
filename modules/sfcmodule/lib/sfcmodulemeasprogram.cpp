@@ -19,8 +19,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     const cSfcModuleConfigData *configData = m_pModule->getConfigData();
     m_dutInputDictionary.fillFromDutConfig(configData->m_dutConfigs);
 
-    m_resourceTypeList.addTypesFromConfig(m_pModule->getConfigData()->m_dutConfigs);
-
     m_IdentifyState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourcesState);
     m_readResourcesState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
     m_readResourceState.addTransition(this, &cSfcModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
@@ -191,14 +189,14 @@ void cSfcModuleMeasProgram::readResources()
 
 void cSfcModuleMeasProgram::readResource()
 {
-    QString resourcetype = m_resourceTypeList.getResourceTypeList().at(m_nIt);
+    QString resourcetype = m_dutInputDictionary.getResourceTypeList().at(m_nIt);
     m_MsgNrCmdList[m_rmInterface.getResources(resourcetype)] = readresource;
 }
 
 void cSfcModuleMeasProgram::testSecInputs()
 {
     const auto dutInplist = m_pModule->getConfigData()->m_dutConfigs.m_dutInpList;
-    QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
+    QStringList resourceTypeList = m_dutInputDictionary.getResourceTypeList();
     qint32 dutInputCountLeftToCheck = dutInplist.count();
     for (int dutInputNo = 0; dutInputNo < dutInplist.count(); dutInputNo++) {
         QString dutInputName = dutInplist[dutInputNo];
@@ -315,7 +313,7 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             case readresource:
             {
                 if (reply == ack) {
-                    QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
+                    QStringList resourceTypeList = m_dutInputDictionary.getResourceTypeList();
                     m_ResourceHash[resourceTypeList.at(m_nIt)] = answer.toString();
                     m_nIt++;
                     if (m_nIt < resourceTypeList.count())
