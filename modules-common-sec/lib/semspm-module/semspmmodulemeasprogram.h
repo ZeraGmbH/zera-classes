@@ -41,19 +41,16 @@ private slots:
     void freeECalculator();
 
     void setSync();
-    void setSync2();
     void setMeaspulses();
     void setMasterMux();
     void setSlaveMux();
-    void setSlave2Mux();
     void setMasterMeasMode();
     void setSlaveMeasMode();
-    void setSlave2MeasMode();
     void enableInterrupt();
     void startMeasurement();
     void startMeasurementDone();
 
-    void readFinalEnergyCounter(); // This one reads result from last measurement - sometimes / after start stop????
+    void readFinalEnergyCounter();
     void readFinalTimeCounter();
     void resetIntRegister();
     void onEMResultState();
@@ -88,6 +85,7 @@ private:
     void actualizeRefConstant();
     quint32 getStatus();
     void setStatus(quint32 status);
+    quint32 calcIncrementTimeCounter(quint32 decrementTimeCounter);
 
     void handleSECInterrupt();
     void updateDemoMeasurementResults();
@@ -110,14 +108,11 @@ private:
     // statemachine for starting error measurement
     QStateMachine m_startMeasurementMachine;
     QState m_setsyncState; // our 2 ecalc units must be synchronized
-    QState m_setsync2State;
     QState m_setMeaspulsesState; // we set the desired measpulses
     QState m_setMasterMuxState; // we set the Input selectors
     QState m_setSlaveMuxState;
-    QState m_setSlave2MuxState;
     QState m_setMasterMeasModeState; // and the meas modes
     QState m_setSlaveMeasModeState;
-    QState m_setSlave2MeasModeState;
     QState m_enableInterruptState;
     QState m_startMeasurementState;
     QFinalState m_startMeasurementDoneState; // here we start it
@@ -135,7 +130,6 @@ private:
 
     QString m_masterEcName;
     QString m_slaveRefEnergyCounterEcName;
-    QString m_slaveTimeMeasErrEcName;
 
     VfModuleParameter* m_pRefInputPar = nullptr;
     VfModuleParameter* m_pRefConstantPar = nullptr;

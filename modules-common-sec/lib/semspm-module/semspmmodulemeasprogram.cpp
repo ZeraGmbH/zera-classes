@@ -56,27 +56,21 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
     connect(&m_deactivationDoneState, &QState::entered, this, &cModuleActivist::deactivated);
 
     // setting up statemachine used when starting a measurement
-    m_setsyncState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_setsync2State);
-    m_setsync2State.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_setMeaspulsesState);
+    m_setsyncState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_setMeaspulsesState);
     m_setMeaspulsesState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_setMasterMuxState);
     m_setMasterMuxState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_setSlaveMuxState);
-    m_setSlaveMuxState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_setSlave2MuxState);
-    m_setSlave2MuxState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_setMasterMeasModeState);
+    m_setSlaveMuxState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_setMasterMeasModeState);
     m_setMasterMeasModeState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_setSlaveMeasModeState);
-    m_setSlaveMeasModeState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_setSlave2MeasModeState);
-    m_setSlave2MeasModeState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_enableInterruptState);
+    m_setSlaveMeasModeState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_enableInterruptState);
     m_enableInterruptState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_startMeasurementState);
     m_startMeasurementState.addTransition(this, &SemSpmModuleMeasProgram::setupContinue, &m_startMeasurementDoneState);
 
     m_startMeasurementMachine.addState(&m_setsyncState);
-    m_startMeasurementMachine.addState(&m_setsync2State);
     m_startMeasurementMachine.addState(&m_setMeaspulsesState);
     m_startMeasurementMachine.addState(&m_setMasterMuxState);
     m_startMeasurementMachine.addState(&m_setSlaveMuxState);
-    m_startMeasurementMachine.addState(&m_setSlave2MuxState);
     m_startMeasurementMachine.addState(&m_setMasterMeasModeState);
     m_startMeasurementMachine.addState(&m_setSlaveMeasModeState);
-    m_startMeasurementMachine.addState(&m_setSlave2MeasModeState);
     m_startMeasurementMachine.addState(&m_enableInterruptState);
     m_startMeasurementMachine.addState(&m_startMeasurementState);
     m_startMeasurementMachine.addState(&m_startMeasurementDoneState);
@@ -84,14 +78,11 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
     m_startMeasurementMachine.setInitialState(&m_setsyncState);
 
     connect(&m_setsyncState, &QState::entered, this, &SemSpmModuleMeasProgram::setSync);
-    connect(&m_setsync2State, &QState::entered, this, &SemSpmModuleMeasProgram::setSync2);
     connect(&m_setMeaspulsesState, &QState::entered, this, &SemSpmModuleMeasProgram::setMeaspulses);
     connect(&m_setMasterMuxState, &QState::entered, this, &SemSpmModuleMeasProgram::setMasterMux);
     connect(&m_setSlaveMuxState, &QState::entered, this, &SemSpmModuleMeasProgram::setSlaveMux);
-    connect(&m_setSlave2MuxState, &QState::entered, this, &SemSpmModuleMeasProgram::setSlave2Mux);
     connect(&m_setMasterMeasModeState, &QState::entered, this, &SemSpmModuleMeasProgram::setMasterMeasMode);
     connect(&m_setSlaveMeasModeState, &QState::entered, this, &SemSpmModuleMeasProgram::setSlaveMeasMode);
-    connect(&m_setSlave2MeasModeState, &QState::entered, this, &SemSpmModuleMeasProgram::setSlave2MeasMode);
     connect(&m_enableInterruptState, &QState::entered, this, &SemSpmModuleMeasProgram::enableInterrupt);
     connect(&m_startMeasurementState, &QState::entered, this, &SemSpmModuleMeasProgram::startMeasurement);
     connect(&m_startMeasurementDoneState, &QState::entered, this, &SemSpmModuleMeasProgram::startMeasurementDone);
@@ -367,10 +358,9 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             {
                 qInfo("%s: Units fetched: %s", qPrintable(m_pModule->getVeinModuleName()), qPrintable(answer.toString()));
                 QStringList sl = answer.toString().split(';');
-                if ((reply == ack) && (sl.length() >= 3)) {
+                if ((reply == ack) && (sl.length() >= 2)) {
                     m_masterEcName = sl.at(0);
                     m_slaveRefEnergyCounterEcName = sl.at(1);
-                    m_slaveTimeMeasErrEcName = sl.at(2);
                     emit activationContinue();
                 }
                 else
@@ -402,11 +392,10 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             }
 
             case actualizepower:
-            {
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
                     if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
-                        m_fTimeSecondsActual = double(answer.toUInt()) * 0.001;
+                        m_fTimeSecondsActual = double(calcIncrementTimeCounter(answer.toUInt())) * 0.001;
                         m_fPower = m_fEnergy * 3600.0 / m_fTimeSecondsActual; // 1 / kilo / Mega - see unitFactor->m_fEnergy above
                         m_pPowerAct->setValue(m_fPower);
                         m_pTimeAct->setValue(m_fTimeSecondsActual);
@@ -415,7 +404,6 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
-            }
 
             case actualizestatus:
                 if (reply == ack) {
@@ -504,7 +492,7 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 break;
             case readfinaltimecount:
                 if (reply == ack) {
-                    setEndTimeVars(answer.toUInt());
+                    setEndTimeVars(calcIncrementTimeCounter(answer.toUInt()));
                     emit interruptContinue();
                 }
                 else
@@ -612,6 +600,11 @@ void SemSpmModuleMeasProgram::setStatus(quint32 status)
     m_pStatusAct->setValue(QVariant::fromValue<quint32>(status));
 }
 
+quint32 SemSpmModuleMeasProgram::calcIncrementTimeCounter(quint32 decrementTimeCounter)
+{
+    return m_masterStartCountValue - decrementTimeCounter;
+}
+
 void SemSpmModuleMeasProgram::handleSECInterrupt()
 {
     if (!m_finalResultStateMachine.isRunning()) {
@@ -642,7 +635,7 @@ void SemSpmModuleMeasProgram::ecalcServerConnect()
 
 void SemSpmModuleMeasProgram::fetchECalcUnits()
 {
-    m_MsgNrCmdList[m_secInterface->setECalcUnit(3)] = fetchecalcunits; // we need 3 ecalc units to cascade
+    m_MsgNrCmdList[m_secInterface->setECalcUnit(2)] = fetchecalcunits; // we need 2 ecalc units to cascade
 }
 
 void SemSpmModuleMeasProgram::setsecINTNotifier()
@@ -710,11 +703,6 @@ void SemSpmModuleMeasProgram::setSync()
     m_MsgNrCmdList[m_secInterface->setSync(m_slaveRefEnergyCounterEcName, m_masterEcName)] = setsync;
 }
 
-void SemSpmModuleMeasProgram::setSync2()
-{
-    m_MsgNrCmdList[m_secInterface->setSync(m_slaveTimeMeasErrEcName, m_masterEcName)] = setsync;
-}
-
 void SemSpmModuleMeasProgram::setMeaspulses()
 {
     if (m_pStopModePar->getValue().toInt() == SemSpmModuleConfigData::StopModeStartStop)
@@ -736,11 +724,6 @@ void SemSpmModuleMeasProgram::setSlaveMux()
     m_MsgNrCmdList[m_secInterface->setMux(m_slaveRefEnergyCounterEcName, refPowerName)] = setslavemux;
 }
 
-void SemSpmModuleMeasProgram::setSlave2Mux()
-{
-    m_MsgNrCmdList[m_secInterface->setMux(m_slaveTimeMeasErrEcName, QString("t1ms"))] = setslavemux;
-}
-
 void SemSpmModuleMeasProgram::setMasterMeasMode()
 {
     m_MsgNrCmdList[m_secInterface->setCmdid(m_masterEcName, ECALCCMDID::SINGLEERRORMASTER)] = setmastermeasmode;
@@ -749,11 +732,6 @@ void SemSpmModuleMeasProgram::setMasterMeasMode()
 void SemSpmModuleMeasProgram::setSlaveMeasMode()
 {
     m_MsgNrCmdList[m_secInterface->setCmdid(m_slaveRefEnergyCounterEcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
-}
-
-void SemSpmModuleMeasProgram::setSlave2MeasMode()
-{
-    m_MsgNrCmdList[m_secInterface->setCmdid(m_slaveTimeMeasErrEcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
 }
 
 void SemSpmModuleMeasProgram::enableInterrupt()
@@ -803,7 +781,7 @@ void SemSpmModuleMeasProgram::readFinalEnergyCounter()
 
 void SemSpmModuleMeasProgram::readFinalTimeCounter()
 {
-    m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTact)] = readfinaltimecount;
+    m_MsgNrCmdList[m_secInterface->readRegister(m_masterEcName, ECALCREG::MTCNTact)] = readfinaltimecount;
     stopECCalculator();
     setStatus(ECALCSTATUS::READY);
 }
@@ -964,7 +942,7 @@ void SemSpmModuleMeasProgram::Actualize()
     if(!m_pModule->getDemo()) {
         m_MsgNrCmdList[m_secInterface->readRegister(m_masterEcName, ECALCREG::STATUS)] = actualizestatus;
         m_MsgNrCmdList[m_secInterface->readRegister(m_slaveRefEnergyCounterEcName, ECALCREG::MTCNTact)] = actualizeenergy;
-        m_MsgNrCmdList[m_secInterface->readRegister(m_slaveTimeMeasErrEcName, ECALCREG::MTCNTact)] = actualizepower;
+        m_MsgNrCmdList[m_secInterface->readRegister(m_masterEcName, ECALCREG::MTCNTact)] = actualizepower;
     }
 }
 
