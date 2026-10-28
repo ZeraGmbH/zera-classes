@@ -8,7 +8,7 @@ class SourceIoErrorInjection : public AbstractSourceIo
 public:
     SourceIoErrorInjection(AbstractSourceIoPtr sourceUnderTest);
 
-    int startTransaction(IoQueueGroup::Ptr transferGroup) override;
+    void startTransaction(IoQueueGroup::Ptr transferGroup) override;
     QJsonObject getCapabilities() const override;
 
     void setDemoResonseErrorIdx(int idx);

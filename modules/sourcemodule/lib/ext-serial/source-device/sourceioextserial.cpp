@@ -11,10 +11,9 @@ SourceIoExtSerial::SourceIoExtSerial(IoDeviceBase::Ptr ioDevice, const SourcePro
             this, &SourceIoExtSerial::onIoGroupFinished);
 }
 
-int SourceIoExtSerial::startTransaction(IoQueueGroup::Ptr transferGroup)
+void SourceIoExtSerial::startTransaction(IoQueueGroup::Ptr transferGroup)
 {
     m_ioQueue.enqueueTransferGroup(transferGroup);
-    return transferGroup->getGroupId();
 }
 
 QJsonObject SourceIoExtSerial::getCapabilities() const

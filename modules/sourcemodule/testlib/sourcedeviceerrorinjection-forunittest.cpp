@@ -7,14 +7,14 @@ SourceIoErrorInjection::SourceIoErrorInjection(AbstractSourceIoPtr sourceUnderTe
             this, &AbstractSourceIo::sigResponseReceived);
 }
 
-int SourceIoErrorInjection::startTransaction(IoQueueGroup::Ptr transferGroup)
+void SourceIoErrorInjection::startTransaction(IoQueueGroup::Ptr transferGroup)
 {
     if(m_simulErrorGroupIdx >= 0) {
         IoTransferDataSingle::Ptr ioData = transferGroup->getTransfer(m_simulErrorGroupIdx);
         // no nullptr checks intended: crash in tests is feedback
         ioData->getDemoResponder()->activateErrorResponse();
     }
-    return m_sourceUnderTest->startTransaction(transferGroup);
+    m_sourceUnderTest->startTransaction(transferGroup);
 }
 
 QJsonObject SourceIoErrorInjection::getCapabilities() const

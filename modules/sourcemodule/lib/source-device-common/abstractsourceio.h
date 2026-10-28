@@ -9,7 +9,7 @@ class AbstractSourceIo : public QObject
 {
     Q_OBJECT
 public:
-    virtual int startTransaction(IoQueueGroup::Ptr transferGroup) = 0;
+    virtual void startTransaction(IoQueueGroup::Ptr transferGroup) = 0;
     virtual QJsonObject getCapabilities() const = 0;
 signals:
     void sigResponseReceived(const IoQueueGroup::Ptr response);
