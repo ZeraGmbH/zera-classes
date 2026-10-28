@@ -6,13 +6,13 @@
 #include "jsonstructureloader.h"
 #include <QVariant>
 
-SourceDeviceExtSerial::SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties properties) :
+SourceDeviceExtSerial::SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties properties, int statePollMs) :
     SourceDeviceTemplate(ioDevice->getDeviceInfo(), ioDevice->getType(), JsonStructureLoader::loadJsonStructure(properties)),
     m_ioDevice(ioDevice),
     m_sourceIo(std::make_shared<SourceIoExtSerial>(ioDevice, properties)),
     m_transactionNotifierStatus(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_transactionNotifierSwitch(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
-    m_statePoller(SourceStatePeriodicPoller::Ptr::create(m_transactionNotifierStatus)),
+    m_statePoller(SourceStatePeriodicPoller::Ptr::create(m_transactionNotifierStatus, statePollMs)),
     m_stateController(m_transactionNotifierSwitch, m_transactionNotifierStatus, m_statePoller)
 {
     m_switcher = std::make_unique<SourceSwitchJsonExtSerial>(m_sourceIo, m_transactionNotifierSwitch);
@@ -66,11 +66,6 @@ void SourceDeviceExtSerial::doFinalCloseActivities()
 {
     resetVeinComponents();
     emit sigClosed(getId(), m_closeUuid);
-}
-
-void SourceDeviceExtSerial::setStatusPollTime(int ms)
-{
-    m_statePoller->setPollTime(ms);
 }
 
 void SourceDeviceExtSerial::enableCloseRequested(QUuid uuid)

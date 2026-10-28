@@ -175,8 +175,7 @@ void test_sourcedeviceextserial::checkVeinSwitchTwoStateChanges()
         statesReceived.append(jsonState);
     });
 
-    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
-    sourceDevice.setStatusPollTime(0);
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties(), 0);
     sourceDevice.setVeinInterface(&vein.veinInterface);
 
     TimeMachineObject::feedEventLoop(); // initial vein processing
@@ -253,9 +252,8 @@ void test_sourcedeviceextserial::checkVeinSwitchError()
         }
     });
 
-    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties(), 10000 /* never */);
     sourceDevice.setVeinInterface(&vein.veinInterface);
-    sourceDevice.setStatusPollTime(10000); // never
 
     TimeMachineObject::feedEventLoop(); // initial processing
     JsonParamApi paramApi;
@@ -307,9 +305,8 @@ void test_sourcedeviceextserial::checkVeinStateError()
         }
     });
 
-    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties());
+    SourceDeviceExtSerial sourceDevice(ioDevice, DefaultTestSourceProperties(), 0);
     sourceDevice.setVeinInterface(&vein.veinInterface);
-    sourceDevice.setStatusPollTime(0);
 
     TimeMachineForTest::getInstance()->processTimers(50);
     PersistentJsonState persistentState(JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties()));

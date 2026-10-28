@@ -14,10 +14,7 @@ class SourceDeviceExtSerial : public SourceDeviceTemplate
 {
     Q_OBJECT
 public:
-    SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties properties);
-
-    void setStatusPollTime(int ms);
-
+    SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceProperties properties, int statePollMs = 500);
     void switchLoad(const QJsonObject &params) override;
     void close(QUuid uuid) override;
 
