@@ -26,9 +26,8 @@ SourceDeviceExtSerial::SourceDeviceExtSerial(IoDeviceBase::Ptr ioDevice, SourceP
 
 void SourceDeviceExtSerial::close(QUuid uuid)
 {
-    bool closeRequested = tryDemoCloseByUsbDisconnect(uuid);
-    if(!m_closeRequested && !closeRequested) {
-        closeRequested = true;
+    bool demoCloseRequested = tryDemoCloseByUsbDisconnect(uuid);
+    if(!m_closeRequested && !demoCloseRequested) {
         enableCloseRequested(uuid);
         m_statePoller->stopPeriodicPoll();
         JsonParamApi currLoad = m_switcher->getCurrLoadpoint();
