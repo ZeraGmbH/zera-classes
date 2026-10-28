@@ -272,8 +272,7 @@ void cSfcModuleMeasProgram::setMasterMux()
 
 void cSfcModuleMeasProgram::setMasterMeasMode()
 {
-    //m_MsgNrCmdList[m_secInterface->setCmdid(m_masterEcName, ECALCCMDID::COUNTEDGE)] = setmastermeasmode;
-    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterEcName, ECALCREG::CMD, ECALCCMDID::COUNTEDGE)] = enableinterrupt;
+    m_MsgNrCmdList[m_secInterface->writeRegister(m_masterEcName, ECALCREG::CMD, ECALCCMDID::COUNTEDGE)] = setmastermeasmode;
 }
 
 void cSfcModuleMeasProgram::activationDone()
@@ -369,9 +368,8 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     notifyError(writesecregisterErrMsg);
                 break;
             case stopmeas:
-                if (reply == ack) {
+                if (reply == ack)
                     emit deactivationContinue();
-                }
                 else
                     notifyError(stopmeasErrMsg);
                 break;
@@ -398,18 +396,14 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 
             case setmastermeasmode:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
                     notifyError(setcmdidErrMsg);
                 break;
 
             case startmeasurement:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
                     notifyError(startmeasErrMsg);
                 break;
