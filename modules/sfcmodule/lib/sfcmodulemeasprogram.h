@@ -123,7 +123,7 @@ private slots:
 
     void readIntRegister();
     void resetIntRegister(); // This is never used which looks very odd
-    void checkForRestart();
+    void checkForRestart();  // This is a noop - hmmm
 
     void stopECCalculator();
     void freeECalculator();
