@@ -982,7 +982,7 @@ void cPower1ModuleMeasProgram::generateVeinInterfaceForQrefFreq()
         m_QREFFrequencyParameter->setUnit(unit);
         if(configData->m_enableScpiCommands)
             m_QREFFrequencyParameter->setScpiInfo("CONFIGURATION",QString("FIXFREQ"), SCPI::isQuery|SCPI::isCmdwP);
-        cDoubleValidator *validator = new cDoubleValidator(0.001, 20000.0, 0.001);
+        cDoubleValidator *validator = new cDoubleValidator(0.000, 20000.0, 0.0001); // For tests: 0-20MHz / 0.1Hz steps
         m_QREFFrequencyParameter->setValidator(validator);
         m_pModule->m_veinModuleParameterMap[paramLabel] = m_QREFFrequencyParameter; // for modules use
     }

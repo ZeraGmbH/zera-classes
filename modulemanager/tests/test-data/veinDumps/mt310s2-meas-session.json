@@ -3335,9 +3335,9 @@
                     "Unit": "kHz",
                     "Validation": {
                         "Data": [
-                            0.001,
+                            0,
                             20000,
-                            0.001
+                            0.0001
                         ],
                         "Type": "DOUBLE"
                     }
