@@ -3,7 +3,6 @@
 
 #include "secmeasinputdictionary.h"
 #include "vfmoduleparameter.h"
-#include "secresourcetypelist.h"
 #include <rminterface.h>
 #include <pcbinterface.h>
 #include <secinterface.h>
@@ -16,10 +15,6 @@
 namespace SFCMODULE
 {
 
-namespace ECALCCMDID {
-enum { COUNTEDGE = 1, COUNTRESET, ARM = 128};
-}
-
 class cSfcModule;
 
 class cSfcModuleMeasProgram : public cBaseMeasProgram
@@ -30,7 +25,6 @@ public:
     void generateVeinInterface() override; // here we export our interface (entities)
 
 signals:
-    void interruptContinue();
     void setupContinue();
 public slots:
     void start() override; // difference between start and stop is that actual values
@@ -51,7 +45,7 @@ private:
     bool m_bMeasurementRunning = false;
 
     TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
-    static constexpr quint32 m_nActualizeIntervallLowFreq = 500;
+    static constexpr quint32 m_nActualizeIntervall = 100;
     TimerTemplateQtPtr m_ContinousTimer;
 
     // statemachine for deactivating
@@ -73,14 +67,12 @@ private:
     QState m_testSecInputsState; // here we test if all our configured Inputs are present, we don't set them because we only get information from here
 
     QState m_ecalcServerConnectState; // connect to ecalculator server
-    QState m_fetchECalcUnitsState; // we try to fetch 2 error calc units from sec server
+    QState m_fetchECalcUnitsState; // we try to fetch 2 error calc unit from sec server
     QState m_pcbServerConnectState; // connect to pcb server
 
     QState m_readDUTInputsState; // init to read all ref Input informations
     QState m_readDUTInputAliasState; // read for 1 Input
     QState m_readDUTInputDoneState;
-
-    QState m_setsecINTNotifierState; // we get notified on sec interrupts
 
     QFinalState m_activationDoneState; // and then we have finished
 
@@ -88,18 +80,9 @@ private:
     QStateMachine m_startMeasurementMachine;
     QState m_setMasterMuxState; // we set the Input selectors
     QState m_setMasterMeasModeState; // and the meas modes
-    QState m_enableInterruptState;
     QState m_startMeasurementState;
     QFinalState m_startMeasurementDoneState; // here we start it
 
-
-    // statemachine for interrupthandling;
-    QStateMachine m_InterrupthandlingStateMachine;
-    QState m_readIntRegisterState;
-    QFinalState m_FinalState;
-
-
-    void handleSECInterrupt();
     void updateProgress(quint32 flankCountActual);
     void stopMeasurement(bool bAbort);
 
@@ -115,22 +98,16 @@ private slots:
     void readDUTInputs();
     void readDUTInputAlias();
     void readDUTInputDone();
-    void setsecINTNotifier();
     void activationDone();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void onStartStopChanged(QVariant newValue);
-
-    void readIntRegister();
-    void resetIntRegister(); // This is never used which looks very odd
-    void checkForRestart();  // This is a noop - hmmm
 
     void stopECCalculator();
     void freeECalculator();
 
     void setMasterMux();
     void setMasterMeasMode();
-    void enableInterrupt();
     void startMeasurement();
     void startMeasurementDone();
 
