@@ -379,7 +379,7 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             {
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
-                    if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
+                    if(m_bMeasurementRunning && !m_finalResultStateMachine.isRunning()) {
                         m_uint32BitExpander.setActual32(answer.toUInt());
                         const double unitFactor = m_semSpmFunctions->getUnitFactorHash()[m_pInputUnitPar->getValue().toString()]; // 1 / kilo / Mega
                         m_fEnergy = UInt32BitExpander::uint64ToDbl(m_uint32BitExpander.getActualExpanded64()) / (m_pRefConstantPar->getValue().toDouble() * unitFactor);
@@ -394,7 +394,7 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             case actualizepower:
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
-                    if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
+                    if(m_bMeasurementRunning && !m_finalResultStateMachine.isRunning()) {
                         m_fTimeSecondsActual = double(calcIncrementTimeCounter(answer.toUInt())) * 0.001;
                         m_fPower = m_fEnergy * 3600.0 / m_fTimeSecondsActual; // 1 / kilo / Mega - see unitFactor->m_fEnergy above
                         m_pPowerAct->setValue(m_fPower);
@@ -408,11 +408,8 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             case actualizestatus:
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
-                    quint32 status = getStatus();
-                    if((status & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
-                        // once ready we leave status ready (continous mode)
-                        setStatus((status & ECALCSTATUS::READY) | (answer.toUInt() & 7));
-                    }
+                    if(m_bMeasurementRunning && !m_finalResultStateMachine.isRunning())
+                        setStatus(answer.toUInt() & 7);
                 }
                 else
                     notifyError(readsecregisterErrMsg);
@@ -478,13 +475,8 @@ void SemSpmModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 break;
             case readfinalenegrycount:
                 if (reply == ack) {
-                    // Although we do not have high frequency measurements,
-                    // incorporate still running check as we learned from sec1
-                    // see cSec1ModuleMeasProgram::catchInterfaceAnswer /
-                    // case readvicount
-                    if((getStatus() & ECALCSTATUS::ABORT) == 0)
-                        // no need to use uint32BitExpander 'final' functions - here we just use actual
-                        m_uint32BitExpander.setActual32(answer.toUInt());
+                    // no need to use uint32BitExpander 'final' functions - here we just use actual
+                    m_uint32BitExpander.setActual32(answer.toUInt());
                     emit interruptContinue();
                 }
                 else
