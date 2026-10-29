@@ -707,7 +707,7 @@ void SemSpmModuleMeasProgram::setMeaspulses()
 
 void SemSpmModuleMeasProgram::setMasterMux()
 {
-    m_MsgNrCmdList[m_secInterface->setMux(m_masterEcName, QString("t1ms"))] = setmastermux; // to be discussed
+    m_MsgNrCmdList[m_secInterface->setMux(m_masterEcName, QString("t1ms"))] = setmastermux;
 }
 
 void SemSpmModuleMeasProgram::setSlaveMux()
