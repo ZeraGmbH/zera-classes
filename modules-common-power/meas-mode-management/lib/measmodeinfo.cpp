@@ -41,10 +41,7 @@ sumtypes cMeasModeInfo::getSumTypeCode() const
 {
     switch (m_nCode)
     {
-    case m4lsg:
     case m3lsg:
-    case m2lsg:
-    case mXlsg:
         return sum_phase_pq_geom;
     default:
         return sum_phasevals;

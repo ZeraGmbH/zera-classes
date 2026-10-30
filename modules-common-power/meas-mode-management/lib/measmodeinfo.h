@@ -30,8 +30,8 @@ enum measmodes
 
 enum sumtypes
 {
-    sum_phasevals = 0,
-    sum_phase_pq_geom
+    sum_phasevals = 0, // Sum = Val1 + Val2 + Val3
+    sum_phase_pq_geom  // Sum = √((ΣP)² + (ΣQ)²)  !!! This is wrongly documented and should not be used - except 3LSg???
 };
 
 constexpr int MeasModeFirst = m4lw;
