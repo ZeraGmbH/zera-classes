@@ -400,6 +400,7 @@
         "ACT_FlankCount": 0,
         "ACT_InitialLedState": 0,
         "ACT_LedState": 0,
+        "ACT_Status": 0,
         "PAR_StartStop": 0
     },
     "1300": {

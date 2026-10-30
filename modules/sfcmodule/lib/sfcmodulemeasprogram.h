@@ -23,68 +23,11 @@ class cSfcModuleMeasProgram : public cBaseMeasProgram
 public:
     explicit cSfcModuleMeasProgram(cSfcModule *module);
     void generateVeinInterface() override; // here we export our interface (entities)
-
 signals:
     void setupContinue();
 public slots:
     void start() override; // difference between start and stop is that actual values
     void stop() override;  // in interface are not updated when stop
-
-private:
-    cSfcModule *m_pModule = nullptr;
-    Zera::cRMInterface m_rmInterface;
-    Zera::cSECInterfacePtr m_secInterface;
-    Zera::PcbInterfacePtr m_pcbInterface;
-
-    qint32 m_nIt = 0;
-    QString m_sIt;
-    QString m_masterEcName;
-    QList<QString> m_sItList; // for interation over x Input hash
-    QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
-    SecMeasInputDictionary m_dutInputDictionary;
-    bool m_bMeasurementRunning = false;
-
-    TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
-    static constexpr quint32 m_nActualizeIntervall = 100;
-    TimerTemplateQtPtr m_ContinousTimer;
-
-    // statemachine for deactivating
-    QState m_stopECalculatorState; // we stop running measurement
-    QState m_freeECalculatorState; // we give back our ecalcunits to sec server
-    QFinalState m_deactivationDoneState;
-
-    VfModuleParameter* m_pStartStopPar = nullptr;
-    VfModuleParameter* m_pFlankCountAct = nullptr;
-    VfModuleParameter* m_pLedStateAct = nullptr;
-    VfModuleParameter* m_pLedInitialStateAct = nullptr;
-
-    // statemachine for activating gets the following states
-    QState resourceManagerConnectState; // connect to resource manager
-    QState m_IdentifyState; // identify to resource manager
-    QState m_readResourcesState; // init to read all resource information for each type
-    QState m_readResourceState; // read for 1 type
-
-    QState m_testSecInputsState; // here we test if all our configured Inputs are present, we don't set them because we only get information from here
-
-    QState m_ecalcServerConnectState; // connect to ecalculator server
-    QState m_fetchECalcUnitsState; // we try to fetch 2 error calc unit from sec server
-    QState m_pcbServerConnectState; // connect to pcb server
-
-    QState m_readDUTInputsState; // init to read all ref Input informations
-    QState m_readDUTInputAliasState; // read for 1 Input
-    QState m_readDUTInputDoneState;
-
-    QFinalState m_activationDoneState; // and then we have finished
-
-    // statemachine for starting error measurement
-    QStateMachine m_startMeasurementMachine;
-    QState m_setMasterMuxState; // we set the Input selectors
-    QState m_setMasterMeasModeState; // and the meas modes
-    QState m_startMeasurementState;
-    QFinalState m_startMeasurementDoneState; // here we start it
-
-    void updateProgress(quint32 flankCountActual);
-    void stopMeasurement(bool bAbort);
 
 private slots:
     void resourceManagerConnect();
@@ -113,6 +56,63 @@ private slots:
 
     void Actualize();
     void readStatusRegister();
+private:
+    void updateProgress(quint32 flankCountActual);
+    void stopMeasurement(bool bAbort);
+    void setStatus(quint32 status);
+
+    cSfcModule *m_pModule = nullptr;
+    Zera::cRMInterface m_rmInterface;
+    Zera::cSECInterfacePtr m_secInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
+
+    qint32 m_nIt = 0;
+    QString m_sIt;
+    QString m_masterEcName;
+    QList<QString> m_sItList; // for interation over x Input hash
+    QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
+    SecMeasInputDictionary m_dutInputDictionary;
+    bool m_bMeasurementRunning = false;
+
+    TimerTemplateQtPtr m_ActualizeTimer; // after timed out we actualize progressvalue
+    static constexpr quint32 m_nActualizeIntervall = 100;
+    TimerTemplateQtPtr m_ContinousTimer;
+
+    // statemachine for deactivating
+    QState m_stopECalculatorState; // we stop running measurement
+    QState m_freeECalculatorState; // we give back our ecalcunits to sec server
+    QFinalState m_deactivationDoneState;
+
+    VfModuleParameter* m_pStartStopPar = nullptr;
+    VfModuleParameter* m_pStatusAct = nullptr;
+    VfModuleParameter* m_pFlankCountAct = nullptr;
+    VfModuleParameter* m_pLedStateAct = nullptr;
+    VfModuleParameter* m_pLedInitialStateAct = nullptr;
+
+    // statemachine for activating gets the following states
+    QState resourceManagerConnectState; // connect to resource manager
+    QState m_IdentifyState; // identify to resource manager
+    QState m_readResourcesState; // init to read all resource information for each type
+    QState m_readResourceState; // read for 1 type
+
+    QState m_testSecInputsState; // here we test if all our configured Inputs are present, we don't set them because we only get information from here
+
+    QState m_ecalcServerConnectState; // connect to ecalculator server
+    QState m_fetchECalcUnitsState; // we try to fetch 2 error calc unit from sec server
+    QState m_pcbServerConnectState; // connect to pcb server
+
+    QState m_readDUTInputsState; // init to read all ref Input informations
+    QState m_readDUTInputAliasState; // read for 1 Input
+    QState m_readDUTInputDoneState;
+
+    QFinalState m_activationDoneState; // and then we have finished
+
+    // statemachine for starting error measurement
+    QStateMachine m_startMeasurementMachine;
+    QState m_setMasterMuxState; // we set the Input selectors
+    QState m_setMasterMeasModeState; // and the meas modes
+    QState m_startMeasurementState;
+    QFinalState m_startMeasurementDoneState; // here we start it
 };
 
 }

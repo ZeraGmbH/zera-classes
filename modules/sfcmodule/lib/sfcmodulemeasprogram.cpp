@@ -135,9 +135,15 @@ enum sfcmoduleCmds
 void cSfcModuleMeasProgram::stopMeasurement(bool bAbort)
 {
     Q_UNUSED(bAbort)
+    setStatus(ECALCSTATUS::READY);
     m_bMeasurementRunning = false;
     m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
     m_ActualizeTimer->stop();
+}
+
+void cSfcModuleMeasProgram::setStatus(quint32 status)
+{
+    m_pStatusAct->setValue(QVariant::fromValue<quint32>(status));
 }
 
 void cSfcModuleMeasProgram::resourceManagerConnect()
@@ -362,6 +368,8 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 if (reply == ack)
                 {
                     quint32 statusRegister = answer.toUInt();
+                    if (m_bMeasurementRunning) // FPGA doe not supply READY
+                        setStatus(statusRegister & 7);
 
                     m_pLedStateAct->setValue((statusRegister & 0x100) == 0 ? 1 : 0);
                     m_pLedInitialStateAct->setValue((statusRegister & 0x200) == 0 ? 1 : 0);
@@ -393,6 +401,17 @@ void cSfcModuleMeasProgram::generateVeinInterface()
     m_pStartStopPar->setValidator(new cIntValidator(0,1,1));
     m_pStartStopPar->setScpiInfo("CALCULATE", "START", SCPI::isCmdwP | SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] = m_pStartStopPar;
+
+    m_pStatusAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                         key = QString("ACT_Status"),
+                                         QString("Status:\n"
+                                                 "0: Idle\n"
+                                                 "1: Waiting for first pulse\n"
+                                                 "2: Started\n"
+                                                 "4: Ready"),
+                                         QVariant((quint32)0) );
+    m_pStatusAct->setScpiInfo("CALCULATE", "STATUS", SCPI::isQuery);
+    m_pModule->m_veinModuleParameterMap[key] = m_pStatusAct;
 
     m_pFlankCountAct = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              key = QString("ACT_FlankCount"),

@@ -8344,6 +8344,7 @@
         "ACT_FlankCount": 0,
         "ACT_InitialLedState": 0,
         "ACT_LedState": 0,
+        "ACT_Status": 0,
         "EntityName": "SfcModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -8354,6 +8355,9 @@
                     "Description": "<skipped>"
                 },
                 "ACT_LedState": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Status": {
                     "Description": "<skipped>"
                 },
                 "EntityName": {
@@ -8399,6 +8403,13 @@
                         "LEDSTATUS",
                         "2",
                         "ACT_LedState",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "STATUS",
+                        "2",
+                        "ACT_Status",
                         "0"
                     ],
                     [
