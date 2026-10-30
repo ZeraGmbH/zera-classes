@@ -166,16 +166,21 @@ void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
     QCOMPARE(client.getUnhandledResponses(), 0);
 
     // Not sorted
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-queries-in-one-transaction", responses.join("\n")));
+    bool allOk = true;
+    if(!TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-queries-in-one-transaction", responses.join("\n")))
+        allOk = false;
     QCOMPARE(responses.size(), queryCount);
     QCOMPARE(scpiQueriesUniques.count(), 0); // this is the silver bullet to find out transactions are not messed up!!!
-    QVERIFY(scpiReceived != scpiQueries); // make sure sorter really sorts
+    if (scpiReceived == scpiQueries) // make sure sorter really sorts
+        allOk = false;
 
     // Sorted
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-queries-in-one-transaction-sorted", responsesSorted.join("\n")));
+    if(!TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-queries-in-one-transaction-sorted", responsesSorted.join("\n")))
+        allOk = false;
     QCOMPARE(responsesSorted.size(), queryCount);
     QCOMPARE(scpiQueriesUniquesSorted.count(), 0);
     QCOMPARE(scpiReceivedSorted, scpiQueries);
+    QVERIFY(allOk);
 }
 
 void test_scpi_all_responses::checkDumpAllTimes2QueriesInOneTransaction()
@@ -235,16 +240,21 @@ void test_scpi_all_responses::checkDumpAllTimes2QueriesInOneTransaction()
     QCOMPARE(client.getUnhandledResponses(), 0);
 
     // Not sorted
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-double-queries-in-one-transaction", responses.join("\n")));
+    bool allOk = true;
+    if(!TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-double-queries-in-one-transaction", responses.join("\n")))
+        allOk = false;
     QCOMPARE(responses.size(), queryCount);
     QCOMPARE(scpiQueriesUniques.count(), 0); // this is the silver bullet to find out transactions are not messed up!!!
-    QVERIFY(scpiReceived != scpiQueries); // make sure sorter really sorts
+    if(scpiReceived == scpiQueries) // make sure sorter really sorts
+        allOk = false;
 
     // Sorted
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-double-queries-in-one-transaction-sorted", responsesSorted.join("\n")));
+    if (!TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-double-queries-in-one-transaction-sorted", responsesSorted.join("\n")))
+        allOk = false;
     QCOMPARE(responsesSorted.size(), queryCount);
     QCOMPARE(scpiQueriesUniquesSorted.count(), 0);
     QCOMPARE(scpiReceivedSorted, scpiQueries);
+    QVERIFY(allOk);
 }
 
 void test_scpi_all_responses::checkScpiCmdResponse_data()
