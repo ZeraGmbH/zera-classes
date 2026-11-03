@@ -25,7 +25,6 @@ public:
 signals:
     void sigFullScanFinished(bool ok);
     void sigFetchDone(const QString &channelMName, bool ok);
-    friend class SystemObserverResetter;
 
 private:
     void clear();

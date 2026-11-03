@@ -1,7 +1,6 @@
 #include "test_cro_system_observer.h"
 #include "cro_systemobserver.h"
 #include "cro_systemobserverfetchtask.h"
-#include "cro_systemobserverresetter.h"
 #include <testfactoryi2cctrl.h>
 #include <networkconnectioninfo.h>
 #include <timemachineobject.h>
@@ -101,7 +100,7 @@ void test_cro_system_observer::scanByTaskInvalid()
     QCOMPARE(spy[0][0], false);
 }
 
-void test_cro_system_observer::rescanWithoutClear()
+void test_cro_system_observer::rescan()
 {
     SystemObserver observer(netInfo, m_tcpFactory);
     QSignalSpy spyRangesChanged(&observer, &SystemObserver::sigFetchDone);
@@ -109,6 +108,15 @@ void test_cro_system_observer::rescanWithoutClear()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyRangesChanged.count(), 8);
+    QCOMPARE(spyRangesChanged.count(), 8);
+    QCOMPARE(spyRangesChanged[0][1], true);
+    QCOMPARE(spyRangesChanged[1][1], true);
+    QCOMPARE(spyRangesChanged[2][1], true);
+    QCOMPARE(spyRangesChanged[3][1], true);
+    QCOMPARE(spyRangesChanged[4][1], true);
+    QCOMPARE(spyRangesChanged[5][1], true);
+    QCOMPARE(spyRangesChanged[6][1], true);
+    QCOMPARE(spyRangesChanged[7][1], true);
     QStringList channels = observer.getChannelMNames();
     QCOMPARE(channels.count(), 8);
 
@@ -121,48 +129,6 @@ void test_cro_system_observer::rescanWithoutClear()
 
     QCOMPARE(observer.getChannelMNames().count(), 8);
     QCOMPARE(spyRangesChanged.count(), 0);
-    QCOMPARE(spyFinished.count(), 1);
-    QCOMPARE(spyFinished[0][0], true);
-}
-
-void test_cro_system_observer::rescanWithClear()
-{
-    SystemObserver observer(netInfo, m_tcpFactory);
-    QSignalSpy spyRangesChanged(&observer, &SystemObserver::sigFetchDone);
-    observer.startFullScan();
-    TimeMachineObject::feedEventLoop();
-
-    QCOMPARE(spyRangesChanged.count(), 8);
-    QCOMPARE(spyRangesChanged[0][1], true);
-    QCOMPARE(spyRangesChanged[1][1], true);
-    QCOMPARE(spyRangesChanged[2][1], true);
-    QCOMPARE(spyRangesChanged[3][1], true);
-    QCOMPARE(spyRangesChanged[4][1], true);
-    QCOMPARE(spyRangesChanged[5][1], true);
-    QCOMPARE(spyRangesChanged[6][1], true);
-    QCOMPARE(spyRangesChanged[7][1], true);
-    QStringList channels = observer.getChannelMNames();
-    QCOMPARE(channels.count(), 8);
-
-    spyRangesChanged.clear();
-    SystemObserverResetter::clear(&observer);
-    QCOMPARE(observer.getChannelMNames().count(), 0);
-
-    QSignalSpy spyFinished(&observer, &SystemObserver::sigFullScanFinished);
-    observer.startFullScan();
-    TimeMachineObject::feedEventLoop();
-
-    QCOMPARE(observer.getChannelMNames().count(), 8);
-    QCOMPARE(spyRangesChanged.count(), 8);
-    QCOMPARE(spyRangesChanged.count(), 8);
-    QCOMPARE(spyRangesChanged[0][1], true);
-    QCOMPARE(spyRangesChanged[1][1], true);
-    QCOMPARE(spyRangesChanged[2][1], true);
-    QCOMPARE(spyRangesChanged[3][1], true);
-    QCOMPARE(spyRangesChanged[4][1], true);
-    QCOMPARE(spyRangesChanged[5][1], true);
-    QCOMPARE(spyRangesChanged[6][1], true);
-    QCOMPARE(spyRangesChanged[7][1], true);
     QCOMPARE(spyFinished.count(), 1);
     QCOMPARE(spyFinished[0][0], true);
 }
