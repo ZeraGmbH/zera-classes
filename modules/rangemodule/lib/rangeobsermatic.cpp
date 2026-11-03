@@ -186,24 +186,27 @@ void cRangeObsermatic::generateVeinInterface()
     }
 
     m_pParRangeAutomaticOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                         QString("PAR_RangeAutomatic"),
-                                                         QString("Range automatic on/off"),
-                                                         QVariant(0));
-
+                                                      QString("PAR_RangeAutomatic"),
+                                                      QString("Range automatic on/off"),
+                                                      int(m_ConfPar.m_nRangeAutoAct.m_nActive)); // bool validator casts to int...
+    m_pParRangeAutomaticOnOff->setValidator(new cBoolValidator());
+    m_pParRangeAutomaticOnOff->setScpiInfo("CONFIGURATION", "RNGAUTO", SCPI::isQuery|SCPI::isCmdwP);
     m_pModule->m_veinModuleParameterMap["PAR_RangeAutomatic"] = m_pParRangeAutomaticOnOff; // for modules use
 
     m_pParGroupingOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                   QString("PAR_ChannelGrouping"),
-                                                   QString("Channel grouping on/off"),
-                                                   QVariant(0));
-
+                                                QString("PAR_ChannelGrouping"),
+                                                QString("Channel grouping on/off"),
+                                                int(m_ConfPar.m_nGroupAct.m_nActive));
+    m_pParGroupingOnOff->setValidator(new cBoolValidator());
+    m_pParGroupingOnOff->setScpiInfo("CONFIGURATION", "GROUPING", SCPI::isQuery|SCPI::isCmdwP);
     m_pModule->m_veinModuleParameterMap["PAR_ChannelGrouping"] = m_pParGroupingOnOff; // for modules use
 
     m_pParOverloadOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                   QString("PAR_Overload"),
-                                                   QString("Overload"),
-                                                   QVariant(0));
-
+                                                QString("PAR_Overload"),
+                                                QString("Overload"),
+                                                int(0));
+    m_pParOverloadOnOff->setValidator(new cBoolValidator());
+    m_pParOverloadOnOff->setScpiInfo("SENSE", "OVERLOAD", SCPI::isQuery|SCPI::isCmdwP);
     m_pModule->m_veinModuleParameterMap["PAR_Overload"] = m_pParOverloadOnOff; // for modules use
 
     m_pParRangeTimer = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -619,18 +622,6 @@ void cRangeObsermatic::readGainScaleDone()
         m_RangeActRejectionComponentList.at(i)->setChannelName(channelAlias);
         m_RangeActOVLRejectionComponentList.at(i)->setChannelName(channelAlias);
     }
-
-    m_pParRangeAutomaticOnOff->setValidator(new cBoolValidator());
-    m_pParRangeAutomaticOnOff->setScpiInfo("CONFIGURATION", "RNGAUTO", SCPI::isQuery|SCPI::isCmdwP);
-
-    m_pParGroupingOnOff->setValidator(new cBoolValidator());
-    m_pParGroupingOnOff->setScpiInfo("CONFIGURATION", "GROUPING", SCPI::isQuery|SCPI::isCmdwP);
-
-    m_pParOverloadOnOff->setValidator(new cBoolValidator());
-    m_pParOverloadOnOff->setScpiInfo("SENSE", "OVERLOAD", SCPI::isQuery|SCPI::isCmdwP);
-
-    m_pParRangeAutomaticOnOff->setValue(m_ConfPar.m_nRangeAutoAct.m_nActive);
-    m_pParGroupingOnOff->setValue(m_ConfPar.m_nGroupAct.m_nActive);
 
     m_bActive = true;
     emit activated();
