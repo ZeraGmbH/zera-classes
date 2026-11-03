@@ -79,7 +79,31 @@ signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
     void newRangeList(); // if the channel has read new range list after async. notification
 
+private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void pcbConnection();
+    void readRangeAndProperties();
+    void resetStatusSlot();
+    void setNotifierRangeCat();
+    void activationDone();
+
+    void deactivationResetNotifiers();
+    void deactivationDone();
+
+    // the slots for querying a measchannels range properties
+    void readRangelist();
+    void readRngAlias();
+    void readType();
+    void readUrvalue();
+    void readRejection();
+    void readOVRejection();
+    void readADCRejection();
+    void readisAvail();
+    void rangeQueryLoop();
 private:
+    void setRangeListAlias();
+    QString findOptimalRange(double actualValue, const QString &actRngAlias, qint32 actRngType, double extraRejectionFactor);
+
     RangeChannelData m_channelData;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
@@ -119,32 +143,8 @@ private:
 
     qint32 m_RangeQueryIt;
     cRangeInfoWithConstantValues m_CurrRangeInfo;
-
-    void setRangeListAlias();
-    QString findOptimalRange(double actualValue, const QString &actRngAlias, qint32 actRngType, double extraRejectionFactor);
-
-private slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void pcbConnection();
-    void readRangeAndProperties();
-    void resetStatusSlot();
-    void setNotifierRangeCat();
-    void activationDone();
-
-    void deactivationResetNotifiers();
-    void deactivationDone();
-
-    // the slots for querying a measchannels range properties
-    void readRangelist();
-    void readRngAlias();
-    void readType();
-    void readUrvalue();
-    void readRejection();
-    void readOVRejection();
-    void readADCRejection();
-    void readisAvail();
-    void rangeQueryLoop();
 };
+
 
 }
 
