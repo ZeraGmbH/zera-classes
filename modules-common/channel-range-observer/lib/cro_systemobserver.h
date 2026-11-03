@@ -27,9 +27,6 @@ signals:
     void sigFetchDone(const QString &channelMName, bool ok);
     friend class SystemObserverResetter;
 
-protected:
-    QMap<QString, ChannelPtr> m_channelMNameToChannel;
-
 private:
     void clear();
     void preparePcbInterface();
@@ -41,6 +38,7 @@ private:
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     Zera::PcbInterfacePtr m_pcbInterface;
 
+    QMap<QString, ChannelPtr> m_channelMNameToChannel;
     std::shared_ptr<int> m_samplesPerPeriod = std::make_shared<int>(0);
     TaskContainerInterfacePtr m_currentTasks;
     std::shared_ptr<QStringList> m_tempChannelMNames;
