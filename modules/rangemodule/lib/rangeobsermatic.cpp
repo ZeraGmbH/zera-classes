@@ -86,6 +86,8 @@ void cRangeObsermatic::generateVeinInterface()
     const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
     const QString unknownStr = "Unkown";
     for (int i = 0; i < channelMNames.count(); i++) {
+        cRangeMeasChannel *channel = m_pModule->getMeasChannel(channelMNames.at(i));
+
         QString key = QString("PAR_Channel%1Range").arg(i+1);
         pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key,
@@ -97,7 +99,7 @@ void cRangeObsermatic::generateVeinInterface()
         m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
 
         m_actChannelRangeList.append(unknownStr); // here we also fill our internal actual channel range list
-        m_RangeMeasChannelList.append(m_pModule->getMeasChannel(channelMNames.at(i)));
+        m_RangeMeasChannelList.append(channel);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                               QString("SIG_Channel%1OVL").arg(i+1),
