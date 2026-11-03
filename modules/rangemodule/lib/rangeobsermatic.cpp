@@ -228,14 +228,12 @@ void cRangeObsermatic::generateVeinInterface()
                                                        QString("INF_OverloadMax"),
                                                        QString("Maximum range overload condition"),
                                                        QVariant(0));
-
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pComponentOverloadMax);
 
     m_pRangingSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Ranging"),
                                                 QString("Signal on changing ranges"),
                                                 QVariant(0));
-
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pRangingSignal);
 }
 
