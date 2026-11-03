@@ -47,7 +47,6 @@ void test_cro_channel_notify_source_on_change::mt581s2NotifyManyChannels()
     m_pcbIFace->scpiCommand("GENERATOR:MODEON m0;");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spylUL1.count(), 1);
-    QCOMPARE(spylUL1[0][0], true);
     QCOMPARE(spylIL1.count(), 0);
     QCOMPARE(channelUL1->isSourceModeOn(), true);
     QCOMPARE(channelIL1->isSourceModeOn(), false);
@@ -58,7 +57,6 @@ void test_cro_channel_notify_source_on_change::mt581s2NotifyManyChannels()
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spylUL1.count(), 0);
     QCOMPARE(spylIL1.count(), 1);
-    QCOMPARE(spylIL1[0][0], true);
     QCOMPARE(channelUL1->isSourceModeOn(), true);
     QCOMPARE(channelIL1->isSourceModeOn(), true);
 
@@ -68,8 +66,6 @@ void test_cro_channel_notify_source_on_change::mt581s2NotifyManyChannels()
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spylUL1.count(), 1);
     QCOMPARE(spylIL1.count(), 1);
-    QCOMPARE(spylUL1[0][0], false);
-    QCOMPARE(spylIL1[0][0], false);
     QCOMPARE(channelUL1->isSourceModeOn(), false);
     QCOMPARE(channelIL1->isSourceModeOn(), false);
 
@@ -79,8 +75,6 @@ void test_cro_channel_notify_source_on_change::mt581s2NotifyManyChannels()
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spylUL1.count(), 1);
     QCOMPARE(spylIL1.count(), 1);
-    QCOMPARE(spylUL1[0][0], true);
-    QCOMPARE(spylIL1[0][0], true);
     QCOMPARE(channelUL1->isSourceModeOn(), true);
     QCOMPARE(channelIL1->isSourceModeOn(), true);
 }

@@ -37,7 +37,7 @@ public:
 signals:
     void sigRangeChangeReported(const QString &channelMName, int interruptCounter);
     void sigFetchDoneChannel(const QString &channelMName, bool ok);
-    void sigSourceModeOnChanged(bool on);
+    void sigSourceModeOnChanged();
 
 private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);

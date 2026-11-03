@@ -190,7 +190,7 @@ void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &ans
             bool sourceModeOn = channelMNameList.contains(getMName());
             if (m_sourceModeOn != sourceModeOn) {
                 m_sourceModeOn = sourceModeOn;
-                emit sigSourceModeOnChanged(m_sourceModeOn);
+                emit sigSourceModeOnChanged();
             }
         }
     }
