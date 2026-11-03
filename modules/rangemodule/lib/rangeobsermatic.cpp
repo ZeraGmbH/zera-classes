@@ -137,6 +137,15 @@ void cRangeObsermatic::generateVeinInterface()
         m_hardOvlList.append(false);
         m_groupOvlList.append(false);
         m_maxOvlList.append(false);
+
+        pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                           QString("INF_Channel%1UserCanChange").arg(i+1),
+                                           QString("User can change range"),
+                                           int(0));
+        const QString channelAlias = channel->getAlias();
+        pComponent->setScpiInfo("SENSE", QString("%1:RANGE").arg(channelAlias), SCPI::isQuery|SCPI::isCmdwP);
+        m_userCanChangeRange.append(pComponent);
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
     }
 
     for(int i=0; i < m_GroupList.length();++i) {
@@ -176,7 +185,6 @@ void cRangeObsermatic::generateVeinInterface()
 
         m_RangeGroupPreScalingInfo.append(pComponent);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
-
     }
 
     if (m_GroupList.count() > 0) {

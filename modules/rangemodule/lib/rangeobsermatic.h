@@ -78,6 +78,7 @@ private:
     QList<VfModuleParameter*> m_RangeGroupPreScalingList;
     QList<VfModuleParameter*> m_RangeGroupPreScalingEnabledList;
     QList<VfModuleComponent*> m_RangeGroupPreScalingInfo;
+    QList<VfModuleComponent*> m_userCanChangeRange;
 
     VfModuleParameter* m_pParRangeAutomaticOnOff;
     VfModuleParameter* m_pParGroupingOnOff;

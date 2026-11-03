@@ -84,6 +84,9 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
     connect(&m_rangeQueryLoopState, &QState::entered, this, &cRangeMeasChannel::rangeQueryLoop);
 
     connect(&m_rangeQueryMachine, &QStateMachine::finished, this, &cRangeMeasChannel::newRangeList);
+
+    connect(getChannelObserver().get(), &ChannelRangeObserver::Channel::sigSourceModeOnChanged,
+            this, &cRangeMeasChannel::onSourceModeOnChanged);
 }
 
 
@@ -355,6 +358,10 @@ bool cRangeMeasChannel::isHWOverload()
     return ((m_nStatus & 1) > 0);
 }
 
+bool cRangeMeasChannel::isSoureModeOn() const
+{
+    return m_channelObserver->isSourceModeOn();
+}
 
 double cRangeMeasChannel::getUrValue(const QString &range) const
 {
@@ -623,6 +630,11 @@ void cRangeMeasChannel::activationDone()
 {
     m_bActive = true;
     emit activated();
+}
+
+void cRangeMeasChannel::onSourceModeOnChanged(bool on)
+{
+
 }
 
 

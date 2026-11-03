@@ -18,6 +18,7 @@ target_link_libraries(channel-range-observer
     ${QTX}::Core
     module-tasks
     module-service-interfaces
+    Zera::VfStorage
     Zera::service-interfaces
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"

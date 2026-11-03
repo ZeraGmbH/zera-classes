@@ -62,6 +62,7 @@ public:
     double getOffsetCorrection(); // returns last read offset correction
 
     bool isHWOverload(); // test if we have some hardware overload condition
+    bool isSoureModeOn() const;
 
     double getUrValue(const QString &range) const;      // upper range value
     double getRejection(const QString &range) const;    // nominal (100%) rejection
@@ -86,6 +87,7 @@ private slots:
     void resetStatusSlot();
     void setNotifierRangeCat();
     void activationDone();
+    void onSourceModeOnChanged(bool on);
 
     void deactivationResetNotifiers();
     void deactivationDone();
