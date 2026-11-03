@@ -1,9 +1,11 @@
 file(GLOB SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    *.cpp
+    tasks/*.cpp
     )
 
 file(GLOB HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    *.h
+    tasks/*.h
     )
 
 add_library(channel-range-observer SHARED
@@ -24,8 +26,8 @@ target_link_libraries(channel-range-observer
 target_include_directories(channel-range-observer
     PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/channel-range-observer>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tasks>
     )
 
 set_target_properties(channel-range-observer PROPERTIES VERSION ${PROJECT_VERSION})
