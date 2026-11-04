@@ -28,6 +28,7 @@ constexpr int rangemoduleEntityId = 1020;
 
 void test_cro_channel_notify_source_on_change::mt581s2NotifyManyChannels()
 {
+    // Don't think of optimizing this for speed - it is an end to end test by design
     ModuleManagerTestRunner testRunner(":/def-session-minimal.json", false, "mt581s2");
     createClient();
 
