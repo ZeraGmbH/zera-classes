@@ -19,6 +19,7 @@ SETUP_QTESTS_CHANNEL_RANGE_OBSERVER(
     test_cro_range
     test_cro_channelcurrentrange
     test_cro_channel_notify_source_on_change
+    test_cro_channel_can_change_range_observer
 )
 
 target_sources(test_cro_channel_notify_source_on_change
