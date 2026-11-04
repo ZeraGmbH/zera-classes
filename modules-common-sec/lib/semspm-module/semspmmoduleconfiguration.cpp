@@ -70,7 +70,7 @@ void SemSpmModuleConfiguration::configXMLInfo(const QString &key)
             m_configData.m_refConfigs.m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_configData.m_refConfigs.m_nRefInpCount; i++) {
                 m_ConfigXMLMap[QString("confpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
-                m_configData.m_refConfigs.m_refInpList.append(TRefInput());
+                m_configData.m_refConfigs.m_refInpList.append(TInputNameAlias());
             }
             break;
         case setRefInput:
@@ -103,7 +103,7 @@ void SemSpmModuleConfiguration::configXMLInfo(const QString &key)
                     m_bConfigError = true;
                 }
                 else {
-                    TRefInput refInput;
+                    TInputNameAlias refInput;
                     refInput.inputName = refInputFNameAndAlias[0];
                     refInput.alias = refInputFNameAndAlias[1];
                     m_configData.m_refConfigs.m_refInpList.replace(cmd, refInput);

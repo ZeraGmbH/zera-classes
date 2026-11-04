@@ -48,7 +48,7 @@ void cSfcModuleConfiguration::configXMLInfo(const QString &key)
             m_configData.m_dutConfigs.m_nDutInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_configData.m_dutConfigs.m_nDutInpCount; i++) {
                 m_ConfigXMLMap[QString("sfcmodconfpar:configuration:measure:dutinput:inp%1").arg(i+1)] = setDutInput1Name+i;
-                m_configData.m_dutConfigs.m_dutInpList.append(TRefInput());
+                m_configData.m_dutConfigs.m_dutInpList.append(TInputNameAlias());
             }
             break;
         case setDutInputPar:
@@ -64,7 +64,7 @@ void cSfcModuleConfiguration::configXMLInfo(const QString &key)
                     m_bConfigError = true;
                 }
                 else {
-                    TRefInput dutInput;
+                    TInputNameAlias dutInput;
                     dutInput.inputName = dutInputFNameAndAlias[0];
                     dutInput.alias = dutInputFNameAndAlias[1];
                     m_configData.m_dutConfigs.m_dutInpList.replace(cmd, dutInput);

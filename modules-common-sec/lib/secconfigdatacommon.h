@@ -5,7 +5,7 @@
 #include <QString>
 #include <QList>
 
-struct TRefInput
+struct TInputNameAlias
 {
     QString inputName;
     QString alias;
@@ -14,14 +14,14 @@ struct TRefInput
 struct TSecCommonReferenceConfigs
 {
     quint8 m_nRefInpCount = 0;
-    QList<TRefInput> m_refInpList;
+    QList<TInputNameAlias> m_refInpList;
     stringParameter m_sRefInput;
 };
 
 struct TSecCommonDutConfigs
 {
     quint8 m_nDutInpCount = 0;
-    QList<TRefInput> m_dutInpList;
+    QList<TInputNameAlias> m_dutInpList;
     stringParameter m_sDutInput;
 };
 

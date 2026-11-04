@@ -113,14 +113,14 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
             m_configData.m_dutConfigs.m_nDutInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_configData.m_dutConfigs.m_nDutInpCount; i++) {
                 m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:dutinput:inp%1").arg(i+1)] = setDutInput1Name+i;
-                m_configData.m_dutConfigs.m_dutInpList.append(TRefInput());
+                m_configData.m_dutConfigs.m_dutInpList.append(TInputNameAlias());
             }
             break;
         case setRefInputCount:
             m_configData.m_refConfigs.m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_configData.m_refConfigs.m_nRefInpCount; i++) {
                 m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
-                m_configData.m_refConfigs.m_refInpList.append(TRefInput());
+                m_configData.m_refConfigs.m_refInpList.append(TInputNameAlias());
             }
             break;
         case setDutInputPar:
@@ -181,7 +181,7 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
                     m_bConfigError = true;
                 }
                 else {
-                    TRefInput dutInput;
+                    TInputNameAlias dutInput;
                     dutInput.inputName = dutInputFNameAndAlias[0];
                     dutInput.alias = dutInputFNameAndAlias[1];
                     m_configData.m_dutConfigs.m_dutInpList.replace(cmd, dutInput);
@@ -195,7 +195,7 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
                     m_bConfigError = true;
                 }
                 else {
-                    TRefInput refInput;
+                    TInputNameAlias refInput;
                     refInput.inputName = refInputFNameAndAlias[0];
                     refInput.alias = refInputFNameAndAlias[1];
                     m_configData.m_refConfigs.m_refInpList.replace(cmd, refInput);
