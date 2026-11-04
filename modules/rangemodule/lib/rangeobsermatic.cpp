@@ -137,6 +137,16 @@ void cRangeObsermatic::generateVeinInterface()
         m_hardOvlList.append(false);
         m_groupOvlList.append(false);
         m_maxOvlList.append(false);
+
+        ChannelRangeObserver::ChannelCanChangeRangeObserverPtr observer = createCanChangeRangeObserver(channel->getMName());
+        pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                           QString("INF_Channel%1UserCanChange").arg(i+1),
+                                           QString("User can change range"),
+                                           observer->canChangeRange());
+        pComponent->setScpiInfo("SENSE", QString("%1:RANGE").arg(channel->getAlias()), SCPI::isQuery);
+        m_userCanChangeRange.append(pComponent);
+        m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
+        m_channelCanChangeRangeObservers.append(observer);
     }
 
     for(int i=0; i < m_GroupList.length();++i) {
@@ -176,7 +186,6 @@ void cRangeObsermatic::generateVeinInterface()
 
         m_RangeGroupPreScalingInfo.append(pComponent);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
-
     }
 
     if (m_GroupList.count() > 0) {
@@ -869,6 +878,18 @@ double cRangeObsermatic::parseStrRangeToDouble(QString range)
     if (unit == "mV" || unit == "mA")
         value /= 1000.0;
     return value;
+}
+
+ChannelRangeObserver::ChannelCanChangeRangeObserverPtr cRangeObsermatic::createCanChangeRangeObserver(const QString &channelMName)
+{
+    VeinStorage::AbstractComponentPtr rangeAutomaticComponent = m_pModule->getStorageDb()->getFutureComponent(
+        m_pModule->getEntityId(),
+        "PAR_RangeAutomatic");
+
+    ChannelRangeObserver::ChannelPtr croChannel = m_pModule->getSharedChannelRangeObserver()->getChannel(channelMName);
+    ChannelRangeObserver::ChannelCanChangeRangeObserverPtr observer =
+        std::make_shared<ChannelRangeObserver::ChannelCanChangeRangeObserver>(croChannel    /* TODO*/);
+    return observer;
 }
 
 }

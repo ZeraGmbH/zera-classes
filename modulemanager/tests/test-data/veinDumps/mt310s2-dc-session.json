@@ -151,27 +151,35 @@
         "INF_Channel1ActOVLREJ": 312.4999858438974,
         "INF_Channel1ActREJ": 250,
         "INF_Channel1OVLREJ": 312.4999858438974,
+        "INF_Channel1UserCanChange": true,
         "INF_Channel2ActOVLREJ": 312.4999858438974,
         "INF_Channel2ActREJ": 250,
         "INF_Channel2OVLREJ": 312.4999858438974,
+        "INF_Channel2UserCanChange": true,
         "INF_Channel3ActOVLREJ": 312.4999858438974,
         "INF_Channel3ActREJ": 250,
         "INF_Channel3OVLREJ": 312.4999858438974,
+        "INF_Channel3UserCanChange": true,
         "INF_Channel4ActOVLREJ": 12.499999218166801,
         "INF_Channel4ActREJ": 10,
         "INF_Channel4OVLREJ": 12.499999218166801,
+        "INF_Channel4UserCanChange": true,
         "INF_Channel5ActOVLREJ": 12.499999218166801,
         "INF_Channel5ActREJ": 10,
         "INF_Channel5OVLREJ": 12.499999218166801,
+        "INF_Channel5UserCanChange": true,
         "INF_Channel6ActOVLREJ": 12.499999218166801,
         "INF_Channel6ActREJ": 10,
         "INF_Channel6OVLREJ": 12.499999218166801,
+        "INF_Channel6UserCanChange": true,
         "INF_Channel7ActOVLREJ": 312.4999858438974,
         "INF_Channel7ActREJ": 250,
         "INF_Channel7OVLREJ": 312.4999858438974,
+        "INF_Channel7UserCanChange": true,
         "INF_Channel8ActOVLREJ": 1.24999992181668e-12,
         "INF_Channel8ActREJ": 1e-12,
         "INF_Channel8OVLREJ": 1.24999992181668e-12,
+        "INF_Channel8UserCanChange": false,
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_Channel1Peak": {
@@ -257,6 +265,9 @@
                     "ChannelName": "UL1",
                     "Description": "<skipped>"
                 },
+                "INF_Channel1UserCanChange": {
+                    "Description": "<skipped>"
+                },
                 "INF_Channel2ActOVLREJ": {
                     "ChannelName": "UL2",
                     "Description": "<skipped>"
@@ -267,6 +278,9 @@
                 },
                 "INF_Channel2OVLREJ": {
                     "ChannelName": "UL2",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel2UserCanChange": {
                     "Description": "<skipped>"
                 },
                 "INF_Channel3ActOVLREJ": {
@@ -281,6 +295,9 @@
                     "ChannelName": "UL3",
                     "Description": "<skipped>"
                 },
+                "INF_Channel3UserCanChange": {
+                    "Description": "<skipped>"
+                },
                 "INF_Channel4ActOVLREJ": {
                     "ChannelName": "IL1",
                     "Description": "<skipped>"
@@ -291,6 +308,9 @@
                 },
                 "INF_Channel4OVLREJ": {
                     "ChannelName": "IL1",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel4UserCanChange": {
                     "Description": "<skipped>"
                 },
                 "INF_Channel5ActOVLREJ": {
@@ -305,6 +325,9 @@
                     "ChannelName": "IL2",
                     "Description": "<skipped>"
                 },
+                "INF_Channel5UserCanChange": {
+                    "Description": "<skipped>"
+                },
                 "INF_Channel6ActOVLREJ": {
                     "ChannelName": "IL3",
                     "Description": "<skipped>"
@@ -315,6 +338,9 @@
                 },
                 "INF_Channel6OVLREJ": {
                     "ChannelName": "IL3",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel6UserCanChange": {
                     "Description": "<skipped>"
                 },
                 "INF_Channel7ActOVLREJ": {
@@ -329,6 +355,9 @@
                     "ChannelName": "UAUX",
                     "Description": "<skipped>"
                 },
+                "INF_Channel7UserCanChange": {
+                    "Description": "<skipped>"
+                },
                 "INF_Channel8ActOVLREJ": {
                     "ChannelName": "IAUX",
                     "Description": "<skipped>"
@@ -339,6 +368,9 @@
                 },
                 "INF_Channel8OVLREJ": {
                     "ChannelName": "IAUX",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel8UserCanChange": {
                     "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
@@ -739,6 +771,62 @@
                         "2",
                         "PAR_Channel8Range",
                         "1"
+                    ],
+                    [
+                        "SENSE",
+                        "UL1:RANGE",
+                        "2",
+                        "INF_Channel1UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "UL2:RANGE",
+                        "2",
+                        "INF_Channel2UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "UL3:RANGE",
+                        "2",
+                        "INF_Channel3UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "IL1:RANGE",
+                        "2",
+                        "INF_Channel4UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "IL2:RANGE",
+                        "2",
+                        "INF_Channel5UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "IL3:RANGE",
+                        "2",
+                        "INF_Channel6UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "UAUX:RANGE",
+                        "2",
+                        "INF_Channel7UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "IAUX:RANGE",
+                        "2",
+                        "INF_Channel8UserCanChange",
+                        "0"
                     ],
                     [
                         "MEASURE",

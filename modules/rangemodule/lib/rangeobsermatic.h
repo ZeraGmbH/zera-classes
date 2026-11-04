@@ -1,6 +1,7 @@
 #ifndef RANGEOBSERMATIC_H
 #define RANGEOBSERMATIC_H
 
+#include "cro_channelcanchangerangeobserver.h"
 #include "rangemoduleconfigdata.h"
 #include "rangemeaschannel.h"
 #include <moduleactivist.h>
@@ -84,6 +85,7 @@ private:
     void setOverloadVeinComponent(bool overloadOn);
     void replaceOrAddPendingDecreaseRange(int channelIdx, const QString optRange);
     bool pendingDecreaseHashContainsRange(int channelIdx, const QString &range) const;
+    ChannelRangeObserver::ChannelCanChangeRangeObserverPtr createCanChangeRangeObserver(const QString &channelMName);
 
     cRangeModule *m_pModule;
     QList<QStringList> m_GroupList;
@@ -99,6 +101,7 @@ private:
     quint32 m_nRangeSetPending = 0;
     quint32 m_nReadStatusPending = 0;
     QStringList m_actChannelRangeList; // a list of the actual ranges set
+    QList<ChannelRangeObserver::ChannelCanChangeRangeObserverPtr> m_channelCanChangeRangeObservers;
 
     // our interface entities
     QList<VfModuleParameter*> m_RangeParameterList;
@@ -109,6 +112,7 @@ private:
     QList<VfModuleParameter*> m_RangeGroupPreScalingList;
     QList<VfModuleParameter*> m_RangeGroupPreScalingEnabledList;
     QList<VfModuleComponent*> m_RangeGroupPreScalingInfo;
+    QList<VfModuleComponent*> m_userCanChangeRange;
 
     VfModuleParameter* m_pParRangeAutomaticOnOff;
     VfModuleParameter* m_pParGroupingOnOff;

@@ -3,6 +3,7 @@
 
 #include "cro_channel.h"
 #include <vs_abstractcomponent.h>
+#include <memory>
 
 namespace ChannelRangeObserver {
 
@@ -28,6 +29,8 @@ private:
     VeinStorage::AbstractComponentPtr m_rangeAutomaticComponent;
     bool m_canChangeRange = false;
 };
+
+typedef std::shared_ptr<ChannelCanChangeRangeObserver> ChannelCanChangeRangeObserverPtr;
 
 }
 #endif // CRO_CHANNELCANCHANGERANGEOBSERVER_H

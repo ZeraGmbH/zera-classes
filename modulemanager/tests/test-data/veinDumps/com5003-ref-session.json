@@ -159,21 +159,27 @@
         "INF_Channel1ActOVLREJ": 12.499988280242833,
         "INF_Channel1ActREJ": 10,
         "INF_Channel1OVLREJ": 12.499988280242833,
+        "INF_Channel1UserCanChange": true,
         "INF_Channel2ActOVLREJ": 12.499988280242833,
         "INF_Channel2ActREJ": 10,
         "INF_Channel2OVLREJ": 12.499988280242833,
+        "INF_Channel2UserCanChange": true,
         "INF_Channel3ActOVLREJ": 12.499988280242833,
         "INF_Channel3ActREJ": 10,
         "INF_Channel3OVLREJ": 12.499988280242833,
+        "INF_Channel3UserCanChange": true,
         "INF_Channel4ActOVLREJ": 12.499988280242833,
         "INF_Channel4ActREJ": 10,
         "INF_Channel4OVLREJ": 12.499988280242833,
+        "INF_Channel4UserCanChange": true,
         "INF_Channel5ActOVLREJ": 12.499988280242833,
         "INF_Channel5ActREJ": 10,
         "INF_Channel5OVLREJ": 12.499988280242833,
+        "INF_Channel5UserCanChange": true,
         "INF_Channel6ActOVLREJ": 12.499988280242833,
         "INF_Channel6ActREJ": 10,
         "INF_Channel6OVLREJ": 12.499988280242833,
+        "INF_Channel6UserCanChange": true,
         "INF_ModuleInterface": {
             "ComponentInfo": {
                 "ACT_Channel1Peak": {
@@ -243,6 +249,9 @@
                     "ChannelName": "REF1",
                     "Description": "<skipped>"
                 },
+                "INF_Channel1UserCanChange": {
+                    "Description": "<skipped>"
+                },
                 "INF_Channel2ActOVLREJ": {
                     "ChannelName": "REF2",
                     "Description": "<skipped>"
@@ -253,6 +262,9 @@
                 },
                 "INF_Channel2OVLREJ": {
                     "ChannelName": "REF2",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel2UserCanChange": {
                     "Description": "<skipped>"
                 },
                 "INF_Channel3ActOVLREJ": {
@@ -267,6 +279,9 @@
                     "ChannelName": "REF3",
                     "Description": "<skipped>"
                 },
+                "INF_Channel3UserCanChange": {
+                    "Description": "<skipped>"
+                },
                 "INF_Channel4ActOVLREJ": {
                     "ChannelName": "REF4",
                     "Description": "<skipped>"
@@ -277,6 +292,9 @@
                 },
                 "INF_Channel4OVLREJ": {
                     "ChannelName": "REF4",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel4UserCanChange": {
                     "Description": "<skipped>"
                 },
                 "INF_Channel5ActOVLREJ": {
@@ -291,6 +309,9 @@
                     "ChannelName": "REF5",
                     "Description": "<skipped>"
                 },
+                "INF_Channel5UserCanChange": {
+                    "Description": "<skipped>"
+                },
                 "INF_Channel6ActOVLREJ": {
                     "ChannelName": "REF6",
                     "Description": "<skipped>"
@@ -301,6 +322,9 @@
                 },
                 "INF_Channel6OVLREJ": {
                     "ChannelName": "REF6",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel6UserCanChange": {
                     "Description": "<skipped>"
                 },
                 "INF_ModuleInterface": {
@@ -636,6 +660,48 @@
                         "2",
                         "PAR_Channel6Range",
                         "1"
+                    ],
+                    [
+                        "SENSE",
+                        "REF1:RANGE",
+                        "2",
+                        "INF_Channel1UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF2:RANGE",
+                        "2",
+                        "INF_Channel2UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF3:RANGE",
+                        "2",
+                        "INF_Channel3UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF4:RANGE",
+                        "2",
+                        "INF_Channel4UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF5:RANGE",
+                        "2",
+                        "INF_Channel5UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF6:RANGE",
+                        "2",
+                        "INF_Channel6UserCanChange",
+                        "0"
                     ],
                     [
                         "MEASURE",
