@@ -4,10 +4,10 @@
         <measure>
             <dutinput>
                 <n>4</n>
-                <inp1>fi0</inp1>
-                <inp2>fi1</inp2>
-                <inp3>fi2</inp3>
-                <inp4>fi3</inp4>
+                <inp1>fi0,Fin1</inp1>
+                <inp2>fi1,Fin2</inp2>
+                <inp3>fi2,Fin3</inp3>
+                <inp4>fi3,Fin4</inp4>
             </dutinput>
             <refinput>
                 <n>3</n>

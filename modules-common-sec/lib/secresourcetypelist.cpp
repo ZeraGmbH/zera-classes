@@ -10,7 +10,10 @@ void SecResourceTypeList::addTypesFromConfig(const TSecCommonReferenceConfigs &r
 
 void SecResourceTypeList::addTypesFromConfig(const TSecCommonDutConfigs &dutConfig)
 {
-    addTypesFromList(dutConfig.m_dutInpList);
+    QStringList inputNames;
+    for(const auto &input : dutConfig.m_dutInpList)
+        inputNames.append(input.inputName);
+    addTypesFromList(inputNames);
 }
 
 void SecResourceTypeList::addTypesFromList(const QStringList &inputList)

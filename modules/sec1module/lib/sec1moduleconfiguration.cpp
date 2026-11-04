@@ -113,7 +113,7 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
             m_configData.m_dutConfigs.m_nDutInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_configData.m_dutConfigs.m_nDutInpCount; i++) {
                 m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:dutinput:inp%1").arg(i+1)] = setDutInput1Name+i;
-                m_configData.m_dutConfigs.m_dutInpList.append(QString());
+                m_configData.m_dutConfigs.m_dutInpList.append(TRefInput());
             }
             break;
         case setRefInputCount:
@@ -175,8 +175,17 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
         default:
             if ((cmd >= setDutInput1Name) && (cmd < setDutInput1Name + 32)) {
                 cmd -= setDutInput1Name;
-                QString name = m_pXMLReader->getValue(key);
-                m_configData.m_dutConfigs.m_dutInpList.replace(cmd, name);
+                const QStringList dutInputFNameAndAlias = m_pXMLReader->getValue(key).split(",");
+                if (dutInputFNameAndAlias.count() != 2) {
+                    qCritical("SEC configuration: Input is not comma separated input,alias!");
+                    m_bConfigError = true;
+                }
+                else {
+                    TRefInput dutInput;
+                    dutInput.inputName = dutInputFNameAndAlias[0];
+                    dutInput.alias = dutInputFNameAndAlias[1];
+                    m_configData.m_dutConfigs.m_dutInpList.replace(cmd, dutInput);
+                }
             }
             else if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32)) {
                 cmd -= setRefInput1Name;

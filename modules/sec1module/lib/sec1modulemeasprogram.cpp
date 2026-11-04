@@ -1035,7 +1035,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
     const auto dutInplist = m_pModule->getConfigData()->m_dutConfigs.m_dutInpList;
     qint32 dutInputCountLeftToCheck = dutInplist.count();
     for (int dutInputNo = 0; dutInputNo < dutInplist.count(); dutInputNo++) {
-        QString dutInputName = dutInplist[dutInputNo];
+        QString dutInputName = dutInplist[dutInputNo].inputName;
         for (int resourceTypeNo = 0; resourceTypeNo < resourceTypeList.count(); resourceTypeNo++) {
             QString resourcelist = m_ResourceHash[resourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(dutInputName)) {

@@ -4,7 +4,7 @@
         <measure>
             <dutinput>
                 <n>1</n>
-                <inp1>sh0</inp1>
+                <inp1>sh0,SC1</inp1>
             </dutinput>
             <refinput>
                 <n>1</n>

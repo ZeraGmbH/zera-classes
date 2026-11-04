@@ -4,8 +4,8 @@
         <measure>
             <dutinput>
                 <n>2</n>
-                <inp1>sh0</inp1>
-                <inp2>hk0</inp2>
+                <inp1>sh0,SC1</inp1>
+                <inp2>hk0,HK1</inp2>
             </dutinput>
             <refinput>
                 <n>3</n>

@@ -12,8 +12,9 @@ void SecMeasInputDictionary::fillFromReferenceConfig(const TSecCommonReferenceCo
 
 void SecMeasInputDictionary::fillFromDutConfig(const TSecCommonDutConfigs &dutConfig)
 {
-    for(const QString &refInput : dutConfig.m_dutInpList)
-        m_inputsOrderedByConfig.append(refInput);
+    const QList<TRefInput> dutInputList = dutConfig.m_dutInpList;
+    for(const TRefInput &dutInput : dutInputList)
+        m_inputsOrderedByConfig.append(dutInput.inputName);
     m_resourceTypeList.addTypesFromConfig(dutConfig);
 }
 

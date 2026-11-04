@@ -21,7 +21,7 @@ struct TSecCommonReferenceConfigs
 struct TSecCommonDutConfigs
 {
     quint8 m_nDutInpCount = 0;
-    QList<QString> m_dutInpList;
+    QList<TRefInput> m_dutInpList;
     stringParameter m_sDutInput;
 };
 
