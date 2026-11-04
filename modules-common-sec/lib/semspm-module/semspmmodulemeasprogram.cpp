@@ -23,7 +23,7 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
     const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
     if (!SecPowerModuleFinder::testConfiguredRefInputs(configData->m_refConfigs, m_pModule->getStorageDb()))
         qCritical("%s module has invalid configuration!", qPrintable(m_pModule->getVeinModuleName()));
-    m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
+    m_refInputDictionary.fillFromConfig(configData->m_refConfigs);
 
     //transition from this state to m_fetch....is done in ecalcServerConnect
     m_fetchECalcUnitsState.addTransition(this, &SemSpmModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
@@ -247,7 +247,7 @@ void SemSpmModuleMeasProgram::generateVeinInterface()
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
                                             QString("Actual frequency input (internal)"),
-                                            QVariant(configData->m_refConfigs.m_sRefInput.m_sValue));
+                                            QVariant(configData->m_refConfigs.m_input.m_sValue));
     m_pModule->m_veinModuleParameterMap[key] = m_pRefFreqInput; // and for the modules interface
 
     m_pUpperLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -513,7 +513,7 @@ void SemSpmModuleMeasProgram::setInterfaceComponents()
     m_pPowerModuleEntityId->setValue(m_powerModuleObserver.getPowerModulentityId());
 
     const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
-    m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_refConfigs.m_sRefInput.m_sValue));
+    m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_refConfigs.m_input.m_sValue));
     m_pStopModePar->setValue(configData->m_stopMode.m_nValue);
     m_pMeasTimePar->setValue(configData->m_nMeasTime.m_nValue);
     m_pUpperLimitPar->setValue(configData->m_limitConfigs.m_fUpperLimit.m_fValue);
@@ -653,7 +653,7 @@ void SemSpmModuleMeasProgram::activationDone()
     const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
     connect(&m_powerModuleObserver, &SecPowerModuleObserver::sigPowerModuleValuesChanged,
             this, &SemSpmModuleMeasProgram::onPowerModuleValuesChanged);
-    const QString refInputName = configData->m_refConfigs.m_sRefInput.m_sValue;
+    const QString refInputName = configData->m_refConfigs.m_input.m_sValue;
     m_powerModuleObserver.setPowerModulentityId(SecPowerModuleFinder::findEntity(refInputName, m_pModule->getStorageDb()));
     // -> onPowerModuleValuesChanged
 
@@ -712,7 +712,7 @@ void SemSpmModuleMeasProgram::setMasterMux()
 
 void SemSpmModuleMeasProgram::setSlaveMux()
 {
-    QString refPowerName = m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue;
+    QString refPowerName = m_pModule->getConfigData()->m_refConfigs.m_input.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_slaveRefEnergyCounterEcName, refPowerName)] = setslavemux;
 }
 
@@ -870,7 +870,7 @@ void SemSpmModuleMeasProgram::newStartStop(QVariant startstop)
 void SemSpmModuleMeasProgram::newRefInput(QVariant refinput)
 {
     QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refinput.toString());
-    m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue = refPowerName;
+    m_pModule->getConfigData()->m_refConfigs.m_input.m_sValue = refPowerName;
     m_pRefFreqInput->setValue(refPowerName);
 
     // -> onPowerModuleValuesChanged

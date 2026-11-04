@@ -3,7 +3,6 @@
 
 #include "secmeasinputdictionary.h"
 #include "vfmoduleparameter.h"
-#include <rminterface.h>
 #include <pcbinterface.h>
 #include <secinterface.h>
 #include <basemeasprogram.h>
@@ -30,17 +29,9 @@ public slots:
     void stop() override;  // in interface are not updated when stop
 
 private slots:
-    void resourceManagerConnect();
-    void sendRMIdent();
-    void readResources();
-    void readResource();
-    void testSecInputs();
     void ecalcServerConnect();
     void fetchECalcUnits();
     void pcbServerConnect();
-    void readDUTInputs();
-    void readDUTInputAlias();
-    void readDUTInputDone();
     void activationDone();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
@@ -62,15 +53,10 @@ private:
     void setStatus(quint32 status);
 
     cSfcModule *m_pModule = nullptr;
-    Zera::cRMInterface m_rmInterface;
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;
 
-    qint32 m_nIt = 0;
-    QString m_sIt;
     QString m_masterEcName;
-    QList<QString> m_sItList; // for interation over x Input hash
-    QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_dutInputDictionary;
     bool m_bMeasurementRunning = false;
 
@@ -90,21 +76,9 @@ private:
     VfModuleParameter* m_pLedInitialStateAct = nullptr;
 
     // statemachine for activating gets the following states
-    QState resourceManagerConnectState; // connect to resource manager
-    QState m_IdentifyState; // identify to resource manager
-    QState m_readResourcesState; // init to read all resource information for each type
-    QState m_readResourceState; // read for 1 type
-
-    QState m_testSecInputsState; // here we test if all our configured Inputs are present, we don't set them because we only get information from here
-
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 2 error calc unit from sec server
     QState m_pcbServerConnectState; // connect to pcb server
-
-    QState m_readDUTInputsState; // init to read all ref Input informations
-    QState m_readDUTInputAliasState; // read for 1 Input
-    QState m_readDUTInputDoneState;
-
     QFinalState m_activationDoneState; // and then we have finished
 
     // statemachine for starting error measurement

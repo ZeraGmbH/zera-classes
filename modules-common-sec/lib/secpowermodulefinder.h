@@ -8,7 +8,7 @@ class SecPowerModuleFinder
 {
 public:
     static int findEntity(const QString &refName, const VeinStorage::AbstractDatabase *veinDb);
-    static bool testConfiguredRefInputs(const TSecCommonReferenceConfigs &refConfigs,
+    static bool testConfiguredRefInputs(const TSecCommonInputConfigs &refConfigs,
                                         const VeinStorage::AbstractDatabase *veinDb);
 };
 

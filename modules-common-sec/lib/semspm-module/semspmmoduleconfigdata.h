@@ -6,7 +6,7 @@
 class SemSpmModuleConfigData
 {
 public:
-    TSecCommonReferenceConfigs m_refConfigs;
+    TSecCommonInputConfigs m_refConfigs;
     TSecCommonLimitConfigs m_limitConfigs;
 
     intParameter m_nMeasTime;

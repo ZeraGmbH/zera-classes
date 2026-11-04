@@ -12,11 +12,11 @@ int SecPowerModuleFinder::findEntity(const QString &refName, const VeinStorage::
     return -1;
 }
 
-bool SecPowerModuleFinder::testConfiguredRefInputs(const TSecCommonReferenceConfigs &refConfigs,
+bool SecPowerModuleFinder::testConfiguredRefInputs(const TSecCommonInputConfigs &refConfigs,
                                                    const VeinStorage::AbstractDatabase *veinDb)
 {
     bool allFound = true;
-    for (const TInputNameAlias &input : refConfigs.m_refInpList) {
+    for (const TInputNameAlias &input : refConfigs.m_inputList) {
         if (findEntity(input.inputName, veinDb) < 0) {
             allFound = false;
             qWarning("Reference input %s not found!", qPrintable(input.inputName));

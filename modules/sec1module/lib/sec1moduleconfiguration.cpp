@@ -71,10 +71,10 @@ QByteArray cSec1ModuleConfiguration::exportConfiguration() const
     const intParameter* paramRate = &m_configData.m_nMRate;
     m_pXMLReader->setValue(paramRate->m_sKey, QString("%1").arg(paramRate->m_nValue));
 
-    const stringParameter* paramDutInput = &m_configData.m_dutConfigs.m_sDutInput;
+    const stringParameter* paramDutInput = &m_configData.m_dutConfigs.m_input;
     m_pXMLReader->setValue(paramDutInput->m_sKey, paramDutInput->m_sValue);
 
-    const stringParameter* paramRefInput = &m_configData.m_refConfigs.m_sRefInput;
+    const stringParameter* paramRefInput = &m_configData.m_refConfigs.m_input;
     m_pXMLReader->setValue(paramRefInput->m_sKey, paramRefInput->m_sValue);
 
     const stringParameter* paramNode = &m_configData.m_sMode;
@@ -110,26 +110,26 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
         switch (cmd)
         {
         case setDutInputCount:
-            m_configData.m_dutConfigs.m_nDutInpCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_configData.m_dutConfigs.m_nDutInpCount; i++) {
+            m_configData.m_dutConfigs.m_inputCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_configData.m_dutConfigs.m_inputCount; i++) {
                 m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:dutinput:inp%1").arg(i+1)] = setDutInput1Name+i;
-                m_configData.m_dutConfigs.m_dutInpList.append(TInputNameAlias());
+                m_configData.m_dutConfigs.m_inputList.append(TInputNameAlias());
             }
             break;
         case setRefInputCount:
-            m_configData.m_refConfigs.m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_configData.m_refConfigs.m_nRefInpCount; i++) {
+            m_configData.m_refConfigs.m_inputCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_configData.m_refConfigs.m_inputCount; i++) {
                 m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
-                m_configData.m_refConfigs.m_refInpList.append(TInputNameAlias());
+                m_configData.m_refConfigs.m_inputList.append(TInputNameAlias());
             }
             break;
         case setDutInputPar:
-            m_configData.m_dutConfigs.m_sDutInput.m_sKey = key;
-            m_configData.m_dutConfigs.m_sDutInput.m_sValue = m_pXMLReader->getValue(key);
+            m_configData.m_dutConfigs.m_input.m_sKey = key;
+            m_configData.m_dutConfigs.m_input.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setRefInputPar:
-            m_configData.m_refConfigs.m_sRefInput.m_sKey = key;
-            m_configData.m_refConfigs.m_sRefInput.m_sValue = m_pXMLReader->getValue(key);
+            m_configData.m_refConfigs.m_input.m_sKey = key;
+            m_configData.m_refConfigs.m_input.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setMeasMode:
             m_configData.m_sMode.m_sKey = key;
@@ -184,7 +184,7 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
                     TInputNameAlias dutInput;
                     dutInput.inputName = dutInputFNameAndAlias[0];
                     dutInput.alias = dutInputFNameAndAlias[1];
-                    m_configData.m_dutConfigs.m_dutInpList.replace(cmd, dutInput);
+                    m_configData.m_dutConfigs.m_inputList.replace(cmd, dutInput);
                 }
             }
             else if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32)) {
@@ -198,7 +198,7 @@ void cSec1ModuleConfiguration::configXMLInfo(const QString &key)
                     TInputNameAlias refInput;
                     refInput.inputName = refInputFNameAndAlias[0];
                     refInput.alias = refInputFNameAndAlias[1];
-                    m_configData.m_refConfigs.m_refInpList.replace(cmd, refInput);
+                    m_configData.m_refConfigs.m_inputList.replace(cmd, refInput);
                 }
             }
             break;

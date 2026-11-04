@@ -10,7 +10,7 @@ namespace SFCMODULE
 class cSfcModuleConfigData
 {
 public:
-    TSecCommonDutConfigs m_dutConfigs;
+    TSecCommonInputConfigs m_dutConfigs;
 };
 
 }
