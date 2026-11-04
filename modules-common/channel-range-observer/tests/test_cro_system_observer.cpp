@@ -28,7 +28,7 @@ void test_cro_system_observer::init()
 {
     TimeMachineForTest::reset();
     m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);
-    m_testServer = std::make_unique<TestServerForSenseInterfaceMt310s2>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpFactory);
+    m_testServer = std::make_unique<TestServerForSenseInterfaceMtxxxs2>(std::make_shared<TestFactoryI2cCtrl>(true), m_tcpFactory);
     TimeMachineObject::feedEventLoop();
     TimeMachineObject::feedEventLoop();
 }

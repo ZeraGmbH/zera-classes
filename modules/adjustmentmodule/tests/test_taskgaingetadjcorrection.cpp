@@ -88,7 +88,7 @@ void test_taskgaingetadjcorrection::setupServers()
 {
     VeinTcp::AbstractTcpNetworkFactoryPtr tcpNetworkFactory = VeinTcp::MockTcpNetworkFactory::create();
     m_resmanServer = std::make_unique<ResmanRunFacade>(tcpNetworkFactory);
-    m_testServer = std::make_unique<TestServerForSenseInterfaceMt310s2>(
+    m_testServer = std::make_unique<TestServerForSenseInterfaceMtxxxs2>(
         std::make_shared<TestFactoryI2cCtrl>(true),
         tcpNetworkFactory);
     TimeMachineObject::feedEventLoop();

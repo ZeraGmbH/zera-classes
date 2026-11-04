@@ -3,7 +3,7 @@
 
 #include <pcbinterface.h>
 #include <resmanrunfacade.h>
-#include <testserverforsenseinterfacemt310s2.h>
+#include <testserverforsenseinterfacemtxxxs2.h>
 #include <abstracttcpnetworkfactory.h>
 #include <QObject>
 
@@ -32,7 +32,7 @@ private slots:
 private:
     void setupServers();
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
-    std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testServer;
+    std::unique_ptr<TestServerForSenseInterfaceMtxxxs2> m_testServer;
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
 
     Zera::PcbInterfacePtr m_pcbInterface;

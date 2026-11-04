@@ -3,7 +3,7 @@
 
 #include "testfactoryserviceinterfaces.h"
 #include "testmodulemanager.h"
-#include <testserverforsenseinterfacemt310s2.h>
+#include <testserverforsenseinterfacemtxxxs2.h>
 #include <mockzdsp1d.h>
 #include <resmanrunfacade.h>
 #include <testlicensesystem.h>
@@ -65,7 +65,7 @@ private:
     TestDspInterfacePtr m_rangeModuleMeasProgramDspInterface;
 
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
-    std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testPcbServer;
+    std::unique_ptr<TestServerForSenseInterfaceMtxxxs2> m_testPcbServer;
     std::unique_ptr<MockZdsp1d> m_dspServer;
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
     static constexpr bool withIaux = true;

@@ -2,7 +2,7 @@
 #define TEST_TASKOFFSETGETADJCORRECTION_H
 
 #include <pcbinterface.h>
-#include <testserverforsenseinterfacemt310s2.h>
+#include <testserverforsenseinterfacemtxxxs2.h>
 #include <resmanrunfacade.h>
 
 class test_taskoffsetgetadjcorrection : public QObject
@@ -19,7 +19,7 @@ private slots:
 private:
     void setupServers();
 
-    std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testServer;
+    std::unique_ptr<TestServerForSenseInterfaceMtxxxs2> m_testServer;
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
     std::shared_ptr<Zera::cPCBInterface> m_pcbIFace;
     std::unique_ptr<AdjustScpiValueFormatter> m_valueFormatter;

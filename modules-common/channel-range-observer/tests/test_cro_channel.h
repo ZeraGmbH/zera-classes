@@ -4,7 +4,7 @@
 #include <pcbinterface.h>
 #include <abstracttcpnetworkfactory.h>
 #include <resmanrunfacade.h>
-#include <testserverforsenseinterfacemt310s2.h>
+#include <testserverforsenseinterfacemtxxxs2.h>
 
 class test_cro_channel : public QObject
 {
@@ -38,7 +38,7 @@ private:
     void setupServers();
     void setupClient();
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
-    std::unique_ptr<TestServerForSenseInterfaceMt310s2> m_testServer;
+    std::unique_ptr<TestServerForSenseInterfaceMtxxxs2> m_testServer;
     std::unique_ptr<ResmanRunFacade> m_resmanServer;
 
     Zera::PcbInterfacePtr m_pcbInterface;
