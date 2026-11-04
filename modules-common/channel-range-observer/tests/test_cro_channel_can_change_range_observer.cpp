@@ -38,7 +38,7 @@ void test_cro_channel_can_change_range_observer::cleanup()
 void test_cro_channel_can_change_range_observer::cannotSetRangesAfterInit()
 {
     ChannelPtr channel = std::make_shared<Channel>("m0", netInfo, m_tcpFactory, false);
-    ChannelCanChangeRangeObserver observer(channel);
+    ChannelCanChangeRangeObserver observer(channel, nullptr);
     QCOMPARE(observer.canChangeRange(), false);
 }
 
@@ -47,7 +47,7 @@ void test_cro_channel_can_change_range_observer::canSetRangesChannelsFetched()
     ChannelPtr channel = std::make_shared<Channel>("m0", netInfo, m_tcpFactory, false);
     channel->startFetch();
     TimeMachineObject::feedEventLoop();
-    ChannelCanChangeRangeObserver observer(channel);
+    ChannelCanChangeRangeObserver observer(channel, nullptr);
 
     QCOMPARE(observer.canChangeRange(), true);
 }
@@ -57,7 +57,7 @@ void test_cro_channel_can_change_range_observer::cannotSetRangesChannelsFetchedO
     ChannelPtr channel = std::make_shared<Channel>("m7", netInfo, m_tcpFactory, false); // IAUX / no clamps => only 0A
     channel->startFetch();
     TimeMachineObject::feedEventLoop();
-    ChannelCanChangeRangeObserver observer(channel);
+    ChannelCanChangeRangeObserver observer(channel, nullptr);
 
     QCOMPARE(observer.canChangeRange(), false);
 }
@@ -65,7 +65,7 @@ void test_cro_channel_can_change_range_observer::cannotSetRangesChannelsFetchedO
 void test_cro_channel_can_change_range_observer::canSetRangesAfterChannelsFetched()
 {
     ChannelPtr channel = std::make_shared<Channel>("m0", netInfo, m_tcpFactory, false);
-    ChannelCanChangeRangeObserver observer(channel);
+    ChannelCanChangeRangeObserver observer(channel, nullptr);
     QSignalSpy spy(&observer, &ChannelCanChangeRangeObserver::sigCanChangeRangeChanged);
 
     channel->startFetch();
@@ -78,7 +78,7 @@ void test_cro_channel_can_change_range_observer::canSetRangesAfterChannelsFetche
 void test_cro_channel_can_change_range_observer::cannotSetRangesAfterChannelsFetched()
 {
     ChannelPtr channel = std::make_shared<Channel>("m7", netInfo, m_tcpFactory, false); // IAUX / no clamps => only 0A
-    ChannelCanChangeRangeObserver observer(channel);
+    ChannelCanChangeRangeObserver observer(channel, nullptr);
     QSignalSpy spy(&observer, &ChannelCanChangeRangeObserver::sigCanChangeRangeChanged);
 
     channel->startFetch();
@@ -137,7 +137,7 @@ void test_cro_channel_can_change_range_observer::canChangeInitialSourceModeIsOff
     TimeMachineObject::feedEventLoop();
     m_testServer->setSourceOnMode(QStringList());
     TimeMachineObject::feedEventLoop();
-    ChannelCanChangeRangeObserver observer(channel);
+    ChannelCanChangeRangeObserver observer(channel, nullptr);
 
     QCOMPARE(observer.canChangeRange(), true);
 }
@@ -149,7 +149,7 @@ void test_cro_channel_can_change_range_observer::cannotChangeInitialSourceModeIs
     TimeMachineObject::feedEventLoop();
     m_testServer->setSourceOnMode(QStringList() << "m0");
     TimeMachineObject::feedEventLoop();
-    ChannelCanChangeRangeObserver observer(channel);
+    ChannelCanChangeRangeObserver observer(channel, nullptr);
 
     QCOMPARE(observer.canChangeRange(), false);
 }
@@ -159,7 +159,7 @@ void test_cro_channel_can_change_range_observer::cannotChangeAfterSourceModeIsOn
     ChannelPtr channel = std::make_shared<Channel>("m0", netInfo, m_tcpFactory, true);
     channel->startFetch();
     TimeMachineObject::feedEventLoop();
-    ChannelCanChangeRangeObserver observer(channel);
+    ChannelCanChangeRangeObserver observer(channel, nullptr);
 
     QCOMPARE(observer.canChangeRange(), true);
 
@@ -174,7 +174,7 @@ void test_cro_channel_can_change_range_observer::canChangeAfterSourceModeIsOnOff
     ChannelPtr channel = std::make_shared<Channel>("m0", netInfo, m_tcpFactory, true);
     channel->startFetch();
     TimeMachineObject::feedEventLoop();
-    ChannelCanChangeRangeObserver observer(channel);
+    ChannelCanChangeRangeObserver observer(channel, nullptr);
 
     QCOMPARE(observer.canChangeRange(), true);
 

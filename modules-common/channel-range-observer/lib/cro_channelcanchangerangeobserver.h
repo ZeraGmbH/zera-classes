@@ -11,8 +11,8 @@ class ChannelCanChangeRangeObserver : public QObject
 {
     Q_OBJECT
 public:
-    explicit ChannelCanChangeRangeObserver(ChannelPtr channel); // AUX
-    explicit ChannelCanChangeRangeObserver(ChannelPtr channel, VeinStorage::AbstractComponentPtr rangeAutomaticComponent);
+    explicit ChannelCanChangeRangeObserver(ChannelPtr channel,
+                                           VeinStorage::AbstractComponentPtr rangeAutomaticComponent);
 
     bool canChangeRange() const;
 signals:

@@ -727,6 +727,62 @@ void test_range_automatic::rangeAutomaticOnGroupingOn()
     QCOMPARE(getVfComponent(rangeEntityId, UAUXRangeComponent), "8V");
 }
 
+void test_range_automatic::canChangeRangeInitial()
+{
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel1UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel2UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel3UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel4UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel5UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel6UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel7UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel8UserCanChange"), false);
+}
+
+void test_range_automatic::canChangeRangeAfterAddingClampIAUX()
+{
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel8UserCanChange"), false);
+
+    m_testPcbServer->addClamp(cClamp::CL120A, "IAUX");
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel8UserCanChange"), true);
+}
+
+void test_range_automatic::cannotChangeRangeAfterRangeAutomaticOn()
+{
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel1UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel2UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel3UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel4UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel5UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel6UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel7UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel8UserCanChange"), false);
+
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 1);
+
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel1UserCanChange"), false);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel2UserCanChange"), false);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel3UserCanChange"), false);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel4UserCanChange"), false);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel5UserCanChange"), false);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel6UserCanChange"), false);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel7UserCanChange"), false);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel8UserCanChange"), false);
+
+    setVfComponent(rangeEntityId, RangeAutomaticComponent, 0);
+
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel1UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel2UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel3UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel4UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel5UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel6UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel7UserCanChange"), true);
+    QCOMPARE(getVfComponent(rangeEntityId, "INF_Channel8UserCanChange"), false);
+}
+
 void test_range_automatic::setupServices()
 {
     m_resmanServer = std::make_unique<ResmanRunFacade>(m_tcpFactory);

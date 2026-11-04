@@ -48,6 +48,10 @@ private slots:
     void rangeAutomaticOnGroupingOff();
     void rangeAutomaticOnGroupingOn();
 
+    void canChangeRangeInitial();
+    void canChangeRangeAfterAddingClampIAUX();
+    void cannotChangeRangeAfterRangeAutomaticOn();
+
 private:
     void setupServices();
     void fireNewActualValues(float rmsValue, bool includeIAux);

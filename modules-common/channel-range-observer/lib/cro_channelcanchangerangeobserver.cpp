@@ -2,11 +2,6 @@
 
 namespace ChannelRangeObserver {
 
-ChannelCanChangeRangeObserver::ChannelCanChangeRangeObserver(ChannelPtr channel) :
-    ChannelCanChangeRangeObserver(channel, nullptr)
-{
-}
-
 ChannelCanChangeRangeObserver::ChannelCanChangeRangeObserver(ChannelPtr channel,
                                                              VeinStorage::AbstractComponentPtr rangeAutomaticComponent) :
     m_channel(channel),

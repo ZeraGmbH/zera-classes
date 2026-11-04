@@ -143,6 +143,9 @@ void cRangeObsermatic::generateVeinInterface()
                                            QString("INF_Channel%1UserCanChange").arg(i+1),
                                            QString("User can change range"),
                                            observer->canChangeRange());
+        connect(observer.get(), &ChannelRangeObserver::ChannelCanChangeRangeObserver::sigCanChangeRangeChanged, this, [=]() {
+            pComponent->setValue(observer->canChangeRange());
+        });
         pComponent->setScpiInfo("SENSE", QString("%1:RANGE").arg(channel->getAlias()), SCPI::isQuery);
         m_userCanChangeRange.append(pComponent);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
@@ -888,7 +891,7 @@ ChannelRangeObserver::ChannelCanChangeRangeObserverPtr cRangeObsermatic::createC
 
     ChannelRangeObserver::ChannelPtr croChannel = m_pModule->getSharedChannelRangeObserver()->getChannel(channelMName);
     ChannelRangeObserver::ChannelCanChangeRangeObserverPtr observer =
-        std::make_shared<ChannelRangeObserver::ChannelCanChangeRangeObserver>(croChannel    /* TODO*/);
+        std::make_shared<ChannelRangeObserver::ChannelCanChangeRangeObserver>(croChannel, rangeAutomaticComponent);
     return observer;
 }
 
