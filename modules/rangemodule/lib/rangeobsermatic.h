@@ -51,8 +51,39 @@ public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
     void catchChannelReply(quint32 msgnr);
     void catchChannelNewRangeList();
+
+private slots:
+    void dspserverConnect();
+    void readGainScale();
+    void readGainScaleDone();
+
+    void deactivationInit();
+    void deactivationDone();
+
+    void writeGainScale();
+    void readStatus();
+    void analyzeStatus();
+
+    void onNewRange(QVariant range);
+    void newRangeAuto(QVariant rauto);
+    void newGrouping(QVariant rgrouping);
+    void onVeinChangeOverload(QVariant overload);
+    void preScalingChanged(QVariant unused);
+
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
 private:
     double parseStrRangeToDouble(QString range);
+    void rangeObservation();
+    void rangeAutomatic();
+    void groupHandling();
+    void setRanges(bool force = false); // here we really set ranges
+    QList<int> getGroupAliasIdxListForChannel(int channelIdx);
+    bool requiresOverloadReset(int channel);
+    double getPreScale(int channelIdx);
+    void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
+    void setOverloadVeinComponent(bool overloadOn);
+    void replaceOrAddPendingDecreaseRange(int channelIdx, const QString optRange);
+    bool pendingDecreaseHashContainsRange(int channelIdx, const QString &range) const;
 
     cRangeModule *m_pModule;
     QList<QStringList> m_GroupList;
@@ -111,38 +142,6 @@ private:
         QString m_targetRangeName;
     };
     QMap<int /*channelIdx*/, RangePendingDecreaseEntry> m_pendingDecreaseTargetRanges;
-
-    void rangeObservation();
-    void rangeAutomatic();
-    void groupHandling();
-    void setRanges(bool force = false); // here we really set ranges
-    QList<int> getGroupAliasIdxListForChannel(int channelIdx);
-    bool requiresOverloadReset(int channel);
-    double getPreScale(int channelIdx);
-    void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
-    void setOverloadVeinComponent(bool overloadOn);
-    void replaceOrAddPendingDecreaseRange(int channelIdx, const QString optRange);
-    bool pendingDecreaseHashContainsRange(int channelIdx, const QString &range) const;
-
-private slots:
-    void dspserverConnect();
-    void readGainScale();
-    void readGainScaleDone();
-
-    void deactivationInit();
-    void deactivationDone();
-
-    void writeGainScale();
-    void readStatus();
-    void analyzeStatus();
-
-    void onNewRange(QVariant range);
-    void newRangeAuto(QVariant rauto);
-    void newGrouping(QVariant rgrouping);
-    void onVeinChangeOverload(QVariant overload);
-    void preScalingChanged(QVariant unused);
-
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
 };
 
 }
