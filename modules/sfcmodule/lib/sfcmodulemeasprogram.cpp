@@ -13,25 +13,20 @@ namespace SFCMODULE
 cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     cBaseMeasProgram(module->getVeinModuleName()),
     m_pModule(module),
-    m_secInterface(std::make_unique<Zera::cSECInterface>()),
-    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
+    m_secInterface(std::make_unique<Zera::cSECInterface>())
 {
     const cSfcModuleConfigData *configData = m_pModule->getConfigData();
     m_dutInputDictionary.fillFromConfig(configData->m_dutConfigs);
 
     //m_ecalcServerConnectState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_fetchECalcUnitsState); // connect to ecalc server
     //transition from this state to m_fetch....is done in ecalcServerConnect
-    m_fetchECalcUnitsState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_pcbServerConnectState);
+    m_fetchECalcUnitsState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_activationDoneState);
 
-    //m_pcbServerConnectState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_pcbServerConnectState);
-    //transition from this state to m_readDUTInputsState....is done in pcbServerConnect
-    // Here we set mux and mode once to get periodic state properly
     m_setMasterMuxState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_setMasterMeasModeState);
     m_setMasterMeasModeState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_ecalcServerConnectState);
     m_activationMachine.addState(&m_fetchECalcUnitsState);
-    m_activationMachine.addState(&m_pcbServerConnectState);
     m_activationMachine.addState(&m_setMasterMuxState);
     m_activationMachine.addState(&m_setMasterMeasModeState);
     m_activationMachine.addState(&m_activationDoneState);
@@ -40,7 +35,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
 
     connect(&m_ecalcServerConnectState, &QState::entered, this, &cSfcModuleMeasProgram::ecalcServerConnect);
     connect(&m_fetchECalcUnitsState, &QState::entered, this, &cSfcModuleMeasProgram::fetchECalcUnits);
-    connect(&m_pcbServerConnectState, &QState::entered, this, &cSfcModuleMeasProgram::pcbServerConnect);
     connect(&m_setMasterMuxState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMux);
     connect(&m_setMasterMeasModeState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMeasMode);
     connect(&m_activationDoneState, &QState::entered, this, &cSfcModuleMeasProgram::activationDone);
@@ -127,15 +121,6 @@ void cSfcModuleMeasProgram::ecalcServerConnect()
 void cSfcModuleMeasProgram::fetchECalcUnits()
 {
     m_MsgNrCmdList[m_secInterface->setECalcUnit(1)] = fetchecalcunits; // we need 1 ecalc units to cascade
-}
-
-void cSfcModuleMeasProgram::pcbServerConnect()
-{
-    m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_setMasterMuxState);
-    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cSfcModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
 }
 
 void cSfcModuleMeasProgram::setMasterMux()

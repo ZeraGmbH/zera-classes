@@ -34,7 +34,6 @@ private slots:
 
     void ecalcServerConnect();
     void fetchECalcUnits();
-    void pcbServerConnect();
     void setsecINTNotifier();
     void activationDone();
 
@@ -104,15 +103,11 @@ private:
 
     cSec1Module* m_pModule = nullptr; // the module we live in
     Zera::cSECInterfacePtr m_secInterface;
-    Zera::PcbInterfacePtr m_pcbInterface;
 
     // statemachine for activating gets the following states
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 2 error calc units from sec server
-    QState m_pcbServerConnectState; // connect to pcb server
-
     QState m_setsecINTNotifierState; // we get notified on sec interrupts
-
     QFinalState m_activationDoneState; // and then we have finished
 
     // statemachine for deactivating

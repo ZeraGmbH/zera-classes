@@ -31,7 +31,6 @@ public slots:
 private slots:
     void ecalcServerConnect();
     void fetchECalcUnits();
-    void pcbServerConnect();
     void activationDone();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
@@ -54,7 +53,6 @@ private:
 
     cSfcModule *m_pModule = nullptr;
     Zera::cSECInterfacePtr m_secInterface;
-    Zera::PcbInterfacePtr m_pcbInterface;
 
     QString m_masterEcName;
     SecMeasInputDictionary m_dutInputDictionary;
@@ -78,8 +76,6 @@ private:
     // statemachine for activating gets the following states
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 2 error calc unit from sec server
-    QState m_pcbServerConnectState; // connect to pcb server
-
     QFinalState m_activationDoneState; // and then we have finished
 
     // statemachine for starting error measurement
