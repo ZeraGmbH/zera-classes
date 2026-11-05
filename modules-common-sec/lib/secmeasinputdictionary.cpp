@@ -1,13 +1,13 @@
 #include "secmeasinputdictionary.h"
 
-void SecMeasInputDictionary::fillFromConfig(const TSecCommonInputConfigs &refConfig)
+void SecMeasInputDictionary::fillFromConfig(const TSecCommonInputConfigs &config)
 {
-    const QList<TInputNameAlias> refInputList = refConfig.m_inputList;
-    for(const TInputNameAlias &refInput : refInputList) {
-        m_inputsOrderedByConfig.append(refInput.inputName);
-        setAlias(refInput.inputName, refInput.alias);
+    const QList<TInputNameAlias> inputList = config.m_inputList;
+    for(const TInputNameAlias &input : inputList) {
+        m_inputsOrderedByConfig.append(input.inputName);
+        setAlias(input.inputName, input.alias);
     }
-    m_resourceTypeList.addTypesFromConfig(refConfig);
+    m_resourceTypeList.addTypesFromConfig(config);
 }
 
 void SecMeasInputDictionary::addReferenceInput(const QString &inputName, const QString &resource)
