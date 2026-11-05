@@ -15,13 +15,16 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     m_pModule(module),
     m_secInterface(std::make_unique<Zera::cSECInterface>())
 {
+    m_secInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_secServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    connect(m_secInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSfcModuleMeasProgram::catchInterfaceAnswer);
+
     const cSfcModuleConfigData *configData = m_pModule->getConfigData();
     m_dutInputDictionary.fillFromConfig(configData->m_dutConfigs);
 
-    //m_ecalcServerConnectState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_fetchECalcUnitsState); // connect to ecalc server
-    //transition from this state to m_fetch....is done in ecalcServerConnect
-    m_fetchECalcUnitsState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_activationDoneState);
-
+    // activation state machine
+    m_ecalcServerConnectState.addTransition(m_secInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
+    m_fetchECalcUnitsState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_setMasterMuxState);
     m_setMasterMuxState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_setMasterMeasModeState);
     m_setMasterMeasModeState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_activationDoneState);
 
@@ -38,7 +41,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     connect(&m_setMasterMuxState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMux);
     connect(&m_setMasterMeasModeState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMeasMode);
     connect(&m_activationDoneState, &QState::entered, this, &cSfcModuleMeasProgram::activationDone);
-
 
     // setting up statemachine used when starting a measurement
     m_startMeasurementState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_startMeasurementDoneState);
@@ -111,10 +113,6 @@ void cSfcModuleMeasProgram::setStatus(quint32 status)
 
 void cSfcModuleMeasProgram::ecalcServerConnect()
 {
-    m_secInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_secServiceConnectionInfo,
-                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_ecalcServerConnectState.addTransition(m_secInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
-    connect(m_secInterface.get(), &AbstractServerInterface::serverAnswer, this, &cSfcModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_secInterface->getClientSmart());
 }
 

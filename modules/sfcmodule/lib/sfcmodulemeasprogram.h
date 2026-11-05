@@ -76,12 +76,12 @@ private:
     // statemachine for activating gets the following states
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 2 error calc unit from sec server
+    QState m_setMasterMuxState; // we set the Input selectors
+    QState m_setMasterMeasModeState; // and the meas modes
     QFinalState m_activationDoneState; // and then we have finished
 
     // statemachine for starting error measurement
     QStateMachine m_startMeasurementMachine;
-    QState m_setMasterMuxState; // we set the Input selectors
-    QState m_setMasterMeasModeState; // and the meas modes
     QState m_startMeasurementState;
     QFinalState m_startMeasurementDoneState; // here we start it
 };
