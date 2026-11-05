@@ -2,7 +2,6 @@
 #define SECMEASINPUTDICTIONARY_H
 
 #include "secconfigdatacommon.h"
-#include "secresourcetypelist.h"
 #include <QHash>
 #include <QMap>
 
@@ -10,8 +9,6 @@ class SecMeasInputDictionary
 {
 public:
     void fillFromConfig(const TSecCommonInputConfigs &config);
-
-    const QStringList &getResourceTypeList() const;
 
     const QStringList &getInputNameList() const;
     QStringList getInputAliasList() const;
@@ -27,8 +24,6 @@ private:
     QHash<QString /* inputName */, QString /* resource */> m_resourceHash;
     QMap<QString /* inputName */, QString /* alias */> m_aliasMap;
     QHash<QString /* alias */, QString /* inputName */> m_reverseAliasHash;
-
-    SecResourceTypeList m_resourceTypeList;
 };
 
 #endif // SECMEASINPUTDICTIONARY_H
