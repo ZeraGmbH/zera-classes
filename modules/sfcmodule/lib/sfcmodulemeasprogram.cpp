@@ -97,9 +97,8 @@ enum sfcmoduleCmds
     readstatus
 };
 
-void cSfcModuleMeasProgram::stopMeasurement(bool bAbort)
+void cSfcModuleMeasProgram::stopMeasurement()
 {
-    Q_UNUSED(bAbort)
     setStatus(ECALCSTATUS::READY);
     m_bMeasurementRunning = false;
     m_MsgNrCmdList[m_secInterface->stop(m_masterEcName)] = stopmeas;
@@ -134,15 +133,14 @@ void cSfcModuleMeasProgram::setMasterMeasMode()
 
 void cSfcModuleMeasProgram::activationDone()
 {
+    m_bActive = true;
+
     connect(m_pStartStopPar, &VfModuleParameter::sigValueChanged, this, &cSfcModuleMeasProgram::onStartStopChanged);
     m_ActualizeTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervall);
     connect(m_ActualizeTimer.get(), &TimerTemplateQt::sigExpired, this, &cSfcModuleMeasProgram::Actualize);
 
     m_ContinousTimer = TimerFactoryQt::createPeriodic(m_nActualizeIntervall);
     connect(m_ContinousTimer.get(), &TimerTemplateQt::sigExpired, this, &cSfcModuleMeasProgram::readStatusRegister);
-
-    m_bActive = true;
-
     m_ContinousTimer->start();
 
     emit activated();
@@ -212,7 +210,6 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
-
             case actualizeprogress:
                 if (reply == ack)
                     updateProgress(answer.toUInt());
@@ -272,13 +269,12 @@ void cSfcModuleMeasProgram::generateVeinInterface()
 
 void cSfcModuleMeasProgram::onStartStopChanged(QVariant newValue)
 {
-    bool ok;
-    if(newValue.toInt(&ok) > 0)
-    {
+    if(newValue.toInt() > 0) {
         if (!m_startMeasurementMachine.isRunning())
             m_startMeasurementMachine.start();
-    }else
-        stopMeasurement(true);
+    }
+    else
+        stopMeasurement();
 }
 
 void cSfcModuleMeasProgram::stopECCalculator()

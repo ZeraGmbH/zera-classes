@@ -48,7 +48,7 @@ private slots:
     void readStatusRegister();
 private:
     void updateProgress(quint32 flankCountActual);
-    void stopMeasurement(bool bAbort);
+    void stopMeasurement();
     void setStatus(quint32 status);
 
     cSfcModule *m_pModule = nullptr;
