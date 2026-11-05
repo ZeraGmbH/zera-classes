@@ -3,7 +3,6 @@
 
 #include "secmeasinputdictionary.h"
 #include "vfmoduleparameter.h"
-#include <rminterface.h>
 #include <pcbinterface.h>
 #include <secinterface.h>
 #include <basemeasprogram.h>
@@ -54,7 +53,6 @@ private:
     void setStatus(quint32 status);
 
     cSfcModule *m_pModule = nullptr;
-    Zera::cRMInterface m_rmInterface;
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;
 

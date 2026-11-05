@@ -6,7 +6,6 @@
 #include "multipleresulthelper.h"
 #include "secmeasinputdictionary.h"
 #include "secpowermoduleobserver.h"
-#include <rminterface.h>
 #include <doublevalidator.h>
 #include <stringvalidator.h>
 #include <basemeasprogram.h>
@@ -104,7 +103,6 @@ private:
     void calculateMeasTime();
 
     cSec1Module* m_pModule = nullptr; // the module we live in
-    Zera::cRMInterface m_rmInterface;
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;
 
