@@ -9,8 +9,7 @@
 class SecMeasInputDictionary
 {
 public:
-    void fillFromReferenceConfig(const TSecCommonInputConfigs &refConfig);
-    void fillFromDutConfig(const TSecCommonInputConfigs &dutConfig);
+    void fillFromConfig(const TSecCommonInputConfigs &refConfig);
 
     void addReferenceInput(const QString &inputName, const QString &resource);
     QString getResource(const QString &inputName) const;

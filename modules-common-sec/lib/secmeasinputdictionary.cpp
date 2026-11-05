@@ -1,6 +1,6 @@
 #include "secmeasinputdictionary.h"
 
-void SecMeasInputDictionary::fillFromReferenceConfig(const TSecCommonInputConfigs &refConfig)
+void SecMeasInputDictionary::fillFromConfig(const TSecCommonInputConfigs &refConfig)
 {
     const QList<TInputNameAlias> refInputList = refConfig.m_inputList;
     for(const TInputNameAlias &refInput : refInputList) {
@@ -8,14 +8,6 @@ void SecMeasInputDictionary::fillFromReferenceConfig(const TSecCommonInputConfig
         setAlias(refInput.inputName, refInput.alias);
     }
     m_resourceTypeList.addTypesFromConfig(refConfig);
-}
-
-void SecMeasInputDictionary::fillFromDutConfig(const TSecCommonInputConfigs &dutConfig)
-{
-    const QList<TInputNameAlias> dutInputList = dutConfig.m_inputList;
-    for(const TInputNameAlias &dutInput : dutInputList)
-        m_inputsOrderedByConfig.append(dutInput.inputName);
-    m_resourceTypeList.addTypesFromConfig(dutConfig);
 }
 
 void SecMeasInputDictionary::addReferenceInput(const QString &inputName, const QString &resource)

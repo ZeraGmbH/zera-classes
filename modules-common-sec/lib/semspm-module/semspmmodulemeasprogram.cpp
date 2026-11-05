@@ -23,7 +23,7 @@ SemSpmModuleMeasProgram::SemSpmModuleMeasProgram(SemSpmModule *module, std::uniq
     const SemSpmModuleConfigData *configData = m_pModule->getConfigData();
     if (!SecPowerModuleFinder::testConfiguredRefInputs(configData->m_refConfigs, m_pModule->getStorageDb()))
         qCritical("%s module has invalid configuration!", qPrintable(m_pModule->getVeinModuleName()));
-    m_refInputDictionary.fillFromReferenceConfig(configData->m_refConfigs);
+    m_refInputDictionary.fillFromConfig(configData->m_refConfigs);
 
     //transition from this state to m_fetch....is done in ecalcServerConnect
     m_fetchECalcUnitsState.addTransition(this, &SemSpmModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
