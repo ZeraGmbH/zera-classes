@@ -11,11 +11,18 @@ struct TInputNameAlias
     QString alias;
 };
 
-struct TSecCommonInputConfigs
+struct TSecCommonReferenceConfigs
 {
-    quint8 m_inputCount = 0;
-    QList<TInputNameAlias> m_inputList;
-    stringParameter m_input;
+    quint8 m_nRefInpCount = 0;
+    QList<TInputNameAlias> m_refInpList;
+    stringParameter m_sRefInput;
+};
+
+struct TSecCommonDutConfigs
+{
+    quint8 m_nDutInpCount = 0;
+    QList<TInputNameAlias> m_dutInpList;
+    stringParameter m_sDutInput;
 };
 
 struct TSecCommonLimitConfigs

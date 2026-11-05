@@ -45,15 +45,15 @@ void cSfcModuleConfiguration::configXMLInfo(const QString &key)
         switch (cmd)
         {
         case setDutInputCount:
-            m_configData.m_dutConfigs.m_inputCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_configData.m_dutConfigs.m_inputCount; i++) {
+            m_configData.m_dutConfigs.m_nDutInpCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_configData.m_dutConfigs.m_nDutInpCount; i++) {
                 m_ConfigXMLMap[QString("sfcmodconfpar:configuration:measure:dutinput:inp%1").arg(i+1)] = setDutInput1Name+i;
-                m_configData.m_dutConfigs.m_inputList.append(TInputNameAlias());
+                m_configData.m_dutConfigs.m_dutInpList.append(TInputNameAlias());
             }
             break;
         case setDutInputPar:
-            m_configData.m_dutConfigs.m_input.m_sKey = key;
-            m_configData.m_dutConfigs.m_input.m_sValue = m_pXMLReader->getValue(key);
+            m_configData.m_dutConfigs.m_sDutInput.m_sKey = key;
+            m_configData.m_dutConfigs.m_sDutInput.m_sValue = m_pXMLReader->getValue(key);
             break;
         default:
             if ((cmd >= setDutInput1Name) && (cmd < setDutInput1Name + 32)) {
@@ -67,7 +67,7 @@ void cSfcModuleConfiguration::configXMLInfo(const QString &key)
                     TInputNameAlias dutInput;
                     dutInput.inputName = dutInputFNameAndAlias[0];
                     dutInput.alias = dutInputFNameAndAlias[1];
-                    m_configData.m_dutConfigs.m_inputList.replace(cmd, dutInput);
+                    m_configData.m_dutConfigs.m_dutInpList.replace(cmd, dutInput);
                 }
             }
             break;
