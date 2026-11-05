@@ -41,9 +41,6 @@ private slots:
     void ecalcServerConnect();
     void fetchECalcUnits();
     void pcbServerConnect();
-    void readDUTInputs();
-    void readDUTInputAlias();
-    void readDUTInputDone();
     void setsecINTNotifier();
     void activationDone();
 
@@ -127,10 +124,6 @@ private:
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 2 error calc units from sec server
     QState m_pcbServerConnectState; // connect to pcb server
-
-    QState m_readDUTInputsState; // init to read all ref Input informations
-    QState m_readDUTInputAliasState; // read for 1 Input
-    QState m_readDUTInputDoneState;
 
     QState m_setsecINTNotifierState; // we get notified on sec interrupts
 

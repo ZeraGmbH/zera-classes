@@ -44,12 +44,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     //m_ecalcServerConnectState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_fetchECalcUnitsState); // connect to ecalc server
     //transition from this state to m_fetch....is done in ecalcServerConnect
     m_fetchECalcUnitsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_pcbServerConnectState); // connect to pcbserver
-    m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readDUTInputsState);
+    m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_setsecINTNotifierState);
 
-    m_readDUTInputsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputAliasState);
-    m_readDUTInputAliasState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputDoneState);
-    m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readDUTInputAliasState);
-    m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
     m_setsecINTNotifierState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&resourceManagerConnectState);
@@ -60,9 +56,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     m_activationMachine.addState(&m_ecalcServerConnectState);
     m_activationMachine.addState(&m_fetchECalcUnitsState);
     m_activationMachine.addState(&m_pcbServerConnectState);
-    m_activationMachine.addState(&m_readDUTInputsState);
-    m_activationMachine.addState(&m_readDUTInputAliasState);
-    m_activationMachine.addState(&m_readDUTInputDoneState);
     m_activationMachine.addState(&m_setsecINTNotifierState);
     m_activationMachine.addState(&m_activationDoneState);
 
@@ -76,9 +69,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module) :
     connect(&m_ecalcServerConnectState, &QState::entered, this, &cSec1ModuleMeasProgram::ecalcServerConnect);
     connect(&m_fetchECalcUnitsState, &QState::entered, this, &cSec1ModuleMeasProgram::fetchECalcUnits);
     connect(&m_pcbServerConnectState, &QState::entered, this, &cSec1ModuleMeasProgram::pcbServerConnect);
-    connect(&m_readDUTInputsState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputs);
-    connect(&m_readDUTInputAliasState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputAlias);
-    connect(&m_readDUTInputDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputDone);
     connect(&m_setsecINTNotifierState, &QState::entered, this, &cSec1ModuleMeasProgram::setsecINTNotifier);
     connect(&m_activationDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::activationDone);
 
@@ -518,7 +508,6 @@ enum sec1moduleCmds
    sendrmident,
    readresource,
    fetchecalcunits,
-   readdutInputalias,
    setsecintnotifier,
 
    freeecalcunits,
@@ -587,17 +576,6 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 }
                 else
                     notifyError(fetchsececalcunitErrMsg);
-                break;
-            }
-
-            case readdutInputalias:
-            {
-                if (reply == ack) {
-                    m_dutInputDictionary.setAlias(m_sIt, answer.toString());
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readaliasErrMsg);
                 break;
             }
 
@@ -1069,26 +1047,6 @@ void cSec1ModuleMeasProgram::fetchECalcUnits()
 void cSec1ModuleMeasProgram::pcbServerConnect()
 {
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
-}
-
-void cSec1ModuleMeasProgram::readDUTInputs()
-{
-    m_sItList = m_dutInputDictionary.getInputNameList();
-    emit activationContinue();
-}
-
-void cSec1ModuleMeasProgram::readDUTInputAlias()
-{
-    m_sIt = m_sItList.takeFirst();
-    m_MsgNrCmdList[m_pcbInterface->resourceAliasQuery(m_dutInputDictionary.getResource(m_sIt), m_sIt)] = readdutInputalias;
-}
-
-void cSec1ModuleMeasProgram::readDUTInputDone()
-{
-    if (m_sItList.isEmpty())
-        emit activationContinue();
-    else
-        emit activationLoop();
 }
 
 void cSec1ModuleMeasProgram::setsecINTNotifier()

@@ -30,10 +30,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
 
     //m_pcbServerConnectState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_pcbServerConnectState);
     //transition from this state to m_readDUTInputsState....is done in pcbServerConnect
-    m_readDUTInputsState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readDUTInputAliasState);
-    m_readDUTInputAliasState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readDUTInputDoneState);
-    m_readDUTInputDoneState.addTransition(this, &cSfcModuleMeasProgram::activationLoop, &m_readDUTInputAliasState);
-    m_readDUTInputDoneState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_setMasterMuxState);
     // Here we set mux and mode once to get periodic state properly
     m_setMasterMuxState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_setMasterMeasModeState);
     m_setMasterMeasModeState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_activationDoneState);
@@ -46,9 +42,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     m_activationMachine.addState(&m_ecalcServerConnectState);
     m_activationMachine.addState(&m_fetchECalcUnitsState);
     m_activationMachine.addState(&m_pcbServerConnectState);
-    m_activationMachine.addState(&m_readDUTInputsState);
-    m_activationMachine.addState(&m_readDUTInputAliasState);
-    m_activationMachine.addState(&m_readDUTInputDoneState);
     m_activationMachine.addState(&m_setMasterMuxState);
     m_activationMachine.addState(&m_setMasterMeasModeState);
     m_activationMachine.addState(&m_activationDoneState);
@@ -63,9 +56,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     connect(&m_ecalcServerConnectState, &QState::entered, this, &cSfcModuleMeasProgram::ecalcServerConnect);
     connect(&m_fetchECalcUnitsState, &QState::entered, this, &cSfcModuleMeasProgram::fetchECalcUnits);
     connect(&m_pcbServerConnectState, &QState::entered, this, &cSfcModuleMeasProgram::pcbServerConnect);
-    connect(&m_readDUTInputsState, &QState::entered, this, &cSfcModuleMeasProgram::readDUTInputs);
-    connect(&m_readDUTInputAliasState, &QState::entered, this, &cSfcModuleMeasProgram::readDUTInputAlias);
-    connect(&m_readDUTInputDoneState, &QState::entered, this, &cSfcModuleMeasProgram::readDUTInputDone);
     connect(&m_setMasterMuxState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMux);
     connect(&m_setMasterMeasModeState, &QState::entered, this, &cSfcModuleMeasProgram::setMasterMeasMode);
     connect(&m_activationDoneState, &QState::entered, this, &cSfcModuleMeasProgram::activationDone);
@@ -115,7 +105,6 @@ enum sfcmoduleCmds
     sendrmident,
     readresource,
     fetchecalcunits,
-    readdutInputalias,
 
     freeecalcunits,
 
@@ -214,29 +203,9 @@ void cSfcModuleMeasProgram::pcbServerConnect()
 {
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readDUTInputsState);
+    m_pcbServerConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_setMasterMuxState);
     connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cSfcModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
-}
-
-void cSfcModuleMeasProgram::readDUTInputs()
-{
-    m_sItList = m_dutInputDictionary.getInputNameList();
-    emit activationContinue();
-}
-
-void cSfcModuleMeasProgram::readDUTInputAlias()
-{
-    m_sIt = m_sItList.takeFirst();
-    m_MsgNrCmdList[m_pcbInterface->resourceAliasQuery(m_dutInputDictionary.getResource(m_sIt), m_sIt)] = readdutInputalias;
-}
-
-void cSfcModuleMeasProgram::readDUTInputDone()
-{
-    if (m_sItList.isEmpty())
-        emit activationContinue();
-    else
-        emit activationLoop();
 }
 
 void cSfcModuleMeasProgram::setMasterMux()
@@ -315,16 +284,6 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 break;
             }
 
-            case readdutInputalias:
-            {
-                if (reply == ack) {
-                    m_dutInputDictionary.setAlias(m_sIt, answer.toString());
-                    emit activationContinue();
-                }
-                else
-                    notifyError(readaliasErrMsg);
-                break;
-            }
             case stopmeas:
                 if (reply == ack)
                     emit deactivationContinue();

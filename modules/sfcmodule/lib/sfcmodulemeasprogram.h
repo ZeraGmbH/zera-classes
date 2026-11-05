@@ -38,9 +38,6 @@ private slots:
     void ecalcServerConnect();
     void fetchECalcUnits();
     void pcbServerConnect();
-    void readDUTInputs();
-    void readDUTInputAlias();
-    void readDUTInputDone();
     void activationDone();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
@@ -100,10 +97,6 @@ private:
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 2 error calc unit from sec server
     QState m_pcbServerConnectState; // connect to pcb server
-
-    QState m_readDUTInputsState; // init to read all ref Input informations
-    QState m_readDUTInputAliasState; // read for 1 Input
-    QState m_readDUTInputDoneState;
 
     QFinalState m_activationDoneState; // and then we have finished
 
