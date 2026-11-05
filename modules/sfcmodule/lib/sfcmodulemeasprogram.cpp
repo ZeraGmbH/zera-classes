@@ -19,11 +19,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     const cSfcModuleConfigData *configData = m_pModule->getConfigData();
     m_dutInputDictionary.fillFromConfig(configData->m_dutConfigs);
 
-    m_IdentifyState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourcesState);
-    m_readResourcesState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
-    m_readResourceState.addTransition(this, &cSfcModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
-    m_readResourceState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_testSecInputsState); // go on if done
-    m_testSecInputsState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_ecalcServerConnectState); // test all configured Inputs
     //m_ecalcServerConnectState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_fetchECalcUnitsState); // connect to ecalc server
     //transition from this state to m_fetch....is done in ecalcServerConnect
     m_fetchECalcUnitsState.addTransition(this, &cSfcModuleMeasProgram::activationContinue, &m_pcbServerConnectState);
@@ -34,11 +29,6 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     m_setMasterMuxState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_setMasterMeasModeState);
     m_setMasterMeasModeState.addTransition(this, &cSfcModuleMeasProgram::setupContinue, &m_activationDoneState);
 
-    m_activationMachine.addState(&resourceManagerConnectState);
-    m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_readResourcesState);
-    m_activationMachine.addState(&m_readResourceState);
-    m_activationMachine.addState(&m_testSecInputsState);
     m_activationMachine.addState(&m_ecalcServerConnectState);
     m_activationMachine.addState(&m_fetchECalcUnitsState);
     m_activationMachine.addState(&m_pcbServerConnectState);
@@ -46,13 +36,8 @@ cSfcModuleMeasProgram::cSfcModuleMeasProgram(cSfcModule *module) :
     m_activationMachine.addState(&m_setMasterMeasModeState);
     m_activationMachine.addState(&m_activationDoneState);
 
-    m_activationMachine.setInitialState(&resourceManagerConnectState);
+    m_activationMachine.setInitialState(&m_ecalcServerConnectState);
 
-    connect(&resourceManagerConnectState, &QState::entered, this, &cSfcModuleMeasProgram::resourceManagerConnect);
-    connect(&m_IdentifyState, &QState::entered, this, &cSfcModuleMeasProgram::sendRMIdent);
-    connect(&m_readResourcesState, &QState::entered, this, &cSfcModuleMeasProgram::readResources);
-    connect(&m_readResourceState, &QState::entered, this, &cSfcModuleMeasProgram::readResource);
-    connect(&m_testSecInputsState, &QState::entered, this, &cSfcModuleMeasProgram::testSecInputs);
     connect(&m_ecalcServerConnectState, &QState::entered, this, &cSfcModuleMeasProgram::ecalcServerConnect);
     connect(&m_fetchECalcUnitsState, &QState::entered, this, &cSfcModuleMeasProgram::fetchECalcUnits);
     connect(&m_pcbServerConnectState, &QState::entered, this, &cSfcModuleMeasProgram::pcbServerConnect);
@@ -102,8 +87,6 @@ void cSfcModuleMeasProgram::updateProgress(quint32 flankCountActual)
 
 enum sfcmoduleCmds
 {
-    sendrmident,
-    readresource,
     fetchecalcunits,
 
     freeecalcunits,
@@ -133,56 +116,6 @@ void cSfcModuleMeasProgram::stopMeasurement(bool bAbort)
 void cSfcModuleMeasProgram::setStatus(quint32 status)
 {
     m_pStatusAct->setValue(QVariant::fromValue<quint32>(status));
-}
-
-void cSfcModuleMeasProgram::resourceManagerConnect()
-{
-    m_rmInterface.setClientSuperSmart(m_pModule->getNetworkConfig()->m_rmServiceConnectionInfo,
-                                      m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    resourceManagerConnectState.addTransition(m_rmInterface.getClientSmart().get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cSfcModuleMeasProgram::catchInterfaceAnswer);
-    // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmInterface.getClientSmart());
-}
-
-void cSfcModuleMeasProgram::sendRMIdent()
-{
-    m_MsgNrCmdList[m_rmInterface.rmIdent(m_pModule->getVeinModuleName())] = sendrmident;
-}
-
-void cSfcModuleMeasProgram::readResources()
-{
-    m_nIt = 0; // we want to read all resources from resourcetypelist
-    emit activationContinue();
-}
-
-void cSfcModuleMeasProgram::readResource()
-{
-    QString resourcetype = m_dutInputDictionary.getResourceTypeList().at(m_nIt);
-    m_MsgNrCmdList[m_rmInterface.getResources(resourcetype)] = readresource;
-}
-
-void cSfcModuleMeasProgram::testSecInputs()
-{
-    const auto dutInplist = m_pModule->getConfigData()->m_dutConfigs.m_inputList;
-    QStringList resourceTypeList = m_dutInputDictionary.getResourceTypeList();
-    qint32 dutInputCountLeftToCheck = dutInplist.count();
-    for (int dutInputNo = 0; dutInputNo < dutInplist.count(); dutInputNo++) {
-        QString dutInputName = dutInplist[dutInputNo].inputName;
-        for (int resourceTypeNo = 0; resourceTypeNo < resourceTypeList.count(); resourceTypeNo++) {
-            QString resourcelist = m_ResourceHash[resourceTypeList[resourceTypeNo]];
-            if (resourcelist.contains(dutInputName)) {
-                dutInputCountLeftToCheck--;
-                m_dutInputDictionary.addReferenceInput(dutInputName, resourceTypeList[resourceTypeNo]);
-                break;
-            }
-        }
-    }
-
-    if (dutInputCountLeftToCheck == 0) // we found all our configured Inputs
-        emit activationContinue(); // so lets go on
-    else
-        notifyError(resourceErrMsg);
 }
 
 void cSfcModuleMeasProgram::ecalcServerConnect()
@@ -247,29 +180,6 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case sendrmident:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                    notifyError(rmidentErrMSG);
-                break;
-
-            case readresource:
-            {
-                if (reply == ack) {
-                    QStringList resourceTypeList = m_dutInputDictionary.getResourceTypeList();
-                    m_ResourceHash[resourceTypeList.at(m_nIt)] = answer.toString();
-                    m_nIt++;
-                    if (m_nIt < resourceTypeList.count())
-                        emit activationLoop();
-                    else
-                        emit activationContinue();
-                }
-                else
-                    notifyError(resourceErrMsg);
-                break;
-            }
-
             case fetchecalcunits:
             {
                 qInfo("%s: Units fetched: %s", qPrintable(m_pModule->getVeinModuleName()), qPrintable(answer.toString()));

@@ -33,11 +33,6 @@ private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
     void onPowerModuleValuesChanged();
 
-    void resourceManagerConnect();
-    void sendRMIdent();
-    void readResources();
-    void readResource();
-    void testSecInputs();
     void ecalcServerConnect();
     void fetchECalcUnits();
     void pcbServerConnect();
@@ -114,13 +109,6 @@ private:
     Zera::PcbInterfacePtr m_pcbInterface;
 
     // statemachine for activating gets the following states
-    QState resourceManagerConnectState; // connect to resource manager
-    QState m_IdentifyState; // identify to resource manager
-    QState m_readResourcesState; // init to read all resource information for each type
-    QState m_readResourceState; // read for 1 type
-
-    QState m_testSecInputsState; // here we test if all our configured Inputs are present, we don't set them because we only get information from here
-
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 2 error calc units from sec server
     QState m_pcbServerConnectState; // connect to pcb server
