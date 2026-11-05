@@ -527,8 +527,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
             case fetchecalcunits:
             {
                 qInfo("%s: Units fetched: %s", qPrintable(m_pModule->getVeinModuleName()), qPrintable(answer.toString()));
-                QStringList sl;
-                sl = answer.toString().split(';');
+                QStringList sl = answer.toString().split(';');
                 if ((reply == ack) && (sl.length() >= 2)) {
                     m_masterEcName = sl.at(0);
                     m_slaveRefEnergyCounterEcName = sl.at(1);
@@ -538,16 +537,13 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                     notifyError(fetchsececalcunitErrMsg);
                 break;
             }
-
             case freeecalcunits:
                 if (reply == ack) // we only continue if sec server manager acknowledges
                     emit deactivationContinue();
                 else
                     notifyError(freesececalcunitErrMsg);
                 break;
-
             case actualizeprogress:
-            {
                 if (reply == ack) {
                     // Still running and not waiting for next?
                     updateProgress(answer.toUInt());
@@ -555,10 +551,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
-            }
-
             case actualizeenergy:
-            {
                 if (reply == ack) {
                     // Still running and not waiting for next?
                     if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
@@ -574,11 +567,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
-            }
-
-
             case actualizestatus:
-            {
                 if (reply == ack)
                 {
                     // Still running and not waiting for next?
@@ -591,15 +580,12 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
-            }
-
             case setsync:
                 if (reply == ack)
                     emit setupContinue();
                 else
                     notifyError(setsyncErrMsg);
                 break;
-
             case enableinterrupt:
             case setmeaspulses:
                 if (reply == ack)
@@ -607,7 +593,6 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 else
                     notifyError(writesecregisterErrMsg);
                 break;
-
             case setmastermux:
             case setslavemux:
                 if (reply == ack)
@@ -615,42 +600,31 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 else
                     notifyError(setmuxErrMsg);
                 break;
-
             case setmastermeasmode:
             case setslavemeasmode:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
                     notifyError(setcmdidErrMsg);
                 break;
-
             case startmeasurement:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
                     notifyError(startmeasErrMsg);
                 break;
-
             case stopmeas:
-                if (reply == ack) {
+                if (reply == ack)
                     emit deactivationContinue();
-                }
                 else
                     notifyError(stopmeasErrMsg);
                 break;
-
             case setsecintnotifier:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(registerpcbnotifierErrMsg);
                 break;
-
-
             case resetintregister:
                 if (reply == ack)
                     emit interruptContinue();
@@ -676,7 +650,6 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
-
             }
         }
     }
@@ -1425,6 +1398,5 @@ void cSec1ModuleMeasProgram::clientActivationChanged(bool bActive)
     if (m_bMeasurementRunning)
         m_ActualizeTimer->start();
 }
-
 
 }

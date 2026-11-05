@@ -98,10 +98,7 @@ enum sfcmoduleCmds
     startmeasurement,
 
     actualizeprogress,
-    readstatus,
-
-    dontcareresponse,
-    debugread
+    readstatus
 };
 
 void cSfcModuleMeasProgram::stopMeasurement(bool bAbort)
@@ -150,8 +147,6 @@ void cSfcModuleMeasProgram::setMasterMux()
 void cSfcModuleMeasProgram::setMasterMeasMode()
 {
     m_MsgNrCmdList[m_secInterface->setCmdid(m_masterEcName, ECALCCMDID::FLANKCOUNT)] = setmastermeasmode;
-
-    m_MsgNrCmdList[m_secInterface->readRegister(m_masterEcName, ECALCREG::CONF)] = debugread;
 }
 
 void cSfcModuleMeasProgram::activationDone()
@@ -183,8 +178,7 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             case fetchecalcunits:
             {
                 qInfo("%s: Units fetched: %s", qPrintable(m_pModule->getVeinModuleName()), qPrintable(answer.toString()));
-                QStringList sl;
-                sl = answer.toString().split(';');
+                QStringList sl = answer.toString().split(';');
                 if ((reply == ack) && (sl.length() >= 2)) {
                     m_masterEcName = sl.at(0);
                     emit activationContinue();
@@ -193,7 +187,6 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     notifyError(fetchsececalcunitErrMsg);
                 break;
             }
-
             case stopmeas:
                 if (reply == ack)
                     emit deactivationContinue();
@@ -206,27 +199,18 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                     notifyError(freesececalcunitErrMsg);
                 break;
-
             case setmastermux:
                 if (reply == ack)
                     emit setupContinue();
                 else
                     notifyError(setmuxErrMsg);
                 break;
-
             case setmastermeasmode:
                 if (reply == ack)
                     emit setupContinue();
                 else
                     notifyError(setcmdidErrMsg);
                 break;
-
-            case debugread: {
-                quint32 registerRead = answer.toUInt();
-                QString hexvalue = QString("%1").arg(registerRead, 8, 16, QLatin1Char( '0' ));
-                qInfo("%s", qPrintable(hexvalue));
-                break;
-            }
             case startmeasurement:
                 if (reply == ack)
                     emit setupContinue();
@@ -234,8 +218,7 @@ void cSfcModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     notifyError(startmeasErrMsg);
                 break;
             case readstatus:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     quint32 statusRegister = answer.toUInt();
                     if (m_bMeasurementRunning) // FPGA doe not supply READY
                         setStatus(statusRegister & 7);

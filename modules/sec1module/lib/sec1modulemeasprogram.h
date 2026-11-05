@@ -140,7 +140,6 @@ private:
     QState m_calcResultAndResetIntState;
     QFinalState m_FinalState;
 
-    QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
     SecPowerModuleObserver m_powerModuleObserver;
     SecMeasInputDictionary m_dutInputDictionary;

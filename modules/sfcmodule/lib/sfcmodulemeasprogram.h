@@ -59,7 +59,6 @@ private:
     Zera::PcbInterfacePtr m_pcbInterface;
 
     QString m_masterEcName;
-    QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_dutInputDictionary;
     bool m_bMeasurementRunning = false;
 
