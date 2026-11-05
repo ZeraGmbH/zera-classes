@@ -58,7 +58,6 @@ private:
     Zera::cSECInterfacePtr m_secInterface;
     Zera::PcbInterfacePtr m_pcbInterface;
 
-    qint32 m_nIt = 0;
     QString m_masterEcName;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_dutInputDictionary;

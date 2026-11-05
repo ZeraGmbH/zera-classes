@@ -145,8 +145,6 @@ private:
     SecPowerModuleObserver m_powerModuleObserver;
     SecMeasInputDictionary m_dutInputDictionary;
 
-    qint32 m_nIt = 0;
-
     QString m_masterEcName;
     QString m_slaveRefEnergyCounterEcName;
 
