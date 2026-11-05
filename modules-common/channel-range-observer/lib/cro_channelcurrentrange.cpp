@@ -27,7 +27,7 @@ void ChannelCurrentRange::startObserve()
     startTasks();
 }
 
-void ChannelRangeObserver::ChannelCurrentRange::preparePcbInterface()
+void ChannelCurrentRange::preparePcbInterface()
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_pcbInterface->setClientSuperSmart(m_netInfo, m_tcpFactory);
@@ -38,7 +38,7 @@ void ChannelRangeObserver::ChannelCurrentRange::preparePcbInterface()
 static constexpr int notifyId = 1;
 static const char* notificationStr = "Notify:1";
 
-void ChannelRangeObserver::ChannelCurrentRange::startTasks()
+void ChannelCurrentRange::startTasks()
 {
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(getPcbConnectionTask());
