@@ -158,8 +158,6 @@ private:
     SecMeasInputDictionary m_dutInputDictionary;
 
     qint32 m_nIt = 0;
-    QList<QString> m_sItList; // for interation over x Input hash
-    QString m_sIt;
 
     QString m_masterEcName;
     QString m_slaveRefEnergyCounterEcName;
