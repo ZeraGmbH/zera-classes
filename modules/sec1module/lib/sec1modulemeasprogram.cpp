@@ -395,7 +395,7 @@ void cSec1ModuleMeasProgram::generateVeinInterface()
     m_pRefFreqInput = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                             key = QString("ACT_RefFreqInput"),
                                             QString("Actual frequency input (internal)"),
-                                            configData->m_refConfigs.m_sRefInput.m_sValue);
+                                            configData->m_refConfigs.m_input.m_sValue);
     m_pModule->m_veinModuleParameterMap[key] = m_pRefFreqInput; // and for the modules interface
 
     m_pUpperLimitPar = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -832,8 +832,8 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
     computeDependencies(); // dependant on mode we calculate parameters by ourself
 
     const cSec1ModuleConfigData *configData = m_pModule->getConfigData();
-    m_pDutInputPar->setValue(m_dutInputDictionary.getAlias(configData->m_dutConfigs.m_sDutInput.m_sValue));
-    m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_refConfigs.m_sRefInput.m_sValue));
+    m_pDutInputPar->setValue(m_dutInputDictionary.getAlias(configData->m_dutConfigs.m_input.m_sValue));
+    m_pRefInputPar->setValue(m_refInputDictionary.getAlias(configData->m_refConfigs.m_input.m_sValue));
     m_pDutConstantPar->setValue(configData->m_fDutConstant.m_fValue);
     m_pRefConstantPar->setValue(m_powerModuleObserver.getConstant());
     m_pMRatePar->setValue(configData->m_nMRate.m_nValue);
@@ -1032,7 +1032,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
 {
     QStringList resourceTypeList = m_dutInputDictionary.getResourceTypeList();
 
-    const auto dutInplist = m_pModule->getConfigData()->m_dutConfigs.m_dutInpList;
+    const auto dutInplist = m_pModule->getConfigData()->m_dutConfigs.m_inputList;
     qint32 dutInputCountLeftToCheck = dutInplist.count();
     for (int dutInputNo = 0; dutInputNo < dutInplist.count(); dutInputNo++) {
         QString dutInputName = dutInplist[dutInputNo].inputName;
@@ -1133,7 +1133,7 @@ void cSec1ModuleMeasProgram::activationDone()
 
     connect(&m_powerModuleObserver, &SecPowerModuleObserver::sigPowerModuleValuesChanged,
             this, &cSec1ModuleMeasProgram::onPowerModuleValuesChanged);
-    const QString refInputName = m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue;
+    const QString refInputName = m_pModule->getConfigData()->m_refConfigs.m_input.m_sValue;
     m_powerModuleObserver.setPowerModulentityId(SecPowerModuleFinder::findEntity(refInputName, m_pModule->getStorageDb()));
     // -> onPowerModuleValuesChanged
 
@@ -1172,13 +1172,13 @@ void cSec1ModuleMeasProgram::setMeaspulses()
 
 void cSec1ModuleMeasProgram::setMasterMux()
 {
-    QString dutInputName = m_pModule->getConfigData()->m_dutConfigs.m_sDutInput.m_sValue;
+    QString dutInputName = m_pModule->getConfigData()->m_dutConfigs.m_input.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_masterEcName, dutInputName)] = setmastermux;
 }
 
 void cSec1ModuleMeasProgram::setSlaveMux()
 {
-    QString refPowerName = m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue;
+    QString refPowerName = m_pModule->getConfigData()->m_refConfigs.m_input.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_slaveRefEnergyCounterEcName, refPowerName)] = setslavemux;
 }
 
@@ -1471,7 +1471,7 @@ void cSec1ModuleMeasProgram::newDutConstantUnit(const QVariant &dutconstunit)
 void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 {
     QString dutInputName = m_dutInputDictionary.getInputFNameFromAlias(dutinput.toString());
-    m_pModule->getConfigData()->m_dutConfigs.m_sDutInput.m_sValue = dutInputName;
+    m_pModule->getConfigData()->m_dutConfigs.m_input.m_sValue = dutInputName;
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1480,7 +1480,7 @@ void cSec1ModuleMeasProgram::newDutInput(const QVariant &dutinput)
 void cSec1ModuleMeasProgram::newRefInput(const QVariant &refinput)
 {
     QString refPowerName = m_refInputDictionary.getInputFNameFromAlias(refinput.toString());
-    m_pModule->getConfigData()->m_refConfigs.m_sRefInput.m_sValue = refPowerName;
+    m_pModule->getConfigData()->m_refConfigs.m_input.m_sValue = refPowerName;
     m_pRefFreqInput->setValue(refPowerName);
     emit m_pModule->parameterChanged();
 

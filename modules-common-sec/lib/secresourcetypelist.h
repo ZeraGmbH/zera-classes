@@ -7,8 +7,7 @@
 class SecResourceTypeList
 {
 public:
-    void addTypesFromConfig(const TSecCommonReferenceConfigs &refConfig);
-    void addTypesFromConfig(const TSecCommonDutConfigs &dutConfig);
+    void addTypesFromConfig(const TSecCommonInputConfigs &config);
     const QStringList &getResourceTypeList() const;
 private:
     void addTypesFromList(const QStringList &inputList);

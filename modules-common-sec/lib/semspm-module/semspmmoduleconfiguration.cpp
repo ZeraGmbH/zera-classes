@@ -36,7 +36,7 @@ void SemSpmModuleConfiguration::setConfiguration(const QByteArray& xmlString)
 
 QByteArray SemSpmModuleConfiguration::exportConfiguration() const
 {
-    const stringParameter* paramRefInput = &m_configData.m_refConfigs.m_sRefInput;
+    const stringParameter* paramRefInput = &m_configData.m_refConfigs.m_input;
     m_pXMLReader->setValue(paramRefInput->m_sKey, paramRefInput->m_sValue);
 
     const intParameter* paramStopMode = &m_configData.m_stopMode;
@@ -67,15 +67,15 @@ void SemSpmModuleConfiguration::configXMLInfo(const QString &key)
         switch (cmd)
         {
         case setRefInputCount:
-            m_configData.m_refConfigs.m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_configData.m_refConfigs.m_nRefInpCount; i++) {
+            m_configData.m_refConfigs.m_inputCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_configData.m_refConfigs.m_inputCount; i++) {
                 m_ConfigXMLMap[QString("confpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
-                m_configData.m_refConfigs.m_refInpList.append(TInputNameAlias());
+                m_configData.m_refConfigs.m_inputList.append(TInputNameAlias());
             }
             break;
         case setRefInput:
-            m_configData.m_refConfigs.m_sRefInput.m_sKey = key;
-            m_configData.m_refConfigs.m_sRefInput.m_sValue = m_pXMLReader->getValue(key);
+            m_configData.m_refConfigs.m_input.m_sKey = key;
+            m_configData.m_refConfigs.m_input.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setStopMode:
             m_configData.m_stopMode.m_sKey = key;
@@ -106,7 +106,7 @@ void SemSpmModuleConfiguration::configXMLInfo(const QString &key)
                     TInputNameAlias refInput;
                     refInput.inputName = refInputFNameAndAlias[0];
                     refInput.alias = refInputFNameAndAlias[1];
-                    m_configData.m_refConfigs.m_refInpList.replace(cmd, refInput);
+                    m_configData.m_refConfigs.m_inputList.replace(cmd, refInput);
                 }
             }
             break;

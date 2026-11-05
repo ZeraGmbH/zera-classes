@@ -10,8 +10,8 @@ namespace SEC1MODULE
 class cSec1ModuleConfigData
 {
 public:
-    TSecCommonReferenceConfigs m_refConfigs;
-    TSecCommonDutConfigs m_dutConfigs;
+    TSecCommonInputConfigs m_refConfigs;
+    TSecCommonInputConfigs m_dutConfigs;
     TSecCommonLimitConfigs m_limitConfigs;
 
     stringParameter m_sMode;

@@ -175,7 +175,7 @@ void cSfcModuleMeasProgram::readResource()
 
 void cSfcModuleMeasProgram::testSecInputs()
 {
-    const auto dutInplist = m_pModule->getConfigData()->m_dutConfigs.m_dutInpList;
+    const auto dutInplist = m_pModule->getConfigData()->m_dutConfigs.m_inputList;
     QStringList resourceTypeList = m_dutInputDictionary.getResourceTypeList();
     qint32 dutInputCountLeftToCheck = dutInplist.count();
     for (int dutInputNo = 0; dutInputNo < dutInplist.count(); dutInputNo++) {
@@ -241,7 +241,7 @@ void cSfcModuleMeasProgram::readDUTInputDone()
 
 void cSfcModuleMeasProgram::setMasterMux()
 {
-    const QString &dutInputName = m_pModule->getConfigData()->m_dutConfigs.m_sDutInput.m_sValue;
+    const QString &dutInputName = m_pModule->getConfigData()->m_dutConfigs.m_input.m_sValue;
     m_MsgNrCmdList[m_secInterface->setMux(m_masterEcName, dutInputName)] = setmastermux;
 }
 
