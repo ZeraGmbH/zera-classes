@@ -6,6 +6,7 @@
 #include <abstracttcpnetworkfactory.h>
 #include <pcbinterface.h>
 #include <taskcontainerinterface.h>
+#include <memory>
 
 namespace ChannelRangeObserver {
 
@@ -38,6 +39,8 @@ private:
 
     TaskContainerInterfacePtr m_currentTasks;
 };
+
+typedef std::shared_ptr<ChannelCurrentRange> ChannelCurrentRangePtr;
 
 }
 #endif // CRO_CHANNELCURRENTRANGE_H

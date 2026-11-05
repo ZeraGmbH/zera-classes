@@ -138,18 +138,25 @@ void cRangeObsermatic::generateVeinInterface()
         m_groupOvlList.append(false);
         m_maxOvlList.append(false);
 
-        ChannelRangeObserver::ChannelCanChangeRangeObserverPtr observer = createCanChangeRangeObserver(channel->getMName());
+        ChannelRangeObserver::ChannelCanChangeRangeObserverPtr observerCanChangeRange = createCanChangeRangeObserver(channel->getMName());
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            QString("INF_Channel%1UserCanChange").arg(i+1),
                                            QString("User can change range"),
-                                           observer->canChangeRange());
-        connect(observer.get(), &ChannelRangeObserver::ChannelCanChangeRangeObserver::sigCanChangeRangeChanged, this, [=]() {
-            pComponent->setValue(observer->canChangeRange());
+                                           observerCanChangeRange->canChangeRange());
+        connect(observerCanChangeRange.get(), &ChannelRangeObserver::ChannelCanChangeRangeObserver::sigCanChangeRangeChanged, this, [=]() {
+            pComponent->setValue(observerCanChangeRange->canChangeRange());
         });
         pComponent->setScpiInfo("SENSE", QString("%1:RANGE").arg(channel->getAlias()), SCPI::isQuery);
         m_userCanChangeRange.append(pComponent);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
-        m_channelCanChangeRangeObservers.append(observer);
+        m_channelCanChangeRangeObservers.append(observerCanChangeRange);
+
+        ChannelRangeObserver::ChannelCurrentRangePtr observerCurrentRange = std::make_shared<ChannelRangeObserver::ChannelCurrentRange>(
+            channel->getMName(),
+            m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+            m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+        observerCurrentRange->startObserve();
+        m_channelCurrentRangeObservers.append(observerCurrentRange);
     }
 
     for(int i=0; i < m_GroupList.length();++i) {
@@ -804,7 +811,6 @@ void cRangeObsermatic::preScalingChanged(QVariant unused)
 void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
-        // that we will ignore
     }
     else {
         // because rangemodulemeasprogram, adjustment and rangeobsermatic share the same dsp interface

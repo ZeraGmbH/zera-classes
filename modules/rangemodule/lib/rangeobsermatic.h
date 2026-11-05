@@ -1,7 +1,6 @@
 #ifndef RANGEOBSERMATIC_H
 #define RANGEOBSERMATIC_H
 
-#include "cro_channelcanchangerangeobserver.h"
 #include "rangemoduleconfigdata.h"
 #include "rangemeaschannel.h"
 #include <moduleactivist.h>
@@ -11,6 +10,8 @@
 #include <stringvalidator.h>
 #include <dspinterface.h>
 #include <timertemplateqt.h>
+#include "cro_channelcanchangerangeobserver.h"
+#include "cro_channelcurrentrange.h"
 
 // cRangeObsermatic is responsible for setting, observing, automatic setting
 // and grouping measurement channel ranges. it works on a flexible list of
@@ -101,7 +102,9 @@ private:
     quint32 m_nRangeSetPending = 0;
     quint32 m_nReadStatusPending = 0;
     QStringList m_actChannelRangeList; // a list of the actual ranges set
+
     QList<ChannelRangeObserver::ChannelCanChangeRangeObserverPtr> m_channelCanChangeRangeObservers;
+    QList<ChannelRangeObserver::ChannelCurrentRangePtr> m_channelCurrentRangeObservers;
 
     // our interface entities
     QList<VfModuleParameter*> m_RangeParameterList;
