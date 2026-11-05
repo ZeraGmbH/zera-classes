@@ -536,16 +536,13 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                     notifyError(freesececalcunitErrMsg);
                 break;
             case actualizeprogress:
-                if (reply == ack) {
-                    // Still running and not waiting for next?
+                if (reply == ack)
                     updateProgress(answer.toUInt());
-                }
                 else
                     notifyError(readsecregisterErrMsg);
                 break;
             case actualizeenergy:
                 if (reply == ack) {
-                    // Still running and not waiting for next?
                     if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
                         const double actual = static_cast<double>(answer.toUInt());
                         m_fEnergy = actual / m_powerModuleObserver.getConstant();
@@ -560,9 +557,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                     notifyError(readsecregisterErrMsg);
                 break;
             case actualizestatus:
-                if (reply == ack)
-                {
-                    // Still running and not waiting for next?
+                if (reply == ack) {
                     quint32 status = getStatus();
                     if(m_bMeasurementRunning && (status & ECALCSTATUS::WAIT) == 0) {
                         // once ready we leave status ready (continous mode)
@@ -634,9 +629,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
                     // * Run high frequency continous measurement
                     // * Stop it (all OK up here)
                     // * Change DUT constant/unit -> Crap results
-                    if(m_bMeasurementRunning) {
+                    if(m_bMeasurementRunning)
                         m_finalEnergyCounter = answer.toUInt();
-                    }
                     emit interruptContinue();
                 }
                 else
