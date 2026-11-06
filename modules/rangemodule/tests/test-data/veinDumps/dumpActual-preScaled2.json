@@ -533,18 +533,6 @@
                         "Type": "BOOL"
                     }
                 },
-                "PAR_RangeTimer": {
-                    "Description": "Range timer for range decrease",
-                    "Unit": "ms",
-                    "Validation": {
-                        "Data": [
-                            0,
-                            600000,
-                            0
-                        ],
-                        "Type": "INTEGER"
-                    }
-                },
                 "SIG_Channel1OVL": {
                     "Description": "Channels overload status"
                 },
@@ -907,13 +895,6 @@
                         "10",
                         "PAR_RangeAutomatic",
                         "0"
-                    ],
-                    [
-                        "CONFIGURATION",
-                        "RNGTIMER",
-                        "10",
-                        "PAR_RangeTimer",
-                        "0"
                     ]
                 ],
                 "Name": "RNG1"
@@ -947,7 +928,6 @@
         "PAR_PreScalingGroup0": "2/1*(1)",
         "PAR_PreScalingGroup1": "1/1",
         "PAR_RangeAutomatic": 0,
-        "PAR_RangeTimer": 3000,
         "SIG_Channel1OVL": 0,
         "SIG_Channel2OVL": 0,
         "SIG_Channel3OVL": 0,

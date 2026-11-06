@@ -57,8 +57,6 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     m_writeDspGainScaleStateMachine.addState(&m_writeGainScaleDoneState);
     m_writeDspGainScaleStateMachine.setInitialState(&m_writeGainScaleState);
     connect(&m_writeGainScaleState, &QState::entered, this, &cRangeObsermatic::writeGainScale);
-
-    m_timerForRangeDecrease = TimerFactoryQt::createSingleShot(m_ConfPar.m_time.m_nValue);
 }
 
 void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
@@ -230,21 +228,6 @@ void cRangeObsermatic::generateVeinInterface()
     m_pParOverloadOnOff->setScpiInfo("SENSE", "OVERLOAD", SCPI::isQuery|SCPI::isCmdwP);
     m_pModule->m_veinModuleParameterMap["PAR_Overload"] = m_pParOverloadOnOff; // for modules use
 
-    m_pParRangeTimer = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                      QString("PAR_RangeTimer"),
-                                                      QString("Range timer for range decrease"),
-                                                      m_ConfPar.m_time.m_nValue);
-
-    m_pModule->m_veinModuleParameterMap["PAR_RangeTimer"] = m_pParRangeTimer; // for modules use
-    m_pParRangeTimer->setUnit("ms");
-    m_pParRangeTimer->setValidator(new UintValidator(0, 600000)); // set to 10mins max
-    m_pParRangeTimer->setScpiInfo("CONFIGURATION", "RNGTIMER", SCPI::isQuery|SCPI::isCmdwP);
-    connect(m_pParRangeTimer, &VfModuleParameter::sigValueChanged, this, [this](const QVariant& value){
-        m_ConfPar.m_time.m_nValue = value.toUInt();
-        m_timerForRangeDecrease = TimerFactoryQt::createSingleShot(m_ConfPar.m_time.m_nValue);
-        emit m_pModule->parameterChanged();
-    });
-
     m_pComponentOverloadMax = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                        QString("INF_OverloadMax"),
                                                        QString("Maximum range overload condition"),
@@ -309,37 +292,6 @@ void cRangeObsermatic::rangeObservation()
     setOverloadVeinComponent(markOverload);
 }
 
-
-void RANGEMODULE::cRangeObsermatic::replaceOrAddPendingDecreaseRange(int channelIdx, const QString optRange)
-{
-    if (m_pendingDecreaseTargetRanges.contains(channelIdx)) {
-        QObject::disconnect(m_pendingDecreaseTargetRanges[channelIdx].m_connection);
-        m_pendingDecreaseTargetRanges.remove(channelIdx);
-    }
-
-    RangePendingDecreaseEntry newEntry;
-    newEntry.m_targetRangeName = optRange;
-    newEntry.m_connection = connect(m_timerForRangeDecrease.get(), &TimerTemplateQt::sigExpired, this, [channelIdx, optRange, this]{
-        m_ConfPar.setCurrentRange(channelIdx, optRange);
-        QObject::disconnect(m_pendingDecreaseTargetRanges[channelIdx].m_connection);
-        m_pendingDecreaseTargetRanges.remove(channelIdx);
-        if (m_pendingDecreaseTargetRanges.isEmpty()) {
-            groupHandling();
-            setRanges();
-            emit m_pModule->parameterChanged();
-        }
-
-    });
-    m_pendingDecreaseTargetRanges[channelIdx] = newEntry;
-    m_timerForRangeDecrease->start();
-}
-
-bool cRangeObsermatic::pendingDecreaseHashContainsRange(int channelIdx, const QString &range) const
-{
-    return m_pendingDecreaseTargetRanges.contains(channelIdx) &&
-           m_pendingDecreaseTargetRanges[channelIdx].m_targetRangeName == range;
-}
-
 void cRangeObsermatic::rangeAutomatic()
 {
     if (m_ConfPar.m_nRangeAutoAct.m_nActive == 1) {
@@ -358,12 +310,7 @@ void cRangeObsermatic::rangeAutomatic()
                                                                                    channelData->getPeakValue() * scaleFactor,
                                                                                    range);
 
-                        /*if (parseStrRangeToDouble(optimalRange) < parseStrRangeToDouble(range)) {
-                            if (!pendingDecreaseHashContainsRange(channelIdx, optimalRange))
-                                replaceOrAddPendingDecreaseRange(channelIdx, optimalRange);
-                        }
-                        else*/
-                            m_ConfPar.setCurrentRange(channelIdx, optimalRange);
+                        m_ConfPar.setCurrentRange(channelIdx, optimalRange);
                     }
                 }
                 else {
@@ -874,19 +821,6 @@ void cRangeObsermatic::catchChannelNewRangeList()
     m_ChannelRangeValidatorHash[mchn->getMName()]->setValidator(mchn->getRangeListAlias());
     m_pModule->exportMetaData();
     setRanges(true); // after a new range list was detected, we force setting ranges because it may be that the actual range disappeared
-}
-
-double cRangeObsermatic::parseStrRangeToDouble(QString range)
-{
-    static QRegularExpression re("(\\d+)([a-zA-Z]+)");
-    QRegularExpressionMatch match = re.match(range);
-    if (!match.hasMatch())
-        return 0.0;
-    double value = match.captured(1).toDouble();
-    const QString unit = match.captured(2);
-    if (unit == "mV" || unit == "mA")
-        value /= 1000.0;
-    return value;
 }
 
 ChannelRangeObserver::ChannelCanChangeRangeObserverPtr cRangeObsermatic::createCanChangeRangeObserver(const QString &channelMName)

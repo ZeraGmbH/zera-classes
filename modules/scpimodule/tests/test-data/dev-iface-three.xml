@@ -20,7 +20,6 @@
           <INVERTPHASE DataType="BOOL" Description="Inverted Phase" Max="1" Min="0" ScpiPath="CONFIGURATION:RNG1:IL3:INVERTPHASE" Type="Query,Command+Par"/>
         </IL3>
         <RNGAUTO DataType="BOOL" Description="Range automatic on/off" Max="1" Min="0" ScpiPath="CONFIGURATION:RNG1:RNGAUTO" Type="Query,Command+Par"/>
-        <RNGTIMER DataType="INTEGER" Description="Range timer for range decrease" Max="600000" Min="0" ScpiPath="CONFIGURATION:RNG1:RNGTIMER" Type="Query,Command+Par" Unit="ms"/>
         <UAUX Type="Node">
           <INVERTPHASE DataType="BOOL" Description="Inverted Phase" Max="1" Min="0" ScpiPath="CONFIGURATION:RNG1:UAUX:INVERTPHASE" Type="Query,Command+Par"/>
         </UAUX>

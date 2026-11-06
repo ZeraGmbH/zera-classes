@@ -74,7 +74,6 @@ private slots:
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
 private:
-    double parseStrRangeToDouble(QString range);
     void rangeObservation();
     void rangeAutomatic();
     void groupHandling();
@@ -84,8 +83,6 @@ private:
     double getPreScale(int channelIdx);
     void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
     void setOverloadVeinComponent(bool overloadOn);
-    void replaceOrAddPendingDecreaseRange(int channelIdx, const QString optRange);
-    bool pendingDecreaseHashContainsRange(int channelIdx, const QString &range) const;
     ChannelRangeObserver::ChannelCanChangeRangeObserverPtr createCanChangeRangeObserver(const QString &channelMName);
 
     cRangeModule *m_pModule;
@@ -120,7 +117,6 @@ private:
     VfModuleParameter* m_pParRangeAutomaticOnOff;
     VfModuleParameter* m_pParGroupingOnOff;
     VfModuleParameter* m_pParOverloadOnOff;
-    VfModuleParameter* m_pParRangeTimer;
     VfModuleComponent* m_pComponentOverloadMax;
 
     DspVarGroupClientInterface* m_gainScaleDSPVarGroup = nullptr; // copy of dsp internal correction data
@@ -143,12 +139,6 @@ private:
     QFinalState m_writeGainScaleDoneState;
 
     bool m_rangeSetManual = false; // we set this here after we selected a new range and enable resetting stored overloadcondition
-    TimerTemplateQtPtr m_timerForRangeDecrease;
-    struct RangePendingDecreaseEntry {
-        QMetaObject::Connection m_connection;
-        QString m_targetRangeName;
-    };
-    QMap<int /*channelIdx*/, RangePendingDecreaseEntry> m_pendingDecreaseTargetRanges;
 };
 
 }
