@@ -67,10 +67,10 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
             m_nWaitAfterRanging--;
         }
         else {
-            rangeObservation(); // first we test for overload conditions
-            rangeAutomatic(); // let rangeautomatic do its job
-            groupHandling(); // and look for grouping channels if necessary
-            setRanges(); // set the new ranges now
+            observeRangeOverload();
+            rangeAutomatic();
+            groupHandling();
+            setRanges();
         }
     }
 }
@@ -266,11 +266,11 @@ void cRangeObsermatic::handleOverload(const int channelIdx, bool rmsOverload, bo
     m_softOvlList.replace(channelIdx, true);
 }
 
-void cRangeObsermatic::rangeObservation()
+void cRangeObsermatic::observeRangeOverload()
 {
     bool markOverload = false;
     qint32 nrActValues = m_RangeMeasChannelList.count();
-    for (int i = 0; i < nrActValues; i++) { // we test all channels
+    for (int i = 0; i < nrActValues; i++) {
         cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
         // the overload observation must consider the prescaling
         double prescalingFac = getPreScale(i);

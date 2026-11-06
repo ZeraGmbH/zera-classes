@@ -74,7 +74,7 @@ private slots:
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
 private:
-    void rangeObservation();
+    void observeRangeOverload();
     void rangeAutomatic();
     void groupHandling();
     void setRanges(bool force = false); // here we really set ranges
