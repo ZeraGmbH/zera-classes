@@ -31,14 +31,14 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
         m_pModule->getSharedChannelRangeObserver()->getChannelMNames(),
         false /* just for demo COM5003 ref-session - postpone better solution now */);
 
-    m_readGainCorrState.addTransition(this, &cRangeObsermatic::activationContinue, &m_readGainCorrDoneState);
+    m_readGainCorrState.addTransition(this, &cRangeObsermatic::activationContinue, &m_activationDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
-    m_activationMachine.addState(&m_readGainCorrDoneState);
+    m_activationMachine.addState(&m_activationDoneState);
 
     connect(&m_dspserverConnectState, &QState::entered, this, &cRangeObsermatic::dspserverConnect);
     connect(&m_readGainCorrState, &QState::entered, this, &cRangeObsermatic::readGainScale);
-    connect(&m_readGainCorrDoneState, &QState::entered, this, &cRangeObsermatic::readGainScaleDone);
+    connect(&m_activationDoneState, &QState::entered, this, &cRangeObsermatic::onActivationDone);
 
     m_deactivationInitState.addTransition(this, &cRangeObsermatic::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
@@ -75,7 +75,16 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
     }
 }
 
-void cRangeObsermatic::createSelectedRangeObserver(cRangeMeasChannel *channel, int channelIdx)
+void cRangeObsermatic::createSelectedRangeObservers()
+{
+    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
+    for (int channelIdx = 0; channelIdx < channelMNames.count(); channelIdx++) {
+        const cRangeMeasChannel *channel = m_pModule->getMeasChannel(channelMNames.at(channelIdx));
+        createSelectedRangeObserver(channel, channelIdx);
+    }
+}
+
+void cRangeObsermatic::createSelectedRangeObserver(const cRangeMeasChannel *channel, int channelIdx)
 {
     ChannelRangeObserver::ChannelCurrentRangePtr observerCurrentRange = std::make_shared<ChannelRangeObserver::ChannelCurrentRange>(
         channel->getMName(),
@@ -564,7 +573,7 @@ void cRangeObsermatic::readGainScale()
 }
 
 
-void cRangeObsermatic::readGainScaleDone()
+void cRangeObsermatic::onActivationDone()
 {
     // our initial range set from configuration
     setRanges(true);

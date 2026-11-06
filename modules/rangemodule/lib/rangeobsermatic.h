@@ -57,7 +57,7 @@ public slots:
 private slots:
     void dspserverConnect();
     void readGainScale();
-    void readGainScaleDone();
+    void onActivationDone();
 
     void deactivationInit();
     void deactivationDone();
@@ -80,7 +80,8 @@ private:
     void setOverloadVeinComponent(bool overloadOn);
 
     void createCanChangeRangeObserver(cRangeMeasChannel *channel, VfModuleComponent *canChangeComponent);
-    void createSelectedRangeObserver(cRangeMeasChannel *channel, int channelIdx);
+    void createSelectedRangeObservers();
+    void createSelectedRangeObserver(const cRangeMeasChannel *channel, int channelIdx);
 
     void rangeAutomatic();
     void groupHandling();
@@ -129,7 +130,7 @@ private:
     // statemachine for activation (reading dsp correction data used for scaling)
     QState m_dspserverConnectState;
     QState m_readGainCorrState;
-    QFinalState m_readGainCorrDoneState;
+    QFinalState m_activationDoneState;
 
     // statemachine for deactivating
     QState m_deactivationInitState;
