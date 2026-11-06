@@ -75,15 +75,19 @@ private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
 private:
     void observeRangeOverload();
+    bool requiresOverloadReset(int channel);
+    void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
+    void setOverloadVeinComponent(bool overloadOn);
+
+    void createCanChangeRangeObserver(cRangeMeasChannel *channel, VfModuleComponent *canChangeComponent);
+    void createSelectedRangeObserver(cRangeMeasChannel *channel, int channelIdx);
+
     void rangeAutomatic();
     void groupHandling();
     void setRanges(bool force = false); // here we really set ranges
+
     QList<int> getGroupAliasIdxListForChannel(int channelIdx);
-    bool requiresOverloadReset(int channel);
     double getPreScale(int channelIdx);
-    void handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool adcOverLoad);
-    void setOverloadVeinComponent(bool overloadOn);
-    ChannelRangeObserver::ChannelCanChangeRangeObserverPtr createCanChangeRangeObserver(const QString &channelMName);
 
     cRangeModule *m_pModule;
     QList<QStringList> m_GroupList;
@@ -112,7 +116,6 @@ private:
     QList<VfModuleParameter*> m_RangeGroupPreScalingList;
     QList<VfModuleParameter*> m_RangeGroupPreScalingEnabledList;
     QList<VfModuleComponent*> m_RangeGroupPreScalingInfo;
-    QList<VfModuleComponent*> m_userCanChangeRange;
 
     VfModuleParameter* m_pParRangeAutomaticOnOff;
     VfModuleParameter* m_pParGroupingOnOff;

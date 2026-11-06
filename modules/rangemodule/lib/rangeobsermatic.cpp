@@ -75,6 +75,41 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
     }
 }
 
+void cRangeObsermatic::createSelectedRangeObserver(cRangeMeasChannel *channel, int channelIdx)
+{
+    ChannelRangeObserver::ChannelCurrentRangePtr observerCurrentRange = std::make_shared<ChannelRangeObserver::ChannelCurrentRange>(
+        channel->getMName(),
+        m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    connect(observerCurrentRange.get(), &ChannelRangeObserver::ChannelCurrentRange::sigFetchDoneCurrentRange, this, [=](const QString &channelMName, const QString &rangeName, bool ok){
+        if (ok) {
+            Q_UNUSED(channelMName)
+            /*if (m_ConfPar.getCurrentRange(channelIdx) != rangeName) {
+                m_ConfPar.setCurrentRange(channelIdx, rangeName);
+                // m_rangeSetManual = true; // ???
+                //setRanges(); // force???
+            }*/
+        }
+    });
+    observerCurrentRange->startObserve();
+    m_channelCurrentRangeObservers.append(observerCurrentRange);
+}
+
+void cRangeObsermatic::createCanChangeRangeObserver(cRangeMeasChannel *channel, VfModuleComponent *canChangeComponent)
+{
+    VeinStorage::AbstractComponentPtr rangeAutomaticComponent = m_pModule->getStorageDb()->getFutureComponent(
+        m_pModule->getEntityId(),
+        "PAR_RangeAutomatic");
+    ChannelRangeObserver::ChannelPtr croChannel = m_pModule->getSharedChannelRangeObserver()->getChannel(channel->getMName());
+    ChannelRangeObserver::ChannelCanChangeRangeObserverPtr observerCanChangeRange =
+        std::make_shared<ChannelRangeObserver::ChannelCanChangeRangeObserver>(croChannel, rangeAutomaticComponent);
+    m_channelCanChangeRangeObservers.append(observerCanChangeRange);
+
+    canChangeComponent->setValue(observerCanChangeRange->canChangeRange());
+    connect(observerCanChangeRange.get(), &ChannelRangeObserver::ChannelCanChangeRangeObserver::sigCanChangeRangeChanged, this, [=]() {
+        canChangeComponent->setValue(observerCanChangeRange->canChangeRange());
+    });
+}
 
 void cRangeObsermatic::generateVeinInterface()
 {
@@ -83,10 +118,10 @@ void cRangeObsermatic::generateVeinInterface()
 
     const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
     const QString unknownStr = "Unkown";
-    for (int i = 0; i < channelMNames.count(); i++) {
-        cRangeMeasChannel *channel = m_pModule->getMeasChannel(channelMNames.at(i));
+    for (int channelIdx = 0; channelIdx < channelMNames.count(); channelIdx++) {
+        cRangeMeasChannel *channel = m_pModule->getMeasChannel(channelMNames.at(channelIdx));
 
-        QString key = QString("PAR_Channel%1Range").arg(i+1);
+        QString key = QString("PAR_Channel%1Range").arg(channelIdx+1);
         pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key,
                                            QString("Channel's range"),
@@ -100,7 +135,7 @@ void cRangeObsermatic::generateVeinInterface()
         m_RangeMeasChannelList.append(channel);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              QString("SIG_Channel%1OVL").arg(i+1),
+                                              QString("SIG_Channel%1OVL").arg(channelIdx+1),
                                               QString("Channels overload status"),
                                               QVariant(int(0)) );
 
@@ -108,7 +143,7 @@ void cRangeObsermatic::generateVeinInterface()
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              QString("INF_Channel%1OVLREJ").arg(i+1),
+                                              QString("INF_Channel%1OVLREJ").arg(channelIdx+1),
                                               QString("Channel's maximum range peak rejection"),
                                               QVariant(double(0.0)) );
 
@@ -116,7 +151,7 @@ void cRangeObsermatic::generateVeinInterface()
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              QString("INF_Channel%1ActREJ").arg(i+1),
+                                              QString("INF_Channel%1ActREJ").arg(channelIdx+1),
                                               QString("Channel's actual rejection"),
                                               QVariant(double(0.0)) );
 
@@ -124,7 +159,7 @@ void cRangeObsermatic::generateVeinInterface()
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              QString("INF_Channel%1ActOVLREJ").arg(i+1),
+                                              QString("INF_Channel%1ActOVLREJ").arg(channelIdx+1),
                                               QString("Channel's actual range peak rejection"),
                                               QVariant(double(0.0)) );
 
@@ -136,25 +171,15 @@ void cRangeObsermatic::generateVeinInterface()
         m_groupOvlList.append(false);
         m_maxOvlList.append(false);
 
-        ChannelRangeObserver::ChannelCanChangeRangeObserverPtr observerCanChangeRange = createCanChangeRangeObserver(channel->getMName());
-        pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                           QString("INF_Channel%1UserCanChange").arg(i+1),
-                                           QString("User can change range"),
-                                           observerCanChangeRange->canChangeRange());
-        connect(observerCanChangeRange.get(), &ChannelRangeObserver::ChannelCanChangeRangeObserver::sigCanChangeRangeChanged, this, [=]() {
-            pComponent->setValue(observerCanChangeRange->canChangeRange());
-        });
-        pComponent->setScpiInfo("SENSE", QString("%1:RANGE").arg(channel->getAlias()), SCPI::isQuery);
-        m_userCanChangeRange.append(pComponent);
+        VfModuleComponent *pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                              QString("INF_Channel%1UserCanChange").arg(channelIdx+1),
+                                                              QString("User can change range"),
+                                                              true);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
-        m_channelCanChangeRangeObservers.append(observerCanChangeRange);
+        pComponent->setScpiInfo("SENSE", QString("%1:RANGE").arg(channel->getAlias()), SCPI::isQuery);
+        createCanChangeRangeObserver(channel, pComponent);
 
-        ChannelRangeObserver::ChannelCurrentRangePtr observerCurrentRange = std::make_shared<ChannelRangeObserver::ChannelCurrentRange>(
-            channel->getMName(),
-            m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-            m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-        observerCurrentRange->startObserve();
-        m_channelCurrentRangeObservers.append(observerCurrentRange);
+        createSelectedRangeObserver(channel, channelIdx);
     }
 
     for(int i=0; i < m_GroupList.length();++i) {
@@ -812,7 +837,6 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
     }
 }
 
-
 void cRangeObsermatic::catchChannelNewRangeList()
 {
     cRangeMeasChannel* mchn;
@@ -821,18 +845,6 @@ void cRangeObsermatic::catchChannelNewRangeList()
     m_ChannelRangeValidatorHash[mchn->getMName()]->setValidator(mchn->getRangeListAlias());
     m_pModule->exportMetaData();
     setRanges(true); // after a new range list was detected, we force setting ranges because it may be that the actual range disappeared
-}
-
-ChannelRangeObserver::ChannelCanChangeRangeObserverPtr cRangeObsermatic::createCanChangeRangeObserver(const QString &channelMName)
-{
-    VeinStorage::AbstractComponentPtr rangeAutomaticComponent = m_pModule->getStorageDb()->getFutureComponent(
-        m_pModule->getEntityId(),
-        "PAR_RangeAutomatic");
-
-    ChannelRangeObserver::ChannelPtr croChannel = m_pModule->getSharedChannelRangeObserver()->getChannel(channelMName);
-    ChannelRangeObserver::ChannelCanChangeRangeObserverPtr observer =
-        std::make_shared<ChannelRangeObserver::ChannelCanChangeRangeObserver>(croChannel, rangeAutomaticComponent);
-    return observer;
 }
 
 }
