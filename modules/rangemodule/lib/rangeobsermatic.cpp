@@ -135,33 +135,33 @@ void cRangeObsermatic::generateVeinInterface()
         m_RangeMeasChannelList.append(channel);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              QString("SIG_Channel%1OVL").arg(channelIdx+1),
-                                              QString("Channels overload status"),
-                                              QVariant(int(0)) );
+                                           QString("SIG_Channel%1OVL").arg(channelIdx+1),
+                                           QString("Channels overload status"),
+                                           QVariant(int(0)) );
 
         m_RangeOVLComponentList.append(pComponent);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              QString("INF_Channel%1OVLREJ").arg(channelIdx+1),
-                                              QString("Channel's maximum range peak rejection"),
-                                              QVariant(double(0.0)) );
+                                           QString("INF_Channel%1OVLREJ").arg(channelIdx+1),
+                                           QString("Channel's maximum range peak rejection"),
+                                           QVariant(double(0.0)) );
 
         m_RangeOVLRejectionComponentList.append(pComponent);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              QString("INF_Channel%1ActREJ").arg(channelIdx+1),
-                                              QString("Channel's actual rejection"),
-                                              QVariant(double(0.0)) );
+                                           QString("INF_Channel%1ActREJ").arg(channelIdx+1),
+                                           QString("Channel's actual rejection"),
+                                           QVariant(double(0.0)) );
 
         m_RangeActRejectionComponentList.append(pComponent);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              QString("INF_Channel%1ActOVLREJ").arg(channelIdx+1),
-                                              QString("Channel's actual range peak rejection"),
-                                              QVariant(double(0.0)) );
+                                           QString("INF_Channel%1ActOVLREJ").arg(channelIdx+1),
+                                           QString("Channel's actual range peak rejection"),
+                                           QVariant(double(0.0)) );
 
         m_RangeActOVLRejectionComponentList.append(pComponent);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
@@ -171,10 +171,10 @@ void cRangeObsermatic::generateVeinInterface()
         m_groupOvlList.append(false);
         m_maxOvlList.append(false);
 
-        VfModuleComponent *pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                              QString("INF_Channel%1UserCanChange").arg(channelIdx+1),
-                                                              QString("User can change range"),
-                                                              true);
+        pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                           QString("INF_Channel%1UserCanChange").arg(channelIdx+1),
+                                           QString("User can change range"),
+                                           true);
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
         pComponent->setScpiInfo("SENSE", QString("%1:RANGE").arg(channel->getAlias()), SCPI::isQuery);
         createCanChangeRangeObserver(channel, pComponent);
@@ -185,10 +185,10 @@ void cRangeObsermatic::generateVeinInterface()
     for(int i=0; i < m_GroupList.length();++i) {
         QString key = QString("PAR_PreScalingGroup%1").arg(i);
         pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                             key,
-                                             QString("Scaling factor for group k (see configuration)"),
-                                             QVariant("1/1"),
-                                             false);
+                                           key,
+                                           QString("Scaling factor for group k (see configuration)"),
+                                           QVariant("1/1"),
+                                           false);
 
         pParameter->setUnit("");
         pParameter->setValidator(new cRegExValidator("^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((1|sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$"));
@@ -200,10 +200,10 @@ void cRangeObsermatic::generateVeinInterface()
 
         // activate preScaling for U and I
         pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                             key = QString("PAR_PreScalingEnabledGroup%1").arg(i),
-                                             QString("Enable prescaling for group"),
-                                             QVariant(0),
-                                             false);
+                                           key = QString("PAR_PreScalingEnabledGroup%1").arg(i),
+                                           QString("Enable prescaling for group"),
+                                           QVariant(0),
+                                           false);
 
         pParameter->setValidator(new cBoolValidator());
         pParameter->setUnit("");
@@ -212,9 +212,9 @@ void cRangeObsermatic::generateVeinInterface()
         m_pModule->m_veinModuleParameterMap[key] = pParameter;
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                              QString("INF_PreScalingInfoGroup%1").arg(i),
-                                              QString("Channel's actual range peak rejection"),
-                                              QVariant(double(1.0)) );
+                                           QString("INF_PreScalingInfoGroup%1").arg(i),
+                                           QString("Channel's actual range peak rejection"),
+                                           QVariant(double(1.0)) );
 
 
         m_RangeGroupPreScalingInfo.append(pComponent);
@@ -254,15 +254,15 @@ void cRangeObsermatic::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap["PAR_Overload"] = m_pParOverloadOnOff; // for modules use
 
     m_pComponentOverloadMax = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                       QString("INF_OverloadMax"),
-                                                       QString("Maximum range overload condition"),
-                                                       QVariant(0));
+                                                    QString("INF_OverloadMax"),
+                                                    QString("Maximum range overload condition"),
+                                                    QVariant(0));
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pComponentOverloadMax);
 
     m_pRangingSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                QString("SIG_Ranging"),
-                                                QString("Signal on changing ranges"),
-                                                QVariant(0));
+                                             QString("SIG_Ranging"),
+                                             QString("Signal on changing ranges"),
+                                             QVariant(0));
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pRangingSignal);
 }
 
