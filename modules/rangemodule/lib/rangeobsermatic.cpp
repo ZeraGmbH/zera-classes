@@ -93,11 +93,15 @@ void cRangeObsermatic::createSelectedRangeObserver(const cRangeMeasChannel *chan
     connect(observerCurrentRange.get(), &ChannelRangeObserver::ChannelCurrentRange::sigFetchDoneCurrentRange, this, [=](const QString &channelMName, const QString &rangeName, bool ok){
         if (ok) {
             Q_UNUSED(channelMName)
-            /*if (m_ConfPar.getCurrentRange(channelIdx) != rangeName) {
+            QString rangNameFormatted = rangeName;
+            if (rangNameFormatted == "0A")
+                rangNameFormatted = "--";
+            const QString oldRange = m_ConfPar.getCurrentRange(channelIdx);
+            if (oldRange != rangNameFormatted) {
                 m_ConfPar.setCurrentRange(channelIdx, rangeName);
-                // m_rangeSetManual = true; // ???
-                //setRanges(); // force???
-            }*/
+                m_rangeSetManual = true; // force overload off
+                setRanges(); // force???
+            }
         }
     });
     observerCurrentRange->startObserve();
