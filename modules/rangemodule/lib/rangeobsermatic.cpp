@@ -187,8 +187,6 @@ void cRangeObsermatic::generateVeinInterface()
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
         pComponent->setScpiInfo("SENSE", QString("%1:RANGE").arg(channel->getAlias()), SCPI::isQuery);
         createCanChangeRangeObserver(channel, pComponent);
-
-        createSelectedRangeObserver(channel, channelIdx);
     }
 
     for(int i=0; i < m_GroupList.length();++i) {
@@ -622,6 +620,8 @@ void cRangeObsermatic::onActivationDone()
         m_RangeActRejectionComponentList.at(i)->setChannelName(channelAlias);
         m_RangeActOVLRejectionComponentList.at(i)->setChannelName(channelAlias);
     }
+
+    createSelectedRangeObservers();
 
     m_bActive = true;
     emit activated();
