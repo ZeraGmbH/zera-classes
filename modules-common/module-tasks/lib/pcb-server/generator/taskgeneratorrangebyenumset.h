@@ -4,7 +4,7 @@
 #include <abstractserverInterface.h>
 #include <tasktemplate.h>
 
-class TaskGeneratorRangeByEnumSet
+class TaskGeneratorRangeByEnumSet // do we need this?
 {
 public:
     static TaskTemplatePtr create(AbstractServerInterfacePtr interface,
