@@ -9,6 +9,7 @@ class NullableString
 public:
     NullableString();
     NullableString(const QString &str);
+    NullableString(const QLatin1String &str);
 
     bool isNull() const;
     const QString &getStr() const;

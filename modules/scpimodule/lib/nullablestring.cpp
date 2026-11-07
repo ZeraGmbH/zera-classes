@@ -9,6 +9,11 @@ NullableString::NullableString(const QString &str)
     setStr(str);
 }
 
+NullableString::NullableString(const QLatin1String &str)
+{
+    setStr(str);
+}
+
 bool NullableString::isNull() const
 {
     return m_isNull;
