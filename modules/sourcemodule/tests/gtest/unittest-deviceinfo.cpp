@@ -5,7 +5,7 @@
 
 // Check all deviceinfos for validity by loading them into ZeraJsonParamsStructure
 TEST(TEST_DEVICEINFO, ALL_VALID) {
-    QDir dir(QStringLiteral("://deviceinfo"));
+    QDir dir(QStringLiteral(":/deviceinfo"));
     const QFileInfoList fileInfoList = dir.entryInfoList();
     EXPECT_FALSE(fileInfoList.isEmpty());
     for(const auto &fileInfo : fileInfoList) {

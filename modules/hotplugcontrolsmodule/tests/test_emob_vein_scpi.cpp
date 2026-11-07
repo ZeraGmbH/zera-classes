@@ -337,7 +337,7 @@ void test_emob_vein_scpi::readPruefGroessenStateScpiNoDevice()
 void test_emob_vein_scpi::dumpDevIface()
 {
     QString dumped = m_scpiClient->sendReceive("dev:iface?", false);
-    QVERIFY(XmlDocumentCompare::compareXmlFile("://scpi-dump.xml", dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlFile(":/scpi-dump.xml", dumped));
 }
 
 void test_emob_vein_scpi::dumpVeinInfModuleInterface()
@@ -346,7 +346,7 @@ void test_emob_vein_scpi::dumpVeinInfModuleInterface()
     VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
     QByteArray jsonDumped = storageDb->getStoredValue(hotplugControlsEntityId, "INF_ModuleInterface").toByteArray();
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile("://vein-inf-moduleinterface-dump.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-inf-moduleinterface-dump.json", jsonDumped));
 }
 
 void test_emob_vein_scpi::invokeRpc(QString rpcName, QString paramName, QVariant paramValue)

@@ -7,7 +7,7 @@ QString JsonFilenames::getJsonStructurePath(SupportedSourceTypes type)
     QString fileName, filePath;
     fileName = getJsonFileName(type);
     if(!fileName.isEmpty()) {
-        filePath = QStringLiteral("://deviceinfo/") + fileName;
+        filePath = QStringLiteral(":/deviceinfo/") + fileName;
     }
     return filePath;
 }

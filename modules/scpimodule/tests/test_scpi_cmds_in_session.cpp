@@ -55,7 +55,7 @@ void test_scpi_cmds_in_session::minScpiDevIface()
     SCPIMODULE::ScpiTestClient client(getScpiModule());
 
     QString dumped = sendReceive(client, "dev:iface?", false);
-    QVERIFY(XmlDocumentCompare::compareXmlFile("://dev-iface-basic.xml", dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlFile(":/dev-iface-basic.xml", dumped));
 }
 
 void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()

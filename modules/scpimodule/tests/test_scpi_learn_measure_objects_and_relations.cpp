@@ -108,7 +108,7 @@ void test_scpi_learn_measure_objects_and_relations::devIfaceTwoOsci()
     TimeMachineObject::feedEventLoop();
 
     QString dumped = client.getResponsesNotSorted()[0].getStr();
-    QVERIFY(XmlDocumentCompare::compareXmlFile("://dev-iface-two-osci.xml", dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlFile(":/dev-iface-two-osci.xml", dumped));
 }
 
 void test_scpi_learn_measure_objects_and_relations::sortingChangesBehaviourOnQueries()

@@ -223,7 +223,7 @@ void test_power1_module_regression::scpiDumpMtPower1Module1()
     ScpiModuleNetClientBlocked client;
     QString dumped = client.sendReceive("dev:iface?", false);
 
-    QVERIFY(XmlDocumentCompare::compareXmlFile("://scpiDumps/session-power1module1-scpi.xml", dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlFile(":/scpiDumps/session-power1module1-scpi.xml", dumped));
 }
 
 void test_power1_module_regression::scpiDumpMtPower1Module4()
@@ -234,7 +234,7 @@ void test_power1_module_regression::scpiDumpMtPower1Module4()
     ScpiModuleNetClientBlocked client;
     QString dumped = client.sendReceive("dev:iface?", false);
 
-    QVERIFY(XmlDocumentCompare::compareXmlFile("://scpiDumps/session-power1module4-scpi.xml", dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlFile(":/scpiDumps/session-power1module4-scpi.xml", dumped));
 }
 
 void test_power1_module_regression::setMeasMode(int entityId,
