@@ -5,6 +5,7 @@
 #include "scpiserver.h"
 #include "scpimoduleconfiguration.h"
 #include "scpimodeldeviface.h"
+#include "scpimodellocalfile.h"
 #include "scpimodelstatus.h"
 #include "scpimodelieee4882.h"
 #include "scpimodelrpcs.h"
@@ -66,6 +67,7 @@ private:
     ScpiModelCatalogs m_scpiModelCatalogs;
     ScpiModelRpcs m_scpiModelRpcs;
     ScpiModelDevIface m_scpiModelDevIface;
+    ScpiModelLocalFile m_scpiModelLocalFile;
     ScpiModelStatus m_scpiModelStatus;
     ScpiModelIEEE4882 m_scpiModelIeee488;
 

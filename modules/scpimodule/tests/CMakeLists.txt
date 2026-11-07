@@ -15,6 +15,10 @@ function(SETUP_QTESTS_MODULE)
             Zera::zera-timers-testlib
             Zera::VfConvenientCodeTest
         )
+        target_compile_definitions(${_testname}
+            PRIVATE
+            SCPI_FILE_EXAMPLE_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../scpi-files/scpi-file-example.txt"
+        )
     endforeach()
 endfunction()
 
@@ -27,4 +31,8 @@ SETUP_QTESTS_MODULE(
     test_scpi_error_and_status
     test_scpi_learn_measure_objects_and_relations
     test_scpi_vein_query_sort
+    test_scpi_local_file
+    test_scpi_local_file_read
 )
+
+# the test reads the shipped example file directly from the source tree (rcc does not allow ../ paths in qrc files)

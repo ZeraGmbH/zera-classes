@@ -5,6 +5,7 @@ file(GLOB SOURCES
     scpi-model-catalogs/*.cpp
     scpi-model-dev-iface/*.cpp
     scpi-model-ieee-488-2/*.cpp
+    scpi-model-local-file/*.cpp
     scpi-model-measure-and-friends/*.cpp
     scpi-model-parameters/*.cpp
     scpi-model-rpcs/*.cpp
@@ -19,6 +20,7 @@ file(GLOB HEADER
     scpi-model-catalogs/*.h
     scpi-model-dev-iface/*.h
     scpi-model-ieee-488-2/*.h
+    scpi-model-local-file/*.h
     scpi-model-measure-and-friends/*.h
     scpi-model-parameters/*.h
     scpi-model-rpcs/*.h
@@ -39,6 +41,7 @@ target_include_directories(scpimodule-lib
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/delegates-common>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-catalogs>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-ieee-488-2>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-local-file>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-measure-and-friends>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-parameters>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/scpi-model-rpcs>

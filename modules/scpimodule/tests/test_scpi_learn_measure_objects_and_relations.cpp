@@ -70,7 +70,7 @@ void test_scpi_learn_measure_objects_and_relations::countMeasureRelatedObjectsCr
 
     constexpr int osciMeasureNodeCount = 50;
     QCOMPARE(scpiPathsOsciMeasure.size(), osciMeasureNodeCount);
-    constexpr int nonOsciMeasureNodeCount = 33;
+    constexpr int nonOsciMeasureNodeCount = 34;
     QCOMPARE(scpiPathsNonOsciMeasure.size(), nonOsciMeasureNodeCount);
 
     QCOMPARE(noClientDelegateInstanceCount, scpiPathsNonOsciMeasure.size() + scpiPathsOsciMeasure.size());

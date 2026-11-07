@@ -22,6 +22,9 @@ ZERA GmbH Koenigswinter, MT310s2, Unknown, unknokwn-release
 SYSTEM:ERROR?:
 +0,No error
 
+SYSTEM:LOCALFILE?:
+ERROR: missing parameter <filepath>
+
 STATUS:OPERATION:CONDITION?:
 0
 

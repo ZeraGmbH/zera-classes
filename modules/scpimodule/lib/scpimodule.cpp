@@ -15,7 +15,8 @@ cSCPIModule::cSCPIModule(const ModuleFactoryParam &moduleParam) :
     m_scpiModelParameters(this),
     m_scpiModelCatalogs(this),
     m_scpiModelRpcs(this),
-    m_scpiModelDevIface(this)
+    m_scpiModelDevIface(this),
+    m_scpiModelLocalFile(this)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");
@@ -28,6 +29,7 @@ cSCPIModule::cSCPIModule(const ModuleFactoryParam &moduleParam) :
     m_scpiModelCatalogs.setupScpi(&m_scpiInterface);
     m_scpiModelRpcs.setupScpi(&m_scpiInterface);
     m_scpiModelDevIface.setupScpi(&m_scpiInterface);
+    m_scpiModelLocalFile.setupScpi(&m_scpiInterface);
     m_scpiModelStatus.setupScpi(&m_scpiInterface);
     m_scpiModelIeee488.setupScpi(&m_scpiInterface);
 }

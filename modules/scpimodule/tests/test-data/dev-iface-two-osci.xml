@@ -169,6 +169,7 @@
         <ALL Description="Queries all errors from error queue and removes them from queue" ScpiPath="SYSTEM:ERROR:ALL" Type="Query"/>
         <COUNT Description="Queries the number of error messages of internal error list" ScpiPath="SYSTEM:ERROR:COUNT" Type="Query"/>
       </ERROR>
+      <LOCALFILE Description="Returns the content of a text file (UTF-8) from the local file system: SYSTEM:LOCALFILE? &lt;filepath>;" ScpiPath="SYSTEM:LOCALFILE" Type="Query,Command+Par"/>
     </SYSTEM>
   </MODELS>
   <RELEASE/>
