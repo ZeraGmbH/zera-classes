@@ -1,6 +1,8 @@
 #include "statusmoduleinit.h"
 #include "statusmodule.h"
-#include "rpc/rpccreateversionfile.h"
+#include "rpcreadlocalfile.h"
+#include "rpccreateversionfile.h"
+#include "stringvalidatorallstrings.h"
 #include <reply.h>
 #include <proxy.h>
 #include <errormessages.h>
@@ -274,10 +276,29 @@ void cStatusModuleInit::generateVeinInterface()
 
     m_versionsJson = std::make_shared<QJsonObject>();
     std::shared_ptr<RPCCreateVersionFile> rpcReadLogs = std::make_shared<RPCCreateVersionFile>(m_pModule->getRpcEventSystem(),
-                                                                             m_pModule->getEntityId(),
-                                                                             m_versionsJson);
+                                                                                               m_pModule->getEntityId(),
+                                                                                               m_versionsJson);
     m_createVersionFileRpc = std::make_shared<VfModuleRpc>(rpcReadLogs, "Create version file");
     m_pModule->m_veinModuleRPCMap[rpcReadLogs->getSignature()] = m_createVersionFileRpc;
+
+    std::shared_ptr<RpcReadLocalFile> rpcReadLocalFile =
+        std::make_shared<RpcReadLocalFile>(m_pModule->getRpcEventSystem(),
+                                           m_pModule->getEntityId());
+    // SCPI_LOCAL_FILE_PATH unusable here: build environment path sneaks in
+    const QString description =
+        "Returns the content of a text file installed on device:\n"
+        "* **Command format:** 'SYSTEM:LOCALFILE? <filename>;'\n"
+        "* **Retrieve example file:** 'SYSTEM:LOCALFILE? scpi-file-example.txt;'\n"
+        "* **Path of files to read:** '/home/operator/scpi-files'\n"
+        "* **To upload:** Go to Setting/Application and select 'Desktop (slow) / open file manager (in right bar) / copy file\n"
+        ;
+    m_pReadLocalFileRpc = std::make_shared<VfModuleRpc>(rpcReadLocalFile, description);
+    m_pReadLocalFileRpc->setRPCScpiInfo("STATUS", QString("LOCFILE"),
+                                        SCPI::isQuery,
+                                        rpcReadLocalFile->getSignature());
+    m_pReadLocalFileRpc->setValidator(new StringValidatorAllStrings);
+    m_pReadLocalFileRpc->canAcceptOptionalParam(); // Decision: immediate error message
+    m_pModule->m_veinModuleRPCMap[rpcReadLocalFile->getSignature()] = m_pReadLocalFileRpc; // for modules use
 
     m_veinUpdateTimer->start();
 }

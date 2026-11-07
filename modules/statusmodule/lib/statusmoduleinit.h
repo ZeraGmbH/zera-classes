@@ -140,6 +140,7 @@ private:
     VfModuleParameter *m_pChannels = nullptr;
     VfModuleRpcPtr m_createVersionFileRpc = nullptr;
     VfModuleRpcPtr m_resetAdjDataRpc;
+    VfModuleRpcPtr m_pReadLocalFileRpc;
 
     QVariant wantedSerialNr;
 

@@ -17,7 +17,10 @@ SETUP_QTESTS_MODULE(
     test_statusmodule_with_dspsuper
     test_rpc_create_version_file
     test_adj_data
+    test_scpi_local_file_read
 )
+
+add_definitions(-DOE_INSTALL_ROOT="${OE_INSTALL_ROOT}")
 
 target_sources(test_statusmodule_with_dspsuper
   PRIVATE
@@ -35,6 +38,11 @@ target_sources(test_rpc_create_version_file
 )
 
 target_sources(test_adj_data
+  PRIVATE
+  test-data/test-data.qrc
+)
+
+target_sources(test_scpi_local_file_read
   PRIVATE
   test-data/test-data.qrc
 )

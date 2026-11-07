@@ -1,8 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>status-min-session.json</file>
-        <file>status-dsp-session.json</file>
         <file>com5003-min-session.json</file>
         <file>mt310s2-050059467.eeprom</file>
+        <file>status-min-session.json</file>
+        <file>status-dsp-session.json</file>
+        <file>status-scpi-session.json</file>
     </qresource>
 </RCC>

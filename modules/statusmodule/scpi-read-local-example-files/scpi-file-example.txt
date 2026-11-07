@@ -1,0 +1,7 @@
+Zera SCPI local file example
+
+German umlauts: Ä Ö Ü ä ö ü ß
+Chinese text: 你好，世界！
+
+This file is served by the query:
+SYSTEM:LOCALFILE? scpi-file-example.txt;

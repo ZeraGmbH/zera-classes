@@ -1651,6 +1651,9 @@ STATUS:DEV1:CPUINFO?:
 STATUS:DEV1:DEVTYPE?:
 unknown
 
+STATUS:DEV1:LOCFILE?:
+ERROR: missing parameter. Command format accepted: 'STATUS:DEV1:LOCFILE? <filepath>;'
+
 STATUS:DEV1:RELEASE?:
 
 
@@ -2460,6 +2463,9 @@ Unknown
 
 STATUS:DEV1:RELEASE?:
 
+
+STATUS:DEV1:LOCFILE?:
+ERROR: missing parameter. Command format accepted: 'STATUS:DEV1:LOCFILE? <filepath>;'
 
 STATUS:DEV1:DEVTYPE?:
 unknown

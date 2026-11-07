@@ -21,7 +21,7 @@
 <!-- Main chapter headings -->
 <xsl:variable name="ScpiStandard" select="'1. SCPI Standard'"/>
 <xsl:variable name="DeviceConnection" select="'2. Device connection'"/>
-<xsl:variable name="DeviceInfo" select="'3. Device information'"/>
+<xsl:variable name="DeviceInfo" select="'3. Device status information'"/>
 <xsl:variable name="DevIface" select="'4. Device interface'"/>
 <xsl:variable name="SystemCmds" select="'5. System commands'"/>
 <xsl:variable name="ScpiStandardCmds" select="'6. Standard SCPI commands'"/>

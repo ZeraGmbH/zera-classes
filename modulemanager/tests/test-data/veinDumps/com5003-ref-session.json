@@ -1948,6 +1948,15 @@
             "RpcInfo": {
                 "RPC_CreateVersionFile(QString p_destinationPath)": {
                     "Description": "<skipped>"
+                },
+                "RPC_ReadLocalFile(QString p_fileName)": {
+                    "Description": "<skipped>",
+                    "Optional parameter": "",
+                    "Validation": {
+                        "Data": [
+                        ],
+                        "Type": "STRING"
+                    }
                 }
             },
             "SCPIInfo": {
@@ -2065,7 +2074,16 @@
                         "0"
                     ]
                 ],
-                "Name": "DEV1"
+                "Name": "DEV1",
+                "RPC": [
+                    [
+                        "STATUS",
+                        "LOCFILE",
+                        "2",
+                        "RPC_ReadLocalFile(QString p_fileName)",
+                        "0"
+                    ]
+                ]
             }
         },
         "INF_PCBServerVersion": "V42.0",

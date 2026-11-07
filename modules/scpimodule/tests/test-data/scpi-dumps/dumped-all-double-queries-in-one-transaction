@@ -2260,6 +2260,12 @@ CALCULATE:ADJ1:COMPUTATION?:
 CALCULATE:ADJ1:AMPLITUDE?:
 
 
+STATUS:DEV1:LOCFILE?:
+ERROR: missing parameter. Command format accepted: 'STATUS:DEV1:LOCFILE? <filepath>;'
+
+STATUS:DEV1:LOCFILE?:
+ERROR: missing parameter. Command format accepted: 'STATUS:DEV1:LOCFILE? <filepath>;'
+
 EMOB:HOTP1:EMLOCKSTATE?:
 4
 

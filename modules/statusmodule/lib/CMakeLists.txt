@@ -16,6 +16,7 @@ add_library(statusmodule-lib SHARED
 target_include_directories(statusmodule-lib
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/rpc>
     )
 
 target_link_libraries(statusmodule-lib
@@ -25,6 +26,7 @@ target_link_libraries(statusmodule-lib
     Zera::zera-timers
     Zera::zenuxservicecommon
     Zera::service-interfaces
+    Zera::zera-file-io-extensions
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
 )
