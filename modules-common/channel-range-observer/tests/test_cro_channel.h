@@ -27,6 +27,7 @@ private slots:
     void checkUrValue();
     void checkRangeAvailable();
     void checkOrderingVoltageRanges();
+    void checkOrderingCurrentRanges();
     void checkOrderingAllCurrentRanges();
     void checkAvailableRangesMtDefaultAc();
     void checkAvailableRangesMtAdj();

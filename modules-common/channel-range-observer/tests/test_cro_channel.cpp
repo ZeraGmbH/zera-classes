@@ -191,6 +191,19 @@ void test_cro_channel::checkOrderingVoltageRanges()
     QCOMPARE(rangeNamesReceived, rangeNamesExpected);
 }
 
+void test_cro_channel::checkOrderingCurrentRanges()
+{
+    Channel channel("m3", netInfo, m_tcpFactory, false);
+    channel.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QStringList rangeNamesReceived = channel.getAvailRangeNames();
+    QStringList rangeNamesExpected = QStringList()
+                                     << "10A" << "5A" << "2.5A" << "1.0A"
+                                     << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
+    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+}
+
 void test_cro_channel::checkOrderingAllCurrentRanges()
 {
     Channel channel("m3", netInfo, m_tcpFactory, false);
