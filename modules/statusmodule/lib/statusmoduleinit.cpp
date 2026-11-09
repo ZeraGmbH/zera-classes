@@ -291,6 +291,7 @@ void cStatusModuleInit::generateVeinInterface()
         "* **Retrieve example file:** 'SYSTEM:LOCALFILE? scpi-file-example.txt;'\n"
         "* **Path of files to read:** '/home/operator/scpi-files'\n"
         "* **To upload:** Go to Setting/Application and select 'Desktop (slow) / open file manager (in right bar) / copy file\n"
+        "* **Filename must not contain spaces**\n"
         ;
     m_pReadLocalFileRpc = std::make_shared<VfModuleRpc>(rpcReadLocalFile, description);
     m_pReadLocalFileRpc->setRPCScpiInfo("STATUS", QString("LOCFILE"),
