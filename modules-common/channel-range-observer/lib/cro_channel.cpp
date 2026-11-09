@@ -179,10 +179,8 @@ void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &ans
     Q_UNUSED(reply)
     if (msgnr == 0) {
         const QString strAnswer = answer.toString();
-        if (strAnswer == notificationStrRangeChange) {
-            notifyRangeChangeReported();
+        if (strAnswer == notificationStrRangeChange)
             startFetch();
-        }
         else if (strAnswer.startsWith(notificationStrSourceModeChange)) {
             QString channelMNames = strAnswer;
             channelMNames.remove(notificationStrSourceModeChange);
@@ -209,12 +207,6 @@ void Channel::setAvailableRanges()
     for(const QString &rangeName : *m_allRangeNamesOrderedByServer)
         if(*m_rangeNameToRange[rangeName]->m_available == true)
             m_availableRangeNames.append(rangeName);
-}
-
-void Channel::notifyRangeChangeReported()
-{
-    m_rangeChangeInterruptCount++;
-    emit sigRangeChangeReported(m_channelMName, m_rangeChangeInterruptCount);
 }
 
 void Channel::notifyError(const QString &errMsg)

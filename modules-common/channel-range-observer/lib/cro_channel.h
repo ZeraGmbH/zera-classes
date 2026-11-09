@@ -35,7 +35,6 @@ public:
     const RangePtr getRange(const QString &rangeName) const;
     ChannelCommonStorage *getModuleCommonStorage();
 signals:
-    void sigRangeChangeReported(const QString &channelMName, int interruptCounter);
     void sigFetchDoneChannel(const QString &channelMName, bool ok);
     void sigSourceModeOnChanged();
 
@@ -50,7 +49,6 @@ private:
     TaskTemplatePtr getRangesRegisterChangeNotificationTask();
     TaskTemplatePtr getFetchFinalTask();
     void setAvailableRanges();
-    void notifyRangeChangeReported();
     static void notifyError(const QString &errMsg);
 
     const QString m_channelMName;

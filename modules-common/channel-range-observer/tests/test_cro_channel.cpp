@@ -314,12 +314,12 @@ void test_cro_channel::checkScanTwiceAvailableRangesMtAdj()
     QCOMPARE(spy.count(), 1);
 }
 
-void test_cro_channel::notifyRangeChangeByClampComeAndGo()
+void test_cro_channel::notifyFetchDoneByClampComeAndGo()
 {
     Channel channel("m3", netInfo, m_tcpFactory, false);
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
-    QSignalSpy spy(&channel, &Channel::sigRangeChangeReported);
+    QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
 
     spy.clear();
     m_testServer->addClamp(cClamp::CL120A, "IL1");
@@ -333,14 +333,14 @@ void test_cro_channel::notifyRangeChangeByClampComeAndGo()
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.size(), 1);
     QCOMPARE(spy[0][0], "m3");
-    QCOMPARE(spy[0][1], 2);
+    QCOMPARE(spy[0][1], true);
 
     spy.clear();
     m_testServer->addClamp(cClamp::CL120A, "IL1");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.size(), 1);
     QCOMPARE(spy[0][0], "m3");
-    QCOMPARE(spy[0][1], 3);
+    QCOMPARE(spy[0][1], true);
 }
 
 void test_cro_channel::setupServers()
