@@ -273,19 +273,16 @@ QString cRangeMeasChannel::getMaxRange() const
 {
     QList<cRangeInfoWithConstantValues> riList = m_RangeInfoHash.values();
     double newAmpl = -1.0;
-    int p=-1;
-
-    for (int i = 0; i < riList.count(); i++) {
-        double newUrvalue = riList.at(i).urvalue;
+    int foundRangeIdx = 0;
+    for (int rangeIdx = 0; rangeIdx < riList.count(); rangeIdx++) {
+        double newUrvalue = riList.at(rangeIdx).urvalue;
         if (newUrvalue > newAmpl) {
             newAmpl = newUrvalue;
-            p=i;
+            foundRangeIdx =rangeIdx;
         }
     }
-
-    return riList.at(p).alias;
+    return riList.at(foundRangeIdx).alias;
 }
-
 
 QString cRangeMeasChannel::getMaxRange(const QString &rngAlias)
 {
@@ -303,26 +300,24 @@ QString cRangeMeasChannel::getMaxRange(const QString &rngAlias)
 
     QList<cRangeInfoWithConstantValues> riList = m_RangeInfoHash.values();
     double newAmpl = -1.0;
-    int i, p = -1;
-
-    for (i = 0; i < riList.count(); i++) {
-        const cRangeInfoWithConstantValues& ri = riList.at(i);
+    int rangeIdxFound = 0;
+    for (int rangeIdx = 0; rangeIdx < riList.count(); rangeIdx++) {
+        const cRangeInfoWithConstantValues& ri = riList.at(rangeIdx);
         double newUrvalue = ri.urvalue;
         if (actRngType >=0) {
             if ((newUrvalue > newAmpl) && (ri.type == actRngType)) {
                 newAmpl = newUrvalue;
-                p=i;
+                rangeIdxFound = rangeIdx;
             }
         }
         else {
             if ((newUrvalue > newAmpl)) {
                 newAmpl = newUrvalue;
-                p=i;
+                rangeIdxFound = rangeIdx;
             }
         }
     }
-
-    return riList.at(p).alias;
+    return riList.at(rangeIdxFound).alias;
 }
 
 
