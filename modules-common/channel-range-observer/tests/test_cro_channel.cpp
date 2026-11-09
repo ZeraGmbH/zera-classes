@@ -343,6 +343,36 @@ void test_cro_channel::notifyFetchDoneByClampComeAndGo()
     QCOMPARE(spy[0][1], true);
 }
 
+void test_cro_channel::checkAvailableRangesMtClampComeAndGo()
+{
+    Channel channel("m3", netInfo, m_tcpFactory, false);
+    channel.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QStringList rangeNamesReceived = channel.getAvailRangeNames();
+    QStringList rangeNamesExpected = QStringList()
+                                     << "10A" << "5A" << "2.5A" << "1.0A"
+                                     << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
+    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+
+    m_testServer->addClamp(cClamp::CL120A, "IL1");
+    TimeMachineObject::feedEventLoop();
+
+    QStringList rangeNamesReceivedClamp = channel.getAvailRangeNames();
+    QStringList rangeNamesExpectedClamp = QStringList()
+                                          << "10A" << "5A" << "2.5A" << "1.0A"
+                                          << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
+                                          << "C100A" << "C50A" << "C10A" << "C5A" << "C1A"
+                                          << "C500mA" << "C100mA" << "C50mA" << "C10mA";
+    QCOMPARE(rangeNamesReceivedClamp, rangeNamesExpectedClamp);
+
+    m_testServer->removeAllClamps();
+    TimeMachineObject::feedEventLoop();
+
+    rangeNamesReceived = channel.getAvailRangeNames();
+    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+}
+
 void test_cro_channel::setupServers()
 {
     TimeMachineForTest::reset();

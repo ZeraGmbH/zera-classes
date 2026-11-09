@@ -35,6 +35,7 @@ private slots:
     void checkScanTwiceAvailableRangesMtAdj();
 
     void notifyFetchDoneByClampComeAndGo();
+    void checkAvailableRangesMtClampComeAndGo();
 private:
     void setupServers();
     void setupClient();
