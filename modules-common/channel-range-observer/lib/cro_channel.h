@@ -63,7 +63,6 @@ private:
     std::shared_ptr<QStringList> m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();
     QStringList m_availableRangeNames;
     QHash<QString, RangePtr> m_rangeNameToRange;
-    int m_rangeChangeInterruptCount = 0;
 
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
