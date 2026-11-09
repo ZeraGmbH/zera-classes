@@ -52,8 +52,8 @@ const RangePtr Channel::getRange(const QString &rangeName) const
     auto iter = m_rangeNameToRange.constFind(rangeName);
     if(iter != m_rangeNameToRange.constEnd())
         return iter.value();
-    qWarning("Range data for range %s not found!", qPrintable(rangeName));
-    return nullptr;
+    qCritical("Range data for range %s not found!", qPrintable(rangeName));
+    return std::make_shared<Range>(m_channelMName, "", m_netInfo, m_tcpFactory);
 }
 
 ChannelCommonStorage *Channel::getModuleCommonStorage()

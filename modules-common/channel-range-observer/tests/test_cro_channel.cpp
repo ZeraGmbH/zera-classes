@@ -162,7 +162,7 @@ void test_cro_channel::getRangesCheckBasicData()
     TimeMachineObject::feedEventLoop();
 
     QVERIFY(channel.getRange("250V") != nullptr);
-    QCOMPARE(channel.getRange("foo"), nullptr);
+    QVERIFY(channel.getRange("foo") != nullptr); // try sane fallback
     QStringList rangeName = channel.getAllRangeNames();
     QCOMPARE(rangeName.count(), 3);
     QVERIFY(rangeName.contains("8V"));
