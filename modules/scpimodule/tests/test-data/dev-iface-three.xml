@@ -177,7 +177,7 @@
           <PERIODCOUNT Description="DSP period count" ScpiPath="STATUS:DEV1:DSP:PERIODCOUNT" Type="Query"/>
           <TIMEMS Description="DSP ms timer" ScpiPath="STATUS:DEV1:DSP:TIMEMS" Type="Query"/>
         </DSP>
-        <LOCFILE DataType="STRING" Description="Returns the content of a text file installed on device:&#10;* **Command format:** 'SYSTEM:LOCALFILE? &lt;filename>;'&#10;* **Retrieve example file:** 'SYSTEM:LOCALFILE? scpi-file-example.txt;'&#10;* **Path of files to read:** '/home/operator/scpi-files'&#10;* **To upload:** Go to Setting/Application and select 'Desktop (slow) / open file manager (in right bar) / copy file&#10;* **Filename must not contain spaces**&#10;" ScpiPath="STATUS:DEV1:LOCFILE" Type="Query"/>
+        <LOCFILE DataType="STRING" Description="Returns the content of a text file installed on device:&#10;* **Command format:** 'STATUS:DEV1:LOCFILE? &lt;filename>;'&#10;* **Retrieve example file:** 'STATUS:DEV1:LOCFILE? scpi-file-example.txt;'&#10;* **Path of files to read:** '/home/operator/scpi-files'&#10;* **To upload:** Go to Setting/Application and select 'Desktop (slow) / open file manager (in right bar) / copy file&#10;* **Filename must not contain spaces**&#10;" ScpiPath="STATUS:DEV1:LOCFILE" Type="Query"/>
         <RELEASE Description="Release number" ScpiPath="STATUS:DEV1:RELEASE" Type="Query"/>
         <SERIAL DataType="STRING" Description="Serial number" RegEx="^\d{9}$" ScpiPath="STATUS:DEV1:SERIAL" Type="Query,Command+Par"/>
         <VERSION Type="Node">

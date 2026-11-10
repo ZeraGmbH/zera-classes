@@ -287,8 +287,8 @@ void cStatusModuleInit::generateVeinInterface()
     // SCPI_LOCAL_FILE_PATH unusable here: build environment path sneaks in
     const QString description =
         "Returns the content of a text file installed on device:\n"
-        "* **Command format:** 'SYSTEM:LOCALFILE? <filename>;'\n"
-        "* **Retrieve example file:** 'SYSTEM:LOCALFILE? scpi-file-example.txt;'\n"
+        "* **Command format:** 'STATUS:DEV1:LOCFILE? <filename>;'\n"
+        "* **Retrieve example file:** 'STATUS:DEV1:LOCFILE? scpi-file-example.txt;'\n"
         "* **Path of files to read:** '/home/operator/scpi-files'\n"
         "* **To upload:** Go to Setting/Application and select 'Desktop (slow) / open file manager (in right bar) / copy file\n"
         "* **Filename must not contain spaces**\n"
