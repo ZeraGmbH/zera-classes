@@ -22,6 +22,7 @@ public:
 
     bool getAvailable() const;
     int getType() const;
+    const QString &getAlias() const;
     double getUrValue() const;
     double getRejection() const;
     double getOvrRejection() const;
@@ -43,6 +44,7 @@ private:
 
     std::shared_ptr<bool> m_available = std::make_shared<bool>(false);
     std::shared_ptr<int> m_type = std::make_shared<int>(0);
+    std::shared_ptr<QString> m_alias = std::make_shared<QString>();
     std::shared_ptr<double> m_urValue = std::make_shared<double>(0.0);
     std::shared_ptr<double> m_rejection = std::make_shared<double>(0.0);
     std::shared_ptr<double> m_ovrejection = std::make_shared<double>(0.0);

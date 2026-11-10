@@ -166,7 +166,6 @@ void test_cro_range::refetchAlthoughNotSuggestedWorks()
 void test_cro_range::checkUrValue()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -203,10 +202,24 @@ void test_cro_range::checkType()
     QCOMPARE(range2.getType(), Direct + modeADJ);
 }
 
+void test_cro_range::checkAlias()
+{
+    Range range1("m0", "250V", netInfo, m_tcpFactory);
+    range1.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(range1.getAlias(), "250V");
+
+    Range range2("m7", "0A", netInfo, m_tcpFactory);
+    range2.startFetch();
+    TimeMachineObject::feedEventLoop();
+
+    QCOMPARE(range2.getAlias(), "--");
+}
+
 void test_cro_range::checkRejection()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -216,7 +229,6 @@ void test_cro_range::checkRejection()
 void test_cro_range::checkOvRejection()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
@@ -226,7 +238,6 @@ void test_cro_range::checkOvRejection()
 void test_cro_range::checkAdcRejection()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QSignalSpy spy(&range, &Range::sigFetchDoneRange);
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 

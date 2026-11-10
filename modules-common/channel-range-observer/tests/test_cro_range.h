@@ -26,6 +26,7 @@ private slots:
     void refetchAlthoughNotSuggestedWorks();
     void checkUrValue();
     void checkType();
+    void checkAlias();
     void checkRejection();
     void checkOvRejection();
     void checkAdcRejection();
