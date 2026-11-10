@@ -9,10 +9,17 @@ namespace ChannelRangeObserver {
 class ChannelRangesData
 {
 public:
+    RangePtr findRangeByName(const QString &rangeName) const;
+
+    void addRange(const QString &rangeName, RangePtr range);
+    void doAllRangesCompleteJobs();
+
     void clear();
 
     std::shared_ptr<QStringList> m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();
     QStringList m_availableRangeNames;
+
+private:
     QHash<QString, RangePtr> m_rangeNameToRange;
 };
 

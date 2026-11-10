@@ -48,9 +48,9 @@ const QStringList &Channel::getAvailRangeNames() const
 
 const RangePtr Channel::getRange(const QString &rangeName) const
 {
-    auto iter = m_rangesCurr.m_rangeNameToRange.constFind(rangeName);
-    if(iter != m_rangesCurr.m_rangeNameToRange.constEnd())
-        return iter.value();
+    RangePtr rangeFound = m_rangesCurr.findRangeByName(rangeName);
+    if (rangeFound != nullptr)
+        return rangeFound;
     qCritical("Range data for range %s not found! Available: %s",
               qPrintable(rangeName), qPrintable(m_rangesCurr.m_availableRangeNames.join(" / ")));
     return std::make_shared<Range>(m_channelMName, "", m_netInfo, m_tcpFactory);
@@ -108,7 +108,7 @@ void Channel::startAllRangesTasks()
         allRangesTasks->addSub(getChannelReadDetailsTask());
         for (const QString &rangeName : *m_rangesNext.m_allRangeNamesOrderedByServer) {
             RangePtr newRange = std::make_shared<Range>(m_channelMName, rangeName, m_netInfo, m_tcpFactory);
-            m_rangesNext.m_rangeNameToRange[rangeName] = newRange;
+            m_rangesNext.addRange(rangeName, newRange);
             allRangesTasks->addSub(RangeFetchTask::create(newRange));
         }
         m_currentTasks->addSub(std::move(allRangesTasks));
@@ -125,10 +125,7 @@ void Channel::startAllRangesTasks()
 void Channel::doAfterTaskJobs(bool ok)
 {
     if (ok) {
-        // TODO: Introduce range sort -> cRangeMeasChannel::setRangeListAlias()
-        for(const QString &rangeName : *m_rangesNext.m_allRangeNamesOrderedByServer)
-            if(m_rangesNext.m_rangeNameToRange[rangeName]->getAvailable() == true)
-                m_rangesNext.m_availableRangeNames.append(rangeName);
+        m_rangesNext.doAllRangesCompleteJobs();
         m_rangesCurr = m_rangesNext;
     }
     m_rangesNext.clear();
