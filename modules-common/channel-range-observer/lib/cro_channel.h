@@ -2,7 +2,7 @@
 #define CRO_CHANNEL_H
 
 #include "channelcommonstorage.h"
-#include "cro_range.h"
+#include "cro_channelrangesdata.h"
 #include <networkconnectioninfo.h>
 #include <abstracttcpnetworkfactory.h>
 #include <pcbinterface.h>
@@ -55,18 +55,8 @@ private:
     bool m_sourceModeOn = false;
     ChannelCommonStorage m_channelAdjStorage;
 
-    struct TRangeData {
-        std::shared_ptr<QStringList> m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();
-        QStringList m_availableRangeNames;
-        QHash<QString, RangePtr> m_rangeNameToRange;
-        void clear() {
-            m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();
-            m_availableRangeNames.clear();
-            m_rangeNameToRange.clear();
-        };
-    };
-    TRangeData m_rangesCurr;
-    TRangeData m_rangesNext;
+    ChannelRangesData m_rangesCurr;
+    ChannelRangesData m_rangesNext;
 
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
