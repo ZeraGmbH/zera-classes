@@ -28,9 +28,9 @@ public:
     const QString &getUnit() const;
     int getDspChannel() const;
     bool isSourceModeOn() const;
-    const QStringList &getAllRangeNames() const;
-    const QStringList &getAvailRangeNames() const;
-    const RangePtr getRange(const QString &rangeName) const;
+    const QStringList &getAllRangeAliases() const;
+    const QStringList &getAvailRangeAliases() const;
+    const RangePtr getRange(const QString &rangeAlias) const;
     ChannelCommonStorage *getModuleCommonStorage();
 signals:
     void sigFetchDoneChannel(const QString &channelMName, bool ok);
@@ -63,7 +63,7 @@ private:
     Zera::PcbInterfacePtr m_pcbInterface;
 
     TaskContainerInterfacePtr m_currentTasks;
-    std::shared_ptr<QStringList> m_allRangeNamesServerOrdered;
+    std::shared_ptr<QStringList> m_allRangeNames;
 };
 
 typedef std::shared_ptr<Channel> ChannelPtr;

@@ -42,7 +42,7 @@ void test_cro_channel::cleanup()
 void test_cro_channel::emptyOnStartup()
 {
     Channel channel("m0", netInfo, m_tcpFactory, false);
-    QVERIFY(channel.getAllRangeNames().isEmpty());
+    QVERIFY(channel.getAllRangeAliases().isEmpty());
 }
 
 void test_cro_channel::fetchDirect()
@@ -82,7 +82,7 @@ void test_cro_channel::fetchInvalidChannel()
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy[0][0], "foo");
     QCOMPARE(spy[0][1], false);
-    QCOMPARE(channel.getAvailRangeNames(), QStringList());
+    QCOMPARE(channel.getAvailRangeAliases(), QStringList());
 }
 
 void test_cro_channel::fetchByTaskValid()
@@ -149,10 +149,10 @@ void test_cro_channel::refetchAlthoughNotSuggestedWorks()
     QCOMPARE(spy[0][0], "m0");
     QCOMPARE(spy[0][1], true);
 
-    QStringList rangeNamesReceived = channel.getAvailRangeNames();
-    QStringList rangeNamesExpected = QStringList()
+    QStringList rangeAliasesReceived = channel.getAvailRangeAliases();
+    QStringList rangeAliasesExpected = QStringList()
                                      << "250V" << "8V" << "100mV";
-    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+    QCOMPARE(rangeAliasesReceived, rangeAliasesExpected);
 }
 
 void test_cro_channel::getRangesCheckBasicData()
@@ -163,7 +163,7 @@ void test_cro_channel::getRangesCheckBasicData()
 
     QVERIFY(channel.getRange("250V") != nullptr);
     QVERIFY(channel.getRange("foo") != nullptr); // try sane fallback
-    QStringList rangeName = channel.getAllRangeNames();
+    QStringList rangeName = channel.getAllRangeAliases();
     QCOMPARE(rangeName.count(), 3);
     QVERIFY(rangeName.contains("8V"));
     QVERIFY(rangeName.contains("100mV"));
@@ -186,9 +186,9 @@ void test_cro_channel::checkOrderingVoltageRanges()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = channel.getAllRangeNames();
-    QStringList rangeNamesExpected = QStringList() << "250V" << "8V" << "100mV";
-    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+    QStringList rangeAliasesReceived = channel.getAllRangeAliases();
+    QStringList rangeAliasesExpected = QStringList() << "250V" << "8V" << "100mV";
+    QCOMPARE(rangeAliasesReceived, rangeAliasesExpected);
 }
 
 void test_cro_channel::checkOrderingCurrentRanges()
@@ -197,11 +197,11 @@ void test_cro_channel::checkOrderingCurrentRanges()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = channel.getAvailRangeNames();
-    QStringList rangeNamesExpected = QStringList()
+    QStringList rangeAliasesReceived = channel.getAvailRangeAliases();
+    QStringList rangeAliasesExpected = QStringList()
                                      << "10A" << "5A" << "2.5A" << "1.0A"
                                      << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
-    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+    QCOMPARE(rangeAliasesReceived, rangeAliasesExpected);
 }
 
 void test_cro_channel::checkOrderingAllCurrentRanges()
@@ -210,13 +210,13 @@ void test_cro_channel::checkOrderingAllCurrentRanges()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = channel.getAllRangeNames();
-    QStringList rangeNamesExpected = QStringList()
-                                     << "10A" << "5A" << "2.5A" << "1.0A"
-                                     << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
-                                     << "8V" << "5V" << "2V" << "1V"
-                                     << "500mV" << "200mV" << "100mV" << "50mV" << "20mV" << "10mV" << "5mV" << "2mV";
-    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+    QStringList rangeAliasesReceived = channel.getAllRangeAliases();
+    QStringList rangeAliasesExpected = QStringList()
+                                       << "8V" << "5V" << "2V" << "1V"
+                                       << "500mV" << "200mV" << "100mV" << "50mV" << "20mV" << "10mV" << "5mV" << "2mV"
+                                       << "10A" << "5A" << "2.5A" << "1.0A"
+                                       << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
+    QCOMPARE(rangeAliasesReceived, rangeAliasesExpected);
 }
 
 void test_cro_channel::checkRangeAvailable()
@@ -237,11 +237,11 @@ void test_cro_channel::checkAvailableRangesMtDefaultAc()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = channel.getAvailRangeNames();
-    QStringList rangeNamesExpected = QStringList()
+    QStringList rangeAliasesReceived = channel.getAvailRangeAliases();
+    QStringList rangeAliasesExpected = QStringList()
                                      << "10A" << "5A" << "2.5A" << "1.0A"
                                      << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
-    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+    QCOMPARE(rangeAliasesReceived, rangeAliasesExpected);
 }
 
 void test_cro_channel::checkAvailableRangesMtAdj()
@@ -255,13 +255,13 @@ void test_cro_channel::checkAvailableRangesMtAdj()
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.count(), 1);
 
-    QStringList rangeNamesReceivedAdj = channel.getAvailRangeNames();
-    QStringList rangeNamesExpectedAdj = QStringList()
-                                        << "10A" << "5A" << "2.5A" << "1.0A"
-                                        << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
-                                        << "8V" << "5V" << "2V" << "1V"
-                                        << "500mV" << "200mV" << "100mV" << "50mV" << "20mV" << "10mV" << "5mV" << "2mV";
-    QCOMPARE(rangeNamesReceivedAdj, rangeNamesExpectedAdj);
+    QStringList rangeAliasesReceivedAdj = channel.getAvailRangeAliases();
+    QStringList rangeAliasesExpectedAdj = QStringList()
+                                          << "8V" << "5V" << "2V" << "1V"
+                                          << "500mV" << "200mV" << "100mV" << "50mV" << "20mV" << "10mV" << "5mV" << "2mV"
+                                          << "10A" << "5A" << "2.5A" << "1.0A"
+                                          << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
+    QCOMPARE(rangeAliasesReceivedAdj, rangeAliasesExpectedAdj);
 }
 
 void test_cro_channel::checkAvailableRangesMtSequence()
@@ -270,34 +270,34 @@ void test_cro_channel::checkAvailableRangesMtSequence()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = channel.getAvailRangeNames();
-    QStringList rangeNamesExpected = QStringList()
+    QStringList rangeAliasesReceived = channel.getAvailRangeAliases();
+    QStringList rangeAliasesExpected = QStringList()
                                      << "10A" << "5A" << "2.5A" << "1.0A"
                                      << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
-    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+    QCOMPARE(rangeAliasesReceived, rangeAliasesExpected);
 
     QSignalSpy spy(&channel, &Channel::sigFetchDoneChannel);
     m_pcbInterface->setMMode("ADJ");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.count(), 1);
 
-    QStringList rangeNamesReceivedAdj = channel.getAvailRangeNames();
-    QStringList rangeNamesExpectedAdj = QStringList()
-                                        << "10A" << "5A" << "2.5A" << "1.0A"
-                                        << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
-                                        << "8V" << "5V" << "2V" << "1V"
-                                        << "500mV" << "200mV" << "100mV" << "50mV" << "20mV" << "10mV" << "5mV" << "2mV";
-    QCOMPARE(rangeNamesReceivedAdj, rangeNamesExpectedAdj);
+    QStringList rangeAliasesReceivedAdj = channel.getAvailRangeAliases();
+    QStringList rangeAliasesExpectedAdj = QStringList()
+                                          << "8V" << "5V" << "2V" << "1V"
+                                          << "500mV" << "200mV" << "100mV" << "50mV" << "20mV" << "10mV" << "5mV" << "2mV"
+                                          << "10A" << "5A" << "2.5A" << "1.0A"
+                                          << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
+    QCOMPARE(rangeAliasesReceivedAdj, rangeAliasesExpectedAdj);
 
     m_pcbInterface->setMMode("AC");
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.count(), 2);
 
-    QStringList rangeNamesReceivedAc = channel.getAvailRangeNames();
-    QStringList rangeNamesExpectedAc = QStringList()
+    QStringList rangeAliasesReceivedAc = channel.getAvailRangeAliases();
+    QStringList rangeAliasesExpectedAc = QStringList()
                                         << "10A" << "5A" << "2.5A" << "1.0A"
                                         << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
-    QCOMPARE(rangeNamesReceivedAc, rangeNamesExpectedAc);
+    QCOMPARE(rangeAliasesReceivedAc, rangeAliasesExpectedAc);
 }
 
 void test_cro_channel::checkScanTwiceAvailableRangesMtAdj()
@@ -349,28 +349,28 @@ void test_cro_channel::checkAvailableRangesMtClampComeAndGo()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceived = channel.getAvailRangeNames();
-    QStringList rangeNamesExpected = QStringList()
+    QStringList rangeAliasesReceived = channel.getAvailRangeAliases();
+    QStringList rangeAliasesExpected = QStringList()
                                      << "10A" << "5A" << "2.5A" << "1.0A"
                                      << "500mA" << "250mA" << "100mA" << "50mA" << "25mA";
-    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+    QCOMPARE(rangeAliasesReceived, rangeAliasesExpected);
 
     m_testServer->addClamp(cClamp::CL120A, "IL1");
     TimeMachineObject::feedEventLoop();
 
-    QStringList rangeNamesReceivedClamp = channel.getAvailRangeNames();
-    QStringList rangeNamesExpectedClamp = QStringList()
+    QStringList rangeAliasesReceivedClamp = channel.getAvailRangeAliases();
+    QStringList rangeAliasesExpectedClamp = QStringList()
                                           << "10A" << "5A" << "2.5A" << "1.0A"
                                           << "500mA" << "250mA" << "100mA" << "50mA" << "25mA"
                                           << "C100A" << "C50A" << "C10A" << "C5A" << "C1A"
                                           << "C500mA" << "C100mA" << "C50mA" << "C10mA";
-    QCOMPARE(rangeNamesReceivedClamp, rangeNamesExpectedClamp);
+    QCOMPARE(rangeAliasesReceivedClamp, rangeAliasesExpectedClamp);
 
     m_testServer->removeAllClamps();
     TimeMachineObject::feedEventLoop();
 
-    rangeNamesReceived = channel.getAvailRangeNames();
-    QCOMPARE(rangeNamesReceived, rangeNamesExpected);
+    rangeAliasesReceived = channel.getAvailRangeAliases();
+    QCOMPARE(rangeAliasesReceived, rangeAliasesExpected);
 }
 
 void test_cro_channel::setupServers()

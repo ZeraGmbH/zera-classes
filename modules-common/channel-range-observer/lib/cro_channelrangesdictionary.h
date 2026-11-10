@@ -1,5 +1,5 @@
-#ifndef CRO_CHANNELRANGESDATA_H
-#define CRO_CHANNELRANGESDATA_H
+#ifndef CRO_CHANNELRANGESDICTIONARY_H
+#define CRO_CHANNELRANGESDICTIONARY_H
 
 #include "cro_range.h"
 
@@ -8,20 +8,25 @@ namespace ChannelRangeObserver {
 class ChannelRangesDictionary
 {
 public:
-    RangePtr findRangeByName(const QString &rangeName) const;
-    const QStringList &getAvailableRangeNames() const;
-    const QStringList &getAllRangeNamesInServerOrder() const;
+    RangePtr findRangeByAlias(const QString &rangeAlias) const;
+    const QStringList &getAvailableRangeAliases() const;
+    const QStringList &getAllRangeAliases() const;
 
-    void addRange(const QString &rangeName, RangePtr range);
-    void doAllRangesCompleteJobs(const QStringList &allRangeNamesOrderedByServer);
+    void addMaidenRange(RangePtr range);
+    void doAllRangesCompleteJobs();
 
     void clear();
 
 private:
-    QHash<QString, RangePtr> m_rangeNameToRange;
-    QStringList m_allRangeNamesOrderedByServer;
-    QStringList m_availableRangeNames;
+    void fillAliasToRangeHash();
+    void fillSortedAliasList();
+    void fillAvailAliasList();
+
+    QList<RangePtr> m_rangesAddedBareThenFilled;
+    QHash<QString, RangePtr> m_rangeAliasToRange;
+    QStringList m_allRangeAliasListSorted;
+    QStringList m_availRangeAliasListSorted;
 };
 
 }
-#endif // CRO_CHANNELRANGESDATA_H
+#endif // CRO_CHANNELRANGESDICTIONARY_H

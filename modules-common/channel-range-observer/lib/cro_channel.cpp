@@ -36,23 +36,23 @@ const QString &Channel::getMName() const
     return m_channelMName;
 }
 
-const QStringList &Channel::getAllRangeNames() const
+const QStringList &Channel::getAllRangeAliases() const
 {
-    return m_rangesCurr.getAllRangeNamesInServerOrder();
+    return m_rangesCurr.getAllRangeAliases();
 }
 
-const QStringList &Channel::getAvailRangeNames() const
+const QStringList &Channel::getAvailRangeAliases() const
 {
-    return m_rangesCurr.getAvailableRangeNames();
+    return m_rangesCurr.getAvailableRangeAliases();
 }
 
-const RangePtr Channel::getRange(const QString &rangeName) const
+const RangePtr Channel::getRange(const QString &rangeAlias) const
 {
-    RangePtr rangeFound = m_rangesCurr.findRangeByName(rangeName);
+    RangePtr rangeFound = m_rangesCurr.findRangeByAlias(rangeAlias);
     if (rangeFound != nullptr)
         return rangeFound;
     qCritical("Range data for range %s not found! Available: %s",
-              qPrintable(rangeName), qPrintable(m_rangesCurr.getAvailableRangeNames().join(" / ")));
+              qPrintable(rangeAlias), qPrintable(m_rangesCurr.getAvailableRangeAliases().join(" / ")));
     return std::make_shared<Range>(m_channelMName, "", m_netInfo, m_tcpFactory);
 }
 
@@ -98,18 +98,22 @@ void Channel::startAllRangesTasks()
 {
     m_currentTasks = TaskContainerSequence::create();
     TaskContainerInterfacePtr task = TaskContainerSequence::create();
+
     task->addSub(getPcbConnectionTask());
-    m_allRangeNamesServerOrdered = std::make_shared<QStringList>();
+
+    m_allRangeNames = std::make_shared<QStringList>();
     task->addSub(TaskChannelGetRangeList::create(
         m_pcbInterface,
-        m_channelMName, m_allRangeNamesServerOrdered,
+        m_channelMName, m_allRangeNames,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); }));
+
     task->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allRangesTasks = TaskContainerParallel::create();
         allRangesTasks->addSub(getChannelReadDetailsTask());
-        for (const QString &rangeName : m_rangesNext.getAllRangeNamesInServerOrder()) {
+        const QStringList &allRangeNames = *m_allRangeNames;
+        for (const QString &rangeName : allRangeNames) {
             RangePtr newRange = std::make_shared<Range>(m_channelMName, rangeName, m_netInfo, m_tcpFactory);
-            m_rangesNext.addRange(rangeName, newRange);
+            m_rangesNext.addMaidenRange(newRange);
             allRangesTasks->addSub(RangeFetchTask::create(newRange));
         }
         m_currentTasks->addSub(std::move(allRangesTasks));
@@ -117,6 +121,7 @@ void Channel::startAllRangesTasks()
         return true;
     }));
     m_currentTasks->addSub(std::move(task));
+
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
         doAfterTaskJobs(ok);
     });
@@ -126,7 +131,7 @@ void Channel::startAllRangesTasks()
 void Channel::doAfterTaskJobs(bool ok)
 {
     if (ok) {
-        m_rangesNext.doAllRangesCompleteJobs(*m_allRangeNamesServerOrdered);
+        m_rangesNext.doAllRangesCompleteJobs();
         m_rangesCurr = m_rangesNext;
     }
     m_rangesNext.clear();
