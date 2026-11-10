@@ -27,7 +27,6 @@ Channel::Channel(const QString &channelMName,
 
 void Channel::startFetch()
 {
-    clearRanges();
     preparePcbInterface();
     startAllRangesTasks();
 }
@@ -39,31 +38,27 @@ const QString &Channel::getMName() const
 
 const QStringList &Channel::getAllRangeNames() const
 {
-    return *m_allRangeNamesOrderedByServer;
+    return *m_rangesCurr.m_allRangeNamesOrderedByServer;
 }
 
 const QStringList &Channel::getAvailRangeNames() const
 {
-    return m_availableRangeNames;
+    return m_rangesCurr.m_availableRangeNames;
 }
 
 const RangePtr Channel::getRange(const QString &rangeName) const
 {
-    auto iter = m_rangeNameToRange.constFind(rangeName);
-    if(iter != m_rangeNameToRange.constEnd())
+    auto iter = m_rangesCurr.m_rangeNameToRange.constFind(rangeName);
+    if(iter != m_rangesCurr.m_rangeNameToRange.constEnd())
         return iter.value();
-    qCritical("Range data for range %s not found!", qPrintable(rangeName));
+    qCritical("Range data for range %s not found! Available: %s",
+              qPrintable(rangeName), qPrintable(m_rangesCurr.m_availableRangeNames.join(" / ")));
     return std::make_shared<Range>(m_channelMName, "", m_netInfo, m_tcpFactory);
 }
 
 ChannelCommonStorage *Channel::getModuleCommonStorage()
 {
     return &m_channelAdjStorage;
-}
-
-bool Channel::isValid() const
-{
-    return m_valid;
 }
 
 const QString &Channel::getAlias() const
@@ -86,13 +81,6 @@ bool Channel::isSourceModeOn() const
     return m_sourceModeOn;
 }
 
-void Channel::clearRanges()
-{
-    m_allRangeNamesOrderedByServer->clear();
-    m_availableRangeNames.clear();
-    m_rangeNameToRange.clear();
-}
-
 void Channel::preparePcbInterface()
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
@@ -113,27 +101,38 @@ void Channel::startAllRangesTasks()
     task->addSub(getPcbConnectionTask());
     task->addSub(TaskChannelGetRangeList::create(
         m_pcbInterface,
-        m_channelMName, m_allRangeNamesOrderedByServer,
+        m_channelMName, m_rangesNext.m_allRangeNamesOrderedByServer,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); }));
     task->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allRangesTasks = TaskContainerParallel::create();
         allRangesTasks->addSub(getChannelReadDetailsTask());
-        for (const QString &rangeName : *m_allRangeNamesOrderedByServer) {
+        for (const QString &rangeName : *m_rangesNext.m_allRangeNamesOrderedByServer) {
             RangePtr newRange = std::make_shared<Range>(m_channelMName, rangeName, m_netInfo, m_tcpFactory);
-            m_rangeNameToRange[rangeName] = newRange;
+            m_rangesNext.m_rangeNameToRange[rangeName] = newRange;
             allRangesTasks->addSub(RangeFetchTask::create(newRange));
         }
         m_currentTasks->addSub(std::move(allRangesTasks));
         m_currentTasks->addSub(getRangesRegisterChangeNotificationTask());
-        m_currentTasks->addSub(getFetchFinalTask());
         return true;
     }));
     m_currentTasks->addSub(std::move(task));
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
-        m_valid = ok;
-        emit sigFetchDoneChannel(m_channelMName, ok);
+        doAfterTaskJobs(ok);
     });
     m_currentTasks->start();
+}
+
+void Channel::doAfterTaskJobs(bool ok)
+{
+    if (ok) {
+        // TODO: Introduce range sort -> cRangeMeasChannel::setRangeListAlias()
+        for(const QString &rangeName : *m_rangesNext.m_allRangeNamesOrderedByServer)
+            if(*m_rangesNext.m_rangeNameToRange[rangeName]->m_available == true)
+                m_rangesNext.m_availableRangeNames.append(rangeName);
+        m_rangesCurr = m_rangesNext;
+    }
+    m_rangesNext.clear();
+    emit sigFetchDoneChannel(m_channelMName, ok);
 }
 
 TaskTemplatePtr Channel::getChannelReadDetailsTask()
@@ -192,21 +191,6 @@ void Channel::onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &ans
             }
         }
     }
-}
-
-TaskTemplatePtr Channel::getFetchFinalTask()
-{
-    return TaskLambdaRunner::create([&]() {
-        setAvailableRanges();
-        return true;
-    });
-}
-
-void Channel::setAvailableRanges()
-{
-    for(const QString &rangeName : *m_allRangeNamesOrderedByServer)
-        if(*m_rangeNameToRange[rangeName]->m_available == true)
-            m_availableRangeNames.append(rangeName);
 }
 
 void Channel::notifyError(const QString &errMsg)

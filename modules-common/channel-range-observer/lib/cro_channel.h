@@ -22,10 +22,8 @@ public:
             const NetworkConnectionInfo &netInfo,
             const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpFactory,
             bool hasInternalSourceGenerator);
-    // TODO: What if we are asked while fetching?
     void startFetch();
     const QString &getMName() const;
-    bool isValid() const;
     const QString &getAlias() const;
     const QString &getUnit() const;
     int getDspChannel() const;
@@ -41,18 +39,15 @@ signals:
 private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
 private:
-    void clearRanges();
     void preparePcbInterface();
     void startAllRangesTasks();
+    void doAfterTaskJobs(bool ok);
     TaskTemplatePtr getPcbConnectionTask();
     TaskTemplatePtr getChannelReadDetailsTask();
     TaskTemplatePtr getRangesRegisterChangeNotificationTask();
-    TaskTemplatePtr getFetchFinalTask();
-    void setAvailableRanges();
     static void notifyError(const QString &errMsg);
 
     const QString m_channelMName;
-    bool m_valid = false;
     std::shared_ptr<QString> m_alias = std::make_shared<QString>();
     std::shared_ptr<QString> m_unit = std::make_shared<QString>();
     std::shared_ptr<int> m_dspChannel = std::make_shared<int>(0);
@@ -60,9 +55,18 @@ private:
     bool m_sourceModeOn = false;
     ChannelCommonStorage m_channelAdjStorage;
 
-    std::shared_ptr<QStringList> m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();
-    QStringList m_availableRangeNames;
-    QHash<QString, RangePtr> m_rangeNameToRange;
+    struct TRangeData {
+        std::shared_ptr<QStringList> m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();
+        QStringList m_availableRangeNames;
+        QHash<QString, RangePtr> m_rangeNameToRange;
+        void clear() {
+            m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();
+            m_availableRangeNames.clear();
+            m_rangeNameToRange.clear();
+        };
+    };
+    TRangeData m_rangesCurr;
+    TRangeData m_rangesNext;
 
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;

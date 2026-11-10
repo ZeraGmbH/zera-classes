@@ -19,14 +19,12 @@ private slots:
     void scanByTaskInvalid();
     void rescan();
     void checkSampleRate();
-    void checkValidChannels();
     void checkAlias();
     void checkDspChannel();
     void checkUnit();
     void checkRanges();
     void changeRangesByClamp();
     void notifyRangeChangeByClamp();
-    void getDataForInvalidChannel();
     void invalidScan();
 private:
     VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;

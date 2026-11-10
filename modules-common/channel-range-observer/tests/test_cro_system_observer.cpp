@@ -142,23 +142,6 @@ void test_cro_system_observer::checkSampleRate()
     QCOMPARE(observer.getSamplesPerPeriod(), 504);
 }
 
-void test_cro_system_observer::checkValidChannels()
-{
-    SystemObserver observer(netInfo, m_tcpFactory);
-    observer.startFullScan();
-    TimeMachineObject::feedEventLoop();
-
-    QCOMPARE(observer.getChannel("m0")->isValid(), true);
-    QCOMPARE(observer.getChannel("m1")->isValid(), true);
-    QCOMPARE(observer.getChannel("m2")->isValid(), true);
-    QCOMPARE(observer.getChannel("m3")->isValid(), true);
-    QCOMPARE(observer.getChannel("m4")->isValid(), true);
-    QCOMPARE(observer.getChannel("m5")->isValid(), true);
-    QCOMPARE(observer.getChannel("m6")->isValid(), true);
-    QCOMPARE(observer.getChannel("m7")->isValid(), true);
-    QCOMPARE(observer.getChannel("foo")->isValid(), false);
-}
-
 void test_cro_system_observer::checkAlias()
 {
     SystemObserver observer(netInfo, m_tcpFactory);
@@ -256,15 +239,6 @@ void test_cro_system_observer::notifyRangeChangeByClamp()
     QCOMPARE(spy.size(), 2);
     QCOMPARE(spy[0][1], true);
     QCOMPARE(spy[1][1], true);
-}
-
-void test_cro_system_observer::getDataForInvalidChannel()
-{
-    SystemObserver observer(netInfo, m_tcpFactory);
-    observer.startFullScan();
-    TimeMachineObject::feedEventLoop();
-
-    QCOMPARE(observer.getChannel("foo")->isValid(), false);
 }
 
 void test_cro_system_observer::invalidScan()
