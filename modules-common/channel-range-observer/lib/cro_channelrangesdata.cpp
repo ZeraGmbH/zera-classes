@@ -8,6 +8,16 @@ RangePtr ChannelRangesData::findRangeByName(const QString &rangeName) const
     if(iter != m_rangeNameToRange.constEnd())
         return iter.value();
     return nullptr;
+}
+
+const QStringList &ChannelRangesData::getAvailableRangeNames() const
+{
+    return m_availableRangeNames;
+}
+
+const QStringList &ChannelRangesData::getAllRangeNamesInServerOrder() const
+{
+    return *m_allRangeNamesOrderedByServer;
 };
 
 void ChannelRangesData::addRange(const QString &rangeName, RangePtr range)
@@ -25,7 +35,6 @@ void ChannelRangesData::doAllRangesCompleteJobs()
         if(m_rangeNameToRange[rangeName]->getAvailable() == true)
             m_availableRangeNames.append(rangeName);
 }
-
 
 void ChannelRangesData::clear()
 {

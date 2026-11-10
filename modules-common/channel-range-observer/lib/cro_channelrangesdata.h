@@ -10,6 +10,9 @@ class ChannelRangesData
 {
 public:
     RangePtr findRangeByName(const QString &rangeName) const;
+    const QStringList &getAvailableRangeNames() const;
+
+    const QStringList &getAllRangeNamesInServerOrder() const;
 
     void addRange(const QString &rangeName, RangePtr range);
     void doAllRangesCompleteJobs();
@@ -17,9 +20,9 @@ public:
     void clear();
 
     std::shared_ptr<QStringList> m_allRangeNamesOrderedByServer = std::make_shared<QStringList>();
-    QStringList m_availableRangeNames;
 
 private:
+    QStringList m_availableRangeNames;
     QHash<QString, RangePtr> m_rangeNameToRange;
 };
 
