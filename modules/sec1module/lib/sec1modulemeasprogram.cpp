@@ -1087,7 +1087,7 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
     //
     // Problem:
     // If an abort is requested (by user or change of ranges) while this machine
-    // is running, code below will overwrite m_nStatus and calculate values based on
+    // is running, code below will overwrite status by setStatus and calculate values based on
     // unpredicatble (sec was possibly stopped) crap values.
     //
     // Test case:

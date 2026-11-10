@@ -603,7 +603,7 @@ void cRangeObsermatic::onActivationDone()
     const QStringList channelAliases = m_pModule->getSharedChannelRangeObserver()->getChannelAliases();
     for (int i = 0; i < channelAliases.count(); i++) {
         const QString  channelAlias = channelAliases.at(i);
-        sValidator = new cStringValidator(m_RangeMeasChannelList.at(i)->getRangeListAlias());
+        sValidator = new cStringValidator(m_RangeMeasChannelList.at(i)->getSortedRangeAliasList());
         m_RangeParameterList.at(i)->setValidator(sValidator);
         m_ChannelRangeValidatorHash[channelMNames.at(i)] = sValidator; // systemchannelname, stringvalidator
         // we also set the channels name alias and its unit
@@ -851,7 +851,7 @@ void cRangeObsermatic::catchChannelNewRangeList()
     cRangeMeasChannel* mchn;
 
     mchn = qobject_cast<cRangeMeasChannel*>(QObject::sender());
-    m_ChannelRangeValidatorHash[mchn->getMName()]->setValidator(mchn->getRangeListAlias());
+    m_ChannelRangeValidatorHash[mchn->getMName()]->setValidator(mchn->getSortedRangeAliasList());
     m_pModule->exportMetaData();
     setRanges(true); // after a new range list was detected, we force setting ranges because it may be that the actual range disappeared
 }

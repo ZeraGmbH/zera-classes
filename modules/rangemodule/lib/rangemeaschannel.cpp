@@ -86,10 +86,32 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
     connect(&m_rangeQueryMachine, &QStateMachine::finished, this, &cRangeMeasChannel::newRangeList);
 }
 
+enum rangemeaschannelCmds
+{
+    readrangelist,
+
+    readrngalias,
+    readtype,
+    readurvalue,
+    readrejection,
+    readovrejection,
+    readadcrejection,
+    readisavail,
+
+    setmeaschannelrange,
+    readgaincorrectioninternalandclamp,
+    readoffsetcorrection,
+    readphasecorrection,
+    readchannelstatusbitmask,
+    resetchannelstatusbitmask_emitcmddone,
+    resetchannelstatusbitmask_instatemachine,
+    registerNotifier,
+    unregisterNotifiers
+};
 
 quint32 cRangeMeasChannel::setRange(const QString &rangeAlias)
 {
-    m_newRangeAlias = rangeAlias;
+    m_nextRangeAlias = rangeAlias;
     m_actRangeAlias = rangeAlias;
 
     if (m_bActive) {
@@ -143,7 +165,7 @@ quint32 cRangeMeasChannel::readStatus()
 {
     if (m_bActive) {
         quint32 msgnr = m_pcbInterface->getStatus(getMName());
-        m_MsgNrCmdList[msgnr] = readmeaschannelstatus;
+        m_MsgNrCmdList[msgnr] = readchannelstatusbitmask;
         return msgnr;
     }
     else {
@@ -156,7 +178,7 @@ quint32 cRangeMeasChannel::resetStatus()
 {
     if (m_bActive) {
         quint32 msgnr = m_pcbInterface->resetStatus(getMName());
-        m_MsgNrCmdList[msgnr] = resetmeaschannelstatus;
+        m_MsgNrCmdList[msgnr] = resetchannelstatusbitmask_emitcmddone;
         return msgnr;
     }
     else {
@@ -321,9 +343,9 @@ QString cRangeMeasChannel::getMaxRange(const QString &rngAlias)
 }
 
 
-QString cRangeMeasChannel::getRangeListAlias()
+QString cRangeMeasChannel::getSortedRangeAliasList()
 {
-    return m_sRangeListAlias;
+    return m_sortedRangeAliasList;
 }
 
 
@@ -347,7 +369,7 @@ double cRangeMeasChannel::getOffsetCorrection()
 
 bool cRangeMeasChannel::isHWOverload()
 {
-    return ((m_nStatus & 1) > 0);
+    return ((m_statusBitMask & 1) > 0);
 }
 
 
@@ -481,10 +503,10 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
         case setmeaschannelrange:
             if (reply == ack)
-                m_actRangeAlias = m_newRangeAlias;
+                m_actRangeAlias = m_nextRangeAlias;
             else {
                 qWarning("Set range %s on %s failed with %i!",
-                         qPrintable(m_newRangeAlias),
+                         qPrintable(m_nextRangeAlias),
                          qPrintable(getAlias()),
                          reply);
                 notifyError(setRangeErrMsg);
@@ -516,22 +538,22 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit cmdDone(msgnr);
             break;
 
-        case readmeaschannelstatus:
+        case readchannelstatusbitmask:
             if (reply == ack)
-                m_nStatus = answer.toInt(&ok);
+                m_statusBitMask = answer.toInt(&ok);
             else
                 notifyError(readChannelStatusErrMsg);
             emit cmdDone(msgnr);
             break;
 
-        case resetmeaschannelstatus:
+        case resetchannelstatusbitmask_emitcmddone:
             if (reply == ack) { }
             else
                 notifyError(resetChannelStatusErrMsg);
             emit cmdDone(msgnr);
             break;
 
-        case resetmeaschannelstatus2:
+        case resetchannelstatusbitmask_instatemachine:
             if (reply == ack)
                 emit activationContinue();
             else
@@ -548,7 +570,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     }
 }
 
-void cRangeMeasChannel::setRangeListAlias()
+void cRangeMeasChannel::setSortedRangeAliasList()
 {
     QString s;
     QList<cRangeInfoWithConstantValues> riList = m_rangeAliasToChannelData.values();
@@ -582,7 +604,7 @@ void cRangeMeasChannel::setRangeListAlias()
         }
     }
 
-    m_sRangeListAlias = s;
+    m_sortedRangeAliasList = s;
 }
 
 void cRangeMeasChannel::pcbConnection()
@@ -604,7 +626,7 @@ void cRangeMeasChannel::readRangeAndProperties()
 
 void cRangeMeasChannel::resetStatusSlot()
 {
-    m_MsgNrCmdList[m_pcbInterface->resetStatus(getMName())] = resetmeaschannelstatus2;
+    m_MsgNrCmdList[m_pcbInterface->resetStatus(getMName())] = resetchannelstatusbitmask_instatemachine;
 }
 
 
@@ -711,7 +733,7 @@ void cRangeMeasChannel::rangeQueryLoop()
 
         m_rangeAliasToChannelData = m_growingWorkRangeInfo;
 
-        setRangeListAlias(); // and the list of possible ranges alias
+        setSortedRangeAliasList(); // and the list of possible ranges alias
         emit activationContinue();
     }
 }

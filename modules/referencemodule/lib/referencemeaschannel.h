@@ -25,8 +25,6 @@ enum rangemeaschannelCmds
     readgaincorrection,
     readoffsetcorrection,
     readphasecorrection,
-    readmeaschannelstatus,
-    resetmeaschannelstatus
 };
 
 class cReferenceMeasChannel: public cBaseMeasChannel
@@ -48,12 +46,11 @@ signals:
 private:
     QStringList m_allRangeNamesOrderedByServer; // a list of all ranges
     QHash<QString, cRangeInfoBase> m_rangeAliasToChannelData; // a list of available and selectable ranges, alias will be the key
-    QString m_newRangeAlias;
+    QString m_nextRangeAlias;
     QString m_actRangeAlias; // the actual range set (alias)
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
-    quint32 m_nStatus;
 
     // statemachine for activating a referencemeaschannel
     QState m_pcbConnectionState; // we try to get a connection to our pcb server

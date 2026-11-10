@@ -10,29 +10,6 @@
 namespace RANGEMODULE
 {
 
-enum rangemeaschannelCmds
-{
-    readrangelist,
-
-    readrngalias,
-    readtype,
-    readurvalue,
-    readrejection,
-    readovrejection,
-    readadcrejection,
-    readisavail,
-
-    setmeaschannelrange,
-    readgaincorrectioninternalandclamp,
-    readoffsetcorrection,
-    readphasecorrection,
-    readmeaschannelstatus,
-    resetmeaschannelstatus,
-    resetmeaschannelstatus2, // we use this her in state machine while activating
-    registerNotifier,
-    unregisterNotifiers
-};
-
 class cRangeMeasChannel: public cBaseMeasChannel
 {
     Q_OBJECT
@@ -73,7 +50,7 @@ public:
     QString getOptimalRange(double rms, double peak, const QString &rngAlias); // returns opt. range alias
     QString getMaxRange() const; // returns alias of the range with max ur value
     QString getMaxRange(const QString &rngAlias); // returns alias of the range with max ur value
-    QString getRangeListAlias();
+    QString getSortedRangeAliasList();
 
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
@@ -101,7 +78,7 @@ private slots:
     void readisAvail();
     void rangeQueryLoop();
 private:
-    void setRangeListAlias();
+    void setSortedRangeAliasList();
     QString findOptimalRange(double actualValue, const QString &actRngAlias, qint32 actRngType, double extraRejectionFactor);
 
     RangeChannelData m_sharedChannelData;
@@ -111,13 +88,13 @@ private:
     QHash<QString, cRangeInfoWithConstantValues> m_growingWorkRangeInfo;
     QHash<QString, cRangeInfoWithConstantValues> m_rangeAliasToChannelData;
 
-    QString m_newRangeAlias;
-    QString m_actRangeAlias; // the actual range set (alias)
+    QString m_nextRangeAlias;
+    QString m_actRangeAlias;
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
-    quint32 m_nStatus;
-    QString m_sRangeListAlias; // all range alias: alias1;alias2 ....
+    quint32 m_statusBitMask; // currently just COM5003 HW overload bit
+    QString m_sortedRangeAliasList;
 
     // statemachine for activating a rangemeaschannel
     QState m_pcbConnectionState; // we try to get a connection to our pcb server

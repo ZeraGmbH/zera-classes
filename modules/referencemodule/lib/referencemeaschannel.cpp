@@ -69,8 +69,8 @@ cReferenceMeasChannel::cReferenceMeasChannel(const ChannelRangeObserver::Channel
 quint32 cReferenceMeasChannel::setRange(QString range)
 {
     quint32 msgnr = 0;
-    m_newRangeAlias = range;
-    m_actRangeAlias = m_newRangeAlias;
+    m_nextRangeAlias = range;
+    m_actRangeAlias = m_nextRangeAlias;
     msgnr = m_pcbInterface->setRange(getMName(), m_rangeAliasToChannelData[range].name);
     m_MsgNrCmdList[msgnr] = setmeaschannelrange;
     return msgnr;
@@ -125,7 +125,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
         break;
     case setmeaschannelrange:
         if (reply == ack)
-            m_actRangeAlias = m_newRangeAlias;
+            m_actRangeAlias = m_nextRangeAlias;
         else
             notifyError(setRangeErrMsg);
         emit cmdDone(msgnr);
@@ -149,20 +149,6 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             m_fPhaseCorrection = answer.toDouble();
         else
             notifyError(readPhaseCorrErrMsg);
-        emit cmdDone(msgnr);
-        break;
-    case readmeaschannelstatus:
-        if (reply == ack)
-            m_nStatus = answer.toInt();
-        else
-            notifyError(readChannelStatusErrMsg);
-        emit cmdDone(msgnr);
-        break;
-    case resetmeaschannelstatus:
-        if (reply == ack)
-            {}
-        else
-            notifyError(resetChannelStatusErrMsg);
         emit cmdDone(msgnr);
         break;
     }
