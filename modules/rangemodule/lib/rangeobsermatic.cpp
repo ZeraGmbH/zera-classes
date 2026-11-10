@@ -308,7 +308,7 @@ void cRangeObsermatic::observeRangeOverload()
         double prescalingFac = getPreScale(i);
         // for test overload we take the rms value with/without dc depending on configuration
         // and for overload condition of adc test, we take the peakvalues including dc
-        const RangeChannelData *channelData = rangeMeasChannel->getChannelData();
+        const RangeChannelData *channelData = rangeMeasChannel->getSharedChannelData();
         bool rmsOverload = rangeMeasChannel->isRMSOverload(channelData->getRmsValue()*prescalingFac); // rms
         bool peakOverLoad = rangeMeasChannel->isPeakOverload(channelData->getPeakValue()*prescalingFac); //peak
         bool hardOverLoad = m_hardOvlList.at(i);
@@ -336,7 +336,7 @@ void cRangeObsermatic::rangeAutomatic()
                 if (!m_hardOvlList.at(channelIdx)) {
                     if (!m_softOvlList.at(channelIdx)) {
                         const QString range = m_ConfPar.getCurrentRange(channelIdx);
-                        const RangeChannelData *channelData = rangeMeasChannel->getChannelData();
+                        const RangeChannelData *channelData = rangeMeasChannel->getSharedChannelData();
                         const double scaleFactor = getPreScale(channelIdx);
                         const QString optimalRange = rangeMeasChannel->getOptimalRange(channelData->getRmsValue() * scaleFactor,
                                                                                    channelData->getPeakValue() * scaleFactor,
@@ -784,7 +784,7 @@ void cRangeObsermatic::preScalingChanged(QVariant unused)
 
         m_RangeGroupPreScalingInfo.at(i)->setValue(factor);
         for(int channel = 0; channel<m_RangeMeasChannelList.length(); ++channel)
-            m_RangeMeasChannelList.at(channel)->getChannelData()->setPreScaling(getPreScale(channel));
+            m_RangeMeasChannelList.at(channel)->getSharedChannelData()->setPreScaling(getPreScale(channel));
     }
     setRanges(true);
 }

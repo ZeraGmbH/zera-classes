@@ -293,7 +293,7 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
         for(int channelIdx=0; channelIdx<channelMNames.count(); channelIdx++) {
             cRangeMeasChannel* mchn = m_pModule->getMeasChannel(channelMNames.at(channelIdx));
             float rmsValueScaled = (*actualValues)[channelIdx+rmsOffsetInActual];
-            float preScalingFact = mchn->getChannelData()->getPreScaling();
+            float preScalingFact = mchn->getSharedChannelData()->getPreScaling();
             float rmsValue = rmsValueScaled * preScalingFact; // yes we expected 1/preScalingFact
             m_veinRmsValueList.at(channelIdx)->setValue(QVariant(rmsValue));
         }

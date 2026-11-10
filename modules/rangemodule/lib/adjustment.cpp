@@ -269,7 +269,7 @@ void cAdjustManagement::writeOffsetCorr()
 void cAdjustManagement::getGainCorrFromPcbServer()
 {
     if (m_bActive){
-        const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getChannelData();
+        const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getSharedChannelData();
         double actualValue = channelData->getRmsValue();
         double preScalingFact = channelData->getPreScaling();
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
@@ -307,7 +307,7 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
     if(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
         double actUrValue = RangeMeasChannelConvenience::getUrValueRangeAct(measChannel);
         double threshold = m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue * actUrValue / 100;
-        const RangeChannelData *channelData = measChannel->getChannelData();
+        const RangeChannelData *channelData = measChannel->getSharedChannelData();
         double unscaledRmsValues = channelData->getRmsValue() * channelData->getPreScaling();
         double rmsValues = unscaledRmsValues / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
         if(rmsValues < threshold)
@@ -319,7 +319,7 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
 void cAdjustManagement::getPhaseCorrFromPcbServer()
 {
     if (m_bActive){
-        const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getChannelData();
+        const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getSharedChannelData();
         double frequency = channelData->getSignalFrequency();
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(frequency)] = getphasecorr;
     }
@@ -348,7 +348,7 @@ void cAdjustManagement::getOffsetCorrFromPcbServer()
 {
     if (m_bActive) {
         cRangeMeasChannel* measChannel = m_ChannelList.at(m_nChannelIt);
-        const RangeChannelData *channelData = measChannel->getChannelData();
+        const RangeChannelData *channelData = measChannel->getSharedChannelData();
         double actualValue = channelData->getRmsValue();
         double preScalingFact = channelData->getPreScaling();
         double actualValueForOffset = actualValue * preScalingFact;
@@ -362,7 +362,7 @@ void cAdjustManagement::prepareOffsetCorrForDspServer()
     if (m_bActive) {
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         float fCorr = measChannel->getOffsetCorrection();
-        double preScale=measChannel->getChannelData()->getPreScaling();
+        double preScale=measChannel->getSharedChannelData()->getPreScaling();
         // Offset is an summand. It must be multiplied with the
         // scale factor.
         m_dspOffsetCorrValues[measChannel->getDSPChannelNr()] = fCorr*preScale;

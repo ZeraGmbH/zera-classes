@@ -46,10 +46,10 @@ signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
 
 private:
-    QStringList m_RangeNameList; // a list of all ranges
-    QHash<QString, cRangeInfoBase> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
-    QString m_sNewRange;
-    QString m_sActRange; // the actual range set (alias)
+    QStringList m_allRangeNamesOrderedByServer; // a list of all ranges
+    QHash<QString, cRangeInfoBase> m_rangeAliasToChannelData; // a list of available and selectable ranges, alias will be the key
+    QString m_newRangeAlias;
+    QString m_actRangeAlias; // the actual range set (alias)
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;

@@ -69,9 +69,9 @@ cReferenceMeasChannel::cReferenceMeasChannel(const ChannelRangeObserver::Channel
 quint32 cReferenceMeasChannel::setRange(QString range)
 {
     quint32 msgnr = 0;
-    m_sNewRange = range;
-    m_sActRange = m_sNewRange;
-    msgnr = m_pcbInterface->setRange(getMName(), m_RangeInfoHash[range].name);
+    m_newRangeAlias = range;
+    m_actRangeAlias = m_newRangeAlias;
+    msgnr = m_pcbInterface->setRange(getMName(), m_rangeAliasToChannelData[range].name);
     m_MsgNrCmdList[msgnr] = setmeaschannelrange;
     return msgnr;
 }
@@ -91,7 +91,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     case readrangelist:
         if (reply == ack)
         {
-            m_RangeNameList = answer.toStringList();
+            m_allRangeNamesOrderedByServer = answer.toStringList();
             emit activationContinue();
         }
         else
@@ -125,7 +125,7 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
         break;
     case setmeaschannelrange:
         if (reply == ack)
-            m_sActRange = m_sNewRange;
+            m_actRangeAlias = m_newRangeAlias;
         else
             notifyError(setRangeErrMsg);
         emit cmdDone(msgnr);
@@ -195,7 +195,7 @@ void cReferenceMeasChannel::readRangeProperties1()
 void cReferenceMeasChannel::readRangeProperties3()
 {
     m_RangeQueryIt++;
-    if (m_RangeQueryIt < m_RangeNameList.count()) // another range ?
+    if (m_RangeQueryIt < m_allRangeNamesOrderedByServer.count()) // another range ?
         emit activationLoop();
     else
         emit activationContinue();
@@ -204,12 +204,12 @@ void cReferenceMeasChannel::readRangeProperties3()
 
 void cReferenceMeasChannel::activationDone()
 {
-    QHash<QString, cRangeInfoBase>::iterator it = m_RangeInfoHash.begin();
-    while (it != m_RangeInfoHash.end()) // we delete all unused ranges
+    QHash<QString, cRangeInfoBase>::iterator it = m_rangeAliasToChannelData.begin();
+    while (it != m_rangeAliasToChannelData.end()) // we delete all unused ranges
     {
         m_rangeInfo = it.value();
         if (!m_rangeInfo.avail || ((m_rangeInfo.type & 1) == 1)) // in case range is not avail or virtual
-            it = m_RangeInfoHash.erase(it);
+            it = m_rangeAliasToChannelData.erase(it);
         else
             ++it;
     }
@@ -234,25 +234,25 @@ void cReferenceMeasChannel::deactivationDone()
 
 void cReferenceMeasChannel::readRngAlias()
 {
-    m_MsgNrCmdList[m_pcbInterface->getAlias(getMName(), m_RangeNameList.at(m_RangeQueryIt))] = readrngalias;
+    m_MsgNrCmdList[m_pcbInterface->getAlias(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readrngalias;
 }
 
 
 void cReferenceMeasChannel::readType()
 {
-    m_MsgNrCmdList[m_pcbInterface->getType(getMName(), m_RangeNameList.at(m_RangeQueryIt))] = readtype;
+    m_MsgNrCmdList[m_pcbInterface->getType(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readtype;
 }
 
 void cReferenceMeasChannel::readisAvail()
 {
-    m_MsgNrCmdList[m_pcbInterface->isAvail(getMName(), m_RangeNameList.at(m_RangeQueryIt))] = readisavail;
+    m_MsgNrCmdList[m_pcbInterface->isAvail(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readisavail;
 }
 
 
 void cReferenceMeasChannel::rangeQueryDone()
 {
-    m_rangeInfo.name = m_RangeNameList.at(m_RangeQueryIt);
-    m_RangeInfoHash[m_rangeInfo.alias] = m_rangeInfo; // for each range we append cRangeinfo per alias
+    m_rangeInfo.name = m_allRangeNamesOrderedByServer.at(m_RangeQueryIt);
+    m_rangeAliasToChannelData[m_rangeInfo.alias] = m_rangeInfo; // for each range we append cRangeinfo per alias
 }
 
 }

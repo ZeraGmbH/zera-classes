@@ -47,13 +47,13 @@ public:
                       const QString &moduleName);
     void generateVeinInterface() override;
 
-    RangeChannelData* getChannelData();
+    RangeChannelData* getSharedChannelData();
 
     QString getRange() const;
-    quint32 setRange(const QString &range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
-    quint32 readGainCorrection(double amplitude); // dito
-    quint32 readPhaseCorrection(double frequency); // dito
-    quint32 readOffsetCorrection(double amplitude); // dito
+    quint32 setRange(const QString &rangeAlias);
+    quint32 readGainCorrection(double amplitude);
+    quint32 readPhaseCorrection(double frequency);
+    quint32 readOffsetCorrection(double amplitude);
     quint32 readStatus(); // read the channels status
     quint32 resetStatus(); // reset the channels status
 
@@ -104,12 +104,15 @@ private:
     void setRangeListAlias();
     QString findOptimalRange(double actualValue, const QString &actRngAlias, qint32 actRngType, double extraRejectionFactor);
 
-    RangeChannelData m_channelData;
-    QStringList m_RangeNameList; // a list of all ranges
-    QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
-    QHash<QString, cRangeInfoWithConstantValues> m_RangeInfoHashWorking;
-    QString m_sNewRange;
-    QString m_sActRange; // the actual range set (alias)
+    RangeChannelData m_sharedChannelData;
+    QStringList m_allRangeNamesOrderedByServer; // a list of all ranges
+
+    cRangeInfoWithConstantValues m_oneWorkRangeInfo;
+    QHash<QString, cRangeInfoWithConstantValues> m_growingWorkRangeInfo;
+    QHash<QString, cRangeInfoWithConstantValues> m_rangeAliasToChannelData;
+
+    QString m_newRangeAlias;
+    QString m_actRangeAlias; // the actual range set (alias)
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
@@ -127,7 +130,6 @@ private:
     QState m_deactivationInitState;
     QFinalState m_deactivationDoneState;
 
-
     // statemachine for querying a measchannels range properties
     QStateMachine m_rangeQueryMachine;
     QState m_readRangelistState; // we query our range list
@@ -142,7 +144,6 @@ private:
     QFinalState m_rangeQueryDoneState;
 
     qint32 m_RangeQueryIt;
-    cRangeInfoWithConstantValues m_CurrRangeInfo;
 };
 
 

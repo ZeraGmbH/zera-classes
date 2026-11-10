@@ -164,7 +164,7 @@ void cRangeModule::setPeakRmsAndFrequencyValues(const QVector<float>* const valu
     // prevent potential out of range access
     int iterationLength=qMin(expectedChannelCount,deliveredChannelCount);
     for(int i=0; i<iterationLength;++i) {
-        RangeChannelData *channelData = m_rangeMeasChannelList.at(i)->getChannelData();
+        RangeChannelData *channelData = m_rangeMeasChannelList.at(i)->getSharedChannelData();
         channelData->setPeakValue(values->at(i));
         channelData->setRmsValue(values->at(rmsOffset+i));
         channelData->setSignalFrequency(values->at(frequencyPos));
