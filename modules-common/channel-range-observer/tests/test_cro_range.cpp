@@ -39,8 +39,8 @@ void test_cro_range::cleanup()
 void test_cro_range::defaultOnStartup()
 {
     Range range("m0", "250V", netInfo, m_tcpFactory);
-    QCOMPARE(*range.m_available, false);
-    QCOMPARE(*range.m_urValue, 0.0);
+    QCOMPARE(range.getAvailable(), false);
+    QCOMPARE(range.getUrValue(), 0.0);
 }
 
 void test_cro_range::fetchAvailable()
@@ -54,7 +54,7 @@ void test_cro_range::fetchAvailable()
     QCOMPARE(spy[0][0], "m0");
     QCOMPARE(spy[0][1], "250V");
     QCOMPARE(spy[0][2], true);
-    QCOMPARE(*range.m_available, true);
+    QCOMPARE(range.getAvailable(), true);
 }
 
 void test_cro_range::fetchNotAvailable()
@@ -68,7 +68,7 @@ void test_cro_range::fetchNotAvailable()
     QCOMPARE(spy[0][0], "m3");
     QCOMPARE(spy[0][1], "2mV");
     QCOMPARE(spy[0][2], true);
-    QCOMPARE(*range.m_available, false);
+    QCOMPARE(range.getAvailable(), false);
 }
 
 void test_cro_range::fetchInvalidChannel()
@@ -82,7 +82,7 @@ void test_cro_range::fetchInvalidChannel()
     QCOMPARE(spy[0][0], "foo");
     QCOMPARE(spy[0][1], "5000V");
     QCOMPARE(spy[0][2], false);
-    QCOMPARE(*range.m_available, false);
+    QCOMPARE(range.getAvailable(), false);
 }
 
 void test_cro_range::fetchInvalidRange()
@@ -96,7 +96,7 @@ void test_cro_range::fetchInvalidRange()
     QCOMPARE(spy[0][0], "m0");
     QCOMPARE(spy[0][1], "foo");
     QCOMPARE(spy[0][2], false);
-    QCOMPARE(*range.m_available, false);
+    QCOMPARE(range.getAvailable(), false);
 }
 
 void test_cro_range::fetchTwice()
@@ -160,7 +160,7 @@ void test_cro_range::refetchAlthoughNotSuggestedWorks()
     QCOMPARE(spy[0][0], "m0");
     QCOMPARE(spy[0][1], "250V");
     QCOMPARE(spy[0][2], true);
-    QCOMPARE(*range.m_available, true);
+    QCOMPARE(range.getAvailable(), true);
 }
 
 void test_cro_range::checkUrValue()
@@ -170,7 +170,7 @@ void test_cro_range::checkUrValue()
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(*range.m_urValue, 250);
+    QCOMPARE(range.getUrValue(), 250);
 }
 
 void test_cro_range::checkType()
@@ -193,14 +193,14 @@ void test_cro_range::checkType()
     range1.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(*range1.m_type, Direct + modeAC + modeADJ);
+    QCOMPARE(range1.getType(), Direct + modeAC + modeADJ);
 
     // internal clamp voltage range (don't show up on mode 'AC')
     Range range2("m3", "2mV", netInfo, m_tcpFactory);
     range2.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(*range2.m_type, Direct + modeADJ);
+    QCOMPARE(range2.getType(), Direct + modeADJ);
 }
 
 void test_cro_range::checkRejection()
@@ -210,7 +210,7 @@ void test_cro_range::checkRejection()
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(*range.m_rejection, 4415057.0);
+    QCOMPARE(range.getRejection(), 4415057.0);
 }
 
 void test_cro_range::checkOvRejection()
@@ -220,7 +220,7 @@ void test_cro_range::checkOvRejection()
     range.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(*range.m_ovrejection, 5518821.0);
+    QCOMPARE(range.getOvrRejection(), 5518821.0);
 }
 
 void test_cro_range::checkAdcRejection()
@@ -231,7 +231,7 @@ void test_cro_range::checkAdcRejection()
     TimeMachineObject::feedEventLoop();
 
     // check mt310s2senserange.cpp / adcRejectionMt310s2
-    QCOMPARE(*range.m_adcrejection, 8388607.0);
+    QCOMPARE(range.getAdcRejection(), 8388607.0);
 }
 
 void test_cro_range::setupServers()

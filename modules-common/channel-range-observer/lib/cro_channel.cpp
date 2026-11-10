@@ -127,7 +127,7 @@ void Channel::doAfterTaskJobs(bool ok)
     if (ok) {
         // TODO: Introduce range sort -> cRangeMeasChannel::setRangeListAlias()
         for(const QString &rangeName : *m_rangesNext.m_allRangeNamesOrderedByServer)
-            if(*m_rangesNext.m_rangeNameToRange[rangeName]->m_available == true)
+            if(m_rangesNext.m_rangeNameToRange[rangeName]->getAvailable() == true)
                 m_rangesNext.m_availableRangeNames.append(rangeName);
         m_rangesCurr = m_rangesNext;
     }

@@ -175,9 +175,9 @@ void test_cro_channel::checkUrValue()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(*channel.getRange("250V")->m_urValue, 250.0);
-    QCOMPARE(*channel.getRange("8V")->m_urValue, 8.0);
-    QCOMPARE(*channel.getRange("100mV")->m_urValue, 0.1);
+    QCOMPARE(channel.getRange("250V")->getUrValue(), 250.0);
+    QCOMPARE(channel.getRange("8V")->getUrValue(), 8.0);
+    QCOMPARE(channel.getRange("100mV")->getUrValue(), 0.1);
 }
 
 void test_cro_channel::checkOrderingVoltageRanges()
@@ -225,10 +225,10 @@ void test_cro_channel::checkRangeAvailable()
     channel.startFetch();
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(*channel.getRange("10A")->m_available, true);
-    QCOMPARE(*channel.getRange("500mA")->m_available, true);
-    QCOMPARE(*channel.getRange("8V")->m_available, false);
-    QCOMPARE(*channel.getRange("500mV")->m_available, false);
+    QCOMPARE(channel.getRange("10A")->getAvailable(), true);
+    QCOMPARE(channel.getRange("500mA")->getAvailable(), true);
+    QCOMPARE(channel.getRange("8V")->getAvailable(), false);
+    QCOMPARE(channel.getRange("500mV")->getAvailable(), false);
 }
 
 void test_cro_channel::checkAvailableRangesMtDefaultAc()

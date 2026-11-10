@@ -64,6 +64,36 @@ void Range::startFetch()
     m_currentTasks->start();
 }
 
+bool Range::getAvailable() const
+{
+    return *m_available;
+}
+
+int Range::getType() const
+{
+    return *m_type;
+}
+
+double Range::getUrValue() const
+{
+    return *m_urValue;
+}
+
+double Range::getRejection() const
+{
+    return *m_rejection;
+}
+
+double Range::getOvrRejection() const
+{
+    return *m_ovrejection;
+}
+
+double Range::getAdcRejection() const
+{
+    return *m_adcrejection;
+}
+
 void Range::preparePcbInterface()
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
