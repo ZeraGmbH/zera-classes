@@ -135,7 +135,7 @@ void Channel::doAfterTaskJobs(bool ok)
         m_rangesCurr = m_rangesNext;
     }
     m_rangesNext.clear();
-    emit sigFetchDoneChannel(m_channelMName, ok);
+    emit sigNewRanges(m_channelMName, ok);
 }
 
 TaskTemplatePtr Channel::getChannelReadDetailsTask()

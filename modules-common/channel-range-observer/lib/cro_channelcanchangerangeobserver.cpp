@@ -9,7 +9,7 @@ ChannelCanChangeRangeObserver::ChannelCanChangeRangeObserver(ChannelPtr channel,
 {
     checkChangeRange();
 
-    connect(m_channel.get(), &Channel::sigFetchDoneChannel,
+    connect(m_channel.get(), &Channel::sigNewRanges,
             this, &ChannelCanChangeRangeObserver::onConditionsHaveChanged);
     connect(m_channel.get(), &Channel::sigSourceModeOnChanged,
             this, &ChannelCanChangeRangeObserver::onConditionsHaveChanged);

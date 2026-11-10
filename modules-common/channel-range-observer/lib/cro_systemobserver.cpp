@@ -113,8 +113,8 @@ void SystemObserver::doStartFullScan()
             m_channelMNameToChannel[channelMName] = channelObserver;
 
             allChannelsDetailsTasks->addSub(ChannelFetchTask::create(channelObserver));
-            connect(channelObserver.get(), &Channel::sigFetchDoneChannel,
-                    this, &SystemObserver::sigFetchDone);
+            connect(channelObserver.get(), &Channel::sigNewRanges,
+                    this, &SystemObserver::sigNewRanges);
         }
         m_currentTasks->addSub(std::move(allChannelsDetailsTasks));
         return true;

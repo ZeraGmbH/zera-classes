@@ -19,7 +19,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_pcbConnection(m_pModule->getNetworkConfig()),
     m_observer(m_pModule->getSharedChannelRangeObserver())
 {
-    connect(m_observer.get(), &ChannelRangeObserver::SystemObserver::sigFetchDone,
+    connect(m_observer.get(), &ChannelRangeObserver::SystemObserver::sigNewRanges,
             this, &cAdjustmentModuleMeasProgram::onNewRanges);
 
     connect(&m_offsetTasks, &TaskTemplate::sigFinish, this, [&](bool ok) {

@@ -24,7 +24,7 @@ public:
     bool hasInternalSourceGenerator() const;
 signals:
     void sigFullScanFinished(bool ok);
-    void sigFetchDone(const QString &channelMName, bool ok);
+    void sigNewRanges(const QString &channelMName, bool ok);
 
 private:
     void clear();

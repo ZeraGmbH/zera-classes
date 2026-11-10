@@ -33,7 +33,7 @@ public:
     const RangePtr getRange(const QString &rangeAlias) const;
     ChannelCommonStorage *getModuleCommonStorage();
 signals:
-    void sigFetchDoneChannel(const QString &channelMName, bool ok);
+    void sigNewRanges(const QString &channelMName, bool ok);
     void sigSourceModeOnChanged();
 
 private slots:

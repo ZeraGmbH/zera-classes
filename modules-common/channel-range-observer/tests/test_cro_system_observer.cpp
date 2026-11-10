@@ -103,7 +103,7 @@ void test_cro_system_observer::scanByTaskInvalid()
 void test_cro_system_observer::rescan()
 {
     SystemObserver observer(netInfo, m_tcpFactory);
-    QSignalSpy spyRangesChanged(&observer, &SystemObserver::sigFetchDone);
+    QSignalSpy spyRangesChanged(&observer, &SystemObserver::sigNewRanges);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
 
@@ -214,7 +214,7 @@ void test_cro_system_observer::changeRangesByClamp()
 void test_cro_system_observer::notifyRangeChangeByClamp()
 {
     SystemObserver observer(netInfo, m_tcpFactory);
-    QSignalSpy spy(&observer, &SystemObserver::sigFetchDone);
+    QSignalSpy spy(&observer, &SystemObserver::sigNewRanges);
     observer.startFullScan();
     TimeMachineObject::feedEventLoop();
     QCOMPARE(spy.size(), 8);
@@ -246,7 +246,7 @@ void test_cro_system_observer::invalidScan()
     NetworkConnectionInfo netInfoInvalid("127.0.0.1", 42);
     SystemObserver observer(netInfoInvalid, m_tcpFactory);
     QSignalSpy spyFullScanFinished(&observer, &SystemObserver::sigFullScanFinished);
-    QSignalSpy spyChannel(&observer, &SystemObserver::sigFetchDone);
+    QSignalSpy spyChannel(&observer, &SystemObserver::sigNewRanges);
     observer.startFullScan();
     TimeMachineForTest::getInstance()->processTimers(CONNECTION_TIMEOUT);
 

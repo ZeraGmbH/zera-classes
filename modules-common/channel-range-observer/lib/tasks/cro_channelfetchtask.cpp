@@ -10,7 +10,7 @@ ChannelFetchTaskPtr ChannelFetchTask::create(const ChannelPtr &channel)
 ChannelFetchTask::ChannelFetchTask(const ChannelPtr &channel) :
     m_channel(channel)
 {
-    connect(m_channel.get(), &Channel::sigFetchDoneChannel,
+    connect(m_channel.get(), &Channel::sigNewRanges,
             this, &ChannelFetchTask::onChannelFetched);
 }
 
