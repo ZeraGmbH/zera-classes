@@ -1130,7 +1130,7 @@ STATUS:DEV1:VERSION:PCBSERVER?:
 V42.0
 
 STATUS:DEV1:LOCFILE?:
-ERROR: missing parameter. Command format accepted: 'STATUS:DEV1:LOCFILE? <filepath>;'
+ERROR: missing parameter.'
 
 EMOB:HOTP1:EMLOCKSTATE?:
 4

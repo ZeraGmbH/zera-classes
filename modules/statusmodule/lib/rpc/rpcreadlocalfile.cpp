@@ -36,7 +36,7 @@ void RpcReadLocalFile::callRPCFunction(const QUuid &callId, const QVariantMap &p
             strReturned = SafeFileLoader::stringifyLoadResult(loadResult);
     }
     else
-        strReturned = "ERROR: missing parameter. Command format accepted: 'STATUS:DEV1:LOCFILE? <filepath>;'";
+        strReturned = "ERROR: missing parameter.'";
     // Decision: Return error message and do not go the RPC/SCPI error way
     sendRpcResult(callId, strReturned);
 }

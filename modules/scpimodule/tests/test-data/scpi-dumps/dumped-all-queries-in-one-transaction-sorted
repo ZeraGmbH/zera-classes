@@ -1652,7 +1652,7 @@ STATUS:DEV1:DEVTYPE?:
 unknown
 
 STATUS:DEV1:LOCFILE?:
-ERROR: missing parameter. Command format accepted: 'STATUS:DEV1:LOCFILE? <filepath>;'
+ERROR: missing parameter.'
 
 STATUS:DEV1:RELEASE?:
 
