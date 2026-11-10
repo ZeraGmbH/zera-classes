@@ -2,7 +2,7 @@
 #define CRO_CHANNEL_H
 
 #include "channelcommonstorage.h"
-#include "cro_channelrangesdata.h"
+#include "cro_channelrangesdictionary.h"
 #include <networkconnectioninfo.h>
 #include <abstracttcpnetworkfactory.h>
 #include <pcbinterface.h>
@@ -55,14 +55,15 @@ private:
     bool m_sourceModeOn = false;
     ChannelCommonStorage m_channelAdjStorage;
 
-    ChannelRangesData m_rangesCurr;
-    ChannelRangesData m_rangesNext;
+    ChannelRangesDictionary m_rangesCurr;
+    ChannelRangesDictionary m_rangesNext;
 
     const NetworkConnectionInfo m_netInfo;
     const VeinTcp::AbstractTcpNetworkFactoryPtr m_tcpFactory;
     Zera::PcbInterfacePtr m_pcbInterface;
 
     TaskContainerInterfacePtr m_currentTasks;
+    std::shared_ptr<QStringList> m_allRangeNamesServerOrdered;
 };
 
 typedef std::shared_ptr<Channel> ChannelPtr;

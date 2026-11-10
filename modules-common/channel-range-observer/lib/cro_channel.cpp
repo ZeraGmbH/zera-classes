@@ -99,9 +99,10 @@ void Channel::startAllRangesTasks()
     m_currentTasks = TaskContainerSequence::create();
     TaskContainerInterfacePtr task = TaskContainerSequence::create();
     task->addSub(getPcbConnectionTask());
+    m_allRangeNamesServerOrdered = std::make_shared<QStringList>();
     task->addSub(TaskChannelGetRangeList::create(
         m_pcbInterface,
-        m_channelMName, m_rangesNext.m_allRangeNamesOrderedByServer,
+        m_channelMName, m_allRangeNamesServerOrdered,
         TRANSACTION_TIMEOUT, [&]{ notifyError(QString("Could not read range list for channel %1").arg(m_channelMName)); }));
     task->addSub(TaskLambdaRunner::create([&]() {
         TaskContainerInterfacePtr allRangesTasks = TaskContainerParallel::create();
@@ -125,7 +126,7 @@ void Channel::startAllRangesTasks()
 void Channel::doAfterTaskJobs(bool ok)
 {
     if (ok) {
-        m_rangesNext.doAllRangesCompleteJobs();
+        m_rangesNext.doAllRangesCompleteJobs(*m_allRangeNamesServerOrdered);
         m_rangesCurr = m_rangesNext;
     }
     m_rangesNext.clear();
