@@ -79,11 +79,10 @@ const QString &Range::getName() const
     return m_rangeName;
 }
 
-const QString Range::RangeAliasNull = QString ("--");
 
 const QString &Range::getAlias() const
 {
-    return m_rangeName != "0A" ? m_rangeName : RangeAliasNull;
+    return getAliasFromName(m_rangeName);
 }
 
 double Range::getUrValue() const
@@ -104,6 +103,19 @@ double Range::getOvrRejection() const
 double Range::getAdcRejection() const
 {
     return *m_adcrejection;
+}
+
+const QString Range::RangeAliasNull = QString ("--");
+const QString Range::RangeNameNull = QString ("0A");
+
+const QString &Range::getAliasFromName(const QString &rangeName)
+{
+    return rangeName != RangeNameNull ? rangeName : RangeAliasNull;
+}
+
+const QString &Range::getNameFromAlias(const QString &rangeAlias)
+{
+    return rangeAlias != RangeAliasNull ? rangeAlias : RangeNameNull;
 }
 
 void Range::preparePcbInterface()
