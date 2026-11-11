@@ -79,6 +79,11 @@ int Range::getType() const
     return *m_type;
 }
 
+const QString &Range::getName() const
+{
+    return m_rangeName;
+}
+
 const QString &Range::getAlias() const
 {
     return *m_alias;

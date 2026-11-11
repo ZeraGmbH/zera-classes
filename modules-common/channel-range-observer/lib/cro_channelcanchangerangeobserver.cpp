@@ -41,7 +41,7 @@ bool ChannelCanChangeRangeObserver::checkChangeRange()
 
 bool ChannelCanChangeRangeObserver::hasMoreThanOneRange()
 {
-    return m_channel->getAvailRangeAliases().size() > 1;
+    return m_channel->getAvailRangeNames().size() > 1;
 }
 
 bool ChannelCanChangeRangeObserver::rangeAutoIsOn()

@@ -2,23 +2,23 @@
 
 namespace ChannelRangeObserver {
 
-RangePtr ChannelRangesDictionary::findRangeByAlias(const QString &rangeAlias) const
+RangePtr ChannelRangesDictionary::findRangeByName(const QString &rangeName) const
 {
-    auto iter = m_rangeAliasToRange.constFind(rangeAlias);
-    if(iter != m_rangeAliasToRange.constEnd())
+    auto iter = m_rangeNameToRange.constFind(rangeName);
+    if(iter != m_rangeNameToRange.constEnd())
         return iter.value();
     return nullptr;
 }
 
-const QStringList &ChannelRangesDictionary::getAvailableRangeAliases() const
+const QStringList &ChannelRangesDictionary::getAvailableRangeNames() const
 {
-    return m_availRangeAliasListSorted;
+    return m_availRangeNameListSorted;
 }
 
-const QStringList &ChannelRangesDictionary::getAllRangeAliases() const
+const QStringList &ChannelRangesDictionary::getAllRangeNames() const
 {
-    return m_allRangeAliasListSorted;
-};
+    return m_allRangeNameListSorted;
+}
 
 void ChannelRangesDictionary::addMaidenRange(RangePtr range)
 {
@@ -27,50 +27,50 @@ void ChannelRangesDictionary::addMaidenRange(RangePtr range)
 
 void ChannelRangesDictionary::doAllRangesCompleteJobs()
 {
-    fillAliasToRangeHash();
-    fillSortedAliasList();
-    fillAvailAliasList();
+    fillNameToRangeHash();
+    fillSortedNameList();
+    fillAvailNameList();
 }
 
 void ChannelRangesDictionary::clear()
 {
     m_rangesAddedBareThenFilled.clear();
-    m_allRangeAliasListSorted.clear();
-    m_availRangeAliasListSorted.clear();
-    m_rangeAliasToRange.clear();
+    m_allRangeNameListSorted.clear();
+    m_availRangeNameListSorted.clear();
+    m_rangeNameToRange.clear();
 }
 
-void ChannelRangesDictionary::fillAliasToRangeHash()
+void ChannelRangesDictionary::fillNameToRangeHash()
 {
     const QList<RangePtr> &rangesAddedBareThenFilled = m_rangesAddedBareThenFilled;
     for (const RangePtr &range : rangesAddedBareThenFilled)
-        m_rangeAliasToRange[range->getAlias()] = range;
+        m_rangeNameToRange[range->getName()] = range;
 }
 
-void ChannelRangeObserver::ChannelRangesDictionary::fillSortedAliasList()
+void ChannelRangeObserver::ChannelRangesDictionary::fillSortedNameList()
 {
-    QMap<quint32 /*type*/, QMap<double /*urValue*/, QString /*alias*/>> sorter;
+    QMap<quint32 /*type*/, QMap<double /*urValue*/, QString /*name*/>> sorter;
     const QList<RangePtr> &rangesAddedBareThenFilled = m_rangesAddedBareThenFilled;
     for (const RangePtr &range : rangesAddedBareThenFilled)
-        sorter[range->getType()][-range->getUrValue()] = range->getAlias(); // biggest ranges first
+        sorter[range->getType()][-range->getUrValue()] = range->getName(); // biggest ranges first
 
-    QStringList sortedRangeAliasList;
+    QStringList sortedRangeNameList;
     for (auto iterType=sorter.constBegin(); iterType!=sorter.constEnd(); ++iterType) {
-        const QMap<double /*urValue*/, QString /*alias*/> &typeEntry = iterType.value();
+        const QMap<double /*urValue*/, QString /*name*/> &typeEntry = iterType.value();
         for (auto iterUr=typeEntry.constBegin(); iterUr!=typeEntry.constEnd(); ++iterUr)
-            sortedRangeAliasList.append(iterUr.value());
+            sortedRangeNameList.append(iterUr.value());
     }
-    m_allRangeAliasListSorted = sortedRangeAliasList;
+    m_allRangeNameListSorted = sortedRangeNameList;
 }
 
-void ChannelRangesDictionary::fillAvailAliasList()
+void ChannelRangesDictionary::fillAvailNameList()
 {
-    QStringList availRangeAliasListSorted;
-    const QStringList &allRangeAliasListSorted = m_allRangeAliasListSorted;
-    for(const QString &rangeAlias : allRangeAliasListSorted)
-        if(m_rangeAliasToRange[rangeAlias]->getAvailable() == true)
-            availRangeAliasListSorted.append(rangeAlias);
-    m_availRangeAliasListSorted = availRangeAliasListSorted;
+    QStringList availRangeNameListSorted;
+    const QStringList &allRangeNameListSorted = m_allRangeNameListSorted;
+    for(const QString &rangeName : allRangeNameListSorted)
+        if(m_rangeNameToRange[rangeName]->getAvailable() == true)
+            availRangeNameListSorted.append(rangeName);
+    m_availRangeNameListSorted = availRangeNameListSorted;
 }
 
 }

@@ -194,7 +194,7 @@ void cAdjustmentModuleMeasProgram::onNewRanges()
 QStringList cAdjustmentModuleMeasProgram::getChannelRanges(const QString &channelMName, ChannelRangesAllowed rangesAllowed) const
 {
     ChannelRangeObserver::ChannelPtr channel = m_observer->getChannel(channelMName);
-    QStringList ranges = channel->getAvailRangeAliases();
+    QStringList ranges = channel->getAvailRangeNames();
     if (rangesAllowed == ADJUSTABLE_RANGES_ONLY) {
         const QStringList &rangesDenied = m_pModule->getConfigData()->m_AdjChannelInfoHash[channelMName]->rangeInfo.m_rangesNotAdjustable;
         for (const QString &rangeDenied : rangesDenied)

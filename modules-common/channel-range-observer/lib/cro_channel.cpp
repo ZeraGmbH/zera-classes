@@ -36,23 +36,23 @@ const QString &Channel::getMName() const
     return m_channelMName;
 }
 
-const QStringList &Channel::getAllRangeAliases() const
+const QStringList &Channel::getAllRangeNames() const
 {
-    return m_rangesCurr.getAllRangeAliases();
+    return m_rangesCurr.getAllRangeNames();
 }
 
-const QStringList &Channel::getAvailRangeAliases() const
+const QStringList &Channel::getAvailRangeNames() const
 {
-    return m_rangesCurr.getAvailableRangeAliases();
+    return m_rangesCurr.getAvailableRangeNames();
 }
 
-const RangePtr Channel::getRange(const QString &rangeAlias) const
+const RangePtr Channel::getRange(const QString &rangeName) const
 {
-    RangePtr rangeFound = m_rangesCurr.findRangeByAlias(rangeAlias);
+    RangePtr rangeFound = m_rangesCurr.findRangeByName(rangeName);
     if (rangeFound != nullptr)
         return rangeFound;
     qCritical("Range data for range %s not found! Available: %s",
-              qPrintable(rangeAlias), qPrintable(m_rangesCurr.getAvailableRangeAliases().join(" / ")));
+              qPrintable(rangeName), qPrintable(m_rangesCurr.getAvailableRangeNames().join(" / ")));
     return std::make_shared<Range>(m_channelMName, "", m_netInfo, m_tcpFactory);
 }
 

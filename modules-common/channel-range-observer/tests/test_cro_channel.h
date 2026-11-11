@@ -29,6 +29,7 @@ private slots:
     void checkOrderingVoltageRanges();
     void checkOrderingCurrentRanges();
     void checkOrderingAllCurrentRanges();
+    void checkAUXAvailNames();
     void checkAvailableRangesMtDefaultAc();
     void checkAvailableRangesMtAdj();
     void checkAvailableRangesMtSequence();

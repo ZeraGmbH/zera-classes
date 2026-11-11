@@ -22,7 +22,8 @@ public:
 
     bool getAvailable() const;
     int getType() const;
-    const QString &getAlias() const;
+    const QString &getName() const;
+    const QString &getAlias() const; // Remove??? or simplify???
     double getUrValue() const;
     double getRejection() const;
     double getOvrRejection() const;

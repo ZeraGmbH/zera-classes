@@ -8,9 +8,9 @@ namespace ChannelRangeObserver {
 class ChannelRangesDictionary
 {
 public:
-    RangePtr findRangeByAlias(const QString &rangeAlias) const;
-    const QStringList &getAvailableRangeAliases() const;
-    const QStringList &getAllRangeAliases() const;
+    RangePtr findRangeByName(const QString &rangeName) const;
+    const QStringList &getAvailableRangeNames() const;
+    const QStringList &getAllRangeNames() const; // Is this really of interest or just causing confusion???
 
     void addMaidenRange(RangePtr range);
     void doAllRangesCompleteJobs();
@@ -18,14 +18,14 @@ public:
     void clear();
 
 private:
-    void fillAliasToRangeHash();
-    void fillSortedAliasList();
-    void fillAvailAliasList();
+    void fillNameToRangeHash();
+    void fillSortedNameList();
+    void fillAvailNameList();
 
     QList<RangePtr> m_rangesAddedBareThenFilled;
-    QHash<QString, RangePtr> m_rangeAliasToRange;
-    QStringList m_allRangeAliasListSorted;
-    QStringList m_availRangeAliasListSorted;
+    QHash<QString, RangePtr> m_rangeNameToRange;
+    QStringList m_allRangeNameListSorted;
+    QStringList m_availRangeNameListSorted;
 };
 
 }
