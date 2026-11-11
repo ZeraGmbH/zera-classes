@@ -23,7 +23,7 @@ public:
     bool getAvailable() const;
     int getType() const;
     const QString &getName() const;
-    const QString &getAlias() const; // Remove??? or simplify???
+    const QString &getAlias() const; // This should have been solved on GUI but now SCPI cat is out
     double getUrValue() const;
     double getRejection() const;
     double getOvrRejection() const;
@@ -45,13 +45,13 @@ private:
 
     std::shared_ptr<bool> m_available = std::make_shared<bool>(false);
     std::shared_ptr<int> m_type = std::make_shared<int>(0);
-    std::shared_ptr<QString> m_alias = std::make_shared<QString>();
     std::shared_ptr<double> m_urValue = std::make_shared<double>(0.0);
     std::shared_ptr<double> m_rejection = std::make_shared<double>(0.0);
     std::shared_ptr<double> m_ovrejection = std::make_shared<double>(0.0);
     std::shared_ptr<double> m_adcrejection = std::make_shared<double>(0.0);
 
     TaskContainerInterfacePtr m_currentTasks;
+    static const QString RangeAliasNull;
 };
 
 typedef std::shared_ptr<Range> RangePtr;

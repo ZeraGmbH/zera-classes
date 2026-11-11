@@ -2,7 +2,6 @@
 #include "taskserverconnectionstart.h"
 #include "taskrangegetisavailable.h"
 #include "taskrangegettype.h"
-#include "taskrangegetalias.h"
 #include "taskrangegeturvalue.h"
 #include "taskrangegetrejection.h"
 #include "taskrangegetovrejection.h"
@@ -37,10 +36,6 @@ void Range::startFetch()
         [&]{ notifyError(QString("Could not fetch range availability: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
     rangesTasks->addSub(TaskRangeGetType::create(
         m_pcbInterface, m_channelMName, m_rangeName, m_type,
-        TRANSACTION_TIMEOUT,
-        [&]{ notifyError(QString("Could not fetch range type: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
-    rangesTasks->addSub(TaskRangeGetAlias::create(
-        m_pcbInterface, m_channelMName, m_rangeName, m_alias,
         TRANSACTION_TIMEOUT,
         [&]{ notifyError(QString("Could not fetch range type: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
     rangesTasks->addSub(TaskRangeGetUrValue::create(
@@ -84,9 +79,11 @@ const QString &Range::getName() const
     return m_rangeName;
 }
 
+const QString Range::RangeAliasNull = QString ("--");
+
 const QString &Range::getAlias() const
 {
-    return *m_alias;
+    return m_rangeName != "0A" ? m_rangeName : RangeAliasNull;
 }
 
 double Range::getUrValue() const
