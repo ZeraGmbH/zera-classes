@@ -11,10 +11,11 @@ namespace RANGEMODULE
 
 struct cObsermaticConfPar
 {
-    void setCurrentRange(int channelIdx, const QString &rangeAlias) {
-        m_senseChannelRangeParameter[channelIdx].m_sValue = rangeAlias;
+    void setCurrentRangeName(int channelIdx, const QString &rangeName) {
+        Q_ASSERT(!rangeName.isEmpty());
+        m_senseChannelRangeParameter[channelIdx].m_sValue = rangeName;
     }
-    const QString &getCurrentRange(int channelIdx) {
+    const QString &getCurrentRangeName(int channelIdx) {
         return m_senseChannelRangeParameter[channelIdx].m_sValue;
     }
     boolParameter m_nGroupAct; // grouping active or not 1,0

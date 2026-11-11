@@ -1,4 +1,4 @@
-#include "rangemeaschannelconvenience.h"
+#include "rangemeaschannel.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -49,8 +49,7 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
     m_deactivationMachine.setInitialState(&m_deactivationInitState);
 
     // setting up statemachine for querying the meas channels ranges and their properties
-    m_readRangelistState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readRngAliasState);
-    m_readRngAliasState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readTypeState);
+    m_readRangelistState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readTypeState);
     m_readTypeState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readUrvalueState);
     m_readUrvalueState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readRejectionState);
     m_readRejectionState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readOVRejectionState);
@@ -58,10 +57,9 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
     m_readADCRejectionState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readisAvailState);
     m_readisAvailState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_rangeQueryLoopState);
     m_rangeQueryLoopState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_rangeQueryDoneState);
-    m_rangeQueryLoopState.addTransition(this, &cRangeMeasChannel::activationLoop, &m_readRngAliasState);
+    m_rangeQueryLoopState.addTransition(this, &cRangeMeasChannel::activationLoop, &m_readTypeState);
 
     m_rangeQueryMachine.addState(&m_readRangelistState);
-    m_rangeQueryMachine.addState(&m_readRngAliasState);
     m_rangeQueryMachine.addState(&m_readTypeState);
     m_rangeQueryMachine.addState(&m_readUrvalueState);
     m_rangeQueryMachine.addState(&m_readRejectionState);
@@ -74,7 +72,6 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
     m_rangeQueryMachine.setInitialState(&m_readRangelistState);
 
     connect(&m_readRangelistState, &QState::entered, this, &cRangeMeasChannel::readRangelist);
-    connect(&m_readRngAliasState, &QState::entered, this, &cRangeMeasChannel::readRngAlias);
     connect(&m_readTypeState, &QState::entered, this, &cRangeMeasChannel::readType);
     connect(&m_readUrvalueState, &QState::entered, this, &cRangeMeasChannel::readUrvalue);
     connect(&m_readRejectionState, &QState::entered, this, &cRangeMeasChannel::readRejection);
@@ -90,7 +87,6 @@ enum rangemeaschannelCmds
 {
     readrangelist,
 
-    readrngalias,
     readtype,
     readurvalue,
     readrejection,
@@ -109,13 +105,13 @@ enum rangemeaschannelCmds
     unregisterNotifiers
 };
 
-quint32 cRangeMeasChannel::setRange(const QString &rangeAlias)
+quint32 cRangeMeasChannel::setRange(const QString &rangeName)
 {
-    m_nextRangeAlias = rangeAlias;
-    m_actRangeAlias = rangeAlias;
+    m_nextRangeName = rangeName;
+    m_actRangeName = rangeName;
 
     if (m_bActive) {
-        quint32 msgnr = m_pcbInterface->setRange(getMName(), m_rangeAliasToChannelData[rangeAlias].name); // we set range per name not alias
+        quint32 msgnr = m_pcbInterface->setRange(getMName(), rangeName);
         m_MsgNrCmdList[msgnr] = setmeaschannelrange;
         return msgnr;
     }
@@ -124,9 +120,9 @@ quint32 cRangeMeasChannel::setRange(const QString &rangeAlias)
     }
 }
 
-QString cRangeMeasChannel::getRange() const
+QString cRangeMeasChannel::getCurrRangeName() const
 {
-    return m_actRangeAlias;
+    return m_actRangeName;
 }
 
 quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
@@ -134,7 +130,7 @@ quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
     if (m_bActive) {
         ChannelCommonStorage *channelCommon = getChannelObserver()->getModuleCommonStorage();
         channelCommon->setLastGainAdjAmplitude(amplitude);
-        quint32 msgnr = m_pcbInterface->getGainCorrection(getMName(), m_rangeAliasToChannelData[m_actRangeAlias].name, amplitude);
+        quint32 msgnr = m_pcbInterface->getGainCorrection(getMName(), m_actRangeName, amplitude);
         m_MsgNrCmdList[msgnr] = readgaincorrectioninternalandclamp;
         return msgnr;
     }
@@ -149,7 +145,7 @@ quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
     if (m_bActive) {
         ChannelCommonStorage *channelCommon = getChannelObserver()->getModuleCommonStorage();
         channelCommon->setLastOffsetAdjAmplitude(amplitude);
-        quint32 msgnr = m_pcbInterface->getOffsetCorrection(getMName(), m_rangeAliasToChannelData[m_actRangeAlias].name, amplitude);
+        quint32 msgnr = m_pcbInterface->getOffsetCorrection(getMName(), m_actRangeName, amplitude);
         m_MsgNrCmdList[msgnr] = readoffsetcorrection;
         return msgnr;
     }
@@ -186,11 +182,10 @@ quint32 cRangeMeasChannel::resetStatus()
     }
 }
 
-
 quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
 {
     if (m_bActive) {
-        quint32 msgnr = m_pcbInterface->getPhaseCorrection(getMName(), m_rangeAliasToChannelData[m_actRangeAlias].name, frequency);
+        quint32 msgnr = m_pcbInterface->getPhaseCorrection(getMName(), m_actRangeName, frequency);
         m_MsgNrCmdList[msgnr] = readphasecorrection;
         return msgnr;
     }
@@ -199,54 +194,50 @@ quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
     }
 }
 
-
-bool cRangeMeasChannel::isPossibleRange(const QString &range)
+bool cRangeMeasChannel::isPossibleRange(const QString &rangeName)
 {
-    return m_rangeAliasToChannelData.contains(range);
+    return m_rangeNameToChannelData.contains(rangeName);
 }
-
 
 bool cRangeMeasChannel::isRMSOverload(double ampl)
 {
-    const cRangeInfoWithConstantValues &ri = m_rangeAliasToChannelData[m_actRangeAlias];
+    const cRangeInfoWithConstantValues &ri = m_rangeNameToChannelData[m_actRangeName];
     double ovrRejectionFactor = ri.ovrejection / ri.rejection;
     return ((ri.urvalue * ovrRejectionFactor) < ampl);
 }
 
-
 bool cRangeMeasChannel::isPeakOverload(double peak)
 {
-    const cRangeInfoWithConstantValues &ri = m_rangeAliasToChannelData[m_actRangeAlias];
+    const cRangeInfoWithConstantValues &ri = m_rangeNameToChannelData[m_actRangeName];
     double ovrRejectionFactor = ri.ovrejection / ri.rejection;
     double overloadlimit = ri.urvalue * ovrRejectionFactor * M_SQRT2;
     return (overloadlimit < peak);
 }
 
-
-QString cRangeMeasChannel::getOptimalRange(double rms, double peak, const QString &rngAlias)
+QString cRangeMeasChannel::getOptimalRange(double rms, double peak, const QString &rangeName)
 {
     qint32 actRngType = -1;
-    if (m_rangeAliasToChannelData.contains(rngAlias)) {
-        // if we know this rngalias we take that's type for searching max range
-        actRngType = m_rangeAliasToChannelData[rngAlias].type; // the type of actual range
+    if (m_rangeNameToChannelData.contains(rangeName)) {
+        // if we know this rngname we take that's type for searching max range
+        actRngType = m_rangeNameToChannelData[rangeName].type; // the type of actual range
     }
     else {
         // if we already set a range we could take the actual range for searching
-        if (m_rangeAliasToChannelData.contains(m_actRangeAlias)) {
-            actRngType = m_rangeAliasToChannelData[m_actRangeAlias].type;
+        if (m_rangeNameToChannelData.contains(m_actRangeName)) {
+            actRngType = m_rangeNameToChannelData[m_actRangeName].type;
         }
     }
-    QString newRangeRmsStr = findOptimalRange(rms, rngAlias, actRngType, 1);
-    double newRangeRmsUrValue = m_rangeAliasToChannelData[newRangeRmsStr].urvalue;
-    QString newRangePeakStr = findOptimalRange(peak, rngAlias, actRngType, M_SQRT2);
-    double newRangePeakUrValue = m_rangeAliasToChannelData[newRangePeakStr].urvalue;
+    QString newRangeRmsStr = findOptimalRange(rms, rangeName, actRngType, 1);
+    double newRangeRmsUrValue = m_rangeNameToChannelData[newRangeRmsStr].urvalue;
+    QString newRangePeakStr = findOptimalRange(peak, rangeName, actRngType, M_SQRT2);
+    double newRangePeakUrValue = m_rangeNameToChannelData[newRangePeakStr].urvalue;
 
     return newRangePeakUrValue > newRangeRmsUrValue ? newRangePeakStr : newRangeRmsStr;
 }
 
-QString cRangeMeasChannel::findOptimalRange(double actualValue, const QString &actRngAlias, qint32 actRngType, double extraRejectionFactor)
+QString cRangeMeasChannel::findOptimalRange(double actualValue, const QString &actRangeName, qint32 actRngType, double extraRejectionFactor)
 {
-    QList<cRangeInfoWithConstantValues> riList = m_rangeAliasToChannelData.values();
+    QList<cRangeInfoWithConstantValues> riList = m_rangeNameToChannelData.values();
     double newAmpl = 1e32;
     int i, p = -1;
 
@@ -267,7 +258,7 @@ QString cRangeMeasChannel::findOptimalRange(double actualValue, const QString &a
         double newUrvalue = ri.urvalue;
         double ovrRejectionFactor = (ri.ovrejection / ri.rejection) * extraRejectionFactor; // typically 1.25
         // actual range?
-        if(actRngAlias == ri.alias) {
+        if(actRangeName == ri.name) {
             // are we in hysteresis area?
             if(actualValue > newUrvalue * ovrRejectionFactor * enterRangeLimit &&
                 actualValue < newUrvalue * ovrRejectionFactor * keepRangeLimit) {
@@ -284,16 +275,14 @@ QString cRangeMeasChannel::findOptimalRange(double actualValue, const QString &a
     }
 
     if (p > -1) {
-        return riList.at(p).alias;
+        return riList.at(p).name;
     }
-    else {
-        return getMaxRange(actRngAlias); // we return maximum range in case of overload condition
-    }
+    return getMaxRangeName(actRangeName); // we return maximum range in case of overload condition
 }
 
-QString cRangeMeasChannel::getMaxRange() const
+QString cRangeMeasChannel::getMaxRangeName() const
 {
-    QList<cRangeInfoWithConstantValues> riList = m_rangeAliasToChannelData.values();
+    QList<cRangeInfoWithConstantValues> riList = m_rangeNameToChannelData.values();
     double newAmpl = -1.0;
     int foundRangeIdx = 0;
     for (int rangeIdx = 0; rangeIdx < riList.count(); rangeIdx++) {
@@ -303,24 +292,24 @@ QString cRangeMeasChannel::getMaxRange() const
             foundRangeIdx =rangeIdx;
         }
     }
-    return riList.at(foundRangeIdx).alias;
+    return riList.at(foundRangeIdx).name;
 }
 
-QString cRangeMeasChannel::getMaxRange(const QString &rngAlias)
+QString cRangeMeasChannel::getMaxRangeName(const QString &rangeName)
 {
     qint32 actRngType = -1;
-    if (m_rangeAliasToChannelData.contains(rngAlias)) {
-        // if we know this rngalias we take that's type for searching max range
-        actRngType = m_rangeAliasToChannelData[rngAlias].type; // the type of actual range
+    if (m_rangeNameToChannelData.contains(rangeName)) {
+        // if we know this rngname we take that's type for searching max range
+        actRngType = m_rangeNameToChannelData[rangeName].type; // the type of actual range
     }
     else {
         // if we already set a range we could take the actual range for searching
-        if (m_rangeAliasToChannelData.contains(m_actRangeAlias)) {
-            actRngType = m_rangeAliasToChannelData[m_actRangeAlias].type;
+        if (m_rangeNameToChannelData.contains(m_actRangeName)) {
+            actRngType = m_rangeNameToChannelData[m_actRangeName].type;
         }
     }
 
-    QList<cRangeInfoWithConstantValues> riList = m_rangeAliasToChannelData.values();
+    QList<cRangeInfoWithConstantValues> riList = m_rangeNameToChannelData.values();
     double newAmpl = -1.0;
     int rangeIdxFound = 0;
     for (int rangeIdx = 0; rangeIdx < riList.count(); rangeIdx++) {
@@ -339,53 +328,48 @@ QString cRangeMeasChannel::getMaxRange(const QString &rngAlias)
             }
         }
     }
-    return riList.at(rangeIdxFound).alias;
+    return riList.at(rangeIdxFound).name;
 }
 
 
-QString cRangeMeasChannel::getSortedRangeAliasList()
+QString cRangeMeasChannel::getSortedRangeNameList()
 {
-    return m_sortedRangeAliasList;
+    return m_sortedRangeNameList;
 }
-
 
 double cRangeMeasChannel::getGainCorrection()
 {
     return m_fGainCorrection;
 }
 
-
 double cRangeMeasChannel::getPhaseCorrection()
 {
     return m_fPhaseCorrection;
 }
-
 
 double cRangeMeasChannel::getOffsetCorrection()
 {
     return m_fOffsetCorrection;
 }
 
-
 bool cRangeMeasChannel::isHWOverload()
 {
     return ((m_statusBitMask & 1) > 0);
 }
 
-
-double cRangeMeasChannel::getUrValue(const QString &range) const
+double cRangeMeasChannel::getUrValue(const QString &rangeName) const
 {
-    return m_rangeAliasToChannelData[range].urvalue;
+    return m_rangeNameToChannelData[rangeName].urvalue;
 }
 
-double cRangeMeasChannel::getRejection(const QString &range) const
+double cRangeMeasChannel::getRejection(const QString &rangeName) const
 {
-    return m_rangeAliasToChannelData[range].rejection;
+    return m_rangeNameToChannelData[rangeName].rejection;
 }
 
-double cRangeMeasChannel::getOVRRejection(const QString &range) const
+double cRangeMeasChannel::getOVRRejection(const QString &rangeName) const
 {
-    return m_rangeAliasToChannelData[range].ovrejection;
+    return m_rangeNameToChannelData[rangeName].ovrejection;
 }
 
 
@@ -436,15 +420,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else
                 notifyError(readrangelistErrMsg);
-            break;
-
-        case readrngalias:
-            if (reply == ack) {
-                m_oneWorkRangeInfo.alias = answer.toString();
-                emit activationContinue();
-            }
-            else
-                notifyError(readrangealiasErrMsg);
             break;
 
         case readtype:
@@ -503,11 +478,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
         case setmeaschannelrange:
             if (reply == ack)
-                m_actRangeAlias = m_nextRangeAlias;
+                m_actRangeName = m_nextRangeName;
             else {
                 qWarning("Set range %s on %s failed with %i!",
-                         qPrintable(m_nextRangeAlias),
-                         qPrintable(getAlias()),
+                         qPrintable(m_nextRangeName),
+                         qPrintable(getAlias()), // channel alias
                          reply);
                 notifyError(setRangeErrMsg);
             } // perhaps some error output
@@ -570,14 +545,14 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     }
 }
 
-void cRangeMeasChannel::setSortedRangeAliasList()
+void cRangeMeasChannel::setSortedRangeNameList()
 {
     QString s;
-    QList<cRangeInfoWithConstantValues> riList = m_rangeAliasToChannelData.values();
+    QList<cRangeInfoWithConstantValues> riList = m_rangeNameToChannelData.values();
     int riLen;
 
     if ( (riLen = riList.count()) > 1) {// nothing to sort if we only have 1 range
-        // first we sort the range alias according to range type
+        // first we sort the ranges according to range type
         for (int i = 0; i < riLen-1; i++) {
             for (int j = i; j < riLen; j++) {
                 if (riList.at(i).type < riList.at(j).type) {
@@ -586,7 +561,7 @@ void cRangeMeasChannel::setSortedRangeAliasList()
             }
         }
 
-        // second we sort the range alias according to upper range values but grouped with types
+        // second we sort the ranges according to upper range values but grouped with types
         for (int i = 0; i < riLen-1; i++) {
             for (int j = i; j < riLen; j++) {
                 if ( (riList.at(i).urvalue < riList.at(j).urvalue) && (riList.at(i).type == riList.at(j).type) ) {
@@ -596,15 +571,13 @@ void cRangeMeasChannel::setSortedRangeAliasList()
         }
     }
 
-    s = riList.at(0).alias;
-
+    s = riList.at(0).name;
     if (riLen > 1) {
-        for (int i = 1; i < riList.count(); i++) {
-            s = s + ";" + riList.at(i).alias;
-        }
+        for (int i = 1; i < riList.count(); i++)
+            s = s + ";" + riList.at(i).name;
     }
 
-    m_sortedRangeAliasList = s;
+    m_sortedRangeNameList = s;
 }
 
 void cRangeMeasChannel::pcbConnection()
@@ -658,7 +631,6 @@ void cRangeMeasChannel::deactivationDone()
     emit deactivated();
 }
 
-
 void cRangeMeasChannel::readRangelist()
 {
     m_growingWorkRangeInfo.clear();
@@ -666,19 +638,10 @@ void cRangeMeasChannel::readRangelist()
     m_RangeQueryIt = 0; // we start with range 0
 }
 
-
-
-void cRangeMeasChannel::readRngAlias()
-{
-    m_MsgNrCmdList[m_pcbInterface->getAlias(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readrngalias;
-}
-
-
 void cRangeMeasChannel::readType()
 {
     m_MsgNrCmdList[m_pcbInterface->getType(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readtype;
 }
-
 
 void cRangeMeasChannel::readUrvalue()
 {
@@ -713,7 +676,7 @@ void cRangeMeasChannel::readisAvail()
 void cRangeMeasChannel::rangeQueryLoop()
 {
     m_oneWorkRangeInfo.name = m_allRangeNamesOrderedByServer.at(m_RangeQueryIt);
-    m_growingWorkRangeInfo[m_oneWorkRangeInfo.alias] = m_oneWorkRangeInfo; // for each range we append cRangeinfo per alias
+    m_growingWorkRangeInfo[m_oneWorkRangeInfo.name] = m_oneWorkRangeInfo;
 
     m_RangeQueryIt++;
     if (m_RangeQueryIt < m_allRangeNamesOrderedByServer.count()) { // another range ?
@@ -731,9 +694,9 @@ void cRangeMeasChannel::rangeQueryLoop()
             }
         }
 
-        m_rangeAliasToChannelData = m_growingWorkRangeInfo;
+        m_rangeNameToChannelData = m_growingWorkRangeInfo;
 
-        setSortedRangeAliasList(); // and the list of possible ranges alias
+        setSortedRangeNameList(); // and the list of possible ranges
         emit activationContinue();
     }
 }

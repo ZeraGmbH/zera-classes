@@ -31,6 +31,7 @@ public:
 
     static const QString &getAliasFromName(const QString &rangeName);
     static const QString &getNameFromAlias(const QString &rangeAlias);
+    static const QString getAliasListFromNameList(const QString &rangeNameList); // ',' - separated downstream works like that
 signals:
     void sigFetchDoneRange(const QString &channelMName, const QString &rangeName, bool ok);
 

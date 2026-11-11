@@ -5,17 +5,17 @@ namespace RANGEMODULE
 
 double RangeMeasChannelConvenience::getUrValueRangeAct(const cRangeMeasChannel *channel)
 {
-    return channel->getUrValue(channel->getRange());
+    return channel->getUrValue(channel->getCurrRangeName());
 }
 
 double RangeMeasChannelConvenience::getRejectionRangeAct(const cRangeMeasChannel *channel)
 {
-    return channel->getRejection(channel->getRange());
+    return channel->getRejection(channel->getCurrRangeName());
 }
 
 double RangeMeasChannelConvenience::getOVRRejectionRangeAct(const cRangeMeasChannel *channel)
 {
-    return channel->getOVRRejection(channel->getRange());
+    return channel->getOVRRejection(channel->getCurrRangeName());
 }
 
 double RangeMeasChannelConvenience::getUrValueMaxRangeAct(const cRangeMeasChannel *channel)
@@ -28,10 +28,10 @@ double RangeMeasChannelConvenience::getUrValueMaxRangeAct(const cRangeMeasChanne
 
 double RangeMeasChannelConvenience::getUrValueMaxRangeMax(const cRangeMeasChannel *channel)
 {
-    QString maxRange = channel->getMaxRange();
-    double maxRangeUrValue = channel->getUrValue(maxRange);
-    double maxRangeRejection = channel->getRejection(maxRange);
-    double maxRangeOVRRejection = channel->getOVRRejection(maxRange);
+    QString maxRangeName = channel->getMaxRangeName();
+    double maxRangeUrValue = channel->getUrValue(maxRangeName);
+    double maxRangeRejection = channel->getRejection(maxRangeName);
+    double maxRangeOVRRejection = channel->getOVRRejection(maxRangeName);
     return (maxRangeUrValue * maxRangeOVRRejection / maxRangeRejection);
 }
 
