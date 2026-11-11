@@ -22,9 +22,9 @@ public:
                           const NetworkConnectionInfo &pcbsocket,
                           const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory,
                           const QString &moduleName);
-    void generateVeinInterface() override;
+    void generateVeinInterface() override {};
 
-    quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
+    quint32 setRange(QString range);
 
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready

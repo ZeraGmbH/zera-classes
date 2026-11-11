@@ -75,23 +75,14 @@ cReferenceMeasChannel::cReferenceMeasChannel(const ChannelRangeObserver::Channel
     connect(&m_rangeQueryDoneState, &QState::entered, this, &cReferenceMeasChannel::rangeQueryDone);
 }
 
-
 quint32 cReferenceMeasChannel::setRange(QString range)
 {
-    quint32 msgnr = 0;
     m_nextRangeAlias = range;
     m_actRangeAlias = m_nextRangeAlias;
-    msgnr = m_pcbInterface->setRange(getMName(), m_rangeAliasToChannelData[range].name);
+    quint32 msgnr = m_pcbInterface->setRange(getMName(), m_rangeAliasToChannelData[range].name);
     m_MsgNrCmdList[msgnr] = setmeaschannelrange;
     return msgnr;
 }
-
-
-void cReferenceMeasChannel::generateVeinInterface()
-{
-    // we have no interface
-}
-
 
 void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
