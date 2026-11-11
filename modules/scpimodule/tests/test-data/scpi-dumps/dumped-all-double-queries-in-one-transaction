@@ -2263,12 +2263,6 @@ CALCULATE:ADJ1:AMPLITUDE?:
 STATUS:DEV1:LOCFILE?:
 ERROR: missing parameter'
 
-STATUS:DEV1:LOCFILE:CATALOG?:
-scpi-file-example.txt
-
-STATUS:DEV1:LOCFILE:CATALOG?:
-scpi-file-example.txt
-
 STATUS:DEV1:LOCFILE?:
 ERROR: missing parameter'
 

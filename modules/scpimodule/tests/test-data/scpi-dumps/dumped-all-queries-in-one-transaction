@@ -1132,9 +1132,6 @@ V42.0
 STATUS:DEV1:LOCFILE?:
 ERROR: missing parameter'
 
-STATUS:DEV1:LOCFILE:CATALOG?:
-scpi-file-example.txt
-
 EMOB:HOTP1:EMLOCKSTATE?:
 4
 

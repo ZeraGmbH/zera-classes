@@ -419,7 +419,8 @@ bool test_scpi_all_responses::ignoreForUnreproducableXml(const QString &scpiPath
     return
         scpiPath == "DEVICE:IFACE?" ||
         scpiPath == "CALCULATE:ADJ1:PCB?" ||
-        scpiPath == "CALCULATE:ADJ1:CLAMP?";
+        scpiPath == "CALCULATE:ADJ1:CLAMP?" ||
+        scpiPath == "STATUS:DEV1:LOCFILE:CATALOG?";
 }
 
 QString test_scpi_all_responses::scpiShortHeader(const QString &scpiCmd)
