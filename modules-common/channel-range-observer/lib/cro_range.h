@@ -23,7 +23,6 @@ public:
     bool getAvailable() const;
     int getType() const;
     const QString &getName() const;
-    const QString &getAlias() const; // This should have been solved on GUI but now SCPI cat is out
     double getUrValue() const;
     double getRejection() const;
     double getOvrRejection() const;
