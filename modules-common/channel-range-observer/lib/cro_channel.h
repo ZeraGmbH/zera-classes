@@ -23,14 +23,20 @@ public:
             const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpFactory,
             bool hasInternalSourceGenerator);
     void startFetch();
+
+    // Channel getters
     const QString &getMName() const;
     const QString &getAlias() const;
     const QString &getUnit() const;
     int getDspChannel() const;
     bool isSourceModeOn() const;
+
+    // Range getters
     const QStringList &getAllRangeAliases() const;
     const QStringList &getAvailRangeAliases() const;
     const RangePtr getRange(const QString &rangeAlias) const;
+
+    // TODO: Remove
     ChannelCommonStorage *getModuleCommonStorage();
 signals:
     void sigNewRanges(const QString &channelMName, bool ok);
