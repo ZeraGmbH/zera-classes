@@ -79,12 +79,6 @@ const QString &Range::getName() const
     return m_rangeName;
 }
 
-
-const QString &Range::getAlias() const
-{
-    return getAliasFromName(m_rangeName);
-}
-
 double Range::getUrValue() const
 {
     return *m_urValue;
