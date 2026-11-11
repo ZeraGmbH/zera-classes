@@ -13,20 +13,6 @@
 namespace REFERENCEMODULE
 {
 
-enum rangemeaschannelCmds
-{
-    readrangelist,
-
-    readrngalias,
-    readtype,
-    readisavail,
-
-    setmeaschannelrange,
-    readgaincorrection,
-    readoffsetcorrection,
-    readphasecorrection,
-};
-
 class cReferenceMeasChannel: public cBaseMeasChannel
 {
     Q_OBJECT
@@ -66,7 +52,6 @@ private:
 
     // statemachine for querying a measchannels range properties
     QStateMachine m_rangeQueryMachine;
-    QState m_readRngAliasState;
     QState m_readTypeState;
     QState m_readisAvailState;
     QFinalState m_rangeQueryDoneState;
@@ -86,7 +71,6 @@ private slots:
     void deactivationDone();
 
     // the slots for querying a measchannels range properties
-    void readRngAlias();
     void readType();
     void readisAvail();
     void rangeQueryDone();
