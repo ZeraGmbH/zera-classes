@@ -115,9 +115,7 @@ quint32 cRangeMeasChannel::setRange(const QString &rangeName)
         m_MsgNrCmdList[msgnr] = setmeaschannelrange;
         return msgnr;
     }
-    else {
-        return 1;
-    }
+    return 1;
 }
 
 QString cRangeMeasChannel::getCurrRangeName() const
@@ -134,11 +132,8 @@ quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
         m_MsgNrCmdList[msgnr] = readgaincorrectioninternalandclamp;
         return msgnr;
     }
-    else {
-        return 1;
-    }
+    return 1;
 }
-
 
 quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
 {
@@ -149,9 +144,7 @@ quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
         m_MsgNrCmdList[msgnr] = readoffsetcorrection;
         return msgnr;
     }
-    else {
-        return 1;
-    }
+    return 1;
 }
 
 // This caused a bit of confusion so write it down:
@@ -164,9 +157,7 @@ quint32 cRangeMeasChannel::readStatus()
         m_MsgNrCmdList[msgnr] = readchannelstatusbitmask;
         return msgnr;
     }
-    else {
-        return 1;
-    }
+    return 1;
 }
 
 
@@ -177,9 +168,7 @@ quint32 cRangeMeasChannel::resetStatus()
         m_MsgNrCmdList[msgnr] = resetchannelstatusbitmask_emitcmddone;
         return msgnr;
     }
-    else {
-        return 1;
-    }
+    return 1;
 }
 
 quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
@@ -189,9 +178,7 @@ quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
         m_MsgNrCmdList[msgnr] = readphasecorrection;
         return msgnr;
     }
-    else {
-        return 1;
-    }
+    return 1;
 }
 
 bool cRangeMeasChannel::isPossibleRange(const QString &rangeName)
@@ -384,12 +371,10 @@ RangeChannelData *cRangeMeasChannel::getSharedChannelData()
 
 void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    bool ok;
-
     if (msgnr == 0) {// 0 was reserved for async. messages
         QString sintnr;
         sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt(&ok);
+        int service = sintnr.toInt();
         switch (service) {
         case 1:
             // we got a sense:chn:range:cat notifier
@@ -400,9 +385,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
         }
     }
-
-    else
-    {
+    else {
         int cmd = m_MsgNrCmdList.take(msgnr);
         switch (cmd)
         {
@@ -412,7 +395,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             else
                 notifyError(unregisterpcbnotifierErrMsg);
             break;
-
         case readrangelist:
             if (reply == ack) {
                 m_allRangeNamesOrderedByServer = answer.toStringList();
@@ -421,52 +403,46 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             else
                 notifyError(readrangelistErrMsg);
             break;
-
         case readtype:
             if (reply == ack) {
-                m_oneWorkRangeInfo.type = answer.toInt(&ok);
+                m_oneWorkRangeInfo.type = answer.toInt();
                 emit activationContinue();
             }
             else
                 notifyError(readrangetypeErrMsg);
             break;
-
         case readurvalue:
             if (reply == ack) {
-                m_oneWorkRangeInfo.urvalue = answer.toDouble(&ok);
+                m_oneWorkRangeInfo.urvalue = answer.toDouble();
                 emit activationContinue();
             }
             else
                 notifyError(readrangeurvalueErrMsg);
             break;
-
         case readrejection:
             if (reply == ack) {
-                m_oneWorkRangeInfo.rejection = answer.toDouble(&ok);
+                m_oneWorkRangeInfo.rejection = answer.toDouble();
                 emit activationContinue();
             }
             else
                 notifyError(readrangerejectionErrMsg);
             break;
-
         case readovrejection:
             if (reply == ack) {
-                m_oneWorkRangeInfo.ovrejection = answer.toDouble(&ok);
+                m_oneWorkRangeInfo.ovrejection = answer.toDouble();
                 emit activationContinue();
             }
             else
                 notifyError(readrangeovrejectionErrMsg);
             break;
-
         case readadcrejection:
             if (reply == ack) {
-                m_oneWorkRangeInfo.adcrejection = answer.toDouble(&ok);
+                m_oneWorkRangeInfo.adcrejection = answer.toDouble();
                 emit activationContinue();
             }
             else
                 notifyError(readrangeadcrejectionErrMsg);
             break;
-
         case readisavail:
             if (reply == ack) {
                 m_oneWorkRangeInfo.avail = answer.toBool();
@@ -475,7 +451,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             else
                 notifyError(readrangeavailErrMsg);
             break;
-
         case setmeaschannelrange:
             if (reply == ack)
                 m_actRangeName = m_nextRangeName;
@@ -488,53 +463,46 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             } // perhaps some error output
             emit cmdDone(msgnr);
             break;
-
         case readgaincorrectioninternalandclamp:
             if (reply == ack)
-                m_fGainCorrection = answer.toDouble(&ok);
+                m_fGainCorrection = answer.toDouble();
             else
                 notifyError(readGainCorrErrMsg);
             emit cmdDone(msgnr);
             break;
-
         case readoffsetcorrection:
             if (reply == ack)
-                m_fOffsetCorrection = answer.toDouble(&ok);
+                m_fOffsetCorrection = answer.toDouble();
             else
                 notifyError(readOffsetCorrErrMsg);
             emit cmdDone(msgnr);
             break;
-
         case readphasecorrection:
             if (reply == ack)
-                m_fPhaseCorrection = answer.toDouble(&ok);
+                m_fPhaseCorrection = answer.toDouble();
             else
                 notifyError(readPhaseCorrErrMsg);
             emit cmdDone(msgnr);
             break;
-
         case readchannelstatusbitmask:
             if (reply == ack)
-                m_statusBitMask = answer.toInt(&ok);
+                m_statusBitMask = answer.toInt();
             else
                 notifyError(readChannelStatusErrMsg);
             emit cmdDone(msgnr);
             break;
-
         case resetchannelstatusbitmask_emitcmddone:
             if (reply == ack) { }
             else
                 notifyError(resetChannelStatusErrMsg);
             emit cmdDone(msgnr);
             break;
-
         case resetchannelstatusbitmask_instatemachine:
             if (reply == ack)
                 emit activationContinue();
             else
                 notifyError(resetChannelStatusErrMsg);
             break;
-
         case registerNotifier:
             if (reply == ack)
                 emit activationContinue();
@@ -549,9 +517,9 @@ void cRangeMeasChannel::setSortedRangeNameList()
 {
     QString s;
     QList<cRangeInfoWithConstantValues> riList = m_rangeNameToChannelData.values();
-    int riLen;
+    int riLen = riList.count();
 
-    if ( (riLen = riList.count()) > 1) {// nothing to sort if we only have 1 range
+    if ( riLen > 1) {// nothing to sort if we only have 1 range
         // first we sort the ranges according to range type
         for (int i = 0; i < riLen-1; i++) {
             for (int j = i; j < riLen; j++) {
@@ -590,24 +558,20 @@ void cRangeMeasChannel::pcbConnection()
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
 }
 
-
 void cRangeMeasChannel::readRangeAndProperties()
 {
     m_rangeQueryMachine.start(); // read all ranges and their properties
 }
-
 
 void cRangeMeasChannel::resetStatusSlot()
 {
     m_MsgNrCmdList[m_pcbInterface->resetStatus(getMName())] = resetchannelstatusbitmask_instatemachine;
 }
 
-
 void cRangeMeasChannel::setNotifierRangeCat()
 {
     m_MsgNrCmdList[m_pcbInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(getMName()), 1)] = registerNotifier;
 }
-
 
 void cRangeMeasChannel::activationDone()
 {
@@ -615,13 +579,11 @@ void cRangeMeasChannel::activationDone()
     emit activated();
 }
 
-
 void cRangeMeasChannel::deactivationResetNotifiers()
 {
     m_bActive = false;
     m_MsgNrCmdList[m_pcbInterface->unregisterNotifiers()] = unregisterNotifiers;
 }
-
 
 void cRangeMeasChannel::deactivationDone()
 {
@@ -648,30 +610,25 @@ void cRangeMeasChannel::readUrvalue()
     m_MsgNrCmdList[m_pcbInterface->getUrvalue(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readurvalue;
 }
 
-
 void cRangeMeasChannel::readRejection()
 {
    m_MsgNrCmdList[m_pcbInterface->getRejection(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readrejection;
 }
-
 
 void cRangeMeasChannel::readOVRejection()
 {
     m_MsgNrCmdList[m_pcbInterface->getOVRejection(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readovrejection;
 }
 
-
 void cRangeMeasChannel::readADCRejection()
 {
     m_MsgNrCmdList[m_pcbInterface->getADCRejection(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readadcrejection;
 }
 
-
 void cRangeMeasChannel::readisAvail()
 {
     m_MsgNrCmdList[m_pcbInterface->isAvail(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readisavail;
 }
-
 
 void cRangeMeasChannel::rangeQueryLoop()
 {
@@ -700,6 +657,5 @@ void cRangeMeasChannel::rangeQueryLoop()
         emit activationContinue();
     }
 }
-
 
 }

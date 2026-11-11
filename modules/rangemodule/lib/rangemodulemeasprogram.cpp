@@ -182,8 +182,8 @@ void cRangeModuleMeasProgram::setDspCmdList()
         m_dspInterface->addCycListItem("COPYDU(32,MAXIMUMSAMPLE,MAXRESET)"); // all raw adc maximum samples to userspace
 
         for (int i = 0; i < channelMNames.count(); i++) {
-            cRangeMeasChannel* mchn = m_pModule->getMeasChannel(channelMNames.at(i));
-            quint8 chnnr = mchn->getDSPChannelNr();
+            cRangeMeasChannel* channel = m_pModule->getMeasChannel(channelMNames.at(i));
+            quint8 chnnr = channel->getDSPChannelNr();
             m_dspInterface->addCycListItem(QString("COPYDU(1,MAXIMUMSAMPLE+%1,CHXRAWPEAK+%2)").arg(chnnr).arg(i)); // raw adc value maximum
             m_dspInterface->addCycListItem(QString("SETVAL(MAXRESET+%1,0.0)").arg(chnnr)); // raw adc value maximum
         }
@@ -252,9 +252,9 @@ void cRangeModuleMeasProgram::setActualValuesNames()
 {
     const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
     for (int i = 0; i < channelMNames.count(); i++) {
-        cRangeMeasChannel* mchn = m_pModule->getMeasChannel(channelMNames.at(i));
-        m_veinActValueList.at(i)->setChannelName(mchn->getAlias());
-        m_veinActValueList.at(i)->setUnit(mchn->getUnit());
+        cRangeMeasChannel* channel = m_pModule->getMeasChannel(channelMNames.at(i));
+        m_veinActValueList.at(i)->setChannelName(channel->getAlias());
+        m_veinActValueList.at(i)->setUnit(channel->getUnit());
     }
 }
 
@@ -262,8 +262,8 @@ void cRangeModuleMeasProgram::setSCPIMeasInfo()
 {
     const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
     for (int i = 0; i < channelMNames.count(); i++) {
-        cRangeMeasChannel* mchn = m_pModule->getMeasChannel(channelMNames.at(i));
-        m_veinActValueList.at(i)->setScpiInfo("MEASURE", mchn->getAlias(), SCPI::isCmdwP);
+        cRangeMeasChannel* channel = m_pModule->getMeasChannel(channelMNames.at(i));
+        m_veinActValueList.at(i)->setScpiInfo("MEASURE", channel->getAlias(), SCPI::isCmdwP);
     }
 }
 
@@ -291,9 +291,9 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
         const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
         int rmsOffsetInActual = channelMNames.count();
         for(int channelIdx=0; channelIdx<channelMNames.count(); channelIdx++) {
-            cRangeMeasChannel* mchn = m_pModule->getMeasChannel(channelMNames.at(channelIdx));
+            cRangeMeasChannel* channel = m_pModule->getMeasChannel(channelMNames.at(channelIdx));
             float rmsValueScaled = (*actualValues)[channelIdx+rmsOffsetInActual];
-            float preScalingFact = mchn->getSharedChannelData()->getPreScaling();
+            float preScalingFact = channel->getSharedChannelData()->getPreScaling();
             float rmsValue = rmsValueScaled * preScalingFact; // yes we expected 1/preScalingFact
             m_veinRmsValueList.at(channelIdx)->setValue(QVariant(rmsValue));
         }

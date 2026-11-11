@@ -273,7 +273,6 @@ void cRangeObsermatic::generateVeinInterface()
     m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pRangingSignal);
 }
 
-
 void cRangeObsermatic::handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool peakOverLoad)
 {
     cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
@@ -350,55 +349,51 @@ void cRangeObsermatic::rangeAutomatic()
                     m_MsgNrCmdList[rangeMeasChannel->resetStatus()] = resetstatus;
                 }
             }
-            else {
+            else
                 unmarkOverload = false;
-            }
         }
-
-        if (unmarkOverload) { // if we could recover all overloads
+        if (unmarkOverload)  // if we could recover all overloads
             m_pParOverloadOnOff->setValue(QVariant(int(0)));
-        }
     }
 }
 
 void cRangeObsermatic::groupHandling()
 {
     // preset group overload flags in any case
-    for(auto &entry : m_groupOvlList) {
-        entry = false;
-    }
+    for(auto &groupOvl : m_groupOvlList)
+        groupOvl = false;
+
     if (m_ConfPar.m_nGroupAct.m_nActive == 1) {
-        QList<int> indexList;
         const QStringList channelAliases = m_pModule->getSharedChannelRangeObserver()->getChannelAliases();
-        for (int i = 0; i < m_GroupList.count(); i++) {
-            indexList.clear();
-            const QStringList grouplist = m_GroupList.at(i); // we fetch 1 list of all our grouplists
+        for (int groupIdx = 0; groupIdx < m_GroupList.count(); groupIdx++) {
+            QList<int> channelIdxList;
+            const QStringList grouplist = m_GroupList.at(groupIdx); // we fetch 1 list of all our grouplists
             for(const QString& group : grouplist) {
                 if (channelAliases.contains(group)) // and look if all channels of that grouplist are present
-                    indexList.append(channelAliases.indexOf(group));
+                    channelIdxList.append(channelAliases.indexOf(group));
             }
-            if (grouplist.count() == indexList.count()) {
+            if (grouplist.count() == channelIdxList.count()) {
                 // we found all entries of grouplist in our channel alias list, means group is completely present
                 // so we can group now
                 double maxUrValue= 0.0;
                 int maxIndex = 0;
                 bool groupNeedsOverloadReset = false;
                 // first we search for the range with max upper range value
-                for (int j = 0; j < indexList.count(); j++) {
-                    const int k = indexList.at(j);
-                    const QString rangeName = m_ConfPar.getCurrentRangeName(k);
-                    double rngUrValue = m_RangeMeasChannelList.at(k)->getUrValue(rangeName);
+                for (int idxInChannelIdxList = 0; idxInChannelIdxList < channelIdxList.count(); idxInChannelIdxList++) {
+                    const int channelIdx = channelIdxList.at(idxInChannelIdxList);
+                    const QString rangeName = m_ConfPar.getCurrentRangeName(channelIdx);
+                    double rngUrValue = m_RangeMeasChannelList.at(channelIdx)->getUrValue(rangeName);
                     if (maxUrValue < rngUrValue) {
                         bool allPossible = true;
-                        for (int l = 0; l <indexList.count(); l++)
-                            allPossible = allPossible && m_RangeMeasChannelList.at(indexList.at(l))->isPossibleRange(rangeName);
+                        for (int l = 0; l <channelIdxList.count(); l++)
+                            allPossible = allPossible && m_RangeMeasChannelList.at(channelIdxList.at(l))->isPossibleRange(rangeName);
                         // but we only take the new maximum value if all channels support this range
                         if (allPossible) {
                             maxUrValue = rngUrValue;
-                            maxIndex = indexList.at(j);
+                            maxIndex = channelIdx;
                         }
                     }
-                    if(requiresOverloadReset(k))
+                    if(requiresOverloadReset(channelIdx))
                         groupNeedsOverloadReset = true;
                 }
 
@@ -417,8 +412,8 @@ void cRangeObsermatic::groupHandling()
                 //    max range with overload -> range automatic stops until user resets
                 //    overload manually
                 QString newRange = m_ConfPar.getCurrentRangeName(maxIndex);
-                for (int j = 0; j < indexList.count(); j++) {
-                    const int k = indexList.at(j);
+                for (int j = 0; j < channelIdxList.count(); j++) {
+                    const int k = channelIdxList.at(j);
                     m_ConfPar.setCurrentRangeName(k, newRange);
                     if(groupNeedsOverloadReset) {
                         qInfo("Group overload channel %i set.", k);
@@ -429,7 +424,6 @@ void cRangeObsermatic::groupHandling()
         }
     }
 }
-
 
 void cRangeObsermatic::setRanges(bool force)
 {
@@ -504,7 +498,7 @@ QList<int> cRangeObsermatic::getChannelGroupAliasIdxListForChannel(int channelId
     if (m_ConfPar.m_nGroupAct.m_nActive == 1) {
         const QStringList channelAliases = m_pModule->getSharedChannelRangeObserver()->getChannelAliases();
         QString channelAlias = channelAliases.at(channelIdx);
-        for (const QStringList &aliasesInGroup : m_GroupList) {
+        for (const QStringList &aliasesInGroup : qAsConst(m_GroupList)) {
             if (aliasesInGroup.contains(channelAlias)) {
                 QList<int> indexlist;
                 for(const QString &group : aliasesInGroup)
@@ -644,31 +638,28 @@ void cRangeObsermatic::deactivationDone()
     emit deactivated();
 }
 
-
 void cRangeObsermatic::writeGainScale()
 {
     if (m_bActive)
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_gainScaleDSPVarGroup)] = writegainScale;
 }
 
-
 void cRangeObsermatic::readStatus()
 {
     if(m_bActive) {
-        for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we read status from all channels
-            cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
+        for (int channelIdx = 0; channelIdx < m_RangeMeasChannelList.count(); channelIdx++) { // we read status from all channels
+            cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
             m_MsgNrCmdList[rangeMeasChannel->readStatus()] = readstatus;
             m_nReadStatusPending++;
         }
     }
 }
 
-
 void cRangeObsermatic::analyzeStatus()
 {
-    for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we test all channels
-        cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
-        m_hardOvlList.replace(i, rangeMeasChannel->isHWOverload());
+    for (int channelIdx = 0; channelIdx < m_RangeMeasChannelList.count(); channelIdx++) { // we test all channels
+        cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
+        m_hardOvlList.replace(channelIdx, rangeMeasChannel->isHWOverload());
     }
 }
 
@@ -710,9 +701,7 @@ void cRangeObsermatic::onNewRange(const QVariant &rangeAliasVariant)
 // called when range automatic becomes on or off
 void cRangeObsermatic::newRangeAuto(const QVariant &rangeAuto)
 {
-    bool ok;
-    m_ConfPar.m_nRangeAutoAct.m_nActive = rangeAuto.toInt(&ok);
-
+    m_ConfPar.m_nRangeAutoAct.m_nActive = rangeAuto.toInt();
     if (m_ConfPar.m_nRangeAutoAct.m_nActive == 1) {
         rangeAutomatic(); // call once if switched to automatic
         groupHandling();  // check for grouping
@@ -725,14 +714,11 @@ void cRangeObsermatic::newRangeAuto(const QVariant &rangeAuto)
 // called when grouping becomes on or off
 void cRangeObsermatic::newGrouping(const QVariant rangeGrouping)
 {
-    bool ok;
-    m_ConfPar.m_nGroupAct.m_nActive = rangeGrouping.toInt(&ok);
-
+    m_ConfPar.m_nGroupAct.m_nActive = rangeGrouping.toInt();
     if ( m_ConfPar.m_nGroupAct.m_nActive == 1 ) {
         groupHandling(); // call once if switched to grouphandling
         setRanges();
     }
-
     emit m_pModule->parameterChanged();
 }
 
