@@ -28,6 +28,9 @@ public:
     double getRejection() const;
     double getOvrRejection() const;
     double getAdcRejection() const;
+
+    static const QString &getAliasFromName(const QString &rangeName);
+    static const QString &getNameFromAlias(const QString &rangeAlias);
 signals:
     void sigFetchDoneRange(const QString &channelMName, const QString &rangeName, bool ok);
 
@@ -51,7 +54,9 @@ private:
     std::shared_ptr<double> m_adcrejection = std::make_shared<double>(0.0);
 
     TaskContainerInterfacePtr m_currentTasks;
+
     static const QString RangeAliasNull;
+    static const QString RangeNameNull;
 };
 
 typedef std::shared_ptr<Range> RangePtr;
