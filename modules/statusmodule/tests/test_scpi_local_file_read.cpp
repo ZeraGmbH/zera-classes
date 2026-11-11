@@ -42,7 +42,7 @@ void test_scpi_local_file_read::queryWithoutParameterReturnsErrorMessage()
     startModmanWithSession(":/status-scpi-session.json");
     SCPIMODULE::ScpiTestClient client(getScpiModule());
 
-    QCOMPARE(sendReceive(client, "STATUS:DEV1:LOCFILE?"), "ERROR: missing parameter.'");
+    QCOMPARE(sendReceive(client, "STATUS:DEV1:LOCFILE?"), "ERROR: missing parameter'");
 }
 
 void test_scpi_local_file_read::queryReturnsErrorMessageFromFileRead()

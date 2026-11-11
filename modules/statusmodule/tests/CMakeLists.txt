@@ -18,6 +18,7 @@ SETUP_QTESTS_MODULE(
     test_rpc_create_version_file
     test_adj_data
     test_scpi_local_file_read
+    test_scpi_list_local_files
 )
 
 add_definitions(-DOE_INSTALL_ROOT="${OE_INSTALL_ROOT}")
@@ -45,4 +46,14 @@ target_sources(test_adj_data
 target_sources(test_scpi_local_file_read
   PRIVATE
   test-data/test-data.qrc
+)
+
+target_sources(test_scpi_list_local_files
+  PRIVATE
+  test-data/test-data.qrc
+)
+
+target_link_libraries(test_scpi_list_local_files
+  PRIVATE
+  Zera::zera-file-io-extensions-testlib
 )

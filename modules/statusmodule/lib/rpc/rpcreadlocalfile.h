@@ -9,6 +9,7 @@ class RpcReadLocalFile : public VfCpp::VfCppRpcSimplified
 public:
     RpcReadLocalFile(VeinEvent::EventSystem *eventSystem, int entityId);
 
+    // For now static (for tests)
     static void setFileDirBasePath(const QString &path);
 private slots:
     void callRPCFunction(const QUuid &callId, const QVariantMap &parameters) override;

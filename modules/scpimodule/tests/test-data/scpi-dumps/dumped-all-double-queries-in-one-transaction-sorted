@@ -1652,7 +1652,7 @@ STATUS:DEV1:DEVTYPE?:
 unknown
 
 STATUS:DEV1:LOCFILE?:
-ERROR: missing parameter.'
+ERROR: missing parameter'
 
 STATUS:DEV1:RELEASE?:
 
@@ -2002,6 +2002,9 @@ STATUS:DEV1:DSP:PERIODCOUNT?:
 STATUS:DEV1:DSP:TIMEMS?:
 
 
+STATUS:DEV1:LOCFILE:CATALOG?:
+scpi-file-example.txt
+
 STATUS:DEV1:VERSION:CONTROLER?:
 {"Relay controller version":"Unknown","System controller version":"Unknown"}
 
@@ -2115,6 +2118,9 @@ DSPLCA: V0.0;DSP V0.00
 
 STATUS:DEV1:VERSION:CONTROLER?:
 {"Relay controller version":"Unknown","System controller version":"Unknown"}
+
+STATUS:DEV1:LOCFILE:CATALOG?:
+scpi-file-example.txt
 
 STATUS:DEV1:DSP:TIMEMS?:
 
@@ -2465,7 +2471,7 @@ STATUS:DEV1:RELEASE?:
 
 
 STATUS:DEV1:LOCFILE?:
-ERROR: missing parameter.'
+ERROR: missing parameter'
 
 STATUS:DEV1:DEVTYPE?:
 unknown

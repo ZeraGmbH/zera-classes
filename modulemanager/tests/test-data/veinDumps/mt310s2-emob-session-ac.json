@@ -5849,6 +5849,9 @@
                 "RPC_CreateVersionFile(QString p_destinationPath)": {
                     "Description": "<skipped>"
                 },
+                "RPC_ListLocalFiles()": {
+                    "Description": "<skipped>"
+                },
                 "RPC_ReadLocalFile(QString p_fileName)": {
                     "Description": "<skipped>",
                     "Optional parameter": "",
@@ -5990,6 +5993,13 @@
                 ],
                 "Name": "DEV1",
                 "RPC": [
+                    [
+                        "STATUS",
+                        "LOCFILE:CATALOG",
+                        "2",
+                        "RPC_ListLocalFiles()",
+                        "0"
+                    ],
                     [
                         "STATUS",
                         "LOCFILE",

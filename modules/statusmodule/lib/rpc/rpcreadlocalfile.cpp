@@ -21,9 +21,9 @@ void RpcReadLocalFile::setFileDirBasePath(const QString &path)
 void RpcReadLocalFile::callRPCFunction(const QUuid &callId, const QVariantMap &parameters)
 {
     QString filePath = parameters["p_fileName"].toString();
-    QByteArray fileData;
     QString strReturned;
     if (!filePath.isEmpty()) {
+        QByteArray fileData;
         SafeFileLoader::LoadResult loadResult = SafeFileLoader::readFile(fileData, filePath, m_fileDirBasePath);
         if (loadResult == SafeFileLoader::Ok) {
             TextEncodingConverter::Result convertResult = TextEncodingConverter::convert(fileData);
@@ -36,7 +36,7 @@ void RpcReadLocalFile::callRPCFunction(const QUuid &callId, const QVariantMap &p
             strReturned = SafeFileLoader::stringifyLoadResult(loadResult);
     }
     else
-        strReturned = "ERROR: missing parameter.'";
+        strReturned = "ERROR: missing parameter'";
     // Decision: Return error message and do not go the RPC/SCPI error way
     sendRpcResult(callId, strReturned);
 }

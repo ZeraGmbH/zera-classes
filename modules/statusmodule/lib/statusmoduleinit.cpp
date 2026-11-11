@@ -1,6 +1,7 @@
 #include "statusmoduleinit.h"
 #include "statusmodule.h"
 #include "rpcreadlocalfile.h"
+#include "rpclistlocalfiles.h"
 #include "rpccreateversionfile.h"
 #include "stringvalidatorallstrings.h"
 #include <reply.h>
@@ -300,6 +301,20 @@ void cStatusModuleInit::generateVeinInterface()
     m_pReadLocalFileRpc->setValidator(new StringValidatorAllStrings);
     m_pReadLocalFileRpc->canAcceptOptionalParam(); // Decision: immediate error message
     m_pModule->m_veinModuleRPCMap[rpcReadLocalFile->getSignature()] = m_pReadLocalFileRpc; // for modules use
+
+    std::shared_ptr<RpcListLocalFiles> rpcListLocalFiles =
+        std::make_shared<RpcListLocalFiles>(m_pModule->getRpcEventSystem(),
+                                            m_pModule->getEntityId());
+    const QString listDescription =
+        "Returns the names of files installed on device:\n"
+        "* **Path of files to list:** '/home/operator/scpi-files'\n"
+        "* **Files in subdirectories:** Shown as 'folder/file'\n"
+        ;
+    m_pListLocalFilesRpc = std::make_shared<VfModuleRpc>(rpcListLocalFiles, listDescription);
+    m_pListLocalFilesRpc->setRPCScpiInfo("STATUS", QString("LOCFILE:CATALOG"),
+                                         SCPI::isQuery,
+                                         rpcListLocalFiles->getSignature());
+    m_pModule->m_veinModuleRPCMap[rpcListLocalFiles->getSignature()] = m_pListLocalFilesRpc; // for modules use
 
     m_veinUpdateTimer->start();
 }
