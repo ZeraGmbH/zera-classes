@@ -26,8 +26,8 @@ public:
 
     RangeChannelData* getSharedChannelData();
 
-    QString getRange() const;
-    quint32 setRange(const QString &rangeAlias);
+    QString getCurrRangeName() const;
+    quint32 setRange(const QString &rangeName);
     quint32 readGainCorrection(double amplitude);
     quint32 readPhaseCorrection(double frequency);
     quint32 readOffsetCorrection(double amplitude);
@@ -40,17 +40,17 @@ public:
 
     bool isHWOverload(); // test if we have some hardware overload condition
 
-    double getUrValue(const QString &range) const;      // upper range value
-    double getRejection(const QString &range) const;    // nominal (100%) rejection
-    double getOVRRejection(const QString &range) const; // over (usually 125%) rejection
-    bool isPossibleRange(const QString &range); // returns true if range is available
+    double getUrValue(const QString &rangeName) const;      // upper range value
+    double getRejection(const QString &rangeName) const;    // nominal (100%) rejection
+    double getOVRRejection(const QString &rangeName) const; // over (usually 125%) rejection
+    bool isPossibleRange(const QString &rangeName); // returns true if range is available
     bool isRMSOverload(double ampl); // test if ampl is overload condition
     bool isPeakOverload(double ampl); // test if ampl is adc overload condition
 
-    QString getOptimalRange(double rms, double peak, const QString &rngAlias); // returns opt. range alias
-    QString getMaxRange() const; // returns alias of the range with max ur value
-    QString getMaxRange(const QString &rngAlias); // returns alias of the range with max ur value
-    QString getSortedRangeAliasList();
+    QString getOptimalRange(double rms, double peak, const QString &rangeName); // returns opt. range name
+    QString getMaxRangeName() const;
+    QString getMaxRangeName(const QString &rangeName); // returns name of the range with max ur value
+    QString getSortedRangeNameList();
 
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
@@ -69,7 +69,6 @@ private slots:
 
     // the slots for querying a measchannels range properties
     void readRangelist();
-    void readRngAlias();
     void readType();
     void readUrvalue();
     void readRejection();
@@ -78,23 +77,23 @@ private slots:
     void readisAvail();
     void rangeQueryLoop();
 private:
-    void setSortedRangeAliasList();
-    QString findOptimalRange(double actualValue, const QString &actRngAlias, qint32 actRngType, double extraRejectionFactor);
+    void setSortedRangeNameList();
+    QString findOptimalRange(double actualValue, const QString &actRangeName, qint32 actRngType, double extraRejectionFactor);
 
     RangeChannelData m_sharedChannelData;
     QStringList m_allRangeNamesOrderedByServer; // a list of all ranges
 
     cRangeInfoWithConstantValues m_oneWorkRangeInfo;
     QHash<QString, cRangeInfoWithConstantValues> m_growingWorkRangeInfo;
-    QHash<QString, cRangeInfoWithConstantValues> m_rangeAliasToChannelData;
+    QHash<QString, cRangeInfoWithConstantValues> m_rangeNameToChannelData;
 
-    QString m_nextRangeAlias;
-    QString m_actRangeAlias;
+    QString m_nextRangeName;
+    QString m_actRangeName;
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
     quint32 m_statusBitMask; // currently just COM5003 HW overload bit
-    QString m_sortedRangeAliasList;
+    QString m_sortedRangeNameList;
 
     // statemachine for activating a rangemeaschannel
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
@@ -110,7 +109,6 @@ private:
     // statemachine for querying a measchannels range properties
     QStateMachine m_rangeQueryMachine;
     QState m_readRangelistState; // we query our range list
-    QState m_readRngAliasState;
     QState m_readTypeState;
     QState m_readUrvalueState;
     QState m_readRejectionState;

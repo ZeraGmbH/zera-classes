@@ -9,7 +9,6 @@ public:
     QString name;
     qint32 type;
     bool avail;
-    QString alias;
 };
 
 class cRangeInfoWithConstantValues : public cRangeInfoBase

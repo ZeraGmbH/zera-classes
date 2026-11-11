@@ -118,6 +118,15 @@ const QString &Range::getNameFromAlias(const QString &rangeAlias)
     return rangeAlias != RangeAliasNull ? rangeAlias : RangeNameNull;
 }
 
+const QString Range::getAliasListFromNameList(const QString &rangeNameList)
+{
+    QStringList aliasList;
+    const QStringList rangeNameStringList = rangeNameList.split(";");
+    for (const QString &rangeName : rangeNameStringList)
+        aliasList.append(getAliasFromName(rangeName));
+    return aliasList.join(";");
+}
+
 void Range::preparePcbInterface()
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();

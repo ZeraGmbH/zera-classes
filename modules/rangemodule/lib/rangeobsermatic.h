@@ -66,10 +66,10 @@ private slots:
     void readStatus();
     void analyzeStatus();
 
-    void onNewRange(QVariant range);
-    void newRangeAuto(QVariant rauto);
-    void newGrouping(QVariant rgrouping);
-    void onVeinChangeOverload(QVariant overload);
+    void onNewRange(const QVariant &rangeAliasVariant);
+    void newRangeAuto(const QVariant &rangeAuto);
+    void newGrouping(const QVariant rangeGrouping);
+    void onVeinChangeOverload(const QVariant &overload);
     void preScalingChanged(QVariant unused);
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
@@ -87,7 +87,7 @@ private:
     void groupHandling();
     void setRanges(bool force = false); // here we really set ranges
 
-    QList<int> getGroupAliasIdxListForChannel(int channelIdx);
+    QList<int> getChannelGroupAliasIdxListForChannel(int channelIdx);
     double getPreScale(int channelIdx);
 
     cRangeModule *m_pModule;
@@ -103,13 +103,13 @@ private:
     quint32 m_nWaitAfterRanging = 0;
     quint32 m_nRangeSetPending = 0;
     quint32 m_nReadStatusPending = 0;
-    QStringList m_actChannelRangeList; // a list of the actual ranges set
+    QStringList m_actChannelRangeNameList;
 
     QList<ChannelRangeObserver::ChannelCanChangeRangeObserverPtr> m_channelCanChangeRangeObservers;
     QList<ChannelRangeObserver::ChannelCurrentRangePtr> m_channelCurrentRangeObservers;
 
     // our interface entities
-    QList<VfModuleParameter*> m_RangeParameterList;
+    QList<VfModuleParameter*> m_veinRangeAliasParameterList;
     QList<VfModuleComponent*> m_RangeOVLComponentList;
     QList<VfModuleComponent*> m_RangeOVLRejectionComponentList;
     QList<VfModuleComponent*> m_RangeActRejectionComponentList;
