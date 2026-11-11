@@ -6,6 +6,19 @@
 namespace REFERENCEMODULE
 {
 
+enum rangemeaschannelCmds
+{
+    readrangelist,
+
+    readtype,
+    readisavail,
+
+    setmeaschannelrange,
+    readgaincorrection,
+    readoffsetcorrection,
+    readphasecorrection,
+};
+
 cReferenceMeasChannel::cReferenceMeasChannel(const ChannelRangeObserver::ChannelPtr &channelObserver,
                                              const NetworkConnectionInfo &pcbsocket,
                                              const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory,
@@ -48,18 +61,15 @@ cReferenceMeasChannel::cReferenceMeasChannel(const ChannelRangeObserver::Channel
     connect(&m_deactivationDoneState, &QState::entered, this, &cReferenceMeasChannel::deactivationDone);
 
     // setting up statemachine for querying the meas channels ranges properties
-    m_readRngAliasState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readTypeState);
     m_readTypeState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_readisAvailState);
     m_readisAvailState.addTransition(this, &cReferenceMeasChannel::activationContinue, &m_rangeQueryDoneState);
 
-    m_rangeQueryMachine.addState(&m_readRngAliasState);
     m_rangeQueryMachine.addState(&m_readTypeState);
     m_rangeQueryMachine.addState(&m_readisAvailState);
     m_rangeQueryMachine.addState(&m_rangeQueryDoneState);
 
-    m_rangeQueryMachine.setInitialState(&m_readRngAliasState);
+    m_rangeQueryMachine.setInitialState(&m_readTypeState);
 
-    connect(&m_readRngAliasState, &QState::entered, this, &cReferenceMeasChannel::readRngAlias);
     connect(&m_readTypeState, &QState::entered, this, &cReferenceMeasChannel::readType);
     connect(&m_readisAvailState, &QState::entered, this, &cReferenceMeasChannel::readisAvail);
     connect(&m_rangeQueryDoneState, &QState::entered, this, &cReferenceMeasChannel::rangeQueryDone);
@@ -96,15 +106,6 @@ void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
         }
         else
             notifyError(readrangelistErrMsg);
-        break;
-
-    case readrngalias:
-        if (reply == ack) {
-            m_rangeInfo.alias = answer.toString();
-            emit activationContinue();
-        }
-        else
-            notifyError(readrangealiasErrMsg);
         break;
 
     case readtype:
@@ -203,12 +204,10 @@ void cReferenceMeasChannel::activationDone()
     emit activated();
 }
 
-
 void cReferenceMeasChannel::deactivationInit()
 {
     emit deactivationContinue();
 }
-
 
 void cReferenceMeasChannel::deactivationDone()
 {
@@ -216,13 +215,6 @@ void cReferenceMeasChannel::deactivationDone()
     disconnect(m_pcbInterface.get(), 0, this, 0);
     emit deactivated();
 }
-
-
-void cReferenceMeasChannel::readRngAlias()
-{
-    m_MsgNrCmdList[m_pcbInterface->getAlias(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readrngalias;
-}
-
 
 void cReferenceMeasChannel::readType()
 {
@@ -234,11 +226,10 @@ void cReferenceMeasChannel::readisAvail()
     m_MsgNrCmdList[m_pcbInterface->isAvail(getMName(), m_allRangeNamesOrderedByServer.at(m_RangeQueryIt))] = readisavail;
 }
 
-
 void cReferenceMeasChannel::rangeQueryDone()
 {
     m_rangeInfo.name = m_allRangeNamesOrderedByServer.at(m_RangeQueryIt);
-    m_rangeAliasToChannelData[m_rangeInfo.alias] = m_rangeInfo; // for each range we append cRangeinfo per alias
+    m_rangeAliasToChannelData[ChannelRangeObserver::Range::getAliasFromName(m_rangeInfo.name)] = m_rangeInfo;
 }
 
 }
