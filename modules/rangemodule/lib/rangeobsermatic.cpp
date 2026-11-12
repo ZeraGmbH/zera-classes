@@ -438,9 +438,8 @@ void cRangeObsermatic::setRanges(bool force)
         }
 
         if (rangeName != m_actChannelRangeNameList.at(i) || force) {
-            if (!change) { // signal is only set once regardingless there is more than 1 range to change
+            if (!change) // signal is only set once regardingless there is more than 1 range to change
                 m_pRangingSignal->setValue(QVariant(int(1)));
-            }
             change = true;
 
             // set range
@@ -533,18 +532,15 @@ double cRangeObsermatic::getPreScale(int channelIdx)
     if(channelIdx < channelAliases.length()){
         QString alias = channelAliases.at(channelIdx);
         for(int groupListIdx = 0; groupListIdx<m_GroupList.length(); groupListIdx++) {
-            if(m_GroupList[groupListIdx].contains(alias)) {
+            if(m_GroupList[groupListIdx].contains(alias))
                 groupPresacalingIdxFound = groupListIdx;
-            }
         }
     }
 
-    if(groupPresacalingIdxFound < m_RangeGroupPreScalingList.length() && groupPresacalingIdxFound > -1) {
+    if(groupPresacalingIdxFound < m_RangeGroupPreScalingList.length() && groupPresacalingIdxFound > -1)
         prescaleValue = m_RangeGroupPreScalingInfo.at(groupPresacalingIdxFound)->getValue().toDouble();
-    }
     return prescaleValue;
 }
-
 
 void cRangeObsermatic::dspserverConnect()
 {
@@ -555,14 +551,12 @@ void cRangeObsermatic::dspserverConnect()
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 
-
 void cRangeObsermatic::readGainScale()
 {
     m_gainScaleDSPVarGroup = m_dspInterface->createVariableGroup("SCALEMEM");
     m_gainScaleDspVar = m_gainScaleDSPVarGroup->addDspVar("GAINCORRECTION2", 32, dspDataTypeFloat, dspInternalSegment);
     m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_gainScaleDSPVarGroup)] = readgainscale;
 }
-
 
 void cRangeObsermatic::onActivationDone()
 {
@@ -623,7 +617,6 @@ void cRangeObsermatic::onActivationDone()
     emit activated();
 }
 
-
 void cRangeObsermatic::deactivationInit()
 {
     m_bActive = false;
@@ -631,7 +624,6 @@ void cRangeObsermatic::deactivationInit()
     disconnect(m_dspInterface.get(), 0, this, 0); // we disconnect from our dsp interface
     emit deactivationContinue();
 }
-
 
 void cRangeObsermatic::deactivationDone()
 {
@@ -697,7 +689,6 @@ void cRangeObsermatic::onNewRange(const QVariant &rangeAliasVariant)
     emit m_pModule->parameterChanged();
 }
 
-
 // called when range automatic becomes on or off
 void cRangeObsermatic::newRangeAuto(const QVariant &rangeAuto)
 {
@@ -709,7 +700,6 @@ void cRangeObsermatic::newRangeAuto(const QVariant &rangeAuto)
     }
     emit m_pModule->parameterChanged();
 }
-
 
 // called when grouping becomes on or off
 void cRangeObsermatic::newGrouping(const QVariant rangeGrouping)
@@ -746,10 +736,9 @@ void cRangeObsermatic::onVeinChangeOverload(const QVariant &overload)
     connect(m_pParOverloadOnOff, &VfModuleParameter::sigValueChanged, this, &cRangeObsermatic::onVeinChangeOverload);
 }
 
-void cRangeObsermatic::preScalingChanged(QVariant unused)
+void cRangeObsermatic::preScalingChanged()
 {
-    Q_UNUSED(unused)
-    for(int i=0;i<m_RangeGroupPreScalingInfo.length();++i){
+    for(int i=0; i<m_RangeGroupPreScalingInfo.length(); ++i){
         double factor = 1;
         if(i < m_RangeGroupPreScalingList.length()) {
             if(m_RangeGroupPreScalingEnabledList.at(i)->getValue().toBool() == true) {
@@ -761,12 +750,11 @@ void cRangeObsermatic::preScalingChanged(QVariant unused)
                     factor = num / denom;
                 }
                 // the correction factor is the inverse of the transformer ratio
-                if(fac.length()>1){
-                    if(fac.at(1) == "(sqrt(3))"){
+                if(fac.length()>1) {
+                    if (fac.at(1) == "(sqrt(3))")
                         factor = factor/sqrt(3);
-                    }else if(fac.at(1) == "(1/sqrt(3))"){
+                    else if(fac.at(1) == "(1/sqrt(3))")
                         factor = factor*sqrt(3);
-                    }
                 }
             }
         }
@@ -778,7 +766,21 @@ void cRangeObsermatic::preScalingChanged(QVariant unused)
     setRanges(true);
 }
 
-void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant)
+void cRangeObsermatic::handleRangeChangeResponse(int channelIdx)
+{
+    const QString channelName = m_actChannelRangeNameList.at(channelIdx);
+    const QString channelAlias = ChannelRangeObserver::Range::getAliasFromName(channelName);
+    m_veinRangeAliasParameterList.at(channelIdx)->setValue(channelAlias);
+    if (m_nRangeSetPending > 0) {
+        m_nRangeSetPending--;
+        if (m_nRangeSetPending == 0) {
+            m_pRangingSignal->setValue(QVariant(0));
+            m_nWaitAfterRanging = 1;
+        }
+    }
+}
+
+void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
     }
@@ -813,24 +815,15 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
     case readstatus:
         if (m_nReadStatusPending > 0) {
             m_nReadStatusPending--;
-            if (m_nReadStatusPending == 0) {
+            if (m_nReadStatusPending == 0)
                 analyzeStatus();
-            }
         }
         break;
 
     default:
         if ((cmd >= setrange) && (cmd <= setrange +32)) {
             cmd -= setrange;
-            // this is our synchronization..setValue emits notification
-            m_veinRangeAliasParameterList.at(cmd)->setValue(ChannelRangeObserver::Range::getAliasFromName(m_actChannelRangeNameList.at(cmd)));
-            if (m_nRangeSetPending > 0) {
-                m_nRangeSetPending--;
-                if (m_nRangeSetPending == 0) {
-                    m_pRangingSignal->setValue(QVariant(0));
-                    m_nWaitAfterRanging = 1;
-                }
-            }
+            handleRangeChangeResponse(cmd);
         }
     }
 }

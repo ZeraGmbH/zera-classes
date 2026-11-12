@@ -91,7 +91,6 @@ void cRangeModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
-
 }
 
 void cRangeModule::startMeas()

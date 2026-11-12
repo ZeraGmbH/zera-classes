@@ -70,9 +70,9 @@ private slots:
     void newRangeAuto(const QVariant &rangeAuto);
     void newGrouping(const QVariant rangeGrouping);
     void onVeinChangeOverload(const QVariant &overload);
-    void preScalingChanged(QVariant unused);
+    void preScalingChanged();
 
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply);
 private:
     void observeRangeOverload();
     bool requiresOverloadReset(int channel);
@@ -86,6 +86,7 @@ private:
     void rangeAutomatic();
     void groupHandling();
     void setRanges(bool force = false); // here we really set ranges
+    void handleRangeChangeResponse(int channelIdx);
 
     QList<int> getChannelGroupAliasIdxListForChannel(int channelIdx);
     double getPreScale(int channelIdx);

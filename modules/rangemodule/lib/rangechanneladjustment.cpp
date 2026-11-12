@@ -27,14 +27,14 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeAdj(
         m_pModule->getEntityId(),
         m_channelNameList,
-        false /* just for demo COM5003 ref-session - postpone better solution now */);
+        false /* just for demo COM5003 ref-session - postpone better solution now */
+        );
 
-    m_bAdjustTrigger = false;
-    for (int i = 0; i < m_channelNameList.count(); i++) {
+    for (int channelIdx = 0; channelIdx < m_channelNameList.count(); channelIdx++) {
         // we fetch all our real channels first
-        m_ChannelList.append(m_pModule->getMeasChannel(m_channelNameList.at(i)));
+        m_ChannelList.append(m_pModule->getMeasChannel(m_channelNameList.at(channelIdx)));
         // we connect cmddone of our meas channels so we get informed if commands are finished
-        connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &RangeChannelAdjustment::catchChannelReply);
+        connect(m_ChannelList.at(channelIdx), &cRangeMeasChannel::cmdDone, this, &RangeChannelAdjustment::catchChannelReply);
     }
 
     for (int i = 0; i < m_subdcChannelNameList.count(); i++) // we fetch all our real channels first
@@ -138,18 +138,18 @@ void RangeChannelAdjustment::generateVeinInterface()
     connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, this, &RangeChannelAdjustment::parIgnoreRmsValuesChanged);
 
     VfModuleParameter *pParameter;
-    for (int i = 0; i < m_channelNameList.count(); i++) {
-        QString key = QString("PAR_InvertPhase%1").arg(i+1);
+    for (int channelIdx = 0; channelIdx < m_channelNameList.count(); channelIdx++) {
+        QString key = QString("PAR_InvertPhase%1").arg(channelIdx+1);
         pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key,
                                            QString("Inverted Phase"),
-                                           QVariant(m_adjustmentConfig->m_senseChannelInvertParameter[i].m_nActive));
+                                           QVariant(m_adjustmentConfig->m_senseChannelInvertParameter[channelIdx].m_nActive));
         pParameter->setValidator(new cBoolValidator());
         m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
         m_invertedPhasesParList.append(pParameter);
         connect(pParameter, &VfModuleParameter::sigValueChanged, this, &RangeChannelAdjustment::parInvertedPhaseStateChanged);
-        ChannelCommonStorage *channelCommon = m_ChannelList[i]->getChannelObserver()->getModuleCommonStorage();
-        channelCommon->setInvertedPhaseState(m_adjustmentConfig->m_senseChannelInvertParameter[i].m_nActive);
+        ChannelCommonStorage *channelCommon = m_ChannelList[channelIdx]->getChannelObserver()->getModuleCommonStorage();
+        channelCommon->setInvertedPhaseState(m_adjustmentConfig->m_senseChannelInvertParameter[channelIdx].m_nActive);
     }
 }
 
@@ -212,9 +212,9 @@ void RangeChannelAdjustment::readOffsetCorr()
 void RangeChannelAdjustment::setSubDC()
 {
     quint32 subdc = 0;
-    for (int i = 0; i < m_subDCChannelList.count(); i++) {
+    for (int i = 0; i < m_subDCChannelList.count(); i++)
         subdc |= (1 << m_subDCChannelList.at(i)->getDSPChannelNr());
-    }
+
     DspVarGroupClientInterface* pSubDCMaskDSP = m_dspInterface->createVariableGroup("SubDC"); // here we can set if sub dc or not
     pSubDCMaskDSP->addDspVar("SUBDC", 1, dspDataTypeInt, dspInternalSegment);
     pSubDCMaskDSP->setVarData(QString("SUBDC:%1;").arg(subdc));
@@ -321,7 +321,7 @@ double RangeChannelAdjustment::getIgnoreRmsCorrFactor()
 
 void RangeChannelAdjustment::getPhaseCorrFromPcbServer()
 {
-    if (m_bActive){
+    if (m_bActive) {
         const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getSharedChannelData();
         double frequency = channelData->getSignalFrequency();
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(frequency)] = getphasecorr;
