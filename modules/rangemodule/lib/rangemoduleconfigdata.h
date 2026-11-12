@@ -26,7 +26,7 @@ private:
     QList<stringParameter> m_senseChannelRangeParameter;
 };
 
-struct adjustConfPar
+struct RangeAdjustmentConfigParams
 {
     double m_fAdjInterval = 0.0; // adjustment interval 0.5 .. 5.0 sec.
     boolParameter m_ignoreRmsValuesEnable;
@@ -45,7 +45,7 @@ public:
     QList<int> m_GroupCountList;    // the number of expected items per group
     QList<QStringList> m_GroupList; // here are our groups
     cObsermaticConfPar m_ObsermaticConfPar;
-    adjustConfPar m_adjustConfPar;
+    RangeAdjustmentConfigParams m_adjustConfPar;
     double m_fMeasInterval = 0.0;   // measuring interval 0.1 .. 5.0 sec.
 };
 

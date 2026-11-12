@@ -17,7 +17,7 @@ class RangeChannelAdjustment: public cModuleActivist
 {
     Q_OBJECT
 public:
-    explicit RangeChannelAdjustment(cRangeModule* module, QStringList chnlist, QStringList subdclist, adjustConfPar *adjustmentConfig);
+    explicit RangeChannelAdjustment(cRangeModule* module, QStringList chnlist, QStringList subdclist, RangeAdjustmentConfigParams *adjustmentConfig);
     void generateVeinInterface() override;
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
@@ -59,10 +59,10 @@ private slots:
 private:
     double getIgnoreRmsCorrFactor();
 
-    cRangeModule* m_pModule = nullptr; // the module we live in
-    QStringList m_ChannelNameList; // the list of channels (names) we work on
+    cRangeModule* m_pModule = nullptr;
+    QStringList m_channelNameList;
     QStringList m_subdcChannelNameList; // the list of channels we have to subtract dc
-    adjustConfPar *m_adjustmentConfig = nullptr;
+    RangeAdjustmentConfigParams *m_adjustmentConfig = nullptr;
     Zera::DspInterfacePtr m_dspInterface;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
     QList<cRangeMeasChannel*> m_subDCChannelList;
@@ -87,7 +87,6 @@ private:
     // statemachine for deactivating
     QState m_deactivationInitState;
     QFinalState m_deactivationDoneState;
-
 
     // statemachine for writing dsp correction data
     QStateMachine m_writeCorrectionDSPMachine;

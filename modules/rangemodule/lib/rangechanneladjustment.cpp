@@ -10,8 +10,6 @@
 #include <scpi.h>
 #include <timerfactoryqt.h>
 #include <vfmodulecomponent.h>
-#include <dspinterface.h>
-#include <QSignalTransition>
 
 namespace RANGEMODULE 
 {
@@ -19,22 +17,22 @@ namespace RANGEMODULE
 RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
                                      QStringList chnlist,
                                      QStringList subdclist,
-                                     adjustConfPar *adjustmentConfig) :
+                                     RangeAdjustmentConfigParams *adjustmentConfig) :
     cModuleActivist(QString("%1 / AdjustManagement").arg(qPrintable(module->getVeinModuleName()))),
     m_pModule(module),
-    m_ChannelNameList(chnlist),
+    m_channelNameList(chnlist),
     m_subdcChannelNameList(subdclist),
     m_adjustmentConfig(adjustmentConfig)
 {
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeAdj(
         m_pModule->getEntityId(),
-        m_ChannelNameList,
+        m_channelNameList,
         false /* just for demo COM5003 ref-session - postpone better solution now */);
 
     m_bAdjustTrigger = false;
-    for (int i = 0; i < m_ChannelNameList.count(); i++) {
+    for (int i = 0; i < m_channelNameList.count(); i++) {
         // we fetch all our real channels first
-        m_ChannelList.append(m_pModule->getMeasChannel(m_ChannelNameList.at(i)));
+        m_ChannelList.append(m_pModule->getMeasChannel(m_channelNameList.at(i)));
         // we connect cmddone of our meas channels so we get informed if commands are finished
         connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &RangeChannelAdjustment::catchChannelReply);
     }
@@ -110,8 +108,7 @@ void RangeChannelAdjustment::ActionHandler(QVector<float> *actualValues)
 {
     m_nChannelIt = 0; // we start with first channel
     // in case measurement is faster than adjusting
-    if (m_bActive && m_bAdjustTrigger && !m_adjustMachine.isRunning())
-    {
+    if (m_bActive && m_bAdjustTrigger && !m_adjustMachine.isRunning()) {
         m_bAdjustTrigger = false;
         m_adjustMachine.start();
     }
@@ -141,7 +138,7 @@ void RangeChannelAdjustment::generateVeinInterface()
     connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, this, &RangeChannelAdjustment::parIgnoreRmsValuesChanged);
 
     VfModuleParameter *pParameter;
-    for (int i = 0; i < m_ChannelNameList.count(); i++) {
+    for (int i = 0; i < m_channelNameList.count(); i++) {
         QString key = QString("PAR_InvertPhase%1").arg(i+1);
         pParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                            key,
@@ -202,18 +199,15 @@ void RangeChannelAdjustment::readGainCorr()
     m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
 }
 
-
 void RangeChannelAdjustment::readPhaseCorr()
 {
     m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pPhaseCorrectionDSP)] = readphasecorr;
 }
 
-
 void RangeChannelAdjustment::readOffsetCorr()
 {
     m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pOffsetCorrectionDSP)] = readoffsetcorr;
 }
-
 
 void RangeChannelAdjustment::setSubDC()
 {
@@ -226,7 +220,6 @@ void RangeChannelAdjustment::setSubDC()
     pSubDCMaskDSP->setVarData(QString("SUBDC:%1;").arg(subdc));
     m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(pSubDCMaskDSP)] = subdcdsp;
 }
-
 
 void RangeChannelAdjustment::activationDone()
 {
@@ -242,7 +235,6 @@ void RangeChannelAdjustment::activationDone()
     emit activated();
 }
 
-
 void RangeChannelAdjustment::deactivationInit()
 {
     m_bActive = false;
@@ -255,12 +247,10 @@ void RangeChannelAdjustment::deactivationInit()
     emit deactivationContinue();
 }
 
-
 void RangeChannelAdjustment::deactivationDone()
 {
     emit deactivated();
 }
-
 
 void RangeChannelAdjustment::writeGainCorr()
 {
@@ -268,20 +258,17 @@ void RangeChannelAdjustment::writeGainCorr()
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pGainCorrectionDSP)] = writegaincorr;
 }
 
-
 void RangeChannelAdjustment::writePhaseCorr()
 {
     if (m_bActive)
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pPhaseCorrectionDSP)] = writephasecorr;
 }
 
-
 void RangeChannelAdjustment::writeOffsetCorr()
 {
     if (m_bActive)
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pOffsetCorrectionDSP)] = writeoffsetcorr;
 }
-
 
 void RangeChannelAdjustment::getGainCorrFromPcbServer()
 {
@@ -295,7 +282,6 @@ void RangeChannelAdjustment::getGainCorrFromPcbServer()
     }
 }
 
-
 void RangeChannelAdjustment::prepareGainCorrForDspServer()
 {
     if (m_bActive) {
@@ -308,7 +294,7 @@ void RangeChannelAdjustment::prepareGainCorrForDspServer()
         m_dspGainCorrValues[measChannel->getDSPChannelNr()] = fCorr*getIgnoreRmsCorrFactor();
         m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()] = getIgnoreRmsCorrFactor();
         m_nChannelIt++;
-        if (m_nChannelIt < m_ChannelNameList.count())
+        if (m_nChannelIt < m_channelNameList.count())
             emit repeatStateMachine();
         else {
             m_nChannelIt = 0;
@@ -350,16 +336,14 @@ void RangeChannelAdjustment::preparePhaseCorrForDspServer()
         float fCorr = measChannel->getPhaseCorrection();
         m_dspPhaseCorrValues[measChannel->getDSPChannelNr()] = fCorr;
         m_nChannelIt++;
-        if (m_nChannelIt < m_ChannelNameList.count())
+        if (m_nChannelIt < m_channelNameList.count())
             emit repeatStateMachine();
-        else
-        {
+        else {
             m_nChannelIt = 0;
             emit activationContinue();
         }
     }
 }
-
 
 void RangeChannelAdjustment::getOffsetCorrFromPcbServer()
 {
@@ -373,7 +357,6 @@ void RangeChannelAdjustment::getOffsetCorrFromPcbServer()
     }
 }
 
-
 void RangeChannelAdjustment::prepareOffsetCorrForDspServer()
 {
     if (m_bActive) {
@@ -385,20 +368,18 @@ void RangeChannelAdjustment::prepareOffsetCorrForDspServer()
         m_dspOffsetCorrValues[measChannel->getDSPChannelNr()] = fCorr*preScale;
 
         m_nChannelIt++;
-        if (m_nChannelIt < m_ChannelNameList.count())
+        if (m_nChannelIt < m_channelNameList.count())
             emit repeatStateMachine();
         else
             emit activationContinue();
     }
 }
 
-
 void RangeChannelAdjustment::getCorrDone()
 {
     m_nChannelIt = 0;
     m_writeCorrectionDSPMachine.start(); // we have all correction data and write it to dsp
 }
-
 
 void RangeChannelAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
@@ -408,8 +389,7 @@ void RangeChannelAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
     }
     else {
         // because rangemodulemeasprogram, adjustment and rangeobsermatic share the same dsp interface
-        if (m_MsgNrCmdList.contains(msgnr))
-        {
+        if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
@@ -439,21 +419,18 @@ void RangeChannelAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyError(writesubdcErrMsg);
                 break;
 
-
             case writegaincorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(writedspgaincorrErrMsg);
                 break;
-
             case writephasecorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(writedspphasecorrErrMsg);
                 break;
-
             case writeoffsetcorr:
                 if (reply == ack)
                     emit activationContinue();
