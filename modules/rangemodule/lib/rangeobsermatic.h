@@ -23,6 +23,16 @@
 // GroupHandling ON/OFF Input
 // !!! important range obsermatic must be activated after !!! activating rangemeaschannels
 
+
+// We need smaller pieces - ideas:
+// * Standalone prescale (maybe start here: hiding annoying details would be an enhancement)
+// * Standalone range set action
+//   * Send range change
+//   * On range change (whatever caused it) send out gain scale 2
+// * Standalone actual values observer
+//   * we need values for auto overload / ranging...
+//   * channel adjustment: calc / send correction values
+
 namespace RANGEMODULE
 {
 
