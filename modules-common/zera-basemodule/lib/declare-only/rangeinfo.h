@@ -11,14 +11,4 @@ public:
     bool avail;
 };
 
-class cRangeInfoWithConstantValues : public cRangeInfoBase
-{
-public:
-    double urvalue;
-    double rejection;
-    double ovrejection;
-    double adcrejection;
-};
-
-
 #endif // RANGEINFO_H

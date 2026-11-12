@@ -22,7 +22,7 @@ public:
                       const NetworkConnectionInfo &pcbsocket,
                       const VeinTcp::AbstractTcpNetworkFactoryPtr &tcpNetworkFactory,
                       const QString &moduleName);
-    void generateVeinInterface() override;
+    void generateVeinInterface() override {};
 
     RangeChannelData* getSharedChannelData();
 
@@ -59,33 +59,16 @@ signals:
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void pcbConnection();
-    void readRangeAndProperties();
     void resetStatusSlot();
-    void setNotifierRangeCat();
     void activationDone();
 
-    void deactivationResetNotifiers();
     void deactivationDone();
 
-    // the slots for querying a measchannels range properties
-    void readRangelist();
-    void readType();
-    void readUrvalue();
-    void readRejection();
-    void readOVRejection();
-    void readADCRejection();
-    void readisAvail();
-    void rangeQueryLoop();
 private:
-    void setSortedRangeNameList();
-    QString findOptimalRange(double actualValue, const QString &actRangeName, qint32 actRngType, double extraRejectionFactor);
+    QString findOptimalRange(double actualValue, const QString &actRangeName, qint32 suggestedRangeType, double extraRejectionFactor);
+    qint32 suggestTypeForNextRange(const QString &rangeName);
 
     RangeChannelData m_sharedChannelData;
-    QStringList m_allRangeNamesOrderedByServer; // a list of all ranges
-
-    cRangeInfoWithConstantValues m_oneWorkRangeInfo;
-    QHash<QString, cRangeInfoWithConstantValues> m_growingWorkRangeInfo;
-    QHash<QString, cRangeInfoWithConstantValues> m_rangeNameToChannelData;
 
     QString m_nextRangeName;
     QString m_actRangeName;
@@ -93,34 +76,15 @@ private:
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
     quint32 m_statusBitMask; // currently just COM5003 HW overload bit
-    QString m_sortedRangeNameList;
 
     // statemachine for activating a rangemeaschannel
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
-    QState m_readRangeAndProperties; // we query our range list and all their properties
     QState m_resetStatusState; // we reset our measuring channel when activated
-    QState m_setNotifierRangeCat; // we request notification for range cat query
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating a rangemeaschannel
-    QState m_deactivationInitState;
     QFinalState m_deactivationDoneState;
-
-    // statemachine for querying a measchannels range properties
-    QStateMachine m_rangeQueryMachine;
-    QState m_readRangelistState; // we query our range list
-    QState m_readTypeState;
-    QState m_readUrvalueState;
-    QState m_readRejectionState;
-    QState m_readOVRejectionState;
-    QState m_readADCRejectionState;
-    QState m_readisAvailState;
-    QState m_rangeQueryLoopState;
-    QFinalState m_rangeQueryDoneState;
-
-    qint32 m_RangeQueryIt;
 };
-
 
 }
 
