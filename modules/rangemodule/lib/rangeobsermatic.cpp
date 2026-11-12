@@ -323,6 +323,18 @@ void cRangeObsermatic::observeRangeOverload()
     setOverloadVeinComponent(markOverload);
 }
 
+enum rangeObsermaticCmds
+{
+    readgainscale,
+    writegainScale,
+    resetstatus,
+    readstatus,
+
+    setrange, // we reserve 32 values for setrange
+
+    nextCmd = setrange+32
+};
+
 void cRangeObsermatic::rangeAutomatic()
 {
     if (m_ConfPar.m_nRangeAutoAct.m_nActive == 1) {

@@ -26,18 +26,6 @@
 namespace RANGEMODULE
 {
 
-enum rangeObsermaticCmds
-{
-    readgainscale,
-    writegainScale,
-    resetstatus,
-    readstatus,
-
-    setrange, // we reserve 32 values for setrange
-
-    nextCmd = setrange+32
-};
-
 class cRangeModule;
 
 class cRangeObsermatic: public cModuleActivist
