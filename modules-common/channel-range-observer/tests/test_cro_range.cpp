@@ -195,6 +195,10 @@ void test_cro_range::checkType()
     QCOMPARE(range1.getType(), Direct + modeAC + modeADJ);
 
     // internal clamp voltage range (don't show up on mode 'AC')
+    Zera::cPCBInterface pcbInterface;
+    pcbInterface.setClientSuperSmart(netInfo, VeinTcp::MockTcpNetworkFactory::create());
+    pcbInterface.setMMode("ADJ");
+
     Range range2("m3", "2mV", netInfo, m_tcpFactory);
     range2.startFetch();
     TimeMachineObject::feedEventLoop();

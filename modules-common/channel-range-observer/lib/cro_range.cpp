@@ -29,37 +29,40 @@ void Range::startFetch()
     m_currentTasks = TaskContainerSequence::create();
     m_currentTasks->addSub(getPcbConnectionTask());
 
-    TaskContainerInterfacePtr rangesTasks = TaskContainerParallel::create();
-    rangesTasks->addSub(TaskRangeGetIsAvailable::create(
+    m_currentTasks->addSub(TaskRangeGetIsAvailable::create(
         m_pcbInterface, m_channelMName, m_rangeName, m_available,
         TRANSACTION_TIMEOUT,
         [&]{ notifyError(QString("Could not fetch range availability: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
 
-    // Add sequential+lambda to not full fetch not available
-    rangesTasks->addSub(TaskRangeGetType::create(
-        m_pcbInterface, m_channelMName, m_rangeName, m_type,
-        TRANSACTION_TIMEOUT,
-        [&]{ notifyError(QString("Could not fetch range type: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
-    rangesTasks->addSub(TaskRangeGetUrValue::create(
-        m_pcbInterface, m_channelMName, m_rangeName, m_urValue,
-        TRANSACTION_TIMEOUT,
-        [&]{ notifyError(QString("Could not fetch range UrValue: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
-    rangesTasks->addSub(TaskRangeGetRejection::create(
-        m_pcbInterface, m_channelMName, m_rangeName, m_rejection,
-        TRANSACTION_TIMEOUT,
-        [&]{ notifyError(QString("Could not fetch range rejection: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
-    rangesTasks->addSub(TaskRangeGetOvRejection::create(
-        m_pcbInterface, m_channelMName, m_rangeName, m_ovrejection,
-        TRANSACTION_TIMEOUT,
-        [&]{ notifyError(QString("Could not fetch range ovrejection: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
-    rangesTasks->addSub(TaskRangeGetAdcRejection::create(
-        m_pcbInterface, m_channelMName, m_rangeName, m_adcrejection,
-        TRANSACTION_TIMEOUT,
-        [&]{ notifyError(QString("Could not fetch range adcrejection: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
+    m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
+        if (*m_available == true) { // Load details only for ranges marked as available
+            TaskContainerInterfacePtr rangesTasks = TaskContainerParallel::create();
+            rangesTasks->addSub(TaskRangeGetType::create(
+                m_pcbInterface, m_channelMName, m_rangeName, m_type,
+                TRANSACTION_TIMEOUT,
+                [&]{ notifyError(QString("Could not fetch range type: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
+            rangesTasks->addSub(TaskRangeGetUrValue::create(
+                m_pcbInterface, m_channelMName, m_rangeName, m_urValue,
+                TRANSACTION_TIMEOUT,
+                [&]{ notifyError(QString("Could not fetch range UrValue: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
+            rangesTasks->addSub(TaskRangeGetRejection::create(
+                m_pcbInterface, m_channelMName, m_rangeName, m_rejection,
+                TRANSACTION_TIMEOUT,
+                [&]{ notifyError(QString("Could not fetch range rejection: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
+            rangesTasks->addSub(TaskRangeGetOvRejection::create(
+                m_pcbInterface, m_channelMName, m_rangeName, m_ovrejection,
+                TRANSACTION_TIMEOUT,
+                [&]{ notifyError(QString("Could not fetch range ovrejection: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
+            rangesTasks->addSub(TaskRangeGetAdcRejection::create(
+                m_pcbInterface, m_channelMName, m_rangeName, m_adcrejection,
+                TRANSACTION_TIMEOUT,
+                [&]{ notifyError(QString("Could not fetch range adcrejection: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
 
-    // TODO: add more range tasks
+            m_currentTasks->addSub(std::move(rangesTasks));
+        }
+        return true;
+    }));
 
-    m_currentTasks->addSub(std::move(rangesTasks));
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
         emit sigFetchDoneRange(m_channelMName, m_rangeName, ok);
     });
