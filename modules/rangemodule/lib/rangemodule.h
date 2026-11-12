@@ -9,7 +9,7 @@
 
 namespace RANGEMODULE {
 
-class cAdjustManagement;
+class RangeChannelAdjustment;
 
 class cRangeModule : public cBaseMeasModule
 {
@@ -36,7 +36,7 @@ private:
     cRangeModuleMeasProgram *m_pMeasProgram = nullptr;
     cRangeModuleConfiguration m_configuration;
 
-    cAdjustManagement *m_pAdjustment = nullptr; // our justifying and normation program
+    RangeChannelAdjustment *m_pAdjustment = nullptr; // our justifying and normation program
     cRangeObsermatic *m_pRangeObsermatic = nullptr; // our range handling
     QList<cRangeMeasChannel*> m_rangeMeasChannelList; // our meas channels
     VfModuleMetaData* m_pChannelCountInfo = nullptr;

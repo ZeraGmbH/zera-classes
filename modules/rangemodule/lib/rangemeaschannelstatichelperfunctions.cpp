@@ -1,24 +1,24 @@
-#include "rangemeaschannelconvenience.h"
+#include "rangemeaschannelstatichelperfunctions.h"
 
 namespace RANGEMODULE
 {
 
-double RangeMeasChannelConvenience::getUrValueRangeAct(const cRangeMeasChannel *channel)
+double RangeMeasChannelStaticHelperFunctions::getUrValueRangeAct(const cRangeMeasChannel *channel)
 {
     return channel->getUrValue(channel->getCurrRangeName());
 }
 
-double RangeMeasChannelConvenience::getRejectionRangeAct(const cRangeMeasChannel *channel)
+double RangeMeasChannelStaticHelperFunctions::getRejectionRangeAct(const cRangeMeasChannel *channel)
 {
     return channel->getRejection(channel->getCurrRangeName());
 }
 
-double RangeMeasChannelConvenience::getOVRRejectionRangeAct(const cRangeMeasChannel *channel)
+double RangeMeasChannelStaticHelperFunctions::getOVRRejectionRangeAct(const cRangeMeasChannel *channel)
 {
     return channel->getOVRRejection(channel->getCurrRangeName());
 }
 
-double RangeMeasChannelConvenience::getUrValueMaxRangeAct(const cRangeMeasChannel *channel)
+double RangeMeasChannelStaticHelperFunctions::getUrValueMaxRangeAct(const cRangeMeasChannel *channel)
 {
     double actRangeUrValue = getUrValueRangeAct(channel);
     double actRangeRejection = getRejectionRangeAct(channel);
@@ -26,7 +26,7 @@ double RangeMeasChannelConvenience::getUrValueMaxRangeAct(const cRangeMeasChanne
     return (actRangeUrValue * actRangeOVRRejection / actRangeRejection);
 }
 
-double RangeMeasChannelConvenience::getUrValueMaxRangeMax(const cRangeMeasChannel *channel)
+double RangeMeasChannelStaticHelperFunctions::getUrValueMaxRangeMax(const cRangeMeasChannel *channel)
 {
     QString maxRangeName = channel->getMaxRangeName();
     double maxRangeUrValue = channel->getUrValue(maxRangeName);

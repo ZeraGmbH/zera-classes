@@ -1,7 +1,7 @@
 #include "rangemodule.h"
 #include "rangemodulemeasprogram.h"
 #include "rangeobsermatic.h"
-#include "rangemeaschannelconvenience.h"
+#include "rangemeaschannelstatichelperfunctions.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -448,8 +448,8 @@ void cRangeObsermatic::setRanges(bool force)
             m_nRangeSetPending++;
             m_actChannelRangeNameList.replace(i, rangeName);
 
-            double actUrValue = RangeMeasChannelConvenience::getUrValueRangeAct(rangeMeasChannel);
-            double actRejection = RangeMeasChannelConvenience::getRejectionRangeAct(rangeMeasChannel);
+            double actUrValue = RangeMeasChannelStaticHelperFunctions::getUrValueRangeAct(rangeMeasChannel);
+            double actRejection = RangeMeasChannelStaticHelperFunctions::getRejectionRangeAct(rangeMeasChannel);
             // The scaling factor is multplied with the inverse presaling value
             double scaleToDsp = (actUrValue / actRejection) * (1 / getPreScale(i));
             quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
@@ -458,7 +458,7 @@ void cRangeObsermatic::setRanges(bool force)
             // we first set information of channels actual urvalue
             m_RangeActRejectionComponentList.at(i)->setValue(actUrValue);
             // we additional set information of channels actual urvalue incl. reserve
-            double maxUrValue = RangeMeasChannelConvenience::getUrValueMaxRangeAct(rangeMeasChannel);
+            double maxUrValue = RangeMeasChannelStaticHelperFunctions::getUrValueMaxRangeAct(rangeMeasChannel);
             m_RangeActOVLRejectionComponentList.at(i)->setValue(maxUrValue);
 
             // reset hard overload AFTER change of range.
@@ -587,7 +587,7 @@ void cRangeObsermatic::onActivationDone()
 
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) {
         const cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
-        double maxUrMaxRange = RangeMeasChannelConvenience::getUrValueMaxRangeMax(rangeMeasChannel);
+        double maxUrMaxRange = RangeMeasChannelStaticHelperFunctions::getUrValueMaxRangeMax(rangeMeasChannel);
         m_RangeOVLRejectionComponentList.at(i)->setValue(maxUrMaxRange);
     }
 

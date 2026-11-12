@@ -1,6 +1,6 @@
 #include "rangemodule.h"
 #include "rangemoduleconfigdata.h"
-#include "adjustment.h"
+#include "rangechanneladjustment.h"
 
 namespace RANGEMODULE
 {
@@ -78,10 +78,10 @@ void cRangeModule::setupModule()
     }
 
     // we also need some program for adjustment
-    m_pAdjustment = new cAdjustManagement(this, channelMNames, getConfigData()->m_subdcChannelList, &getConfigData()->m_adjustConfPar);
+    m_pAdjustment = new RangeChannelAdjustment(this, channelMNames, getConfigData()->m_subdcChannelList, &getConfigData()->m_adjustConfPar);
     m_ModuleActivistList.append(m_pAdjustment);
-    connect(m_pAdjustment, &cAdjustManagement::activated, this, &cRangeModule::activationContinue);
-    connect(m_pAdjustment, &cAdjustManagement::deactivated, this, &cRangeModule::deactivationContinue);
+    connect(m_pAdjustment, &RangeChannelAdjustment::activated, this, &cRangeModule::activationContinue);
+    connect(m_pAdjustment, &RangeChannelAdjustment::deactivated, this, &cRangeModule::deactivationContinue);
 
     // at last we need some program that does the measuring on dsp
     m_pMeasProgram = new cRangeModuleMeasProgram(this);
@@ -110,7 +110,7 @@ void cRangeModule::activationFinished()
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, this, &cRangeModule::setPeakRmsAndFrequencyValues);
     if(m_pAdjustment)
         // we connect the measurement output to our adjustment module
-        connect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pAdjustment, &cAdjustManagement::ActionHandler);
+        connect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pAdjustment, &RangeChannelAdjustment::ActionHandler);
     // and to the range obsermatic
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pRangeObsermatic, &cRangeObsermatic::ActionHandler);
     // we connect a signal that range has changed to measurement for synchronizing purpose
@@ -133,7 +133,7 @@ void cRangeModule::deactivationStart()
     // we first disconnect all what we connected when activation took place
     disconnect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, this, &cRangeModule::setPeakRmsAndFrequencyValues);
     if(m_pAdjustment)
-        disconnect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pAdjustment, &cAdjustManagement::ActionHandler);
+        disconnect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pAdjustment, &RangeChannelAdjustment::ActionHandler);
     disconnect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pRangeObsermatic, &cRangeObsermatic::ActionHandler);
     disconnect(m_pRangeObsermatic->m_pRangingSignal, &VfModuleComponent::sigValueChanged, m_pMeasProgram, &cRangeModuleMeasProgram::syncRanging);
 

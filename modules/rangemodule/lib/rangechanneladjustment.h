@@ -1,5 +1,5 @@
-#ifndef ADJUSTMENT_H
-#define ADJUSTMENT_H
+#ifndef RANGECHANNELADJUSTMENT_H
+#define RANGECHANNELADJUSTMENT_H
 
 #include "rangemodule.h"
 #include "rangemoduleconfigdata.h"
@@ -13,34 +13,49 @@
 namespace RANGEMODULE
 {
 
-enum adjustmentCmds
-{
-    readgaincorr,
-    readphasecorr,
-    readoffsetcorr,
-
-    writegaincorr,
-    writephasecorr,
-    writeoffsetcorr,
-
-    getgaincorr,
-    getphasecorr,
-    getoffsetcore,
-
-    subdcdsp,
-};
-
-
-class cAdjustManagement: public cModuleActivist
+class RangeChannelAdjustment: public cModuleActivist
 {
     Q_OBJECT
 public:
-    explicit cAdjustManagement(cRangeModule* module, QStringList chnlist, QStringList subdclist, adjustConfPar *adjustmentConfig);
+    explicit RangeChannelAdjustment(cRangeModule* module, QStringList chnlist, QStringList subdclist, adjustConfPar *adjustmentConfig);
     void generateVeinInterface() override;
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
 signals:
     void repeatStateMachine();
+
+private slots:
+    void dspserverConnect();
+    void readGainCorr();
+    void readPhaseCorr();
+    void readOffsetCorr();
+    void setSubDC();
+    void activationDone();
+
+    void deactivationInit();
+    void deactivationDone();
+
+    void writeGainCorr();
+    void writePhaseCorr();
+    void writeOffsetCorr();
+
+    void getGainCorrFromPcbServer();
+    void prepareGainCorrForDspServer();
+    void getPhaseCorrFromPcbServer();
+    void preparePhaseCorrForDspServer();
+    void getOffsetCorrFromPcbServer();
+    void prepareOffsetCorrForDspServer();
+    void getCorrDone();
+
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void catchChannelReply(quint32 msgnr);
+
+    void adjustPrepare();
+
+    void parIgnoreRmsValuesOnOffChanged(QVariant newValue);
+    void parIgnoreRmsValuesChanged(QVariant newValue);
+
+    void parInvertedPhaseStateChanged(QVariant newValue);
 private:
     double getIgnoreRmsCorrFactor();
 
@@ -94,43 +109,8 @@ private:
     QVector<float> m_fGainKeeperForFakingRmsValues;
     float* m_dspPhaseCorrValues = nullptr;
     float* m_dspOffsetCorrValues = nullptr;
-
-
-private slots:
-    void dspserverConnect();
-    void readGainCorr();
-    void readPhaseCorr();
-    void readOffsetCorr();
-    void setSubDC();
-    void activationDone();
-
-    void deactivationInit();
-    void deactivationDone();
-
-    void writeGainCorr();
-    void writePhaseCorr();
-    void writeOffsetCorr();
-
-    void getGainCorrFromPcbServer();
-    void prepareGainCorrForDspServer();
-    void getPhaseCorrFromPcbServer();
-    void preparePhaseCorrForDspServer();
-    void getOffsetCorrFromPcbServer();
-    void prepareOffsetCorrForDspServer();
-    void getCorrDone();
-
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void catchChannelReply(quint32 msgnr);
-
-    void adjustPrepare();
-
-    void parIgnoreRmsValuesOnOffChanged(QVariant newValue);
-    void parIgnoreRmsValuesChanged(QVariant newValue);
-
-    void parInvertedPhaseStateChanged(QVariant newValue);
-
 };
 
 }
 
-#endif // ADJUSTMENT_H
+#endif // RANGECHANNELADJUSTMENT_H

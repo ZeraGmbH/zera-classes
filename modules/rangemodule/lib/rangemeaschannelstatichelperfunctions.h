@@ -1,12 +1,12 @@
-#ifndef RANGEMEASCHANNELCONVENIENCE_H
-#define RANGEMEASCHANNELCONVENIENCE_H
+#ifndef RANGEMEASCHANNELSTATICHELPERFUNCTIONS_H
+#define RANGEMEASCHANNELSTATICHELPERFUNCTIONS_H
 
 #include "rangemeaschannel.h"
 
 namespace RANGEMODULE
 {
 
-class RangeMeasChannelConvenience
+class RangeMeasChannelStaticHelperFunctions
 {
 public:
     static double getUrValueRangeAct(const cRangeMeasChannel *channel);
@@ -18,4 +18,4 @@ public:
 };
 
 }
-#endif // RANGEMEASCHANNELCONVENIENCE_H
+#endif // RANGEMEASCHANNELSTATICHELPERFUNCTIONS_H

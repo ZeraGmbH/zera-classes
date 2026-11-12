@@ -24,20 +24,24 @@ public:
                       const QString &moduleName);
     void generateVeinInterface() override {};
 
-    RangeChannelData* getSharedChannelData();
-
-    QString getCurrRangeName() const;
+    // setter
     quint32 setRange(const QString &rangeName);
+
+    // getter
+    RangeChannelData* getSharedChannelData();
+    QString getCurrRangeName() const;
+
+    // for channel adjustment
     quint32 readGainCorrection(double amplitude);
     quint32 readPhaseCorrection(double frequency);
     quint32 readOffsetCorrection(double amplitude);
-    quint32 readStatus(); // read the channels status
-    quint32 resetStatus(); // reset the channels status
-
     double getGainCorrection(); // returns last read gain correction
     double getPhaseCorrection(); // returns last read phase correction
     double getOffsetCorrection(); // returns last read offset correction
 
+    // for range obsermatic
+    quint32 readStatus(); // read the channels status
+    quint32 resetStatus(); // reset the channels status
     bool isHWOverload(); // test if we have some hardware overload condition
 
     double getUrValue(const QString &rangeName) const;      // upper range value

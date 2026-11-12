@@ -1,8 +1,8 @@
-#include "adjustment.h"
+#include "rangechanneladjustment.h"
 #include "boolvalidator.h"
 #include "doublevalidator.h"
 #include "rangemodule.h"
-#include "rangemeaschannelconvenience.h"
+#include "rangemeaschannelstatichelperfunctions.h"
 #include "rangemodulemeasprogram.h"
 #include <errormessages.h>
 #include <reply.h>
@@ -16,7 +16,7 @@
 namespace RANGEMODULE 
 {
 
-cAdjustManagement::cAdjustManagement(cRangeModule *module,
+RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
                                      QStringList chnlist,
                                      QStringList subdclist,
                                      adjustConfPar *adjustmentConfig) :
@@ -36,17 +36,17 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,
         // we fetch all our real channels first
         m_ChannelList.append(m_pModule->getMeasChannel(m_ChannelNameList.at(i)));
         // we connect cmddone of our meas channels so we get informed if commands are finished
-        connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &cAdjustManagement::catchChannelReply);
+        connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &RangeChannelAdjustment::catchChannelReply);
     }
 
     for (int i = 0; i < m_subdcChannelNameList.count(); i++) // we fetch all our real channels first
         m_subDCChannelList.append(m_pModule->getMeasChannel(m_subdcChannelNameList.at(i)));
 
     // and then set up our state machines
-    m_readGainCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_readPhaseCorrState);
-    m_readPhaseCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_readOffsetCorrState);
-    m_readOffsetCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_setSubDCState);
-    m_setSubDCState.addTransition(this, &cAdjustManagement::activationContinue, &m_activationDoneState);
+    m_readGainCorrState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_readPhaseCorrState);
+    m_readPhaseCorrState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_readOffsetCorrState);
+    m_readOffsetCorrState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_setSubDCState);
+    m_setSubDCState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_activationDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_readPhaseCorrState);
@@ -54,41 +54,41 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,
     m_activationMachine.addState(&m_setSubDCState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_dspserverConnectState);
-    connect(&m_dspserverConnectState, &QState::entered, this, &cAdjustManagement::dspserverConnect);
-    connect(&m_readGainCorrState, &QState::entered, this, &cAdjustManagement::readGainCorr);
-    connect(&m_readPhaseCorrState, &QState::entered, this, &cAdjustManagement::readPhaseCorr);
-    connect(&m_readOffsetCorrState, &QState::entered, this, &cAdjustManagement::readOffsetCorr);
-    connect(&m_setSubDCState, &QState::entered, this, &cAdjustManagement::setSubDC);
-    connect(&m_activationDoneState, &QState::entered, this, &cAdjustManagement::activationDone);
+    connect(&m_dspserverConnectState, &QState::entered, this, &RangeChannelAdjustment::dspserverConnect);
+    connect(&m_readGainCorrState, &QState::entered, this, &RangeChannelAdjustment::readGainCorr);
+    connect(&m_readPhaseCorrState, &QState::entered, this, &RangeChannelAdjustment::readPhaseCorr);
+    connect(&m_readOffsetCorrState, &QState::entered, this, &RangeChannelAdjustment::readOffsetCorr);
+    connect(&m_setSubDCState, &QState::entered, this, &RangeChannelAdjustment::setSubDC);
+    connect(&m_activationDoneState, &QState::entered, this, &RangeChannelAdjustment::activationDone);
 
-    m_deactivationInitState.addTransition(this, &cAdjustManagement::deactivationContinue, &m_deactivationDoneState);
+    m_deactivationInitState.addTransition(this, &RangeChannelAdjustment::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState(&m_deactivationInitState);
-    connect(&m_deactivationInitState, &QState::entered, this, &cAdjustManagement::deactivationInit);
-    connect(&m_deactivationDoneState, &QState::entered, this, &cAdjustManagement::deactivationDone);
+    connect(&m_deactivationInitState, &QState::entered, this, &RangeChannelAdjustment::deactivationInit);
+    connect(&m_deactivationDoneState, &QState::entered, this, &RangeChannelAdjustment::deactivationDone);
 
-    m_writeGainCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_writePhaseCorrState);
-    m_writePhaseCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_writeOffsetCorrState);
-    m_writeOffsetCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_writeCorrDoneState);
+    m_writeGainCorrState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_writePhaseCorrState);
+    m_writePhaseCorrState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_writeOffsetCorrState);
+    m_writeOffsetCorrState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_writeCorrDoneState);
     m_writeCorrectionDSPMachine.addState(&m_writeGainCorrState);
     m_writeCorrectionDSPMachine.addState(&m_writePhaseCorrState);
     m_writeCorrectionDSPMachine.addState(&m_writeOffsetCorrState);
     m_writeCorrectionDSPMachine.addState(&m_writeCorrDoneState);
     m_writeCorrectionDSPMachine.setInitialState(&m_writeGainCorrState);
-    connect(&m_writeGainCorrState, &QState::entered, this, &cAdjustManagement::writeGainCorr);
-    connect(&m_writePhaseCorrState, &QState::entered, this, &cAdjustManagement::writePhaseCorr);
-    connect(&m_writeOffsetCorrState, &QState::entered, this, &cAdjustManagement::writeOffsetCorr);
+    connect(&m_writeGainCorrState, &QState::entered, this, &RangeChannelAdjustment::writeGainCorr);
+    connect(&m_writePhaseCorrState, &QState::entered, this, &RangeChannelAdjustment::writePhaseCorr);
+    connect(&m_writeOffsetCorrState, &QState::entered, this, &RangeChannelAdjustment::writeOffsetCorr);
 
-    m_getGainCorrFromPcbServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_prepareGainCorrForDspServerState);
-    m_prepareGainCorrForDspServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_getPhaseCorrFromPcbServerState);
-    m_prepareGainCorrForDspServerState.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getGainCorrFromPcbServerState);
-    m_getPhaseCorrFromPcbServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_preparePhaseCorrForDspServerState);
-    m_preparePhaseCorrForDspServerState.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getPhaseCorrFromPcbServerState);
-    m_preparePhaseCorrForDspServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_getOffsetCorrFromPcbServerState);
-    m_getOffsetCorrFromPcbServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_prepareOffsetCorrForDspServerState);
-    m_prepareOffsetCorrForDspServerState.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getOffsetCorrFromPcbServerState);
-    m_prepareOffsetCorrForDspServerState.addTransition(this, &cAdjustManagement::activationContinue, &m_adjustDoneState);
+    m_getGainCorrFromPcbServerState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_prepareGainCorrForDspServerState);
+    m_prepareGainCorrForDspServerState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_getPhaseCorrFromPcbServerState);
+    m_prepareGainCorrForDspServerState.addTransition(this, &RangeChannelAdjustment::repeatStateMachine, &m_getGainCorrFromPcbServerState);
+    m_getPhaseCorrFromPcbServerState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_preparePhaseCorrForDspServerState);
+    m_preparePhaseCorrForDspServerState.addTransition(this, &RangeChannelAdjustment::repeatStateMachine, &m_getPhaseCorrFromPcbServerState);
+    m_preparePhaseCorrForDspServerState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_getOffsetCorrFromPcbServerState);
+    m_getOffsetCorrFromPcbServerState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_prepareOffsetCorrForDspServerState);
+    m_prepareOffsetCorrForDspServerState.addTransition(this, &RangeChannelAdjustment::repeatStateMachine, &m_getOffsetCorrFromPcbServerState);
+    m_prepareOffsetCorrForDspServerState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_adjustDoneState);
     m_adjustMachine.addState(&m_getGainCorrFromPcbServerState);
     m_adjustMachine.addState(&m_prepareGainCorrForDspServerState);
     m_adjustMachine.addState(&m_getPhaseCorrFromPcbServerState);
@@ -97,16 +97,16 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,
     m_adjustMachine.addState(&m_prepareOffsetCorrForDspServerState);
     m_adjustMachine.addState(&m_adjustDoneState);
     m_adjustMachine.setInitialState(&m_getGainCorrFromPcbServerState);
-    connect(&m_getGainCorrFromPcbServerState, &QState::entered, this, &cAdjustManagement::getGainCorrFromPcbServer);
-    connect(&m_prepareGainCorrForDspServerState, &QState::entered, this, &cAdjustManagement::prepareGainCorrForDspServer);
-    connect(&m_getPhaseCorrFromPcbServerState, &QState::entered, this, &cAdjustManagement::getPhaseCorrFromPcbServer);
-    connect(&m_preparePhaseCorrForDspServerState, &QState::entered, this, &cAdjustManagement::preparePhaseCorrForDspServer);
-    connect(&m_getOffsetCorrFromPcbServerState, &QState::entered, this, &cAdjustManagement::getOffsetCorrFromPcbServer);
-    connect(&m_prepareOffsetCorrForDspServerState, &QState::entered, this, &cAdjustManagement::prepareOffsetCorrForDspServer);
-    connect(&m_adjustDoneState, &QState::entered, this, &cAdjustManagement::getCorrDone);
+    connect(&m_getGainCorrFromPcbServerState, &QState::entered, this, &RangeChannelAdjustment::getGainCorrFromPcbServer);
+    connect(&m_prepareGainCorrForDspServerState, &QState::entered, this, &RangeChannelAdjustment::prepareGainCorrForDspServer);
+    connect(&m_getPhaseCorrFromPcbServerState, &QState::entered, this, &RangeChannelAdjustment::getPhaseCorrFromPcbServer);
+    connect(&m_preparePhaseCorrForDspServerState, &QState::entered, this, &RangeChannelAdjustment::preparePhaseCorrForDspServer);
+    connect(&m_getOffsetCorrFromPcbServerState, &QState::entered, this, &RangeChannelAdjustment::getOffsetCorrFromPcbServer);
+    connect(&m_prepareOffsetCorrForDspServerState, &QState::entered, this, &RangeChannelAdjustment::prepareOffsetCorrForDspServer);
+    connect(&m_adjustDoneState, &QState::entered, this, &RangeChannelAdjustment::getCorrDone);
 }
 
-void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
+void RangeChannelAdjustment::ActionHandler(QVector<float> *actualValues)
 {
     m_nChannelIt = 0; // we start with first channel
     // in case measurement is faster than adjusting
@@ -117,7 +117,7 @@ void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
     }
 }
 
-void cAdjustManagement::generateVeinInterface()
+void RangeChannelAdjustment::generateVeinInterface()
 {
     m_ParIgnoreRmsValuesOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                       QString("PAR_IgnoreRmsValuesOnOff"),
@@ -127,7 +127,7 @@ void cAdjustManagement::generateVeinInterface()
     m_ParIgnoreRmsValuesOnOff->setValidator(new cBoolValidator());
     m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValuesOnOff"] = m_ParIgnoreRmsValuesOnOff;
     m_ParIgnoreRmsValuesOnOff->setScpiInfo("CONFIGURATION","ENABLEIGNORERMSVAL", SCPI::isQuery|SCPI::isCmdwP);
-    connect(m_ParIgnoreRmsValuesOnOff, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesOnOffChanged);
+    connect(m_ParIgnoreRmsValuesOnOff, &VfModuleParameter::sigValueChanged, this, &RangeChannelAdjustment::parIgnoreRmsValuesOnOffChanged);
 
     m_ParIgnoreRmsValues = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                  QString("PAR_IgnoreRmsValues"),
@@ -138,7 +138,7 @@ void cAdjustManagement::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap["PAR_IgnoreRmsValues"] = m_ParIgnoreRmsValues;
     m_ParIgnoreRmsValues->setUnit("%");
     m_ParIgnoreRmsValues->setScpiInfo("CONFIGURATION","IGNORERMSVAL", SCPI::isQuery|SCPI::isCmdwP);
-    connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parIgnoreRmsValuesChanged);
+    connect(m_ParIgnoreRmsValues, &VfModuleParameter::sigValueChanged, this, &RangeChannelAdjustment::parIgnoreRmsValuesChanged);
 
     VfModuleParameter *pParameter;
     for (int i = 0; i < m_ChannelNameList.count(); i++) {
@@ -150,22 +150,39 @@ void cAdjustManagement::generateVeinInterface()
         pParameter->setValidator(new cBoolValidator());
         m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
         m_invertedPhasesParList.append(pParameter);
-        connect(pParameter, &VfModuleParameter::sigValueChanged, this, &cAdjustManagement::parInvertedPhaseStateChanged);
+        connect(pParameter, &VfModuleParameter::sigValueChanged, this, &RangeChannelAdjustment::parInvertedPhaseStateChanged);
         ChannelCommonStorage *channelCommon = m_ChannelList[i]->getChannelObserver()->getModuleCommonStorage();
         channelCommon->setInvertedPhaseState(m_adjustmentConfig->m_senseChannelInvertParameter[i].m_nActive);
     }
 }
 
-void cAdjustManagement::dspserverConnect()
+void RangeChannelAdjustment::dspserverConnect()
 {
     // we set up our dsp server connection
     m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo, m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
     m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
-    connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
+    connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &RangeChannelAdjustment::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 
-void cAdjustManagement::readGainCorr()
+enum adjustmentCmds
+{
+    readgaincorr,
+    readphasecorr,
+    readoffsetcorr,
+
+    writegaincorr,
+    writephasecorr,
+    writeoffsetcorr,
+
+    getgaincorr,
+    getphasecorr,
+    getoffsetcore,
+
+    subdcdsp,
+};
+
+void RangeChannelAdjustment::readGainCorr()
 {
     // we fetch a handle for each gain-, phase, offset correction for
     // all possible channels because we do not know which channels become active
@@ -186,19 +203,19 @@ void cAdjustManagement::readGainCorr()
 }
 
 
-void cAdjustManagement::readPhaseCorr()
+void RangeChannelAdjustment::readPhaseCorr()
 {
     m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pPhaseCorrectionDSP)] = readphasecorr;
 }
 
 
-void cAdjustManagement::readOffsetCorr()
+void RangeChannelAdjustment::readOffsetCorr()
 {
     m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pOffsetCorrectionDSP)] = readoffsetcorr;
 }
 
 
-void cAdjustManagement::setSubDC()
+void RangeChannelAdjustment::setSubDC()
 {
     quint32 subdc = 0;
     for (int i = 0; i < m_subDCChannelList.count(); i++) {
@@ -211,11 +228,11 @@ void cAdjustManagement::setSubDC()
 }
 
 
-void cAdjustManagement::activationDone()
+void RangeChannelAdjustment::activationDone()
 {
     m_AdjustTimer = TimerFactoryQt::createPeriodic(m_adjustmentConfig->m_fAdjInterval*1000.0);
     m_AdjustTimer->start();
-    connect(m_AdjustTimer.get(), &TimerTemplateQt::sigExpired, this, &cAdjustManagement::adjustPrepare);
+    connect(m_AdjustTimer.get(), &TimerTemplateQt::sigExpired, this, &RangeChannelAdjustment::adjustPrepare);
     m_fGainKeeperForFakingRmsValues.resize(32); //prepared for 32 dsp channels
     for(int i = 0; i < m_ChannelList.count(); i++) {
         m_fGainKeeperForFakingRmsValues[m_ChannelList.at(i)->getDSPChannelNr()] = 1;
@@ -226,7 +243,7 @@ void cAdjustManagement::activationDone()
 }
 
 
-void cAdjustManagement::deactivationInit()
+void RangeChannelAdjustment::deactivationInit()
 {
     m_bActive = false;
     Zera::Proxy::getInstance()->releaseConnectionSmart(m_dspInterface->getClientSmart());
@@ -239,34 +256,34 @@ void cAdjustManagement::deactivationInit()
 }
 
 
-void cAdjustManagement::deactivationDone()
+void RangeChannelAdjustment::deactivationDone()
 {
     emit deactivated();
 }
 
 
-void cAdjustManagement::writeGainCorr()
+void RangeChannelAdjustment::writeGainCorr()
 {
     if (m_bActive)
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pGainCorrectionDSP)] = writegaincorr;
 }
 
 
-void cAdjustManagement::writePhaseCorr()
+void RangeChannelAdjustment::writePhaseCorr()
 {
     if (m_bActive)
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pPhaseCorrectionDSP)] = writephasecorr;
 }
 
 
-void cAdjustManagement::writeOffsetCorr()
+void RangeChannelAdjustment::writeOffsetCorr()
 {
     if (m_bActive)
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pOffsetCorrectionDSP)] = writeoffsetcorr;
 }
 
 
-void cAdjustManagement::getGainCorrFromPcbServer()
+void RangeChannelAdjustment::getGainCorrFromPcbServer()
 {
     if (m_bActive){
         const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getSharedChannelData();
@@ -279,7 +296,7 @@ void cAdjustManagement::getGainCorrFromPcbServer()
 }
 
 
-void cAdjustManagement::prepareGainCorrForDspServer()
+void RangeChannelAdjustment::prepareGainCorrForDspServer()
 {
     if (m_bActive) {
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
@@ -300,12 +317,12 @@ void cAdjustManagement::prepareGainCorrForDspServer()
     }
 }
 
-double cAdjustManagement::getIgnoreRmsCorrFactor()
+double RangeChannelAdjustment::getIgnoreRmsCorrFactor()
 {
     double ignoreRmsCorrFactor = 1.0;
     cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
     if(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
-        double actUrValue = RangeMeasChannelConvenience::getUrValueRangeAct(measChannel);
+        double actUrValue = RangeMeasChannelStaticHelperFunctions::getUrValueRangeAct(measChannel);
         double threshold = m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue * actUrValue / 100;
         const RangeChannelData *channelData = measChannel->getSharedChannelData();
         double unscaledRmsValues = channelData->getRmsValue() * channelData->getPreScaling();
@@ -316,7 +333,7 @@ double cAdjustManagement::getIgnoreRmsCorrFactor()
     return ignoreRmsCorrFactor;
 }
 
-void cAdjustManagement::getPhaseCorrFromPcbServer()
+void RangeChannelAdjustment::getPhaseCorrFromPcbServer()
 {
     if (m_bActive){
         const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getSharedChannelData();
@@ -326,7 +343,7 @@ void cAdjustManagement::getPhaseCorrFromPcbServer()
 }
 
 
-void cAdjustManagement::preparePhaseCorrForDspServer()
+void RangeChannelAdjustment::preparePhaseCorrForDspServer()
 {
     if (m_bActive) {
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
@@ -344,7 +361,7 @@ void cAdjustManagement::preparePhaseCorrForDspServer()
 }
 
 
-void cAdjustManagement::getOffsetCorrFromPcbServer()
+void RangeChannelAdjustment::getOffsetCorrFromPcbServer()
 {
     if (m_bActive) {
         cRangeMeasChannel* measChannel = m_ChannelList.at(m_nChannelIt);
@@ -357,7 +374,7 @@ void cAdjustManagement::getOffsetCorrFromPcbServer()
 }
 
 
-void cAdjustManagement::prepareOffsetCorrForDspServer()
+void RangeChannelAdjustment::prepareOffsetCorrForDspServer()
 {
     if (m_bActive) {
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
@@ -376,14 +393,14 @@ void cAdjustManagement::prepareOffsetCorrForDspServer()
 }
 
 
-void cAdjustManagement::getCorrDone()
+void RangeChannelAdjustment::getCorrDone()
 {
     m_nChannelIt = 0;
     m_writeCorrectionDSPMachine.start(); // we have all correction data and write it to dsp
 }
 
 
-void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void RangeChannelAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     Q_UNUSED(answer)
     if (msgnr == 0) { // 0 was reserved for async. messages
@@ -448,7 +465,7 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     }
 }
 
-void cAdjustManagement::catchChannelReply(quint32 msgnr)
+void RangeChannelAdjustment::catchChannelReply(quint32 msgnr)
 {
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
@@ -461,24 +478,24 @@ void cAdjustManagement::catchChannelReply(quint32 msgnr)
     }
 }
 
-void cAdjustManagement::adjustPrepare()
+void RangeChannelAdjustment::adjustPrepare()
 {
     m_bAdjustTrigger = true;
 }
 
-void cAdjustManagement::parIgnoreRmsValuesOnOffChanged(QVariant newValue)
+void RangeChannelAdjustment::parIgnoreRmsValuesOnOffChanged(QVariant newValue)
 {
     m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive = newValue.toInt();
     emit m_pModule->parameterChanged();
 }
 
-void cAdjustManagement::parIgnoreRmsValuesChanged(QVariant newValue)
+void RangeChannelAdjustment::parIgnoreRmsValuesChanged(QVariant newValue)
 {
     m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue = newValue.toDouble();
     emit m_pModule->parameterChanged();
 }
 
-void cAdjustManagement::parInvertedPhaseStateChanged(QVariant newValue)
+void RangeChannelAdjustment::parInvertedPhaseStateChanged(QVariant newValue)
 {
     VfModuleParameter *pParameter = qobject_cast<VfModuleParameter*>(sender()); // get sender of updated signal
     int index = m_invertedPhasesParList.indexOf(pParameter); // which channel is it
