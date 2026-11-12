@@ -14,6 +14,7 @@ private slots:
     void scpiQueryAndCommand();
     void rangeChangeWithDelay();
     void catalogChangeOnScpiByClamp();
+    void catalogChangeOnScpiByAdjMode();
     void catalogChangeOnScpiByClampMultipleClients();
 
 private:

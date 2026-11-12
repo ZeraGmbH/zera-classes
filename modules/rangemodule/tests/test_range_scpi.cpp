@@ -191,6 +191,32 @@ void test_range_scpi::catalogChangeOnScpiByClamp()
     testRunner.removeAllHotplugDevices();
 }
 
+void test_range_scpi::catalogChangeOnScpiByAdjMode()
+{
+    ModuleManagerTestRunner testRunner(":/session-range-scpi.json");
+    ScpiModuleNetClientBlocked client;
+    Zera::cPCBInterface pcbInterface;
+    const NetworkConnectionInfo netInfo("127.0.0.1", 6307);
+    pcbInterface.setClientSuperSmart(netInfo, VeinTcp::MockTcpNetworkFactory::create());
+
+    QCOMPARE(client.sendReceive("SENSE:RNG1:IL3:RANGE:CATALOG?"), "10A;5A;2.5A;1.0A;500mA;250mA;100mA;50mA;25mA");
+
+    pcbInterface.setMMode("ADJ");
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(client.sendReceive("SENSE:RNG1:IL3:RANGE:CATALOG?"), "10A;5A;2.5A;1.0A;500mA;250mA;100mA;50mA;25mA;8V;5V;2V;1V;500mV;200mV;100mV;50mV;20mV;10mV;5mV;2mV");
+
+    QList<AbstractMockAllServices::clampParam> clampParams;
+    clampParams.append({"IL3", cClamp::CL120A});
+    testRunner.addClamps(clampParams);
+    QCOMPARE(client.sendReceive("SENSE:RNG1:IL3:RANGE:CATALOG?"), "C100A;C50A;C10A;C5A;C1A;C500mA;C100mA;C50mA;C10mA;10A;5A;2.5A;1.0A;500mA;250mA;100mA;50mA;25mA;8V;5V;2V;1V;500mV;200mV;100mV;50mV;20mV;10mV;5mV;2mV");
+
+    pcbInterface.setMMode("AC");
+    TimeMachineObject::feedEventLoop();
+    QCOMPARE(client.sendReceive("SENSE:RNG1:IL3:RANGE:CATALOG?"), "C100A;C50A;C10A;C5A;C1A;C500mA;C100mA;C50mA;C10mA;10A;5A;2.5A;1.0A;500mA;250mA;100mA;50mA;25mA");
+
+    testRunner.removeAllHotplugDevices();
+}
+
 void test_range_scpi::catalogChangeOnScpiByClampMultipleClients()
 {
     ModuleManagerTestRunner testRunner(":/session-range-scpi.json");
