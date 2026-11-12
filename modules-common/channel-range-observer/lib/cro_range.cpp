@@ -35,7 +35,7 @@ void Range::startFetch()
         [&]{ notifyError(QString("Could not fetch range availability: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
 
     m_currentTasks->addSub(TaskLambdaRunner::create([&]() {
-        if (*m_available == true) { // Load details only for ranges marked as available
+        if (getAvailable()) { // Load details only for ranges marked as available
             TaskContainerInterfacePtr rangesTasks = TaskContainerParallel::create();
             rangesTasks->addSub(TaskRangeGetType::create(
                 m_pcbInterface, m_channelMName, m_rangeName, m_type,
