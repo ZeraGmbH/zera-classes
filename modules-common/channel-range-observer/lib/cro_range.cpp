@@ -34,6 +34,8 @@ void Range::startFetch()
         m_pcbInterface, m_channelMName, m_rangeName, m_available,
         TRANSACTION_TIMEOUT,
         [&]{ notifyError(QString("Could not fetch range availability: Channel %1 / Range %2").arg(m_channelMName, m_rangeName)); }));
+
+    // Add sequential+lambda to not full fetch not available
     rangesTasks->addSub(TaskRangeGetType::create(
         m_pcbInterface, m_channelMName, m_rangeName, m_type,
         TRANSACTION_TIMEOUT,
@@ -110,15 +112,6 @@ const QString &Range::getAliasFromName(const QString &rangeName)
 const QString &Range::getNameFromAlias(const QString &rangeAlias)
 {
     return rangeAlias != RangeAliasNull ? rangeAlias : RangeNameNull;
-}
-
-const QString Range::getAliasListFromNameList(const QString &rangeNameList)
-{
-    QStringList aliasList;
-    const QStringList rangeNameStringList = rangeNameList.split(";");
-    for (const QString &rangeName : rangeNameStringList)
-        aliasList.append(getAliasFromName(rangeName));
-    return aliasList.join(";");
 }
 
 void Range::preparePcbInterface()

@@ -10,14 +10,9 @@ RangePtr ChannelRangesDictionary::findRangeByName(const QString &rangeName) cons
     return nullptr;
 }
 
-const QStringList &ChannelRangesDictionary::getAvailableRangeNames() const
+const QStringList &ChannelRangesDictionary::getAvailRangeNames() const
 {
     return m_availRangeNameListSorted;
-}
-
-const QStringList &ChannelRangesDictionary::getAllRangeNames() const
-{
-    return m_allRangeNameListSorted;
 }
 
 void ChannelRangesDictionary::addMaidenRange(RangePtr range)
@@ -27,17 +22,25 @@ void ChannelRangesDictionary::addMaidenRange(RangePtr range)
 
 void ChannelRangesDictionary::doAllRangesCompleteJobs()
 {
+    removeAvailableNotSet();
     fillNameToRangeHash();
-    fillSortedNameList();
-    fillAvailNameList();
+    sortRanges();
 }
 
 void ChannelRangesDictionary::clear()
 {
     m_rangesAddedBareThenFilled.clear();
-    m_allRangeNameListSorted.clear();
     m_availRangeNameListSorted.clear();
     m_rangeNameToRange.clear();
+}
+
+void ChannelRangesDictionary::removeAvailableNotSet()
+{
+    QList<RangePtr> rangesAvailable;
+    for (const RangePtr &range : qAsConst(m_rangesAddedBareThenFilled))
+        if (range->getAvailable())
+            rangesAvailable.append(range);
+    m_rangesAddedBareThenFilled = rangesAvailable;
 }
 
 void ChannelRangesDictionary::fillNameToRangeHash()
@@ -47,12 +50,14 @@ void ChannelRangesDictionary::fillNameToRangeHash()
         m_rangeNameToRange[range->getName()] = range;
 }
 
-void ChannelRangeObserver::ChannelRangesDictionary::fillSortedNameList()
+void ChannelRangeObserver::ChannelRangesDictionary::sortRanges()
 {
+    // We found the pragmatic sort approach in rangemodule:
+    // Note: The outer sort is on range type which is a binary mask. Whatsoever - it does what we expect
     QMap<quint32 /*type*/, QMap<double /*urValue*/, QString /*name*/>> sorter;
     const QList<RangePtr> &rangesAddedBareThenFilled = m_rangesAddedBareThenFilled;
     for (const RangePtr &range : rangesAddedBareThenFilled)
-        sorter[range->getType()][-range->getUrValue()] = range->getName(); // biggest ranges first
+        sorter[-range->getType()][-range->getUrValue()] = range->getName(); // biggest ranges first
 
     QStringList sortedRangeNameList;
     for (auto iterType=sorter.constBegin(); iterType!=sorter.constEnd(); ++iterType) {
@@ -60,17 +65,7 @@ void ChannelRangeObserver::ChannelRangesDictionary::fillSortedNameList()
         for (auto iterUr=typeEntry.constBegin(); iterUr!=typeEntry.constEnd(); ++iterUr)
             sortedRangeNameList.append(iterUr.value());
     }
-    m_allRangeNameListSorted = sortedRangeNameList;
-}
-
-void ChannelRangesDictionary::fillAvailNameList()
-{
-    QStringList availRangeNameListSorted;
-    const QStringList &allRangeNameListSorted = m_allRangeNameListSorted;
-    for(const QString &rangeName : allRangeNameListSorted)
-        if(m_rangeNameToRange[rangeName]->getAvailable() == true)
-            availRangeNameListSorted.append(rangeName);
-    m_availRangeNameListSorted = availRangeNameListSorted;
+    m_availRangeNameListSorted = sortedRangeNameList;
 }
 
 }

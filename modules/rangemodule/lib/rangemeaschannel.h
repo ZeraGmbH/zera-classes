@@ -50,7 +50,7 @@ public:
     QString getOptimalRange(double rms, double peak, const QString &rangeName); // returns opt. range name
     QString getMaxRangeName() const;
     QString getMaxRangeName(const QString &rangeName); // returns name of the range with max ur value
-    QString getSortedRangeNameList();
+    QString getAvailAliasList(); // public (Vein / SCPI)
 
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready

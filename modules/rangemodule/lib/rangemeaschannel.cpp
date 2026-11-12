@@ -318,10 +318,9 @@ QString cRangeMeasChannel::getMaxRangeName(const QString &rangeName)
     return riList.at(rangeIdxFound).name;
 }
 
-
-QString cRangeMeasChannel::getSortedRangeNameList()
+QString cRangeMeasChannel::getAvailAliasList()
 {
-    return m_sortedRangeNameList;
+    return m_channelObserver->getAvailAliasList();
 }
 
 double cRangeMeasChannel::getGainCorrection()

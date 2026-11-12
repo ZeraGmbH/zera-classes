@@ -32,10 +32,10 @@ public:
     bool isSourceModeOn() const;
 
     // Range getters
-    const QStringList &getAllRangeNames() const;
     const QStringList &getAvailRangeNames() const;
     const RangePtr getRange(const QString &rangeName) const;
 
+    QString getAvailAliasList(); // ',' - separated downstream works like that
     // TODO: Remove
     ChannelCommonStorage *getModuleCommonStorage();
 signals:

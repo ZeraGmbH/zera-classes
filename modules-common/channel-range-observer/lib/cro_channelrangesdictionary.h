@@ -9,8 +9,7 @@ class ChannelRangesDictionary
 {
 public:
     RangePtr findRangeByName(const QString &rangeName) const;
-    const QStringList &getAvailableRangeNames() const;
-    const QStringList &getAllRangeNames() const; // Is this really of interest or just causing confusion???
+    const QStringList &getAvailRangeNames() const;
 
     void addMaidenRange(RangePtr range);
     void doAllRangesCompleteJobs();
@@ -18,13 +17,12 @@ public:
     void clear();
 
 private:
+    void removeAvailableNotSet();
     void fillNameToRangeHash();
-    void fillSortedNameList();
-    void fillAvailNameList();
+    void sortRanges();
 
     QList<RangePtr> m_rangesAddedBareThenFilled;
     QHash<QString, RangePtr> m_rangeNameToRange;
-    QStringList m_allRangeNameListSorted;
     QStringList m_availRangeNameListSorted;
 };
 

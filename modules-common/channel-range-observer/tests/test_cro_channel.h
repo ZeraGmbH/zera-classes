@@ -28,12 +28,11 @@ private slots:
     void checkRangeAvailable();
     void checkOrderingVoltageRanges();
     void checkOrderingCurrentRanges();
-    void checkOrderingAllCurrentRanges();
     void checkAUXAvailNames();
-    void checkAvailableRangesMtDefaultAc();
-    void checkAvailableRangesMtAdj();
-    void checkAvailableRangesMtSequence();
-    void checkScanTwiceAvailableRangesMtAdj();
+    void checkRangesMtDefaultAcMode();
+    void checkRangesMtAdjMode();
+    void checkRangesMtModeAcAdjSequence();
+    void checkScanTwiceRangesMtAdj();
 
     void notifyFetchDoneByClampComeAndGo();
     void checkAvailableRangesMtClampComeAndGo();
