@@ -1,0 +1,2603 @@
+{
+    "0": {
+        "DevMode": false,
+        "Entities": [
+            0,
+            1000,
+            1001,
+            1020,
+            1050,
+            1070,
+            1130,
+            1150,
+            1190,
+            1400,
+            1500,
+            9000,
+            9999
+        ],
+        "EntityName": "_System",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "Session": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "Default",
+                            "Changing energy direction",
+                            "Reference",
+                            "3 Systems / 2 Wires"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "XSession": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "Foo",
+                            "Bar"
+                        ],
+                        "Type": "STRING"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module gives general information about the device",
+                "Name": "_System"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CONFIGURATION",
+                        "NAMESESSION",
+                        "10",
+                        "Session",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "XSESSION",
+                        "10",
+                        "XSession",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "SESSION:CATALOG",
+                        "2",
+                        "Session",
+                        "1"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "XSESSION:CATALOG",
+                        "2",
+                        "XSession",
+                        "1"
+                    ]
+                ],
+                "Name": "SYST"
+            }
+        },
+        "ModulesPaused": false,
+        "Session": "com5003-ref-session.json",
+        "SessionsAvailable": [
+            "com5003-meas-session.json",
+            "com5003-ced-session.json",
+            "com5003-ref-session.json",
+            "com5003-perphase-session.json"
+        ],
+        "XSession": "Bar"
+    },
+    "1000": {
+        "EntityName": "ModeModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module is responsible for setting measuring mode and resetting dsp adjustment data",
+                "Name": "ModeModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "MOD1"
+            }
+        }
+    },
+    "1001": {
+        "EntityName": "REFERENCEModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures reference actual values for configured channels",
+                "Name": "REFERENCEModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "REF1"
+            }
+        }
+    },
+    "1020": {
+        "ACT_Channel1Peak": null,
+        "ACT_Channel1Rms": null,
+        "ACT_Channel2Peak": null,
+        "ACT_Channel2Rms": null,
+        "ACT_Channel3Peak": null,
+        "ACT_Channel3Rms": null,
+        "ACT_Channel4Peak": null,
+        "ACT_Channel4Rms": null,
+        "ACT_Channel5Peak": null,
+        "ACT_Channel5Rms": null,
+        "ACT_Channel6Peak": null,
+        "ACT_Channel6Rms": null,
+        "ACT_Frequency": null,
+        "EntityName": "RangeModule1",
+        "INF_Channel1ActOVLREJ": 12.499988280242833,
+        "INF_Channel1ActREJ": 10,
+        "INF_Channel1OVLREJ": 12.499988280242833,
+        "INF_Channel1UserCanChange": true,
+        "INF_Channel2ActOVLREJ": 12.499988280242833,
+        "INF_Channel2ActREJ": 10,
+        "INF_Channel2OVLREJ": 12.499988280242833,
+        "INF_Channel2UserCanChange": true,
+        "INF_Channel3ActOVLREJ": 12.499988280242833,
+        "INF_Channel3ActREJ": 10,
+        "INF_Channel3OVLREJ": 12.499988280242833,
+        "INF_Channel3UserCanChange": true,
+        "INF_Channel4ActOVLREJ": 12.499988280242833,
+        "INF_Channel4ActREJ": 10,
+        "INF_Channel4OVLREJ": 12.499988280242833,
+        "INF_Channel4UserCanChange": true,
+        "INF_Channel5ActOVLREJ": 12.499988280242833,
+        "INF_Channel5ActREJ": 10,
+        "INF_Channel5OVLREJ": 12.499988280242833,
+        "INF_Channel5UserCanChange": true,
+        "INF_Channel6ActOVLREJ": 12.499988280242833,
+        "INF_Channel6ActREJ": 10,
+        "INF_Channel6OVLREJ": 12.499988280242833,
+        "INF_Channel6UserCanChange": true,
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_Channel1Peak": {
+                    "ChannelName": "REF1",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_Channel1Rms": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Channel2Peak": {
+                    "ChannelName": "REF2",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_Channel2Rms": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Channel3Peak": {
+                    "ChannelName": "REF3",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_Channel3Rms": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Channel4Peak": {
+                    "ChannelName": "REF4",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_Channel4Rms": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Channel5Peak": {
+                    "ChannelName": "REF5",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_Channel5Rms": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Channel6Peak": {
+                    "ChannelName": "REF6",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_Channel6Rms": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Frequency": {
+                    "Description": "<skipped>",
+                    "Unit": "Hz"
+                },
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_Channel1ActOVLREJ": {
+                    "ChannelName": "REF1",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel1ActREJ": {
+                    "ChannelName": "REF1",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel1OVLREJ": {
+                    "ChannelName": "REF1",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel1UserCanChange": {
+                    "Description": "<skipped>"
+                },
+                "INF_Channel2ActOVLREJ": {
+                    "ChannelName": "REF2",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel2ActREJ": {
+                    "ChannelName": "REF2",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel2OVLREJ": {
+                    "ChannelName": "REF2",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel2UserCanChange": {
+                    "Description": "<skipped>"
+                },
+                "INF_Channel3ActOVLREJ": {
+                    "ChannelName": "REF3",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel3ActREJ": {
+                    "ChannelName": "REF3",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel3OVLREJ": {
+                    "ChannelName": "REF3",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel3UserCanChange": {
+                    "Description": "<skipped>"
+                },
+                "INF_Channel4ActOVLREJ": {
+                    "ChannelName": "REF4",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel4ActREJ": {
+                    "ChannelName": "REF4",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel4OVLREJ": {
+                    "ChannelName": "REF4",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel4UserCanChange": {
+                    "Description": "<skipped>"
+                },
+                "INF_Channel5ActOVLREJ": {
+                    "ChannelName": "REF5",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel5ActREJ": {
+                    "ChannelName": "REF5",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel5OVLREJ": {
+                    "ChannelName": "REF5",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel5UserCanChange": {
+                    "Description": "<skipped>"
+                },
+                "INF_Channel6ActOVLREJ": {
+                    "ChannelName": "REF6",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel6ActREJ": {
+                    "ChannelName": "REF6",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel6OVLREJ": {
+                    "ChannelName": "REF6",
+                    "Description": "<skipped>"
+                },
+                "INF_Channel6UserCanChange": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "INF_OverloadMax": {
+                    "Description": "<skipped>"
+                },
+                "INF_PreScalingInfoGroup0": {
+                    "Description": "<skipped>"
+                },
+                "INF_PreScalingInfoGroup1": {
+                    "Description": "<skipped>"
+                },
+                "INF_PreScalingInfoGroup2": {
+                    "Description": "<skipped>"
+                },
+                "PAR_Channel1Range": {
+                    "ChannelName": "REF1",
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Channel2Range": {
+                    "ChannelName": "REF2",
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Channel3Range": {
+                    "ChannelName": "REF3",
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Channel4Range": {
+                    "ChannelName": "REF4",
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Channel5Range": {
+                    "ChannelName": "REF5",
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Channel6Range": {
+                    "ChannelName": "REF6",
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "R10V",
+                            "R0V"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_ChannelGrouping": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_IgnoreRmsValues": {
+                    "Description": "<skipped>",
+                    "Unit": "%",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            2,
+                            0.1
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_IgnoreRmsValuesOnOff": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase1": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase2": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase3": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase4": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase5": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_InvertPhase6": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_Overload": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_PreScalingEnabledGroup0": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_PreScalingEnabledGroup1": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_PreScalingEnabledGroup2": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_PreScalingGroup0": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((1|sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_PreScalingGroup1": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((1|sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_PreScalingGroup2": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((1|sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_RangeAutomatic": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "SIG_Channel1OVL": {
+                    "Description": "<skipped>"
+                },
+                "SIG_Channel2OVL": {
+                    "Description": "<skipped>"
+                },
+                "SIG_Channel3OVL": {
+                    "Description": "<skipped>"
+                },
+                "SIG_Channel4OVL": {
+                    "Description": "<skipped>"
+                },
+                "SIG_Channel5OVL": {
+                    "Description": "<skipped>"
+                },
+                "SIG_Channel6OVL": {
+                    "Description": "<skipped>"
+                },
+                "SIG_Measuring": {
+                    "Description": "<skipped>"
+                },
+                "SIG_Ranging": {
+                    "Description": "<skipped>"
+                }
+            },
+            "ModuleInfo": {
+                "ChannelCount": "6",
+                "ChannelGroup1": "UL1;UL2;UL3",
+                "ChannelGroup2": "IL1;IL2;IL3",
+                "ChannelGroup3": "REF1;REF2;REF3;REF4;REF5;REF6",
+                "Description": "This module is responsible for range handling,\n range setting, automatic, adjustment and scaling",
+                "GroupCount": "3",
+                "Name": "RangeModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "SENSE",
+                        "REF1:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel1Range",
+                        "1"
+                    ],
+                    [
+                        "SENSE",
+                        "REF2:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel2Range",
+                        "1"
+                    ],
+                    [
+                        "SENSE",
+                        "REF3:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel3Range",
+                        "1"
+                    ],
+                    [
+                        "SENSE",
+                        "REF4:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel4Range",
+                        "1"
+                    ],
+                    [
+                        "SENSE",
+                        "REF5:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel5Range",
+                        "1"
+                    ],
+                    [
+                        "SENSE",
+                        "REF6:RANGE:CATALOG",
+                        "2",
+                        "PAR_Channel6Range",
+                        "1"
+                    ],
+                    [
+                        "SENSE",
+                        "REF1:RANGE",
+                        "2",
+                        "INF_Channel1UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF2:RANGE",
+                        "2",
+                        "INF_Channel2UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF3:RANGE",
+                        "2",
+                        "INF_Channel3UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF4:RANGE",
+                        "2",
+                        "INF_Channel4UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF5:RANGE",
+                        "2",
+                        "INF_Channel5UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF6:RANGE",
+                        "2",
+                        "INF_Channel6UserCanChange",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF1",
+                        "8",
+                        "ACT_Channel1Peak",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF2",
+                        "8",
+                        "ACT_Channel2Peak",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF3",
+                        "8",
+                        "ACT_Channel3Peak",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF4",
+                        "8",
+                        "ACT_Channel4Peak",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF5",
+                        "8",
+                        "ACT_Channel5Peak",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF6",
+                        "8",
+                        "ACT_Channel6Peak",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "F",
+                        "8",
+                        "ACT_Frequency",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF1:RANGE",
+                        "10",
+                        "PAR_Channel1Range",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF2:RANGE",
+                        "10",
+                        "PAR_Channel2Range",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF3:RANGE",
+                        "10",
+                        "PAR_Channel3Range",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF4:RANGE",
+                        "10",
+                        "PAR_Channel4Range",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF5:RANGE",
+                        "10",
+                        "PAR_Channel5Range",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "REF6:RANGE",
+                        "10",
+                        "PAR_Channel6Range",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "GROUPING",
+                        "10",
+                        "PAR_ChannelGrouping",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "IGNORERMSVAL",
+                        "10",
+                        "PAR_IgnoreRmsValues",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "ENABLEIGNORERMSVAL",
+                        "10",
+                        "PAR_IgnoreRmsValuesOnOff",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF1:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase1",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF2:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase2",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF3:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase3",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF4:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase4",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF5:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase5",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REF6:INVERTPHASE",
+                        "10",
+                        "PAR_InvertPhase6",
+                        "0"
+                    ],
+                    [
+                        "SENSE",
+                        "OVERLOAD",
+                        "10",
+                        "PAR_Overload",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "RNGAUTO",
+                        "10",
+                        "PAR_RangeAutomatic",
+                        "0"
+                    ]
+                ],
+                "Name": "RNG1"
+            }
+        },
+        "INF_OverloadMax": 0,
+        "INF_PreScalingInfoGroup0": 1,
+        "INF_PreScalingInfoGroup1": 1,
+        "INF_PreScalingInfoGroup2": 1,
+        "PAR_Channel1Range": "R10V",
+        "PAR_Channel2Range": "R10V",
+        "PAR_Channel3Range": "R10V",
+        "PAR_Channel4Range": "R10V",
+        "PAR_Channel5Range": "R10V",
+        "PAR_Channel6Range": "R10V",
+        "PAR_ChannelGrouping": 1,
+        "PAR_IgnoreRmsValues": 1,
+        "PAR_IgnoreRmsValuesOnOff": 0,
+        "PAR_InvertPhase1": 0,
+        "PAR_InvertPhase2": 0,
+        "PAR_InvertPhase3": 0,
+        "PAR_InvertPhase4": 0,
+        "PAR_InvertPhase5": 0,
+        "PAR_InvertPhase6": 0,
+        "PAR_Overload": 0,
+        "PAR_PreScalingEnabledGroup0": 0,
+        "PAR_PreScalingEnabledGroup1": 0,
+        "PAR_PreScalingEnabledGroup2": 0,
+        "PAR_PreScalingGroup0": "1/1*(1)",
+        "PAR_PreScalingGroup1": "1/1",
+        "PAR_PreScalingGroup2": "1/1",
+        "PAR_RangeAutomatic": 0,
+        "SIG_Channel1OVL": 0,
+        "SIG_Channel2OVL": 0,
+        "SIG_Channel3OVL": 0,
+        "SIG_Channel4OVL": 0,
+        "SIG_Channel5OVL": 0,
+        "SIG_Channel6OVL": 0,
+        "SIG_Measuring": 1,
+        "SIG_Ranging": 0
+    },
+    "1050": {
+        "ACT_DC1": null,
+        "ACT_DC2": null,
+        "ACT_DC3": null,
+        "ACT_DC4": null,
+        "ACT_DC5": null,
+        "ACT_DC6": null,
+        "ACT_DFTPN1": null,
+        "ACT_DFTPN2": null,
+        "ACT_DFTPN3": null,
+        "ACT_DFTPN4": null,
+        "ACT_DFTPN5": null,
+        "ACT_DFTPN6": null,
+        "EntityName": "DFTModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_DC1": {
+                    "ChannelName": "REF1",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DC2": {
+                    "ChannelName": "REF2",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DC3": {
+                    "ChannelName": "REF3",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DC4": {
+                    "ChannelName": "REF4",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DC5": {
+                    "ChannelName": "REF5",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DC6": {
+                    "ChannelName": "REF6",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN1": {
+                    "ChannelName": "REF1",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN2": {
+                    "ChannelName": "REF2",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN3": {
+                    "ChannelName": "REF3",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN4": {
+                    "ChannelName": "REF4",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN5": {
+                    "ChannelName": "REF5",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "ACT_DFTPN6": {
+                    "ChannelName": "REF6",
+                    "Description": "<skipped>",
+                    "Unit": "V"
+                },
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "PAR_Interval": {
+                    "Description": "<skipped>",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_RefChannel": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "REF1",
+                            "REF2",
+                            "REF3",
+                            "REF4",
+                            "REF5",
+                            "REF6"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "<skipped>"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures configured order dft values for configured channels",
+                "Name": "DFTModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "MEASURE",
+                        "REF1",
+                        "8",
+                        "ACT_DFTPN1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "R1DC",
+                        "8",
+                        "ACT_DC1",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF2",
+                        "8",
+                        "ACT_DFTPN2",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "R2DC",
+                        "8",
+                        "ACT_DC2",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF3",
+                        "8",
+                        "ACT_DFTPN3",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "R3DC",
+                        "8",
+                        "ACT_DC3",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF4",
+                        "8",
+                        "ACT_DFTPN4",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "R4DC",
+                        "8",
+                        "ACT_DC4",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF5",
+                        "8",
+                        "ACT_DFTPN5",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "R5DC",
+                        "8",
+                        "ACT_DC5",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "REF6",
+                        "8",
+                        "ACT_DFTPN6",
+                        "0"
+                    ],
+                    [
+                        "MEASURE",
+                        "R6DC",
+                        "8",
+                        "ACT_DC6",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "TINTEGRATION",
+                        "10",
+                        "PAR_Interval",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "REFCHANNEL",
+                        "10",
+                        "PAR_RefChannel",
+                        "0"
+                    ]
+                ],
+                "Name": "DFT1"
+            }
+        },
+        "PAR_Interval": 2,
+        "PAR_RefChannel": "UL1",
+        "SIG_Measuring": 1
+    },
+    "1070": {
+        "ACT_CanChangePhaseMask": false,
+        "ACT_MaxMeasSysCount": 3,
+        "ACT_PQS1": null,
+        "ACT_PQS2": null,
+        "ACT_PQS3": null,
+        "ACT_PQS4": null,
+        "ACT_PowerDisplayName": "P",
+        "EntityName": "POWER1Module1",
+        "INF_FreqOuts": [
+            "fo0"
+        ],
+        "INF_ModeTypes": [
+            "P"
+        ],
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_CanChangePhaseMask": {
+                    "Description": "<skipped>"
+                },
+                "ACT_MaxMeasSysCount": {
+                    "Description": "<skipped>"
+                },
+                "ACT_PQS1": {
+                    "ChannelName": "P1",
+                    "Description": "<skipped>",
+                    "Unit": "W"
+                },
+                "ACT_PQS2": {
+                    "ChannelName": "P2",
+                    "Description": "<skipped>",
+                    "Unit": "W"
+                },
+                "ACT_PQS3": {
+                    "ChannelName": "P3",
+                    "Description": "<skipped>",
+                    "Unit": "W"
+                },
+                "ACT_PQS4": {
+                    "ChannelName": "PS",
+                    "Description": "<skipped>",
+                    "Unit": "W"
+                },
+                "ACT_PowerDisplayName": {
+                    "Description": "<skipped>"
+                },
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_FreqOuts": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModeTypes": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "PAR_FOUT0": {
+                    "Description": "<skipped>"
+                },
+                "PAR_FOUTConstant0": {
+                    "ChannelName": "Fout1",
+                    "Description": "<skipped>"
+                },
+                "PAR_FOUT_NOMINAL_FREQ": {
+                    "Description": "<skipped>",
+                    "Unit": "Hz",
+                    "Validation": {
+                        "Data": [
+                            10000,
+                            200000,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_Interval": {
+                    "Description": "<skipped>",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MeasModePhaseSelect": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "111"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_MeasuringMode": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "QREF"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "SIG_Measuring": {
+                    "Description": "<skipped>"
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures power with configured measuring and integration modes",
+                "FOUTCount": "1",
+                "Name": "POWER1Module1",
+                "PQSCount": "4"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "POW1"
+            }
+        },
+        "PAR_FOUT0": "fOUT1",
+        "PAR_FOUTConstant0": 12000000000,
+        "PAR_FOUT_NOMINAL_FREQ": 1000000,
+        "PAR_Interval": 1,
+        "PAR_MeasModePhaseSelect": "111",
+        "PAR_MeasuringMode": "QREF",
+        "SIG_Measuring": 1
+    },
+    "1130": {
+        "ACT_DutPulses": 0,
+        "ACT_EndTime": "",
+        "ACT_Energy": 0,
+        "ACT_EnergyFinal": 0,
+        "ACT_MeasNum": 0,
+        "ACT_MeasTime": 0,
+        "ACT_MulCount": 0,
+        "ACT_MulResult": {
+            "countFail": 0,
+            "countPass": 0,
+            "countUnfinish": 0,
+            "idxMax": -1,
+            "idxMin": -1,
+            "limits": [
+            ],
+            "mean": null,
+            "range": null,
+            "stddevN": null,
+            "stddevN1": null,
+            "values": [
+            ]
+        },
+        "ACT_PowerModuleEntityId": 1070,
+        "ACT_Progress": 0,
+        "ACT_Rating": -1,
+        "ACT_RefFreqInput": "fo0",
+        "ACT_Result": 0,
+        "ACT_StartTime": "",
+        "ACT_Status": 0,
+        "EntityName": "SEC1Module1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_DutPulses": {
+                    "Description": "<skipped>"
+                },
+                "ACT_EndTime": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Energy": {
+                    "Description": "<skipped>",
+                    "Unit": "kh"
+                },
+                "ACT_EnergyFinal": {
+                    "Description": "<skipped>",
+                    "Unit": "kh"
+                },
+                "ACT_MeasNum": {
+                    "Description": "<skipped>"
+                },
+                "ACT_MeasTime": {
+                    "Description": "<skipped>"
+                },
+                "ACT_MulCount": {
+                    "Description": "<skipped>"
+                },
+                "ACT_MulResult": {
+                    "Description": "<skipped>"
+                },
+                "ACT_PowerModuleEntityId": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Progress": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Rating": {
+                    "Description": "<skipped>"
+                },
+                "ACT_RefFreqInput": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Result": {
+                    "Description": "<skipped>"
+                },
+                "ACT_StartTime": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Status": {
+                    "Description": "<skipped>"
+                },
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "PAR_ClientActiveNotify": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            2147483647,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_Continuous": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_DUTConstUnit": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_DutConstant": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            1e-06,
+                            1e+20,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_DutConstantAuto": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_DutConstantIScaleDenom": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_DutConstantIScaleNum": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_DutConstantUScaleDenom": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*(\\/sqrt\\(3\\))?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_DutConstantUScaleNum": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": "^[1-9][0-9]*(\\/sqrt\\(3\\))?$",
+                        "Type": "REGEX"
+                    }
+                },
+                "PAR_DutInput": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "Fin1",
+                            "Fin2",
+                            "Fin3",
+                            "Fin4"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_DutTypeMeasurePoint": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "CpIpUp",
+                            "CpIsUs",
+                            "CsIpUp",
+                            "CsIsUs"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_Energy": {
+                    "Description": "<skipped>",
+                    "Unit": "kh",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            10000000,
+                            1e-05
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_Lolimit": {
+                    "Description": "<skipped>",
+                    "Unit": "%",
+                    "Validation": {
+                        "Data": [
+                            -100,
+                            100,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                },
+                "PAR_MRate": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            4294967295,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_MeasCount": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            400,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_MeasWait": {
+                    "Description": "<skipped>",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            2147483,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_RefConstant": {
+                    "Description": "<skipped>"
+                },
+                "PAR_RefInput": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            ""
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_ResultUnit": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "%",
+                            "ppm"
+                        ],
+                        "Type": "STRING"
+                    }
+                },
+                "PAR_StartStop": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_Target": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            4294967295,
+                            1
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_Uplimit": {
+                    "Description": "<skipped>",
+                    "Unit": "%",
+                    "Validation": {
+                        "Data": [
+                            -100,
+                            100,
+                            1e-06
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module provides a configurable error calculator",
+                "Name": "SEC1Module1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CALCULATE",
+                        "0001:PULSES",
+                        "2",
+                        "ACT_DutPulses",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:ENDTIME",
+                        "2",
+                        "ACT_EndTime",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:ENERGY",
+                        "2",
+                        "ACT_Energy",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:ENFINAL",
+                        "2",
+                        "ACT_EnergyFinal",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MEASNUM",
+                        "2",
+                        "ACT_MeasNum",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MMEASTIME",
+                        "2",
+                        "ACT_MeasTime",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MULCOUNT",
+                        "2",
+                        "ACT_MulCount",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:STJARRAY",
+                        "2",
+                        "ACT_MulResult",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:PROGRESS",
+                        "2",
+                        "ACT_Progress",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:RATING",
+                        "2",
+                        "ACT_Rating",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:RESULT",
+                        "2",
+                        "ACT_Result",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:STRTTIME",
+                        "2",
+                        "ACT_StartTime",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:STATUS",
+                        "2",
+                        "ACT_Status",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:CONTINUOUS",
+                        "10",
+                        "PAR_Continuous",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:DCUNIT",
+                        "10",
+                        "PAR_DUTConstUnit",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:DUTCONSTANT",
+                        "10",
+                        "PAR_DutConstant",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:AUTODUTCONSTANT",
+                        "10",
+                        "PAR_DutConstantAuto",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "0001:DUTCONSTANTISCALEDENOM",
+                        "10",
+                        "PAR_DutConstantIScaleDenom",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "0001:DUTCONSTANTISCALENUM",
+                        "10",
+                        "PAR_DutConstantIScaleNum",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "0001:DUTCONSTANTUSCALEDENOM",
+                        "10",
+                        "PAR_DutConstantUScaleDenom",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "0001:DUTCONSTANTUSCALENUM",
+                        "10",
+                        "PAR_DutConstantUScaleNum",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:DUTSOURCE",
+                        "10",
+                        "PAR_DutInput",
+                        "0"
+                    ],
+                    [
+                        "CONFIGURATION",
+                        "0001:DUTCONSTANTMEASUREPOINT",
+                        "10",
+                        "PAR_DutTypeMeasurePoint",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:PARENERGY",
+                        "10",
+                        "PAR_Energy",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:LOLIMIT",
+                        "10",
+                        "PAR_Lolimit",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MRATE",
+                        "10",
+                        "PAR_MRate",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MCOUNT",
+                        "10",
+                        "PAR_MeasCount",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:MWAIT",
+                        "10",
+                        "PAR_MeasWait",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:REFCONSTANT",
+                        "10",
+                        "PAR_RefConstant",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:REFSOURCE",
+                        "10",
+                        "PAR_RefInput",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:RESULTUNIT",
+                        "10",
+                        "PAR_ResultUnit",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:START",
+                        "10",
+                        "PAR_StartStop",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:TARGET",
+                        "10",
+                        "PAR_Target",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "0001:UPLIMIT",
+                        "10",
+                        "PAR_Uplimit",
+                        "0"
+                    ]
+                ],
+                "Name": "EC01"
+            }
+        },
+        "PAR_ClientActiveNotify": 0,
+        "PAR_Continuous": 0,
+        "PAR_DUTConstUnit": "",
+        "PAR_DutConstant": 930000000,
+        "PAR_DutConstantAuto": 0,
+        "PAR_DutConstantIScaleDenom": "1",
+        "PAR_DutConstantIScaleNum": "1",
+        "PAR_DutConstantUScaleDenom": "1",
+        "PAR_DutConstantUScaleNum": "1",
+        "PAR_DutInput": "Fin1",
+        "PAR_DutTypeMeasurePoint": "CsIsUs",
+        "PAR_Energy": 8.333333333333333e-05,
+        "PAR_Lolimit": -10,
+        "PAR_MRate": 77500,
+        "PAR_MeasCount": 1,
+        "PAR_MeasWait": 0,
+        "PAR_RefConstant": 12000000000,
+        "PAR_RefInput": "",
+        "PAR_ResultUnit": "ppm",
+        "PAR_StartStop": 0,
+        "PAR_Target": 1000000,
+        "PAR_Uplimit": 10
+    },
+    "1150": {
+        "EntityName": "StatusModule1",
+        "INF_AccumulatorSoc": 0,
+        "INF_AccumulatorStatus": 0,
+        "INF_AdjChksum": "0xffff",
+        "INF_Adjusted": "5",
+        "INF_CTRLVersion": {
+            "Relay controller version": "Unknown"
+        },
+        "INF_CpuInfo": "",
+        "INF_DSPServerVersion": "zdsp1d V1.11",
+        "INF_DSPVersion": "DSPLCA: V0.0;DSP V0.00",
+        "INF_DSP_BUSY": null,
+        "INF_DSP_MS_TIMER": null,
+        "INF_DSP_PERIOD_COUNT": null,
+        "INF_DeviceType": "unknown",
+        "INF_FPGAVersion": "Unknown",
+        "INF_HotplugChannels": "",
+        "INF_Instrument": "",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_AccumulatorSoc": {
+                    "Description": "<skipped>"
+                },
+                "INF_AccumulatorStatus": {
+                    "Description": "<skipped>"
+                },
+                "INF_AdjChksum": {
+                    "Description": "<skipped>"
+                },
+                "INF_Adjusted": {
+                    "Description": "<skipped>"
+                },
+                "INF_CTRLVersion": {
+                    "Description": "<skipped>"
+                },
+                "INF_CpuInfo": {
+                    "Description": "<skipped>"
+                },
+                "INF_DSPServerVersion": {
+                    "Description": "<skipped>"
+                },
+                "INF_DSPVersion": {
+                    "Description": "<skipped>"
+                },
+                "INF_DSP_BUSY": {
+                    "Description": "<skipped>",
+                    "Unit": "%"
+                },
+                "INF_DSP_MS_TIMER": {
+                    "Description": "<skipped>"
+                },
+                "INF_DSP_PERIOD_COUNT": {
+                    "Description": "<skipped>"
+                },
+                "INF_DeviceType": {
+                    "Description": "<skipped>"
+                },
+                "INF_FPGAVersion": {
+                    "Description": "<skipped>"
+                },
+                "INF_HotplugChannels": {
+                    "Description": "<skipped>"
+                },
+                "INF_Instrument": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "INF_PCBServerVersion": {
+                    "Description": "<skipped>"
+                },
+                "INF_PCBVersion": {
+                    "Description": "<skipped>"
+                },
+                "INF_ReleaseNr": {
+                    "Description": "<skipped>"
+                },
+                "INF_Schnubbel": {
+                    "Description": "<skipped>"
+                },
+                "PAR_SerialNr": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": "^\\d{9}$",
+                        "Type": "REGEX"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module is responsible for reading and providing system Status information",
+                "Name": "StatusModule1"
+            },
+            "RpcInfo": {
+                "RPC_CreateVersionFile(QString p_destinationPath)": {
+                    "Description": "<skipped>"
+                },
+                "RPC_ListLocalFiles()": {
+                    "Description": "<skipped>"
+                },
+                "RPC_ReadLocalFile(QString p_fileName)": {
+                    "Description": "<skipped>",
+                    "Optional parameter": "",
+                    "Validation": {
+                        "Data": [
+                        ],
+                        "Type": "STRING"
+                    }
+                }
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "STATUS",
+                        "ADJCHKSUM",
+                        "2",
+                        "INF_AdjChksum",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "ADJUSTMENT",
+                        "2",
+                        "INF_Adjusted",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:CONTROLER",
+                        "2",
+                        "INF_CTRLVersion",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "CPUINFO",
+                        "2",
+                        "INF_CpuInfo",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:DSPSERVER",
+                        "2",
+                        "INF_DSPServerVersion",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:DSP",
+                        "2",
+                        "INF_DSPVersion",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "DSP:BUSYPERCENT",
+                        "2",
+                        "INF_DSP_BUSY",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "DSP:TIMEMS",
+                        "2",
+                        "INF_DSP_MS_TIMER",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "DSP:PERIODCOUNT",
+                        "2",
+                        "INF_DSP_PERIOD_COUNT",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "DEVTYPE",
+                        "2",
+                        "INF_DeviceType",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:FPGA",
+                        "2",
+                        "INF_FPGAVersion",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:PCBSERVER",
+                        "2",
+                        "INF_PCBServerVersion",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "VERSION:PCB",
+                        "2",
+                        "INF_PCBVersion",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "RELEASE",
+                        "2",
+                        "INF_ReleaseNr",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "AUTHORIZATION",
+                        "2",
+                        "INF_Schnubbel",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "SERIAL",
+                        "10",
+                        "PAR_SerialNr",
+                        "0"
+                    ]
+                ],
+                "Name": "DEV1",
+                "RPC": [
+                    [
+                        "STATUS",
+                        "LOCFILE:CATALOG",
+                        "2",
+                        "RPC_ListLocalFiles()",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "LOCFILE",
+                        "2",
+                        "RPC_ReadLocalFile(QString p_fileName)",
+                        "0"
+                    ]
+                ]
+            }
+        },
+        "INF_PCBServerVersion": "V42.0",
+        "INF_PCBVersion": {
+            "Relay PCB version": "Unknown"
+        },
+        "INF_ReleaseNr": "",
+        "INF_Schnubbel": 0,
+        "PAR_SerialNr": "Unknown"
+    },
+    "1190": {
+        "EntityName": "AdjustmentModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "PAR_AdjustAmplitude": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
+                "PAR_AdjustAmplitudeDc": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
+                "PAR_AdjustCLAMPData": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
+                "PAR_AdjustGainStatus": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
+                "PAR_AdjustInit": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
+                "PAR_AdjustOffsetStatus": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
+                "PAR_AdjustPCBData": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
+                "PAR_AdjustPhase": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
+                "PAR_AdjustPhaseStatus": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
+                "PAR_AdjustSend": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
+                "PAR_Adjustoffset": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            "not subject"
+                        ],
+                        "Type": "ADJUSTDATA"
+                    }
+                },
+                "PAR_Computation": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1,
+                            0
+                        ],
+                        "Type": "INTEGER"
+                    }
+                },
+                "PAR_Storage": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            2,
+                            0
+                        ],
+                        "Type": "INTEGER"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module supports commands for adjustment for a configured number of measuring channels",
+                "Name": "AdjustmentModule1"
+            },
+            "RpcInfo": {
+                "RPC_resetAdjustmentData()": {
+                    "Description": "<skipped>"
+                }
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CALCULATE",
+                        "AMPLITUDE",
+                        "10",
+                        "PAR_AdjustAmplitude",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "DCAMPLITUDE",
+                        "10",
+                        "PAR_AdjustAmplitudeDc",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "CLAMP",
+                        "18",
+                        "PAR_AdjustCLAMPData",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "GSTATUS",
+                        "10",
+                        "PAR_AdjustGainStatus",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "INIT",
+                        "10",
+                        "PAR_AdjustInit",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "OSTATUS",
+                        "10",
+                        "PAR_AdjustOffsetStatus",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "PCB",
+                        "18",
+                        "PAR_AdjustPCBData",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "PHASE",
+                        "10",
+                        "PAR_AdjustPhase",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "PSTATUS",
+                        "10",
+                        "PAR_AdjustPhaseStatus",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "SEND",
+                        "2",
+                        "PAR_AdjustSend",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "OFFSET",
+                        "10",
+                        "PAR_Adjustoffset",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "COMPUTATION",
+                        "10",
+                        "PAR_Computation",
+                        "0"
+                    ],
+                    [
+                        "CALCULATE",
+                        "STORAGE",
+                        "10",
+                        "PAR_Storage",
+                        "0"
+                    ]
+                ],
+                "Name": "ADJ1",
+                "RPC": [
+                    [
+                        "CALCULATE",
+                        "RESET",
+                        "4",
+                        "RPC_resetAdjustmentData()",
+                        "0"
+                    ]
+                ]
+            }
+        },
+        "PAR_AdjustAmplitude": "",
+        "PAR_AdjustAmplitudeDc": "",
+        "PAR_AdjustCLAMPData": "",
+        "PAR_AdjustGainStatus": 0,
+        "PAR_AdjustInit": "",
+        "PAR_AdjustOffsetStatus": 0,
+        "PAR_AdjustPCBData": "",
+        "PAR_AdjustPhase": "",
+        "PAR_AdjustPhaseStatus": 0,
+        "PAR_AdjustSend": "",
+        "PAR_Adjustoffset": "",
+        "PAR_Computation": 0,
+        "PAR_Storage": 0
+    },
+    "1400": {
+        "ACT_AirPressure": null,
+        "ACT_DevSerNo": "",
+        "ACT_ErrorFlags": 0,
+        "ACT_Humidity": null,
+        "ACT_TemperatureC": null,
+        "ACT_TemperatureF": null,
+        "ACT_WarningFlags": 0,
+        "EntityName": "BleModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_AirPressure": {
+                    "Description": "<skipped>",
+                    "Unit": "hPa"
+                },
+                "ACT_DevSerNo": {
+                    "Description": "<skipped>"
+                },
+                "ACT_ErrorFlags": {
+                    "Description": "<skipped>"
+                },
+                "ACT_Humidity": {
+                    "Description": "<skipped>",
+                    "Unit": "%"
+                },
+                "ACT_TemperatureC": {
+                    "Description": "<skipped>",
+                    "Unit": "°C"
+                },
+                "ACT_TemperatureF": {
+                    "Description": "<skipped>",
+                    "Unit": "°F"
+                },
+                "ACT_WarningFlags": {
+                    "Description": "<skipped>"
+                },
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "PAR_BluetoothOn": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_MacAddress": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": "^((([0-9A-Fa-f]{2}:){5})|(([0-9A-Fa-f]{2}){5})([0-9A-Fa-f]{2})$|^$)",
+                        "Type": "REGEX"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module measures configured number of harmonic power values from configured input values",
+                "Name": "BleModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "STATUS",
+                        "AIRPR",
+                        "2",
+                        "ACT_AirPressure",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "SERNO",
+                        "2",
+                        "ACT_DevSerNo",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "HUMID",
+                        "2",
+                        "ACT_Humidity",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "TEMP:CELSIUS",
+                        "2",
+                        "ACT_TemperatureC",
+                        "0"
+                    ],
+                    [
+                        "STATUS",
+                        "TEMP:FAHRENHEIT",
+                        "2",
+                        "ACT_TemperatureF",
+                        "0"
+                    ]
+                ],
+                "Name": "BLE1"
+            }
+        },
+        "PAR_BluetoothOn": 0,
+        "PAR_MacAddress": "00:00:00:00:00:00"
+    },
+    "1500": {
+        "ACT_PendingRequest": {
+        },
+        "ACT_TLChangeCount": 0,
+        "ACT_TrustList": [
+        ],
+        "EntityName": "ApiModule",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "PAR_GuiDialogFinished": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_ReloadTrustList": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module supports API access",
+                "Name": "ApiModule"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                ],
+                "Name": "API"
+            }
+        },
+        "PAR_GuiDialogFinished": false,
+        "PAR_ReloadTrustList": false
+    },
+    "9000": {
+        "EntityName": "DspSuperModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "PAR_IntervalGlobalTime": {
+                    "Description": "<skipped>",
+                    "Unit": "s",
+                    "Validation": {
+                        "Data": [
+                            1,
+                            100,
+                            0.5
+                        ],
+                        "Type": "DOUBLE"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "DSP support on timestamps for other modules",
+                "Name": "DspSuperModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "CONFIGURATION",
+                        "TINTEGRATION",
+                        "10",
+                        "PAR_IntervalGlobalTime",
+                        "0"
+                    ]
+                ],
+                "Name": "DSP1"
+            }
+        },
+        "PAR_IntervalGlobalTime": 2
+    },
+    "9999": {
+        "ACT_SerialScpiDeviceFile": "/dev/ttyUSB0",
+        "EntityName": "SCPIModule1",
+        "INF_ModuleInterface": {
+            "ComponentInfo": {
+                "ACT_SerialScpiDeviceFile": {
+                    "Description": "<skipped>"
+                },
+                "EntityName": {
+                    "Description": "<skipped>"
+                },
+                "INF_ModuleInterface": {
+                    "Description": "<skipped>"
+                },
+                "PAR_QueryResponseSortActive": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
+                "PAR_SerialScpiActive": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                }
+            },
+            "ModuleInfo": {
+                "Description": "This module provides a scpi interface depending on the actual session running",
+                "Name": "SCPIModule1"
+            },
+            "SCPIInfo": {
+                "Cmd": [
+                    [
+                        "",
+                        "DEVICE:IFACE",
+                        "2",
+                        "",
+                        "0"
+                    ]
+                ],
+                "Name": "SCP1"
+            }
+        },
+        "PAR_QueryResponseSortActive": 1,
+        "PAR_SerialScpiActive": false
+    }
+}

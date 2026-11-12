@@ -3,6 +3,8 @@
 #include "modulemanagerconfig.h"
 #include "scpimodulenetclientblocked.h"
 #include "vf_client_component_setter.h"
+#include <vs_dumpjson.h>
+#include <testloghelpers.h>
 #include <zera-jsonfileloader.h>
 #include <timemachineobject.h>
 #include <timerfactoryqtfortest.h>
@@ -82,10 +84,44 @@ void test_change_session::changeSessionCom5003SCPICmd()
     ModulemanagerConfig::setDemoDevice("com5003");
     ModuleManagerTestRunner modMan("com5003-meas-session.json", false, "com5003");
 
+    VeinStorage::AbstractDatabase *storageDb = modMan.getVeinStorageDb();
+    QByteArray veinDumpBefore = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>(), QList<int>(), true);
+    bool allOk = true;
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/com5003-meas-session-no-values.json", veinDumpBefore))
+        allOk = false;
+
     ScpiModuleNetClientBlocked client;
     client.sendReceive("CONFIGURATION:SYST:NAMESESSION 3 Systems / 2 Wires;");
     modMan.waitUntilModulesAreReady();
+
+    QByteArray veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>(), QList<int>(), true);
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/com5003-perphase-session-no-values.json", veinDumpAfter))
+        allOk = false;
+    QVERIFY(allOk);
     QCOMPARE(modMan.getVeinStorageDb()->getStoredValue(systemEntityId, "Session").toString(), QString("com5003-perphase-session.json"));
+}
+
+void test_change_session::changeSessionCom5003SCPICmdRefSession()
+{
+    ModulemanagerConfig::setDemoDevice("com5003");
+    ModuleManagerTestRunner modMan("com5003-meas-session.json", false, "com5003");
+
+    VeinStorage::AbstractDatabase *storageDb = modMan.getVeinStorageDb();
+    QByteArray veinDumpBefore = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>(), QList<int>(), true);
+    bool allOk = true;
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/com5003-meas-session-no-values.json", veinDumpBefore))
+        allOk = false;
+
+    // reference session is special due to change of channel names
+    ScpiModuleNetClientBlocked client;
+    client.sendReceive("CONFIGURATION:SYST:NAMESESSION Reference;");
+    modMan.waitUntilModulesAreReady();
+
+    QByteArray veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>(), QList<int>(), true);
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/com5003-ref-session-no-values.json", veinDumpAfter))
+        allOk = false;
+    QVERIFY(allOk);
+    QCOMPARE(modMan.getVeinStorageDb()->getStoredValue(systemEntityId, "Session").toString(), QString("com5003-ref-session.json"));
 }
 
 void test_change_session::changeSessionMt310s2MultipleProblematicRangeModule()
