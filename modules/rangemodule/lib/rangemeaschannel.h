@@ -66,6 +66,7 @@ private slots:
     void resetStatusSlot();
     void activationDone();
 
+    void deactivationInit();
     void deactivationDone();
 
 private:
@@ -87,6 +88,7 @@ private:
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating a rangemeaschannel
+    QState m_deactivationInitState;
     QFinalState m_deactivationDoneState;
 };
 

@@ -26,18 +26,24 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
     m_activationMachine.addState(&m_pcbConnectionState);
     m_activationMachine.addState(&m_resetStatusState);
     m_activationMachine.addState(&m_activationDoneState);
+    m_activationMachine.setInitialState(&m_pcbConnectionState);
 
     connect(&m_pcbConnectionState, &QState::entered, this, &cRangeMeasChannel::pcbConnection);
     connect(&m_resetStatusState, &QState::entered, this, &cRangeMeasChannel::resetStatusSlot);
     connect(&m_activationDoneState, &QState::entered, this, &cRangeMeasChannel::activationDone);
 
     // setting up statemachine for "deactivating" meas channel
-    m_deactivationMachine.addState(&m_deactivationDoneState);
 
+
+    m_deactivationMachine.addState(&m_deactivationInitState);
+    m_deactivationMachine.addState(&m_deactivationDoneState);
+    m_deactivationMachine.setInitialState(&m_deactivationInitState);
+
+    m_deactivationInitState.addTransition(this, &cRangeMeasChannel::deactivationContinue, &m_deactivationDoneState);
+
+    connect(&m_deactivationInitState, &QState::entered, this, &cRangeMeasChannel::deactivationInit);
     connect(&m_deactivationDoneState, &QState::entered, this, &cRangeMeasChannel::deactivationDone);
 
-    m_activationMachine.setInitialState(&m_pcbConnectionState);
-    m_deactivationMachine.setInitialState(&m_deactivationDoneState);
 
     connect(channelObserver.get(), &ChannelRangeObserver::Channel::sigNewRanges, this, &cRangeMeasChannel::newRangeList);
 }
@@ -397,6 +403,12 @@ void cRangeMeasChannel::activationDone()
 {
     m_bActive = true;
     emit activated();
+}
+
+void cRangeMeasChannel::deactivationInit()
+{
+    m_bActive = false;
+    emit deactivationContinue();
 }
 
 void cRangeMeasChannel::deactivationDone()
