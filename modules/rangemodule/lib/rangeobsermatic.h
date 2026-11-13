@@ -109,18 +109,18 @@ private:
 
     // our interface entities
     QList<VfModuleParameter*> m_veinRangeAliasParameterList;
-    QList<VfModuleComponent*> m_RangeOVLComponentList;
-    QList<VfModuleComponent*> m_RangeOVLRejectionComponentList;
-    QList<VfModuleComponent*> m_RangeActRejectionComponentList;
-    QList<VfModuleComponent*> m_RangeActOVLRejectionComponentList;
-    QList<VfModuleParameter*> m_RangeGroupPreScalingList;
-    QList<VfModuleParameter*> m_RangeGroupPreScalingEnabledList;
-    QList<VfModuleComponent*> m_RangeGroupPreScalingInfo;
+    QList<VfModuleComponent*> m_veinRangeOVLComponentList;
+    QList<VfModuleComponent*> m_veinRangeOVLRejectionComponentList;
+    QList<VfModuleComponent*> m_veinRangeActRejectionComponentList;
+    QList<VfModuleComponent*> m_veinRangeActOVLRejectionComponentList;
+    QList<VfModuleParameter*> m_veinRangeGroupPreScalingList;
+    QList<VfModuleParameter*> m_veinRangeGroupPreScalingEnabledList;
+    QList<VfModuleComponent*> m_veinRangeGroupPreScalingInfo;
 
-    VfModuleParameter* m_pParRangeAutomaticOnOff;
-    VfModuleParameter* m_pParGroupingOnOff;
-    VfModuleParameter* m_pParOverloadOnOff;
-    VfModuleComponent* m_pComponentOverloadMax;
+    VfModuleParameter* m_veinParRangeAutomaticOnOff;
+    VfModuleParameter* m_veinParGroupingOnOff;
+    VfModuleParameter* m_veinParOverloadOnOff;
+    VfModuleComponent* m_veinComponentOverloadMax;
 
     DspVarGroupClientInterface* m_gainScaleDSPVarGroup = nullptr; // copy of dsp internal correction data
     DspVarClientInterface *m_gainScaleDspVar = nullptr;
