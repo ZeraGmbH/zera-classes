@@ -148,11 +148,10 @@ void BaseModule::unsetModule()
 
 void BaseModule::activationStart()
 {
+    Q_ASSERT(!m_ModuleActivistList.isEmpty());
     // Interim - we intend to replace all this by tasks
-    if(!m_ModuleActivistList.isEmpty()) {
-        m_nActivationIt = 0; // we start with the first
-        emit activationContinue();
-    }
+    m_nActivationIt = 0; // we start with the first
+    emit activationContinue();
 }
 
 void BaseModule::activationExec()
@@ -173,10 +172,8 @@ void BaseModule::activationDone()
 void BaseModule::deactivationStart()
 {
     // Interim - we intend to replace all this by tasks
-    if(!m_ModuleActivistList.isEmpty()) {
-        m_nActivationIt = 0; // we start with the first
-        emit deactivationContinue();
-    }
+    m_nActivationIt = 0; // we start with the first
+    emit deactivationContinue();
 }
 
 void BaseModule::deactivationExec()
