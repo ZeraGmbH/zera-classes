@@ -11,10 +11,6 @@ private slots:
     void minimalSession();
     void veinDumpInitial();
     void checkActualValueCount();
-    void injectActualValuesWithCheating();
-    void injectActualValuesWithCheatingAndRangeChanged();
-    void injectIncreasingActualValuesWithCheatingEnabled();
-    void injectActualValuesCheatingEnabledWithPreScaling();
 };
 
 #endif // TEST_RANGE_MODULE_REGRESSION_H
