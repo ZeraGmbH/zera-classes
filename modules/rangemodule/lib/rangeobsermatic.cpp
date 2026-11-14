@@ -304,7 +304,7 @@ void cRangeObsermatic::observeRangeOverload()
     for (int i = 0; i < nrActValues; i++) {
         cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
         // the overload observation must consider the prescaling
-        double prescalingFac = getPreScale(i);
+        double prescalingFac = getPreScaling(i);
         // for test overload we take the rms value with/without dc depending on configuration
         // and for overload condition of adc test, we take the peakvalues including dc
         const RangeChannelData *channelData = rangeMeasChannel->getSharedChannelData();
@@ -348,7 +348,7 @@ void cRangeObsermatic::rangeAutomatic()
                     if (!m_softOvlList.at(channelIdx)) {
                         const QString range = m_ConfPar.getCurrentRangeName(channelIdx);
                         const RangeChannelData *channelData = rangeMeasChannel->getSharedChannelData();
-                        const double scaleFactor = getPreScale(channelIdx);
+                        const double scaleFactor = getPreScaling(channelIdx);
                         const QString optimalRange = rangeMeasChannel->getOptimalRange(channelData->getRmsValue() * scaleFactor,
                                                                                    channelData->getPeakValue() * scaleFactor,
                                                                                    range);
@@ -462,7 +462,7 @@ void cRangeObsermatic::setRanges(bool force)
             double actUrValue = RangeMeasChannelStaticHelperFunctions::getUrValueRangeAct(rangeMeasChannel);
             double actRejection = RangeMeasChannelStaticHelperFunctions::getRejectionRangeAct(rangeMeasChannel);
             // The scaling factor is multplied with the inverse presaling value
-            double scaleToDsp = (actUrValue / actRejection) * (1 / getPreScale(i));
+            double scaleToDsp = (actUrValue / actRejection) * (1 / getPreScaling(i));
             quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
             m_gainScaleDspVar->setValue(dspChannel, scaleToDsp);
 
@@ -536,7 +536,7 @@ bool cRangeObsermatic::requiresOverloadReset(int channel)
            (m_ConfPar.m_nRangeAutoAct.m_nActive != 1 || !m_maxOvlList.at(channel));
 }
 
-double cRangeObsermatic::getPreScale(int channelIdx)
+double cRangeObsermatic::getPreScaling(int channelIdx)
 {
     double prescaleValue = 1;
     int groupPresacalingIdxFound = -1;
@@ -773,7 +773,7 @@ void cRangeObsermatic::preScalingChanged()
 
         m_veinRangeGroupPreScalingInfo.at(i)->setValue(factor);
         for(int channel = 0; channel<m_RangeMeasChannelList.length(); ++channel)
-            m_RangeMeasChannelList.at(channel)->getSharedChannelData()->setPreScaling(getPreScale(channel));
+            m_RangeMeasChannelList.at(channel)->getSharedChannelData()->setPreScaling(getPreScaling(channel));
     }
     setRanges(true);
 }

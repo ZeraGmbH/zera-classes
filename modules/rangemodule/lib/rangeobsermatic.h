@@ -87,7 +87,7 @@ private:
     void handleRangeChangeResponse(int channelIdx);
 
     QList<int> getChannelGroupAliasIdxListForChannel(int channelIdx);
-    double getPreScale(int channelIdx);
+    double getPreScaling(int channelIdx);
 
     cRangeModule *m_pModule;
     QList<QStringList> m_GroupList;
