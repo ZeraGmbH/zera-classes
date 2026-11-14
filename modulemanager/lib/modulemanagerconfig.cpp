@@ -35,7 +35,7 @@ bool ModulemanagerConfig::isValid() const
     return !m_jsonConfig.isEmpty();
 }
 
-const QString ModulemanagerConfig::getDeviceName()
+const QString &ModulemanagerConfig::getDeviceName()
 {
     return m_deviceName;
 }
@@ -67,7 +67,7 @@ const QString ModulemanagerConfig::getDefaultSession()
     return devJson.value("defaultSession").toString();
 }
 
-void ModulemanagerConfig::setDefaultSession(QString session)
+void ModulemanagerConfig::setDefaultSession(const QString &session)
 {
     if(getDefaultSession() != session && getAvailableSessions().contains(session)) {
         QJsonObject devJson = getDeviceJson();
@@ -77,7 +77,7 @@ void ModulemanagerConfig::setDefaultSession(QString session)
     }
 }
 
-bool ModulemanagerConfig::containsDeviceName(QString devName)
+bool ModulemanagerConfig::containsDeviceName(const QString &devName)
 {
     if(m_jsonConfig.contains(devName))
         return true;

@@ -12,13 +12,13 @@ public:
     static void setDemoDevice(const QString &demoDevice);
     static QString getConfigFileNameFull();
     bool isValid() const;
-    static const QString getDeviceName();
+    static const QString &getDeviceName();
     bool getCustomerDataEnabled();
     const QStringList getAvailableSessions();
     const QStringList getSessionDisplayStrings();
     const QString getDefaultSession();
-    void setDefaultSession(QString session);
-    bool containsDeviceName(QString devName);
+    void setDefaultSession(const QString &session);
+    bool containsDeviceName(const QString &devName);
     NetworkConnectionInfo getPcbConnectionInfo();
     NetworkConnectionInfo getDspConnectionInfo();
     NetworkConnectionInfo getSecConnectionInfo();
