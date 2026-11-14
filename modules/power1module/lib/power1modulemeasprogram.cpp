@@ -367,7 +367,7 @@ void cPower1ModuleMeasProgram::setDspVarList()
 
 MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
 {
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     MeasSystemChannels measChannelUIPairList;
     for(const auto &measChannelPair : qAsConst(m_pModule->getConfigData()->m_sMeasSystemList)) {
         QStringList channelPairSplit = measChannelPair.split(',');
@@ -1227,7 +1227,7 @@ QString cPower1ModuleMeasProgram::getPhasePowerDescription(int measSystemNo)
             // We found nothing useful filled at the time of call - so hack
             QStringList powerChannels = configData->m_sMeasSystemList[measSystemNo].split(",");
             if(powerChannels.count() == 2) {
-                ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+                const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
                 const QString name0 = observer->getChannel(powerChannels[0])->getAlias();
                 const QString name1 = observer->getChannel(powerChannels[1])->getAlias();
                 strDescription = QString("Actual power value %1/%2").arg(name0, name1);

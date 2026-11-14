@@ -79,7 +79,7 @@ void cThdnModuleMeasProgram::stop()
 
 void cThdnModuleMeasProgram::generateVeinInterface()
 {
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     const QStringList channelMNames = observer->getChannelMNames();
     for (int i = 0; i < channelMNames.size(); i++) {
         const QString channelMName = channelMNames[i];
@@ -127,7 +127,7 @@ void cThdnModuleMeasProgram::generateVeinInterface()
 void cThdnModuleMeasProgram::setDspVarList()
 {
     int samples = m_pModule->getSharedChannelRangeObserver()->getSamplesPerPeriod();
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     const QStringList channelMNames = observer->getChannelMNames();
 
     // work variables without I/O
@@ -151,7 +151,7 @@ void cThdnModuleMeasProgram::setDspVarList()
 
 void cThdnModuleMeasProgram::setDspCmdList()
 {
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     const QStringList channelMNames = observer->getChannelMNames();
     const int thdnCountDsp = channelMNames.size();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once

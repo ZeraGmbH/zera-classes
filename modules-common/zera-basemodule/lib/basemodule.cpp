@@ -270,22 +270,22 @@ bool BaseModule::getDemo()
     return m_moduleParam.m_moduleSharedData->m_demo;
 }
 
-const AbstractFactoryServiceInterfacesPtr BaseModule::getServiceInterfaceFactory() const
+const AbstractFactoryServiceInterfacesPtr &BaseModule::getServiceInterfaceFactory() const
 {
     return m_moduleParam.m_moduleSharedData->m_serviceInterfaceFactory;
 }
 
-const ModuleNetworkParamsPtr BaseModule::getNetworkConfig() const
+const ModuleNetworkParamsPtr &BaseModule::getNetworkConfig() const
 {
     return m_moduleParam.m_moduleSharedData->m_networkParams;
 }
 
-const ChannelRangeObserver::SystemObserverPtr BaseModule::getSharedChannelRangeObserver() const
+const ChannelRangeObserver::SystemObserverPtr &BaseModule::getSharedChannelRangeObserver() const
 {
     return m_moduleParam.m_moduleSharedData->m_channelRangeObserver;
 }
 
-DspCommonSupervisorPtr BaseModule::getDspCommonSupervisor() const
+const DspCommonSupervisorPtr &BaseModule::getDspCommonSupervisor() const
 {
     return m_moduleParam.m_moduleSharedData->m_dspCommonSupervisor;
 }

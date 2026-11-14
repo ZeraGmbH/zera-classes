@@ -30,7 +30,7 @@ cThdnShadowModuleMeasProgram::cThdnShadowModuleMeasProgram(cThdnModule *module) 
 
 void cThdnShadowModuleMeasProgram::generateVeinInterface()
 {
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     const VeinStorage::AbstractDatabase *storageDb = m_pModule->getStorageDb();
     const QStringList channelMNames = observer->getChannelMNames();
     int sourceEntityId = m_pModule->getConfigData()->m_thdrSourceEntity;

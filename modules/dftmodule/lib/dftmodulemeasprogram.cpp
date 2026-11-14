@@ -82,7 +82,7 @@ void cDftModuleMeasProgram::generateVeinInterface()
 {
     int phaseNeutralValueCount = 0;
     int phasePhaseValueCount = 0;
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     VfModuleComponentCreator componentCreator(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem());
     for (int i = 0; i < m_pModule->getConfigData()->m_valueChannelList.count(); i++) {
         const QString &channelMNamesEntry = m_pModule->getConfigData()->m_valueChannelList.at(i);
@@ -213,7 +213,7 @@ void cDftModuleMeasProgram::setDspVarList()
 
 void cDftModuleMeasProgram::setDspCmdList()
 {
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     m_dspInterface->addCycListItem("STARTCHAIN(1,1,0x0101)"); // run once
         m_dspInterface->addCycListItem(QString("CLEARN(%1,FILTER)").arg(DspBuffLen::avgFilterLen(2*m_veinActValueList.count())));
 

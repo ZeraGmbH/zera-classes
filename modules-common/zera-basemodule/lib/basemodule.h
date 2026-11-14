@@ -25,10 +25,10 @@ public:
     int getEntityId() const;
     VeinStorage::AbstractDatabase *getStorageDb() const;
     bool getDemo();
-    const AbstractFactoryServiceInterfacesPtr getServiceInterfaceFactory() const;
-    const ModuleNetworkParamsPtr getNetworkConfig() const;
-    const ChannelRangeObserver::SystemObserverPtr getSharedChannelRangeObserver() const;
-    DspCommonSupervisorPtr getDspCommonSupervisor() const;
+    const AbstractFactoryServiceInterfacesPtr &getServiceInterfaceFactory() const;
+    const ModuleNetworkParamsPtr &getNetworkConfig() const;
+    const ChannelRangeObserver::SystemObserverPtr &getSharedChannelRangeObserver() const;
+    const DspCommonSupervisorPtr &getDspCommonSupervisor() const;
 
     QList<VfModuleMetaData*> veinModuleMetaDataList; // only meta information
     QList<AbstractMetaScpiComponent*> m_veinComponentsWithMetaAndScpi;

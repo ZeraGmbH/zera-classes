@@ -129,7 +129,7 @@ void cOsciModuleMeasProgram::setDspVarList()
 
 void cOsciModuleMeasProgram::setDspCmdList()
 {
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     int samples = observer->getSamplesPerPeriod();
     const cOsciModuleConfigData *configData = m_pModule->getConfigData();
     QString referenceChannel = configData->m_RefChannel.m_sValue;
@@ -232,7 +232,7 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, c
 
 void cOsciModuleMeasProgram::setActualValuesNames()
 {
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     const QStringList &channelList = m_pModule->getConfigData()->m_valueChannelList;
     for(int i = 0; i < channelList.count(); i++) {
         const QString &channelMNamesEntry = m_pModule->getConfigData()->m_valueChannelList.at(i);
@@ -336,7 +336,7 @@ void cOsciModuleMeasProgram::newRefChannel(const QVariant &chn)
 {
     QString channelMName = chn.toString();
     m_pModule->getConfigData()->m_RefChannel.m_sValue = channelMName;
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
     int dspChannel = channel->getDspChannel();
     m_pParameterDSP->setVarData(QString("REFCHN:%1;").arg(dspChannel));

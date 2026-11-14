@@ -350,7 +350,7 @@ QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 
 void cPower2ModuleMeasProgram::setDspCmdList()
 {
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     MeasSystemChannels measChannelPairList;
     cPower2ModuleConfigData *confdata = m_pModule->getConfigData();
     for(const auto &measChannelPair : confdata->m_sMeasSystemList) {

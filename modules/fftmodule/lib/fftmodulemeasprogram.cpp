@@ -75,7 +75,7 @@ void cFftModuleMeasProgram::stop()
 
 void cFftModuleMeasProgram::generateVeinInterface()
 {
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     int channelCount = m_pModule->getConfigData()->m_valueChannelList.count();
     VfModuleComponentCreator componentCreator(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem());
     for (int i = 0; i < channelCount; i++) {
@@ -179,7 +179,7 @@ void cFftModuleMeasProgram::setDspVarList()
 
 void cFftModuleMeasProgram::setDspCmdList()
 {
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     int samples = observer->getSamplesPerPeriod();
     QString referenceChannel = m_pModule->getConfigData()->m_RefChannel.m_sValue;
     int referenceDspChannel = observer->getChannel(referenceChannel)->getDspChannel();
@@ -417,7 +417,7 @@ void cFftModuleMeasProgram::newRefChannel(QVariant chn)
 {
     QString channelMName = chn.toString();
     m_pModule->getConfigData()->m_RefChannel.m_sValue = channelMName;
-    ChannelRangeObserver::SystemObserverPtr observer = m_pModule->getSharedChannelRangeObserver();
+    const ChannelRangeObserver::SystemObserverPtr &observer = m_pModule->getSharedChannelRangeObserver();
     ChannelRangeObserver::ChannelPtr channel = observer->getChannel(channelMName);
     int dspChannel = channel->getDspChannel();
     m_pParameterDSP->setVarData(QString("REFCHN:%1;").arg(dspChannel));
