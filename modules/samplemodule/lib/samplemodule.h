@@ -20,7 +20,6 @@ public:
 
 private slots:
     void activationFinished() override;
-    void deactivationStart() override;
 private:
     void setupModule() override;
     void startMeas() override { /* no start/stop */ };

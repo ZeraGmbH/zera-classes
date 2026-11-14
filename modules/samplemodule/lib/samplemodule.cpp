@@ -44,10 +44,4 @@ void cSampleModule::activationFinished()
     emit activationReady();
 }
 
-void cSampleModule::deactivationStart()
-{
-    m_nActivationIt = 0; // we start with the first
-    emit deactivationContinue();
-}
-
 }
