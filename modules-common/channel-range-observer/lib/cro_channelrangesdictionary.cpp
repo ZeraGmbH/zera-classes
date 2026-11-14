@@ -15,7 +15,7 @@ const QStringList &ChannelRangesDictionary::getAvailRangeNames() const
     return m_availRangeNameListSorted;
 }
 
-void ChannelRangesDictionary::addMaidenRange(RangePtr range)
+void ChannelRangesDictionary::addMaidenRange(const RangePtr &range)
 {
     m_rangesAddedBareThenFilled.append(range);
 }

@@ -11,7 +11,7 @@ public:
     RangePtr findRangeByName(const QString &rangeName) const;
     const QStringList &getAvailRangeNames() const;
 
-    void addMaidenRange(RangePtr range);
+    void addMaidenRange(const RangePtr &range);
     void doAllRangesCompleteJobs();
 
     void clear();
