@@ -11,7 +11,7 @@ class VfRpcEventSystem : public VfEventSystemCommandFilter
 public:
     explicit VfRpcEventSystem(int entityId);
     virtual void processCommandEvent(VeinEvent::CommandEvent *commandEvent);
-    void addRpc(VfCpp::cVeinModuleRpc::Ptr rpc);
+    void addRpc(const VfCpp::cVeinModuleRpc::Ptr &rpc);
 private:
     int m_entityId = 0;
     QHash<QString, VfCpp::cVeinModuleRpc::Ptr> m_rpcHash;

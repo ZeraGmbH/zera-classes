@@ -37,7 +37,7 @@ void VfRpcEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent
     }
 }
 
-void VfRpcEventSystem::addRpc(VfCpp::cVeinModuleRpc::Ptr rpc)
+void VfRpcEventSystem::addRpc(const VfCpp::cVeinModuleRpc::Ptr &rpc)
 {
     m_rpcHash[rpc->rpcName()] = rpc;
 }
