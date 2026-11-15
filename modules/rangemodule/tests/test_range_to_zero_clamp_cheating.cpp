@@ -42,7 +42,7 @@ void test_range_to_zero_clamp_cheating::injectActualValuesWithCheating()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWriteDisabled(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWriteDisabled(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWriteDisabled.count(), 3);
@@ -60,7 +60,7 @@ void test_range_to_zero_clamp_cheating::injectActualValuesWithCheating()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWriteEnabled(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWriteEnabled(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWriteEnabled.count(), 3);
@@ -91,7 +91,7 @@ void test_range_to_zero_clamp_cheating::injectActualValuesWithCheatingAndRangeCh
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -136,7 +136,7 @@ void test_range_to_zero_clamp_cheating::injectIncreasingActualValuesWithCheating
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -186,7 +186,7 @@ void test_range_to_zero_clamp_cheating::injectActualValuesCheatingEnabledWithPre
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);

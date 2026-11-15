@@ -20,6 +20,9 @@ public:
     QJsonObject dumpVarList(QJsonObject inData);
     QStringList dumpCycListItem();
     QJsonObject dumpVariablesWritten();
+signals:
+    void sigDspMemoryWrite(const QString &name, const QVector<float> &values);
+
 private slots:
     void onConnect();
 private:

@@ -96,7 +96,7 @@ void test_range_module_regression::checkActualValueCount()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);

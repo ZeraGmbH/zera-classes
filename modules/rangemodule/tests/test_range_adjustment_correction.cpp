@@ -64,7 +64,7 @@ void test_range_adjustment_correction::gainCorrectionOrder0()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -84,7 +84,7 @@ void test_range_adjustment_correction::gainCorrectionOrder1()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -102,7 +102,7 @@ void test_range_adjustment_correction::gainCorrectionOrder2()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -119,7 +119,7 @@ void test_range_adjustment_correction::phaseCorrectionOrder0()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -138,7 +138,7 @@ void test_range_adjustment_correction::phaseCorrectionOrder1()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -156,7 +156,7 @@ void test_range_adjustment_correction::phaseCorrectionOrder2()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -172,7 +172,7 @@ void test_range_adjustment_correction::offsetCorrectionOrder0()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
@@ -193,7 +193,7 @@ void test_range_adjustment_correction::offsetCorrectionOrder1()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &MockDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspWrite.count(), 3);
