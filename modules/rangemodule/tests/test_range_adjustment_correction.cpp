@@ -64,33 +64,33 @@ void test_range_adjustment_correction::gainCorrectionOrder0()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
+    QCOMPARE(spyDspVarWrite.count(), 3);
     // Gain is queried with amplitude rms * preScaling / keeper (= rms here):
-    QCOMPARE(polynom(100.0, coeff0), findDspWriteValue(spyDspWrite, "GainCorrection", DspChannelUl1));
-    QCOMPARE(polynom(5.0, coeff0), findDspWriteValue(spyDspWrite, "GainCorrection", DspChannelIl2));
+    QCOMPARE(polynom(100.0, coeff0), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
+    QCOMPARE(polynom(5.0, coeff0), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
     // Not adjusted channel keeps the default correction (c0 = 1):
-    QCOMPARE(polynom(100.0, 1.0), findDspWriteValue(spyDspWrite, "GainCorrection", DspChannelUl2));
+    QCOMPARE(polynom(100.0, 1.0), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
 }
 
 void test_range_adjustment_correction::gainCorrectionOrder1()
 {
     constexpr double coeff1 = 0.002;
     constexpr int order = 1;
-    setCorrectionCoefficients("m0", "250V", "GAIN", 1, coeff1); // UL1 -> 1 + 0.002*x
-    setCorrectionCoefficients("m4", "10A", "GAIN", 1, coeff1); // IL2
+    setCorrectionCoefficients("m0", "250V", "GAIN", order, coeff1); // UL1 -> 1 + 0.002*x
+    setCorrectionCoefficients("m4", "10A", "GAIN", order, coeff1); // IL2
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
+    QCOMPARE(spyDspVarWrite.count(), 3);
     // Setting only c1 keeps the default c0 = 1 of the gain correction:
-    QCOMPARE(polynom(100.0, 1.0, coeff1), findDspWriteValue(spyDspWrite, "GainCorrection", DspChannelUl1));
-    QCOMPARE(polynom(5.0, 1.0, coeff1), findDspWriteValue(spyDspWrite, "GainCorrection", DspChannelIl2));
+    QCOMPARE(polynom(100.0, 1.0, coeff1), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
+    QCOMPARE(polynom(5.0, 1.0, coeff1), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
 }
 
 void test_range_adjustment_correction::gainCorrectionOrder2()
@@ -102,13 +102,13 @@ void test_range_adjustment_correction::gainCorrectionOrder2()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
-    QCOMPARE(polynom(100.0, 1.0, 0.0, coeff2), findDspWriteValue(spyDspWrite, "GainCorrection", DspChannelUl1));
-    QCOMPARE(polynom(5.0, 1.0, 0.0, coeff2), findDspWriteValue(spyDspWrite, "GainCorrection", DspChannelIl2));
-    QCOMPARE(polynom(100.0, 1.0), findDspWriteValue(spyDspWrite, "GainCorrection", DspChannelUl2));
+    QCOMPARE(spyDspVarWrite.count(), 3);
+    QCOMPARE(polynom(100.0, 1.0, 0.0, coeff2), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
+    QCOMPARE(polynom(5.0, 1.0, 0.0, coeff2), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
+    QCOMPARE(polynom(100.0, 1.0), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
 }
 
 void test_range_adjustment_correction::phaseCorrectionOrder0()
@@ -119,14 +119,14 @@ void test_range_adjustment_correction::phaseCorrectionOrder0()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
+    QCOMPARE(spyDspVarWrite.count(), 3);
     // Phase is queried with the signal frequency - both channels get the
     // same correction although their rms values differ:
-    QCOMPARE(polynom(50.0, coeff0), findDspWriteValue(spyDspWrite, "PhaseCorrection", DspChannelUl1));
-    QCOMPARE(polynom(50.0, coeff0), findDspWriteValue(spyDspWrite, "PhaseCorrection", DspChannelIl2));
+    QCOMPARE(polynom(50.0, coeff0), findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl1));
+    QCOMPARE(polynom(50.0, coeff0), findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelIl2));
 }
 
 void test_range_adjustment_correction::phaseCorrectionOrder1()
@@ -138,13 +138,13 @@ void test_range_adjustment_correction::phaseCorrectionOrder1()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
-    QCOMPARE(polynom(50.0, 0.0, coeff1), findDspWriteValue(spyDspWrite, "PhaseCorrection", DspChannelUl1));
-    QCOMPARE(polynom(50.0, 0.0, coeff1), findDspWriteValue(spyDspWrite, "PhaseCorrection", DspChannelIl2));
-    QCOMPARE(polynom(50.0, 0.0), findDspWriteValue(spyDspWrite, "PhaseCorrection", DspChannelUl2));
+    QCOMPARE(spyDspVarWrite.count(), 3);
+    QCOMPARE(polynom(50.0, 0.0, coeff1), findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl1));
+    QCOMPARE(polynom(50.0, 0.0, coeff1), findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelIl2));
+    QCOMPARE(polynom(50.0, 0.0), findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl2));
 }
 
 void test_range_adjustment_correction::phaseCorrectionOrder2()
@@ -156,12 +156,12 @@ void test_range_adjustment_correction::phaseCorrectionOrder2()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
-    QCOMPARE(polynom(50.0, 0.0, 0.0, coeff2), findDspWriteValue(spyDspWrite, "PhaseCorrection", DspChannelUl1));
-    QCOMPARE(polynom(50.0, 0.0, 0.0, coeff2), findDspWriteValue(spyDspWrite, "PhaseCorrection", DspChannelIl2));
+    QCOMPARE(spyDspVarWrite.count(), 3);
+    QCOMPARE(polynom(50.0, 0.0, 0.0, coeff2), findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl1));
+    QCOMPARE(polynom(50.0, 0.0, 0.0, coeff2), findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelIl2));
 }
 
 void test_range_adjustment_correction::offsetCorrectionOrder0()
@@ -172,14 +172,14 @@ void test_range_adjustment_correction::offsetCorrectionOrder0()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
+    QCOMPARE(spyDspVarWrite.count(), 3);
     // Offset is queried with amplitude rms * preScaling and multiplied with
     // the pre-scaling factor before being written (1 here):
-    QCOMPARE(polynom(100.0, coeff0), findDspWriteValue(spyDspWrite, "OffsetCorrection", DspChannelUl1));
-    QCOMPARE(polynom(5.0, coeff0), findDspWriteValue(spyDspWrite, "OffsetCorrection", DspChannelIl2));
+    QCOMPARE(polynom(100.0, coeff0), findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelUl1));
+    QCOMPARE(polynom(5.0, coeff0), findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelIl2));
 }
 
 void test_range_adjustment_correction::offsetCorrectionOrder1()
@@ -193,12 +193,12 @@ void test_range_adjustment_correction::offsetCorrectionOrder1()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
-    QSignalSpy spyDspWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
-    QCOMPARE(polynom(100.0, 0.0, coeff1), findDspWriteValue(spyDspWrite, "OffsetCorrection", DspChannelUl1));
-    QCOMPARE(polynom(5.0, 0.0, coeff1), findDspWriteValue(spyDspWrite, "OffsetCorrection", DspChannelIl2));
+    QCOMPARE(spyDspVarWrite.count(), 3);
+    QCOMPARE(polynom(100.0, 0.0, coeff1), findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelUl1));
+    QCOMPARE(polynom(5.0, 0.0, coeff1), findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelIl2));
 }
 
 
@@ -239,17 +239,16 @@ float test_range_adjustment_correction::polynom(double x, double coeff0, double 
 // The rangemodule writes three vectors per adjust cycle: GainCorrection,
 // PhaseCorrection and OffsetCorrection. Each vector is indexed by the DSP
 // channel number (see above); only the first 8 of the 32 floats are used.
-float test_range_adjustment_correction::findDspWriteValue(const QSignalSpy &spyDspWrite,
-                                                    const QString &rangeModuleDspGroupName,
-                                                    int dspChannelNr)
+float test_range_adjustment_correction::findDspWriteValue(const QSignalSpy &spyDspVarWrite,
+                                                          const QString &dspVarName,
+                                                          int dspChannelNr)
 {
-    for (int i = 0; i < spyDspWrite.count(); ++i) {
-        if (spyDspWrite.at(i).at(0) == rangeModuleDspGroupName) {
-            const QVector<float> writtenValues = spyDspWrite.at(i).at(1).value<QVector<float>>();
-            return writtenValues[dspChannelNr];
-        }
+    for (int i = 0; i < spyDspVarWrite.count(); ++i) {
+        TestDspVarWriteData writtenVarData = spyDspVarWrite.at(i).at(0).value<TestDspVarWriteData>();
+        if (writtenVarData.varName == dspVarName)
+            return writtenVarData.values[dspChannelNr];
     }
-    qCritical("No DSP write for group: %s found", qPrintable(rangeModuleDspGroupName));
+    qCritical("No DSP write for group: %s found", qPrintable(dspVarName));
     return 0.0f;
 }
 

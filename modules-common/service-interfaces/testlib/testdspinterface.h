@@ -1,6 +1,7 @@
 #ifndef TESTDSPINTERFACE_H
 #define TESTDSPINTERFACE_H
 
+#include "testdspvarwritedata.h"
 #include <mockdspinterface.h>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -21,7 +22,7 @@ public:
     QStringList dumpCycListItem();
     QJsonObject dumpVariablesWritten();
 signals:
-    void sigDspMemoryWrite(const QString &name, const QVector<float> &values);
+    void sigDspVarWrite(const TestDspVarWriteData &dspVar);
 
 private slots:
     void onConnect();

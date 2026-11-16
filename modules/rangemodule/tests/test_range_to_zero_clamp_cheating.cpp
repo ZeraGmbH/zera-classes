@@ -42,15 +42,15 @@ void test_range_to_zero_clamp_cheating::injectActualValuesWithCheating()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWriteDisabled(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWriteDisabled(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWriteDisabled.count(), 3);
-    QVariant arguments = spyDspWriteDisabled[0][1];
-    QVector<float> writtenCorrData = arguments.value<QVector<float>>();
+    QCOMPARE(spyDspVarWriteDisabled .count(), 3);
+    TestDspVarWriteData writtenVarDataDisabled = spyDspVarWriteDisabled[0][0].value<TestDspVarWriteData>();
+    QCOMPARE(writtenVarDataDisabled.varName, "GAINCORRECTION");
     QVector<float> expectedGainCorr = {1, 1, 1, 1, 1, 1, 1, 1};
     //Extract first 8 values. They are corresponding to 8 channels, others are not used
-    QVector<float> actualGainCorr = writtenCorrData.mid(0, 8);
+    QVector<float> actualGainCorr = writtenVarDataDisabled.values.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
 
 
@@ -60,18 +60,18 @@ void test_range_to_zero_clamp_cheating::injectActualValuesWithCheating()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWriteEnabled(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWriteEnabled(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWriteEnabled.count(), 3);
-    arguments = spyDspWriteEnabled[0][1];
-    writtenCorrData = arguments.value<QVector<float>>();
+    QCOMPARE(spyDspVarWriteEnabled.count(), 3);
+    TestDspVarWriteData writtenVarDataEnabled = spyDspVarWriteEnabled[0][0].value<TestDspVarWriteData>();
+    QCOMPARE(writtenVarDataEnabled.varName, "GAINCORRECTION");
     //Threshold is UL1-2-3-AUX = 5V, IL1-2-3 = 0.2A / IAUX ≈ 0
     //RMS Values {UL1 = 0, UL2 = 1, UL3 = 2, IL1 = 3, IL2 = 4, IL3 = 5, UAUX =6, IAUX = 7}
     //Gain correction channel sequence : {UL1, IL1, .....}
     expectedGainCorr = {1e-10, 1, 1e-10, 1, 1e-10, 1, 1, 1};
     //Extract first 8 values. They are corresponding to 8 channels, others are not used
-    actualGainCorr = writtenCorrData.mid(0, 8);
+    actualGainCorr = writtenVarDataEnabled.values.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
 }
 
@@ -91,32 +91,32 @@ void test_range_to_zero_clamp_cheating::injectActualValuesWithCheatingAndRangeCh
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
-    QVariant arguments = spyDspWrite[0][1];
-    QVector<float> writtenCorrData = arguments.value<QVector<float>>();
+    QCOMPARE(spyDspVarWrite.count(), 3);
+    TestDspVarWriteData writtenVarData = spyDspVarWrite[0][0].value<TestDspVarWriteData>();
+    QCOMPARE(writtenVarData.varName, "GAINCORRECTION");
     //Threshold is UL1-2-3-AUX = 5V, IL1-2-3 = 0.2A / IAUX ≈ 0
     //Gain correction channel sequence : {UL1, IL1, .....}
     QVector<float> expectedGainCorr = {1e-10, 1, 1e-10, 1, 1e-10, 1, 1, 1};
-    QVector<float> actualGainCorr = writtenCorrData.mid(0, 8);
+    QVector<float> actualGainCorr = writtenVarData.values.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
 
     testRunner.setVfComponent(rangeEntityId, "PAR_Channel1Range", "8V");
-    spyDspWrite.clear();
+    spyDspVarWrite.clear();
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
-    arguments = spyDspWrite[0][1];
-    writtenCorrData = arguments.value<QVector<float>>();
+    QCOMPARE(spyDspVarWrite.count(), 3);
+    writtenVarData = spyDspVarWrite[0][0].value<TestDspVarWriteData>();
+    QCOMPARE(writtenVarData.varName, "GAINCORRECTION");
     //Threshold is UL1-2-3 = 0.16V / UAUX = 5V , IL1-2-3 = 0.2A / IAUX ≈ 0
     //RMS Values {UL1 = 0, UL2 = 1, UL3 = 2, IL1 = 3, IL2 = 4, IL3 = 5, UAUX =6, IAUX = 7}
     //Gain correction channel sequence : {UL1, IL1, .....}
     expectedGainCorr = {1e-10, 1, 1, 1, 1, 1, 1, 1};
-    actualGainCorr = writtenCorrData.mid(0, 8);
+    actualGainCorr = writtenVarData.values.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
 }
 
@@ -136,35 +136,33 @@ void test_range_to_zero_clamp_cheating::injectIncreasingActualValuesWithCheating
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
-    QVariant arguments = spyDspWrite[0][1];
-    QVector<float> writtenCorrData = arguments.value<QVector<float>>();
+    QCOMPARE(spyDspVarWrite.count(), 3);
+    TestDspVarWriteData writtenVarData = spyDspVarWrite[0][0].value<TestDspVarWriteData>();
     //Threshold is UL1-2-3-AUX = 5V, IL1-2-3 = 0.2A / IAUX ≈ 0
     //Gain correction channel sequence : {UL1, IL1, .....}
     //RMS Values 0.1 for all channels
     QVector<float> expectedGainCorr = {1e-10, 1e-10, 1e-10, 1e-10, 1e-10, 1e-10, 1e-10, 1};
-    QVector<float> actualGainCorr = writtenCorrData.mid(0, 8);
+    QVector<float> actualGainCorr = writtenVarData.values.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
 
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsPeakDCValue(i, 10);
 
-    spyDspWrite.clear();
+    spyDspVarWrite.clear();
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
-    arguments = spyDspWrite[0][1];
-    writtenCorrData = arguments.value<QVector<float>>();
+    QCOMPARE(spyDspVarWrite.count(), 3);
+    writtenVarData = spyDspVarWrite[0][0].value<TestDspVarWriteData>();
     //Threshold is UL1-2-3-AUX = 5V, IL1-2-3 = 0.2A / IAUX ≈ 0
     //RMS Values 10 for all channels
     //Gain correction channel sequence : {UL1, IL1, .....}
     expectedGainCorr = {1, 1, 1, 1, 1, 1, 1, 1};
-    actualGainCorr = writtenCorrData.mid(0, 8);
+    actualGainCorr = actualGainCorr = writtenVarData.values.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
 }
 
@@ -186,17 +184,16 @@ void test_range_to_zero_clamp_cheating::injectActualValuesCheatingEnabledWithPre
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
-    QVariant arguments = spyDspWrite[0][1];
-    QVector<float> writtenCorrData = arguments.value<QVector<float>>();
+    QCOMPARE(spyDspVarWrite.count(), 3);
+    TestDspVarWriteData writtenVarData = spyDspVarWrite[0][0].value<TestDspVarWriteData>();
     //Threshold is UL1-2-3-AUX = 1.25V , IL1-2-3 = 0.05A / IAUX ≈ 0
     //Gain correction channel sequence : {UL1, IL1, .....}
     //RMS Values {UL1 = 0, UL2 = 2, UL3 = 4, IL1 = 6, IL2 = 8, IL3 = 10, UAUX =12, IAUX = 14}
     //unscaled RMS Values ( UL1-UL2-UL3 / PAR_PreScalingGroup0) {UL1 = 0, UL2 = 1, UL3 = 2, IL1 = 6, IL2 = 8, IL3 = 10, UAUX =12, IAUX = 14}
     QVector<float> expectedGainCorr = {1e-10, 1, 1e-10, 1, 1, 1, 1, 1};
-    QVector<float> actualGainCorr = writtenCorrData.mid(0, 8);
+    QVector<float> actualGainCorr = writtenVarData.values.mid(0, 8);
     QCOMPARE(expectedGainCorr, actualGainCorr);
 }

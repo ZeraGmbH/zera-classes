@@ -1,6 +1,7 @@
 #include "testdspinterface.h"
 #include <dspinterface_p.h>
 #include <dspvarresolver.h>
+#include <timemachinefortest.h>
 
 TestDspInterface::TestDspInterface(const QStringList &valueNamesList, int entityId) :
     MockDspInterface(entityId),
@@ -31,8 +32,11 @@ quint32 TestDspInterface::dspMemoryWrite(DspVarGroupClientInterface *varGroup)
             const QString varName = currentVar->Name();
             DspDataType dataType = currentVar->datatype();
 
+            const int varSize = currentVar->size();
+            QVector<float> varValues(varSize);
             for(int varEntry=0; varEntry<currentVar->size(); ++varEntry) {
                 const float* valuePointer = currentVar->data() + varEntry;
+                varValues[varEntry] = *valuePointer;
                 QString label;
                 if(varEntry == 0)
                     label = QString("%1:%2").arg(memGroupName, varName);
@@ -52,6 +56,8 @@ quint32 TestDspInterface::dspMemoryWrite(DspVarGroupClientInterface *varGroup)
                 struct TVarsWritten write = { m_transactionCount, label, value };
                 m_valuesWritten.append(write);
             }
+            TestDspVarWriteData dspVarData{varName, varValues, m_transactionCount, TimeMachineForTest::getInstance()->getCurrentTimeMs()};
+            emit sigDspVarWrite(dspVarData);
         }
     }
     if(!nonEmptyMemgroupFound) {
@@ -59,8 +65,6 @@ quint32 TestDspInterface::dspMemoryWrite(DspVarGroupClientInterface *varGroup)
         m_valuesWritten.append(write);
     }
     m_transactionCount++;
-
-    emit sigDspMemoryWrite(varGroup->getName(), varGroup->getData());
     return sendCmdResponse("");
 }
 

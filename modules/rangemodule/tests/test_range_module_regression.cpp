@@ -96,13 +96,14 @@ void test_range_module_regression::checkActualValueCount()
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
-    QSignalSpy spyDspWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspMemoryWrite);
+    QSignalSpy spyDspVarWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     TimeMachineObject::feedEventLoop();
 
-    QCOMPARE(spyDspWrite.count(), 3);
-    QCOMPARE(spyDspWrite.at(0).at(0), "GainCorrection");
-    QCOMPARE(spyDspWrite.at(1).at(0), "PhaseCorrection");
-    QCOMPARE(spyDspWrite.at(2).at(0), "OffsetCorrection");
+    QCOMPARE(spyDspVarWrite.count(), 3);
+    TestDspVarWriteData ct = spyDspVarWrite.at(0).at(0).value<TestDspVarWriteData>();
+    QCOMPARE(spyDspVarWrite.at(0).at(0).value<TestDspVarWriteData>().varName, "GAINCORRECTION");
+    QCOMPARE(spyDspVarWrite.at(1).at(0).value<TestDspVarWriteData>().varName, "PHASECORRECTION");
+    QCOMPARE(spyDspVarWrite.at(2).at(0).value<TestDspVarWriteData>().varName, "OFFSETCORRECTION");
 
     jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
 
