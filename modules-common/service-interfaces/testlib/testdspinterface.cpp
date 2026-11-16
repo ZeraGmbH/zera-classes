@@ -55,7 +55,6 @@ quint32 TestDspInterface::dspMemoryWrite(DspVarGroupClientInterface *varGroup)
         }
     }
     if(!nonEmptyMemgroupFound) {
-        const QVector<float> &values = varGroup->getData();
         struct TVarsWritten write = { m_transactionCount, QString("No variables found for varGroup %1").arg(memGroupName), float(qQNaN()) };
         m_valuesWritten.append(write);
     }
