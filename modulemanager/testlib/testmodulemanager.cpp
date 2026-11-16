@@ -95,6 +95,11 @@ int TestModuleManager::getModuleConfigWriteCounts() const
     return m_moduleConfigCountWrites;
 }
 
+PCBServer *TestModuleManager::getPcbServer()
+{
+    return m_testAllServices->getPcbServer();
+}
+
 ZDspServer *TestModuleManager::getDspServer()
 {
     return m_testAllServices->getZdsp1dServer();

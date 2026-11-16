@@ -11,7 +11,6 @@ struct TestDspVarWriteData
     QVector<float> values;
 
     int transactionCount = 0;
-    int currentTimeMs = 0;
 };
 
 Q_DECLARE_METATYPE(TestDspVarWriteData)

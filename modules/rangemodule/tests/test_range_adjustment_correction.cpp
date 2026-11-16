@@ -1,7 +1,9 @@
 #include "test_range_adjustment_correction.h"
 #include "demodspvaluesrange.h"
+#include "testservicesniffer.h"
 #include <scpisingletransactionblocked.h>
 #include <zscpi_response_definitions.h>
+#include <testloghelpers.h>
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
@@ -40,6 +42,7 @@ void test_range_adjustment_correction::initTestCase()
 
     m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/session-range-test.json", /*initialAdjPermission=*/true);
     m_sampleDspInterfaceProg = m_testRunner->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
+    m_sampleDspInterfaceObserv = m_testRunner->findDspInterfaceByType(INJECT_RANGE_OBSERV);
     m_sampleDspInterfaceAdj = m_testRunner->findDspInterfaceByType(INJECT_RANGE_ADJUST);
 }
 
@@ -55,8 +58,16 @@ static constexpr int DspChannelIl1 = 1; // m3
 static constexpr int DspChannelUl2 = 2; // m1
 static constexpr int DspChannelIl2 = 3; // m4
 
+static constexpr int channelCount = 8;
+
 void test_range_adjustment_correction::gainCorrectionOrder0()
 {
+    TestServiceSniffer dumper;
+    dumper.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
+    dumper.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
+    dumper.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
+    dumper.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
+
     constexpr double coeff0 = 0.98;
     constexpr int order = 0;
     setCorrectionCoefficients("m0", "250V", "GAIN", order, coeff0);
@@ -73,13 +84,21 @@ void test_range_adjustment_correction::gainCorrectionOrder0()
     QCOMPARE(polynom(5.0, coeff0), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
     // Not adjusted channel keeps the default correction (c0 = 1):
     QCOMPARE(polynom(100.0, 1.0), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder0.json", dumper.dump()));
 }
 
 void test_range_adjustment_correction::gainCorrectionOrder1()
 {
-    constexpr double coeff1 = 0.002;
+    TestServiceSniffer dumper;
+    dumper.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
+    dumper.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
+    dumper.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
+    dumper.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
+
+    constexpr double coeff1 = 0.001;
     constexpr int order = 1;
-    setCorrectionCoefficients("m0", "250V", "GAIN", order, coeff1); // UL1 -> 1 + 0.002*x
+    setCorrectionCoefficients("m0", "250V", "GAIN", order, coeff1); // UL1 -> 1 + 0.001*x
     setCorrectionCoefficients("m4", "10A", "GAIN", order, coeff1); // IL2
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
@@ -91,13 +110,21 @@ void test_range_adjustment_correction::gainCorrectionOrder1()
     // Setting only c1 keeps the default c0 = 1 of the gain correction:
     QCOMPARE(polynom(100.0, 1.0, coeff1), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
     QCOMPARE(polynom(5.0, 1.0, coeff1), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder1.json", dumper.dump()));
 }
 
 void test_range_adjustment_correction::gainCorrectionOrder2()
 {
-    constexpr double coeff2 = 0.0004;
+    TestServiceSniffer dumper;
+    dumper.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
+    dumper.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
+    dumper.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
+    dumper.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
+
+    constexpr double coeff2 = 0.001;
     // Setting only c2 keeps the defaults c0 = 1 and c1 = 0:
-    setCorrectionCoefficients("m0", "250V", "GAIN", 2, coeff2); // UL1 -> 1 + 0.0004*x^2
+    setCorrectionCoefficients("m0", "250V", "GAIN", 2, coeff2); // UL1 -> 1 + 0.001*x^2
     setCorrectionCoefficients("m4", "10A", "GAIN", 2, coeff2); // IL2
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
@@ -109,6 +136,8 @@ void test_range_adjustment_correction::gainCorrectionOrder2()
     QCOMPARE(polynom(100.0, 1.0, 0.0, coeff2), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
     QCOMPARE(polynom(5.0, 1.0, 0.0, coeff2), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
     QCOMPARE(polynom(100.0, 1.0), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
+
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder2.json", dumper.dump()));
 }
 
 void test_range_adjustment_correction::phaseCorrectionOrder0()
@@ -131,9 +160,9 @@ void test_range_adjustment_correction::phaseCorrectionOrder0()
 
 void test_range_adjustment_correction::phaseCorrectionOrder1()
 {
-    constexpr double coeff1 = 0.01;
+    constexpr double coeff1 = 0.001;
     // Setting only c1 keeps the default c0 = 0 of the phase correction:
-    setCorrectionCoefficients("m0", "250V", "PHASE", 1, coeff1); // UL1 -> 0.01*f
+    setCorrectionCoefficients("m0", "250V", "PHASE", 1, coeff1); // UL1 -> 0.001*f
     setCorrectionCoefficients("m4", "10A", "PHASE", 1, coeff1); // IL2
 
     TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'

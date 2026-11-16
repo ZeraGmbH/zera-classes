@@ -114,6 +114,11 @@ void ModuleManagerTestRunner::setRangeGetSetDelay(int rangeGetSetDelay)
     m_modMan->setRangeGetSetDelay(rangeGetSetDelay);
 }
 
+PCBServer *ModuleManagerTestRunner::getPcbServer()
+{
+    return m_modMan->getPcbServer();
+}
+
 ZDspServer *ModuleManagerTestRunner::getDspServer()
 {
     return m_modMan->getDspServer();

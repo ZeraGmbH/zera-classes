@@ -40,7 +40,10 @@ public:
 
     void setRangeGetSetDelay(int rangeGetSetDelay);
 
+    PCBServer* getPcbServer();
     ZDspServer *getDspServer();
+    cSEC1000dServer *getSecServer();
+
     // search criteria ambiguous: return first
     TestDspInterfacePtr findDspInterfaceByType(DspInterfaceInjectableTypes injectType);
     TestDspInterfacePtr findDspInterfaceByEntityId(int entityId);
@@ -48,7 +51,6 @@ public:
     QMap<int, QList<TestDspInterfacePtr>> getAllDspInterfaces();
     void fireActualValues();
 
-    cSEC1000dServer *getSecServer();
 
     // hotplug full functional methods
     void fireHotplugInterrupt(const AbstractMockAllServices::ChannelAliasHotplugDeviceNameMap &deviceMap);

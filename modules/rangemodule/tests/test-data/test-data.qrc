@@ -13,6 +13,9 @@
         <file>dspSourceDumps/dumpAdjustManagement.json</file>
         <file>dspSourceDumps/dumpMeasProgram.json</file>
         <file>dspSourceDumps/dumpObsermatic.json</file>
+        <file>serviceDumps/gainCorrectionOrder0.json</file>
+        <file>serviceDumps/gainCorrectionOrder1.json</file>
+        <file>serviceDumps/gainCorrectionOrder2.json</file>
         <file>veinDumps/dumpActual.json</file>
         <file>veinDumps/dumpActual-preScaled2.json</file>
         <file>veinDumps/dumpInitial.json</file>

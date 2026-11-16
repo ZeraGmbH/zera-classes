@@ -1,7 +1,6 @@
 #include "testdspinterface.h"
 #include <dspinterface_p.h>
 #include <dspvarresolver.h>
-#include <timemachinefortest.h>
 
 TestDspInterface::TestDspInterface(const QStringList &valueNamesList, int entityId) :
     MockDspInterface(entityId),
@@ -56,7 +55,7 @@ quint32 TestDspInterface::dspMemoryWrite(DspVarGroupClientInterface *varGroup)
                 struct TVarsWritten write = { m_transactionCount, label, value };
                 m_valuesWritten.append(write);
             }
-            TestDspVarWriteData dspVarData{varName, varValues, m_transactionCount, TimeMachineForTest::getInstance()->getCurrentTimeMs()};
+            TestDspVarWriteData dspVarData{varName, varValues, m_transactionCount};
             emit sigDspVarWrite(dspVarData);
         }
     }

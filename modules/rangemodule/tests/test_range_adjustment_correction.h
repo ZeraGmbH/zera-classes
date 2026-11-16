@@ -34,6 +34,7 @@ private:
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     TestDspInterfacePtr m_sampleDspInterfaceProg;
+    TestDspInterfacePtr m_sampleDspInterfaceObserv;
     TestDspInterfacePtr m_sampleDspInterfaceAdj;
 };
 

@@ -40,6 +40,7 @@ public:
     };
     QList<TModuleInstances> getInstanceCountsOnModulesDestroyed();
 
+    PCBServer *getPcbServer();
     ZDspServer *getDspServer();
     cSEC1000dServer *getSecServer();
     void setRangeGetSetDelay(int rangeGetSetDelay);
