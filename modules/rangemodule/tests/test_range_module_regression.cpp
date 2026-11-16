@@ -94,9 +94,10 @@ void test_range_module_regression::checkActualValueCount()
     testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", true);
     testRunner.setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "2/1*(1)");
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     QSignalSpy spyDspVarWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);

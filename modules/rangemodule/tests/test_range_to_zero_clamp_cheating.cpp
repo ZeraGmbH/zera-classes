@@ -40,9 +40,10 @@ void test_range_to_zero_clamp_cheating::injectActualValuesWithCheating()
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 0);
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 2);
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     QSignalSpy spyDspVarWriteDisabled(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWriteDisabled .count(), 3);
@@ -58,9 +59,10 @@ void test_range_to_zero_clamp_cheating::injectActualValuesWithCheating()
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValuesOnOff", 1);
     testRunner.setVfComponent(rangeEntityId, "PAR_IgnoreRmsValues", 2);
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     QSignalSpy spyDspVarWriteEnabled(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWriteEnabled.count(), 3);
@@ -89,9 +91,10 @@ void test_range_to_zero_clamp_cheating::injectActualValuesWithCheatingAndRangeCh
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsPeakDCValue(i, i);
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     QSignalSpy spyDspVarWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
@@ -105,7 +108,8 @@ void test_range_to_zero_clamp_cheating::injectActualValuesWithCheatingAndRangeCh
 
     testRunner.setVfComponent(rangeEntityId, "PAR_Channel1Range", "8V");
     spyDspVarWrite.clear();
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
@@ -134,9 +138,10 @@ void test_range_to_zero_clamp_cheating::injectIncreasingActualValuesWithCheating
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsPeakDCValue(i, 0.1);
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     QSignalSpy spyDspVarWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
@@ -152,7 +157,8 @@ void test_range_to_zero_clamp_cheating::injectIncreasingActualValuesWithCheating
         rangeValues.setRmsPeakDCValue(i, 10);
 
     spyDspVarWrite.clear();
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
     sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
@@ -182,9 +188,10 @@ void test_range_to_zero_clamp_cheating::injectActualValuesCheatingEnabledWithPre
     for(int i = 0; i < rangeChannelCount; i++)
         rangeValues.setRmsPeakDCValue(i, i*2.0);
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     QSignalSpy spyDspVarWrite(sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    sampleDspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);

@@ -4,18 +4,18 @@
             "is": "ScpiServiceIo",
             "scpiCmd": "SENS:m0:250V:CORR:GAIN:COEFFICIENT:2 0.001;",
             "scpiResponse": "ack",
-            "timeMs": 1000
+            "timeMs": 2000
         },
         {
             "is": "ScpiServiceIo",
             "scpiCmd": "SENS:m4:10A:CORR:GAIN:COEFFICIENT:2 0.001;",
             "scpiResponse": "ack",
-            "timeMs": 1000
+            "timeMs": 2000
         },
         {
             "is": "DspVarWrite",
-            "timeMs": 1500,
-            "transActionNo": 7,
+            "timeMs": 2500,
+            "transActionNo": 13,
             "varName": "GAINCORRECTION",
             "varValues": [
                 11,
@@ -30,8 +30,8 @@
         },
         {
             "is": "DspVarWrite",
-            "timeMs": 1500,
-            "transActionNo": 8,
+            "timeMs": 2500,
+            "transActionNo": 14,
             "varName": "PHASECORRECTION",
             "varValues": [
                 0,
@@ -46,8 +46,8 @@
         },
         {
             "is": "DspVarWrite",
-            "timeMs": 1500,
-            "transActionNo": 9,
+            "timeMs": 2500,
+            "transActionNo": 15,
             "varName": "OFFSETCORRECTION",
             "varValues": [
                 0,

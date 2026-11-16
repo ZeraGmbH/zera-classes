@@ -12,6 +12,9 @@ class test_range_adjustment_correction : public QObject
 private slots:
     void initTestCase();
     void init();
+
+    void testRangeAdjTiming();
+
     void gainCorrectionOrder0();
     void gainCorrectionOrder1();
     void gainCorrectionOrder2();

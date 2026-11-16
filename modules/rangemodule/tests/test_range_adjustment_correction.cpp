@@ -12,28 +12,11 @@
 QTEST_MAIN(test_range_adjustment_correction)
 
 // The rangemodule runs an adjustment cycle whenever the adjust interval
-// (0.5s in the test session) has elapsed (!!!) and new actual values arrive:
-// for every channel it queries the PCB for the gain, phase and offset
-// correction of the channel's active range and writes the results to the
-// DSP as 32 float groups 'GainCorrection' / 'PhaseCorrection' /
-// 'OffsetCorrection' on the INJECT_RANGE_ADJUST interface.
-//
-// The corrections are polynomials of order 3 stored per channel/range on
-// the PCB: corr(x) = c0 + c1*x + c2*x^2 + c3*x^3. Defaults after a fresh
-// start are gain c0=1 (all others 0) and phase/offset all 0, which is why
-// tests without injected coefficients only see vectors of 1s and 0s.
-//
-// The query argument ('x') differs per correction type:
-//   gain:   rms * preScaling / gainKeeperForFakingRmsValues (keeper = 1 if
-//           cheating/clamping is off, see test_range_to_zero_clamp_cheating)
-//   offset: rms * preScaling
-//   phase:  signal frequency
-// Before the values are written to the DSP they are prepared per type:
-//   gain:   sign flipped for inverted channel sequence, multiplied with the
-//           clamping factor (1 or 1e-10)
-//   offset: multiplied with preScaling (offset is a summand in the DSP)
-//   phase:  unchanged
+// (0.5s in the test session) has elapsed AND new actual values arrive!!!!!
+// see testRangeAdjTiming() & dump
 
+// Test dumps depend on each other for timeing - we did not find a working
+// way to de-couple them
 
 void test_range_adjustment_correction::initTestCase()
 {
@@ -60,22 +43,41 @@ static constexpr int DspChannelIl2 = 3; // m4
 
 static constexpr int channelCount = 8;
 
+void test_range_adjustment_correction::testRangeAdjTiming()
+{
+    TestServiceSniffer sniffer;
+    sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
+
+    QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    for (int i=0; i<10; ++i) { // 10*100ms
+        TimeMachineForTest::getInstance()->processTimers(100);
+        fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
+        TimeMachineObject::feedEventLoop();
+    }
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/testRangeAdjTiming.json", sniffer.dump())); // -> correction values @ 500ms & 1000ms
+}
+
 void test_range_adjustment_correction::gainCorrectionOrder0()
 {
-    TestServiceSniffer dumper;
-    dumper.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
-    dumper.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
-    dumper.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
-    dumper.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
+    TestServiceSniffer sniffer;
+    sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
 
     constexpr double coeff0 = 0.98;
     constexpr int order = 0;
     setCorrectionCoefficients("m0", "250V", "GAIN", order, coeff0);
     setCorrectionCoefficients("m4", "10A", "GAIN", order, coeff0);
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
@@ -85,25 +87,26 @@ void test_range_adjustment_correction::gainCorrectionOrder0()
     // Not adjusted channel keeps the default correction (c0 = 1):
     QCOMPARE(polynom(100.0, 1.0), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder0.json", dumper.dump()));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder0.json", sniffer.dump()));
 }
 
 void test_range_adjustment_correction::gainCorrectionOrder1()
 {
-    TestServiceSniffer dumper;
-    dumper.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
-    dumper.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
-    dumper.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
-    dumper.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
+    TestServiceSniffer sniffer;
+    sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
 
     constexpr double coeff1 = 0.001;
     constexpr int order = 1;
     setCorrectionCoefficients("m0", "250V", "GAIN", order, coeff1); // UL1 -> 1 + 0.001*x
     setCorrectionCoefficients("m4", "10A", "GAIN", order, coeff1); // IL2
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
@@ -111,25 +114,26 @@ void test_range_adjustment_correction::gainCorrectionOrder1()
     QCOMPARE(polynom(100.0, 1.0, coeff1), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
     QCOMPARE(polynom(5.0, 1.0, coeff1), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder1.json", dumper.dump()));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder1.json", sniffer.dump()));
 }
 
 void test_range_adjustment_correction::gainCorrectionOrder2()
 {
-    TestServiceSniffer dumper;
-    dumper.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
-    dumper.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
-    dumper.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
-    dumper.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
+    TestServiceSniffer sniffer;
+    sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
+    sniffer.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
 
     constexpr double coeff2 = 0.001;
     // Setting only c2 keeps the defaults c0 = 1 and c1 = 0:
     setCorrectionCoefficients("m0", "250V", "GAIN", 2, coeff2); // UL1 -> 1 + 0.001*x^2
     setCorrectionCoefficients("m4", "10A", "GAIN", 2, coeff2); // IL2
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
@@ -137,7 +141,7 @@ void test_range_adjustment_correction::gainCorrectionOrder2()
     QCOMPARE(polynom(5.0, 1.0, 0.0, coeff2), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
     QCOMPARE(polynom(100.0, 1.0), findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder2.json", dumper.dump()));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder2.json", sniffer.dump()));
 }
 
 void test_range_adjustment_correction::phaseCorrectionOrder0()
@@ -146,9 +150,10 @@ void test_range_adjustment_correction::phaseCorrectionOrder0()
     setCorrectionCoefficients("m0", "250V", "PHASE", 0, coeff0); // UL1 -> constant 1.5
     setCorrectionCoefficients("m4", "10A", "PHASE", 0, coeff0); // IL2
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
@@ -165,9 +170,10 @@ void test_range_adjustment_correction::phaseCorrectionOrder1()
     setCorrectionCoefficients("m0", "250V", "PHASE", 1, coeff1); // UL1 -> 0.001*f
     setCorrectionCoefficients("m4", "10A", "PHASE", 1, coeff1); // IL2
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
@@ -183,9 +189,10 @@ void test_range_adjustment_correction::phaseCorrectionOrder2()
     setCorrectionCoefficients("m0", "250V", "PHASE", 2, coeff2); // UL1 -> 0.0001*f^2
     setCorrectionCoefficients("m4", "10A", "PHASE", 2, coeff2); // IL2
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
@@ -199,9 +206,10 @@ void test_range_adjustment_correction::offsetCorrectionOrder0()
     setCorrectionCoefficients("m0", "250V", "OFFSET", 0, coeff0); // UL1 -> constant 0.05
     setCorrectionCoefficients("m4", "10A", "OFFSET", 0, coeff0); // IL2
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
@@ -220,9 +228,10 @@ void test_range_adjustment_correction::offsetCorrectionOrder1()
     setCorrectionCoefficients("m0", "250V", "OFFSET", 1, coeff1); // UL1 -> 0.001*x
     setCorrectionCoefficients("m4", "10A", "OFFSET", 1, coeff1); // IL2
 
-    TimeMachineForTest::getInstance()->processTimers(500); //for 'm_AdjustTimer'
-    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
+    TimeMachineForTest::getInstance()->processTimers(500);
+    fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
