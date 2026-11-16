@@ -26,7 +26,6 @@ private slots:
 
 private:
     void fireActualValues(const TestDspInterfacePtr &dspInterfaceProg, double uRms, double iRms, double frequency);
-    static float polynom(double x, double coeff0, double coeff1 = 0.0, double coeff2 = 0.0, double coeff3 = 0.0);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     TestDspInterfacePtr m_sampleDspInterfaceProg;

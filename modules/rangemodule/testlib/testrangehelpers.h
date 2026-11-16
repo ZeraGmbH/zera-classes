@@ -17,6 +17,7 @@ public:
                                           CorrectionType type, int order, double value);
     static void initCoefficients(const QString &channelMName, const QString &rangeName);
     static float findDspWriteValue(const QSignalSpy &spyDspVarWrite, const QString &dspVarName, int dspChannelNr);
+    static float testPolynom(double x, double coeff0, double coeff1 = 0.0, double coeff2 = 0.0, double coeff3 = 0.0);
 
 private:
     static QString stringifyType(CorrectionType type);

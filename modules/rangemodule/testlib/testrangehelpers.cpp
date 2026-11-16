@@ -32,6 +32,19 @@ float TestRangeHelpers::findDspWriteValue(const QSignalSpy &spyDspVarWrite, cons
     return 0.0f;
 }
 
+// see AdjDataItem::getCorrection
+float TestRangeHelpers::testPolynom(double x, double coeff0, double coeff1, double coeff2, double coeff3)
+{
+    double result = coeff0; // getCorrection starts with Corr += c0 * 1.0
+    double arg = x;
+    result += coeff1 * arg;
+    arg *= x;
+    result += coeff2 * arg;
+    arg *= x;
+    result += coeff3 * arg;
+    return float(QString::number(result, 'g', 6).toDouble()); // MT310s2 SCPI answer quantization (why exactly??)
+}
+
 QString TestRangeHelpers::stringifyType(CorrectionType type)
 {
     switch (type) {

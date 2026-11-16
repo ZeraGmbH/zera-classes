@@ -81,10 +81,10 @@ void test_range_adjustment_correction::gainCorrectionOrder0()
 
     QCOMPARE(spyDspVarWrite.count(), 3);
     // Gain is queried with amplitude rms * preScaling / keeper (= rms here):
-    QCOMPARE(polynom(100.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
-    QCOMPARE(polynom(5.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
+    QCOMPARE(TestRangeHelpers::testPolynom(100.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
+    QCOMPARE(TestRangeHelpers::testPolynom(5.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
     // Not adjusted channel keeps the default correction (c0 = 1):
-    QCOMPARE(polynom(100.0, 1.0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
+    QCOMPARE(TestRangeHelpers::testPolynom(100.0, 1.0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder0.json", sniffer.dump()));
 }
@@ -110,8 +110,8 @@ void test_range_adjustment_correction::gainCorrectionOrder1()
 
     QCOMPARE(spyDspVarWrite.count(), 3);
     // Setting only c1 keeps the default c0 = 1 of the gain correction:
-    QCOMPARE(polynom(100.0, 1.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
-    QCOMPARE(polynom(5.0, 1.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
+    QCOMPARE(TestRangeHelpers::testPolynom(100.0, 1.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
+    QCOMPARE(TestRangeHelpers::testPolynom(5.0, 1.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder1.json", sniffer.dump()));
 }
@@ -136,9 +136,9 @@ void test_range_adjustment_correction::gainCorrectionOrder2()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
-    QCOMPARE(polynom(100.0, 1.0, 0.0, coeff2), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
-    QCOMPARE(polynom(5.0, 1.0, 0.0, coeff2), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
-    QCOMPARE(polynom(100.0, 1.0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
+    QCOMPARE(TestRangeHelpers::testPolynom(100.0, 1.0, 0.0, coeff2), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
+    QCOMPARE(TestRangeHelpers::testPolynom(5.0, 1.0, 0.0, coeff2), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
+    QCOMPARE(TestRangeHelpers::testPolynom(100.0, 1.0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder2.json", sniffer.dump()));
 }
@@ -158,8 +158,8 @@ void test_range_adjustment_correction::phaseCorrectionOrder0()
     QCOMPARE(spyDspVarWrite.count(), 3);
     // Phase is queried with the signal frequency - both channels get the
     // same correction although their rms values differ:
-    QCOMPARE(polynom(50.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl1));
-    QCOMPARE(polynom(50.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelIl2));
+    QCOMPARE(TestRangeHelpers::testPolynom(50.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl1));
+    QCOMPARE(TestRangeHelpers::testPolynom(50.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelIl2));
 }
 
 void test_range_adjustment_correction::phaseCorrectionOrder1()
@@ -176,9 +176,9 @@ void test_range_adjustment_correction::phaseCorrectionOrder1()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
-    QCOMPARE(polynom(50.0, 0.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl1));
-    QCOMPARE(polynom(50.0, 0.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelIl2));
-    QCOMPARE(polynom(50.0, 0.0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl2));
+    QCOMPARE(TestRangeHelpers::testPolynom(50.0, 0.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl1));
+    QCOMPARE(TestRangeHelpers::testPolynom(50.0, 0.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelIl2));
+    QCOMPARE(TestRangeHelpers::testPolynom(50.0, 0.0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl2));
 }
 
 void test_range_adjustment_correction::phaseCorrectionOrder2()
@@ -195,8 +195,8 @@ void test_range_adjustment_correction::phaseCorrectionOrder2()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
-    QCOMPARE(polynom(50.0, 0.0, 0.0, coeff2), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl1));
-    QCOMPARE(polynom(50.0, 0.0, 0.0, coeff2), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelIl2));
+    QCOMPARE(TestRangeHelpers::testPolynom(50.0, 0.0, 0.0, coeff2), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelUl1));
+    QCOMPARE(TestRangeHelpers::testPolynom(50.0, 0.0, 0.0, coeff2), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "PHASECORRECTION", DspChannelIl2));
 }
 
 void test_range_adjustment_correction::offsetCorrectionOrder0()
@@ -214,8 +214,8 @@ void test_range_adjustment_correction::offsetCorrectionOrder0()
     QCOMPARE(spyDspVarWrite.count(), 3);
     // Offset is queried with amplitude rms * preScaling and multiplied with
     // the pre-scaling factor before being written (1 here):
-    QCOMPARE(polynom(100.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelUl1));
-    QCOMPARE(polynom(5.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelIl2));
+    QCOMPARE(TestRangeHelpers::testPolynom(100.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelUl1));
+    QCOMPARE(TestRangeHelpers::testPolynom(5.0, coeff0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelIl2));
 }
 
 void test_range_adjustment_correction::offsetCorrectionOrder1()
@@ -234,8 +234,8 @@ void test_range_adjustment_correction::offsetCorrectionOrder1()
     TimeMachineObject::feedEventLoop();
 
     QCOMPARE(spyDspVarWrite.count(), 3);
-    QCOMPARE(polynom(100.0, 0.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelUl1));
-    QCOMPARE(polynom(5.0, 0.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelIl2));
+    QCOMPARE(TestRangeHelpers::testPolynom(100.0, 0.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelUl1));
+    QCOMPARE(TestRangeHelpers::testPolynom(5.0, 0.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "OFFSETCORRECTION", DspChannelIl2));
 }
 
 
@@ -255,20 +255,3 @@ void test_range_adjustment_correction::fireActualValues(const TestDspInterfacePt
     dspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
 }
 
-// Pseudo-polynomial: reproduces what the mock PCB answers for
-// 'CORR:<TYPE>? <x>' - the same Horner evaluation as
-// AdjDataItem::getCorrection and the 6 significant digits of the SCPI (on MT310s2)
-// answer (QString("%1").arg(val)) - so the returned float is bit-identical
-// to the value the rangemodule receives and writes to the DSP. QCOMPARE can
-// therefore compare exactly.
-float test_range_adjustment_correction::polynom(double x, double coeff0, double coeff1, double coeff2, double coeff3)
-{
-    double result = coeff0; // getCorrection starts with Corr += c0 * 1.0
-    double arg = x;
-    result += coeff1 * arg;
-    arg *= x;
-    result += coeff2 * arg;
-    arg *= x;
-    result += coeff3 * arg;
-    return float(QString::number(result, 'g', 6).toDouble()); // SCPI answer quantization
-}

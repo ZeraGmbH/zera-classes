@@ -17,11 +17,15 @@ void test_range_scaling_factors::initTestCase()
 }
 
 static int constexpr rangeEntityId = 1020;
-static const char* UL1RangeComponent("PAR_Channel1Range");
-static const char* IL1RangeComponent("PAR_Channel4Range");
 static const char* RangeAutomaticComponent("PAR_RangeAutomatic");
 static const char* RangeGroupingComponent("PAR_ChannelGrouping");
+
 static constexpr int channelCountInpected = 2;
+static constexpr int DspChannelUl1 = 0; // m0
+static const char* UL1RangeComponent("PAR_Channel1Range");
+static const char* IL1RangeComponent("PAR_Channel4Range");
+
+static constexpr double coeff1 = 0.001;
 
 void test_range_scaling_factors::init()
 {
@@ -31,7 +35,6 @@ void test_range_scaling_factors::init()
     m_sampleDspInterfaceObserv = m_testRunner->findDspInterfaceByType(INJECT_RANGE_OBSERV);
     m_sampleDspInterfaceAdj = m_testRunner->findDspInterfaceByType(INJECT_RANGE_ADJUST);
 
-    constexpr double coeff1 = 0.001;
     TestRangeHelpers::setCorrectionCoefficient("m0", "250V", TestRangeHelpers::GAIN, 1, coeff1); // UL1
     TestRangeHelpers::setCorrectionCoefficient("m0", "250V", TestRangeHelpers::PHASE, 1, coeff1);
     TestRangeHelpers::setCorrectionCoefficient("m0", "250V", TestRangeHelpers::OFFSET, 1, coeff1);
@@ -74,16 +77,26 @@ void test_range_scaling_factors::preScalingUOnOff()
     sniffer.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCountInpected);
     sniffer.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCountInpected);
 
-    // Expectation
+    constexpr double unscaledU = 10.0;
+    constexpr double unscaledI = 1.0;
+    // prescale on
     TimeMachineForTest::getInstance()->processTimers(500); // enable correction / adjustment
+    QSignalSpy spyDspVarWriteOn(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     m_testRunner->setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "2/1*(1)");
     m_testRunner->setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", true);
-    fireActualValues(m_sampleDspInterfaceProg, 20, 1, 50); // we scale U only
+    fireActualValues(m_sampleDspInterfaceProg, unscaledU*2, unscaledI, 50); // we scale U only
+    float gainUScaledOn = TestRangeHelpers::findDspWriteValue(spyDspVarWriteOn, "GAINCORRECTION", DspChannelUl1);
 
+    // prescale off
     TimeMachineForTest::getInstance()->processTimers(500); // enable next correction / adjustment
+    QSignalSpy spyDspVarWriteOff(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     m_testRunner->setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", false);
-    fireActualValues(m_sampleDspInterfaceProg, 10, 1, 50);
+    fireActualValues(m_sampleDspInterfaceProg, unscaledU, unscaledI, 50);
+    float gainUScaledOff = TestRangeHelpers::findDspWriteValue(spyDspVarWriteOn, "GAINCORRECTION", DspChannelUl1);
 
+    double gainUexpected = TestRangeHelpers::testPolynom(unscaledU, 1, coeff1);
+    QCOMPARE(gainUScaledOff, gainUexpected);
+    QCOMPARE(gainUScaledOn, gainUexpected);
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/preScalingUOnOff.json", sniffer.dump()));
 }
 
