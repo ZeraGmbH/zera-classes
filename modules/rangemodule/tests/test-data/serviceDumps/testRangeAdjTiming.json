@@ -1,0 +1,100 @@
+{
+    "signals": [
+        {
+            "is": "DspVarWrite",
+            "timeMs": 500,
+            "transActionNo": 1,
+            "varName": "GAINCORRECTION",
+            "varValues": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "is": "DspVarWrite",
+            "timeMs": 500,
+            "transActionNo": 2,
+            "varName": "PHASECORRECTION",
+            "varValues": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        {
+            "is": "DspVarWrite",
+            "timeMs": 500,
+            "transActionNo": 3,
+            "varName": "OFFSETCORRECTION",
+            "varValues": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        {
+            "is": "DspVarWrite",
+            "timeMs": 1000,
+            "transActionNo": 4,
+            "varName": "GAINCORRECTION",
+            "varValues": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "is": "DspVarWrite",
+            "timeMs": 1000,
+            "transActionNo": 5,
+            "varName": "PHASECORRECTION",
+            "varValues": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        {
+            "is": "DspVarWrite",
+            "timeMs": 1000,
+            "transActionNo": 6,
+            "varName": "OFFSETCORRECTION",
+            "varValues": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        }
+    ]
+}
