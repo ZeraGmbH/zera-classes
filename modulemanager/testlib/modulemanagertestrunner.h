@@ -48,6 +48,7 @@ public:
     TestDspInterfacePtr findDspInterfaceByType(DspInterfaceInjectableTypes injectType);
     TestDspInterfacePtr findDspInterfaceByEntityId(int entityId);
     QList<TestDspInterfacePtr> findAllDspInterfaceByType(DspInterfaceInjectableTypes injectType);
+    QList<TestDspInterfacePtr> findAllDspInterfaceByEntityId(int entityId);
     QMap<int, QList<TestDspInterfacePtr>> getAllDspInterfaces();
     void fireActualValues();
     void fireActualValues(double uRms, double iRms, double angle, double frequency);

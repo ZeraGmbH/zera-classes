@@ -45,7 +45,6 @@ public:
 
     // search criteria ambiguous: return first
     TestDspInterfacePtr findDspInterfaceByType(DspInterfaceInjectableTypes injectType);
-    TestDspInterfacePtr findDspInterfaceByEntityId(int entityId);
     QList<TestDspInterfacePtr> findAllDspInterfaceByType(DspInterfaceInjectableTypes injectType);
     QMap<int, QList<TestDspInterfacePtr>> getAllDspInterfaces();
 

@@ -35,20 +35,20 @@ void test_range_adjustment_correction::init()
 }
 
 // DSP channel numbers as reported by the PCB ('dspchannel' in  mt310s2d.xml)
+static int constexpr rangeEntityId = 1020;
+
 static constexpr int DspChannelUl1 = 0; // m0
 static constexpr int DspChannelIl1 = 1; // m3
 static constexpr int DspChannelUl2 = 2; // m1
 static constexpr int DspChannelIl2 = 3; // m4
 
-static constexpr int channelCount = 8;
+static constexpr int channelCountInpected = 8;
 
 void test_range_adjustment_correction::testRangeAdjTiming()
 {
     TestServiceSniffer sniffer;
     sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
+    sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
 
     QSignalSpy spyDspVarWrite(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     // m_AdjustTimer -> adjustPrepare() -> m_bAdjustTrigger = true => ActionHandler starts m_adjustMachine -> starts m_writeCorrectionDSPMachine
@@ -64,9 +64,7 @@ void test_range_adjustment_correction::gainCorrectionOrder0()
 {
     TestServiceSniffer sniffer;
     sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
+    sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
 
     constexpr double coeff0 = 0.98;
     constexpr int order = 0;
@@ -93,9 +91,7 @@ void test_range_adjustment_correction::gainCorrectionOrder1()
 {
     TestServiceSniffer sniffer;
     sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
+    sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
 
     constexpr double coeff1 = 0.001;
     constexpr int order = 1;
@@ -120,9 +116,7 @@ void test_range_adjustment_correction::gainCorrectionOrder2()
 {
     TestServiceSniffer sniffer;
     sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCount);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCount);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCount);
+    sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
 
     constexpr double coeff2 = 0.001;
     // Setting only c2 keeps the defaults c0 = 1 and c1 = 0:

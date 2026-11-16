@@ -159,17 +159,6 @@ TestDspInterfacePtr TestFactoryServiceInterfaces::findDspInterfaceByType(DspInte
     return nullptr;
 }
 
-TestDspInterfacePtr TestFactoryServiceInterfaces::findDspInterfaceByEntityId(int entityId)
-{
-    auto entityIter = m_dspInterfaces.constFind(entityId);
-    if (entityIter != m_dspInterfaces.constEnd()) {
-        const QMap<DspInterfaceInjectableTypes, TestDspInterfacePtr> &entityIdInterfaces = entityIter.value();
-        if (!entityIdInterfaces.isEmpty())
-            return entityIdInterfaces.first();
-    }
-    return nullptr;
-}
-
 QList<TestDspInterfacePtr> TestFactoryServiceInterfaces::findAllDspInterfaceByType(DspInterfaceInjectableTypes injectType)
 {
     QList<TestDspInterfacePtr> dspInterfaces;

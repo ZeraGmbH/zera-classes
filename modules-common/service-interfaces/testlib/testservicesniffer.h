@@ -9,6 +9,7 @@ class TestServiceSniffer : public QObject
 {
     Q_OBJECT
 public:
+    void sniffDspVarWrites(const QList<TestDspInterfacePtr> &testDspInterfaces, int limitVarSize=0);
     void sniffDspVarWrites(const TestDspInterfacePtr &testDspInterface, int limitVarSize=0);
 
     enum ScpiRecordype {

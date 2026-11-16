@@ -3,6 +3,14 @@
 #include <timemachinefortest.h>
 #include <QString>
 
+void TestServiceSniffer::sniffDspVarWrites(const QList<TestDspInterfacePtr> &testDspInterfaces, int limitVarSize)
+{
+    for (const TestDspInterfacePtr &interface : testDspInterfaces)
+        connect(interface.get(), &TestDspInterface::sigDspVarWrite, this, [=](const TestDspVarWriteData &dspVar) {
+            onDspVariableWrite(dspVar, limitVarSize);
+        });
+}
+
 void TestServiceSniffer::sniffDspVarWrites(const TestDspInterfacePtr &testDspInterface, int limitVarSize)
 {
     connect(testDspInterface.get(), &TestDspInterface::sigDspVarWrite, this, [=](const TestDspVarWriteData &dspVar) {

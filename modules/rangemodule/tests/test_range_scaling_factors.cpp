@@ -55,9 +55,7 @@ void test_range_scaling_factors::changeOneVoltageAndOneCurrentRange()
 {
     TestServiceSniffer sniffer;
     //sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCountInpected);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCountInpected);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCountInpected);
+    sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
 
     TimeMachineForTest::getInstance()->processTimers(500);
     fireActualValues(m_sampleDspInterfaceProg, 5, 0.1, 50);
@@ -73,9 +71,7 @@ void test_range_scaling_factors::preScalingUOnOff()
 {
     TestServiceSniffer sniffer;
     //sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceProg, channelCountInpected);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceObserv, channelCountInpected);
-    sniffer.sniffDspVarWrites(m_sampleDspInterfaceAdj, channelCountInpected);
+    sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
 
     constexpr double unscaledU = 10.0;
     constexpr double unscaledI = 1.0;
