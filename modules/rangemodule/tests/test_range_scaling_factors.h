@@ -18,15 +18,8 @@ private slots:
     void preScalingUOnOff();
 
 private:
-    QVariant getVfComponent(int entityId, const QString &componentName);
-    void setVfComponent(int entityId, const QString &componentName, const QVariant &newValue);
     void fireActualValues(const TestDspInterfacePtr &dspInterfaceProg,
                           double uRms, double iRms, double frequency);
-    void setCorrectionCoefficients(const QString &channelMName,
-                                   const QString &rangeName,
-                                   const QString &correctionType, // "GAIN", "PHASE" or "OFFSET"
-                                   int order,
-                                   double value);
 
     std::unique_ptr<ModuleManagerTestRunner> m_testRunner;
     TestDspInterfacePtr m_sampleDspInterfaceProg;

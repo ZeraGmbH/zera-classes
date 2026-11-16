@@ -197,16 +197,20 @@ void ModuleManagerTestRunner::fireActualValues()
     constexpr double testcurrent = 10;
     constexpr double testangle = 0;
     constexpr double testfrequency = 50;
+    fireActualValues(testvoltage, testcurrent, testangle, testfrequency);
+}
 
+void ModuleManagerTestRunner::fireActualValues(double uRms, double iRms, double angle, double frequency)
+{
     const QString session = getSessionFileName();
     bool hasDcDft = session.contains("ref-session");  // ATTOW it is just com5003-ref-session
     int dftOrder = hasDcDft ? 0 : 1;
 
     TestDspValues dspValues(findDspInterfaceByType(INJECT_DFT)->getValueList(), dftOrder);
     if(session.contains("dc") || hasDcDft)
-        dspValues.setAllValuesSymmetricDc(testvoltage, testcurrent);
+        dspValues.setAllValuesSymmetricDc(uRms, iRms);
     else
-        dspValues.setAllValuesSymmetricAc(testvoltage, testcurrent, testangle, testfrequency);
+        dspValues.setAllValuesSymmetricAc(uRms, iRms, angle, frequency);
     dspValues.fireAllActualValues(
         findDspInterfaceByType(INJECT_DFT),
         findDspInterfaceByType(INJECT_FFT),

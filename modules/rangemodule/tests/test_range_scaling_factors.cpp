@@ -1,9 +1,7 @@
 #include "test_range_scaling_factors.h"
+#include "testrangehelpers.h"
 #include "demodspvaluesrange.h"
 #include "testservicesniffer.h"
-#include "vf_client_component_setter.h"
-#include <scpisingletransactionblocked.h>
-#include <zscpi_response_definitions.h>
 #include <testloghelpers.h>
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
@@ -11,7 +9,6 @@
 #include <QTest>
 
 QTEST_MAIN(test_range_scaling_factors)
-
 
 void test_range_scaling_factors::initTestCase()
 {
@@ -35,14 +32,14 @@ void test_range_scaling_factors::init()
     m_sampleDspInterfaceAdj = m_testRunner->findDspInterfaceByType(INJECT_RANGE_ADJUST);
 
     constexpr double coeff1 = 0.001;
-    setCorrectionCoefficients("m0", "250V", "GAIN", 1, coeff1); // UL1
-    setCorrectionCoefficients("m3", "10A", "GAIN", 1, coeff1); // IL1
-    setCorrectionCoefficients("m0", "250V", "OFFSET", 1, coeff1); // UL1
-    setCorrectionCoefficients("m3", "10A", "OFFSET", 1, coeff1); // IL1
-    setCorrectionCoefficients("m0", "250V", "PHASE", 1, coeff1); // UL1
-    setCorrectionCoefficients("m3", "10A", "PHASE", 1, coeff1); // IL1
-    setVfComponent(rangeEntityId, RangeGroupingComponent, 0);
-    setVfComponent(rangeEntityId, RangeAutomaticComponent, 0);
+    TestRangeHelpers::setCorrectionCoefficient("m0", "250V", TestRangeHelpers::GAIN, 1, coeff1); // UL1
+    TestRangeHelpers::setCorrectionCoefficient("m0", "250V", TestRangeHelpers::PHASE, 1, coeff1);
+    TestRangeHelpers::setCorrectionCoefficient("m0", "250V", TestRangeHelpers::OFFSET, 1, coeff1);
+    TestRangeHelpers::setCorrectionCoefficient("m3", "10A", TestRangeHelpers::GAIN, 1, coeff1); // IL1
+    TestRangeHelpers::setCorrectionCoefficient("m3", "10A", TestRangeHelpers::PHASE, 1, coeff1);
+    TestRangeHelpers::setCorrectionCoefficient("m3", "10A", TestRangeHelpers::OFFSET, 1, coeff1);
+    m_testRunner->setVfComponent(rangeEntityId, RangeGroupingComponent, 0);
+    m_testRunner->setVfComponent(rangeEntityId, RangeAutomaticComponent, 0);
 }
 
 void test_range_scaling_factors::cleanup()
@@ -50,7 +47,6 @@ void test_range_scaling_factors::cleanup()
     m_testRunner.reset();
     TimeMachineObject::feedEventLoop();
 }
-
 
 void test_range_scaling_factors::changeOneVoltageAndOneCurrentRange()
 {
@@ -64,8 +60,8 @@ void test_range_scaling_factors::changeOneVoltageAndOneCurrentRange()
     fireActualValues(m_sampleDspInterfaceProg, 5, 0.1, 50);
 
     TimeMachineForTest::getInstance()->processTimers(500);
-    setVfComponent(rangeEntityId, UL1RangeComponent, "8V");
-    setVfComponent(rangeEntityId, IL1RangeComponent, "1.0A");
+    m_testRunner->setVfComponent(rangeEntityId, UL1RangeComponent, "8V");
+    m_testRunner->setVfComponent(rangeEntityId, IL1RangeComponent, "1.0A");
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/changeOneVoltageAndOneCurrentRange.json", sniffer.dump()));
 }
@@ -80,30 +76,17 @@ void test_range_scaling_factors::preScalingUOnOff()
 
     // Expectation
     TimeMachineForTest::getInstance()->processTimers(500); // enable correction / adjustment
-    setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "2/1*(1)");
-    setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", true);
+    m_testRunner->setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "2/1*(1)");
+    m_testRunner->setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", true);
     fireActualValues(m_sampleDspInterfaceProg, 20, 1, 50); // we scale U only
 
     TimeMachineForTest::getInstance()->processTimers(500); // enable next correction / adjustment
-    setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", false);
+    m_testRunner->setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", false);
     fireActualValues(m_sampleDspInterfaceProg, 10, 1, 50);
 
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/preScalingUOnOff.json", sniffer.dump()));
 }
 
-
-QVariant test_range_scaling_factors::getVfComponent(int entityId, const QString &componentName)
-{
-    return m_testRunner->getVeinStorageDb()->getStoredValue(entityId, componentName);
-}
-
-void test_range_scaling_factors::setVfComponent(int entityId, const QString &componentName, const QVariant &newValue)
-{
-    QVariant oldValue = getVfComponent(entityId, componentName);
-    QEvent* event = VfClientComponentSetter::generateEvent(entityId, componentName, oldValue, newValue);
-    emit m_testRunner->getVeinStorageSystem()->sigSendEvent(event); // could be any event system
-    TimeMachineObject::feedEventLoop();
-}
 
 void test_range_scaling_factors::fireActualValues(const TestDspInterfacePtr &dspInterfaceProg,
                                                   double uRms, double iRms, double frequency)
@@ -120,17 +103,4 @@ void test_range_scaling_factors::fireActualValues(const TestDspInterfacePtr &dsp
     rangeValues.setRmsPeakDCValue(7, 0);    // m7 / IAUX
     dspInterfaceProg->fireActValInterrupt(rangeValues.getDspValues(), /* dummy */ 0);
     TimeMachineObject::feedEventLoop();
-}
-
-void test_range_scaling_factors::setCorrectionCoefficients(const QString &channelMName,
-                                                                 const QString &rangeName,
-                                                                 const QString &correctionType, // "GAIN", "PHASE" or "OFFSET"
-                                                                 int order,
-                                                                 double value)
-{
-    QString scpiCmd = QString("SENS:%1:%2:CORR:%3:COEFFICIENT:%4")
-    .arg(channelMName, rangeName, correctionType)
-        .arg(order);
-    QString answer = ScpiSingleTransactionBlocked::cmd(scpiCmd, QString::number(value, 'g', 12));
-    QCOMPARE(answer, ZSCPI::scpiAnswer[ZSCPI::ack]);
 }

@@ -4,6 +4,7 @@ function(SETUP_QTESTS_MODULE)
         target_link_libraries(${_testname}
             PRIVATE
             rangemodule-lib
+            rangemodule-testlib
             zera-modulemanager-testlib
             Zera::zdsp1d-testlib
             Zera::mt310s2d-testlib

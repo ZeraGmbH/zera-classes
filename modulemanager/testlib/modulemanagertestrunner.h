@@ -50,6 +50,7 @@ public:
     QList<TestDspInterfacePtr> findAllDspInterfaceByType(DspInterfaceInjectableTypes injectType);
     QMap<int, QList<TestDspInterfacePtr>> getAllDspInterfaces();
     void fireActualValues();
+    void fireActualValues(double uRms, double iRms, double angle, double frequency);
 
 
     // hotplug full functional methods
