@@ -16,6 +16,7 @@ SETUP_QTESTS_MODULE(
     test_range_module_regression
     test_range_to_zero_clamp_cheating
     test_range_adjustment_correction
+    test_range_scaling_factors
     test_range_automatic
     test_range_scpi
 )
@@ -31,6 +32,11 @@ target_sources(test_range_to_zero_clamp_cheating
 )
 
 target_sources(test_range_adjustment_correction
+  PRIVATE
+    test-data/test-data.qrc
+)
+
+target_sources(test_range_scaling_factors
   PRIVATE
     test-data/test-data.qrc
 )

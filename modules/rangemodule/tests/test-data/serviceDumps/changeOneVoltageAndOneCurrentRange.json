@@ -1,0 +1,54 @@
+{
+    "signals": [
+        {
+            "is": "DspVarWrite",
+            "timeMs": 500,
+            "transActionNo": 1,
+            "varName": "GAINCORRECTION",
+            "varValues": [
+                1.005,
+                1.0001
+            ]
+        },
+        {
+            "is": "DspVarWrite",
+            "timeMs": 500,
+            "transActionNo": 2,
+            "varName": "PHASECORRECTION",
+            "varValues": [
+                0.05,
+                0.05
+            ]
+        },
+        {
+            "is": "DspVarWrite",
+            "timeMs": 500,
+            "transActionNo": 3,
+            "varName": "OFFSETCORRECTION",
+            "varValues": [
+                0.005,
+                0.0001
+            ]
+        },
+        {
+            "is": "DspVarWrite",
+            "timeMs": 1000,
+            "transActionNo": 1,
+            "varName": "GAINCORRECTION2",
+            "varValues": [
+                2.384186e-06,
+                3.127333e-06
+            ]
+        },
+        {
+            "is": "DspVarWrite",
+            "timeMs": 1000,
+            "transActionNo": 2,
+            "varName": "GAINCORRECTION2",
+            "varValues": [
+                2.384186e-06,
+                2.393761e-07
+            ]
+        }
+    ]
+}
