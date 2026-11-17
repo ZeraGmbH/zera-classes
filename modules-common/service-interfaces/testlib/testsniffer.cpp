@@ -26,14 +26,27 @@ void TestSniffer::sniffScpiIoServer(ScpiConnection *server, ScpiRecordype type)
     });
 }
 
-void TestSniffer::sniffVeinEntities(VeinStorage::AbstractDatabase *veinStorage, const QList<int> &entities)
+void TestSniffer::sniffVeinValueSets(VeinStorage::AbstractDatabase *veinStorage, const QList<int> &entities)
 {
     for (int entityId : entities) {
         const QStringList componentNames = veinStorage->getComponentList(entityId);
         for (const QString &componentName : componentNames) {
             const VeinStorage::AbstractComponentPtr veinComponent = veinStorage->findComponent(entityId, componentName);
             connect(veinComponent.get(), &VeinStorage::AbstractComponent::sigValueSet, this, [=](const QVariant &setValue) {
-                onVeinValueSet(entityId, componentName, setValue);
+                onVeinValueSet(entityId, componentName, setValue, "VeinSet");
+            });
+        }
+    }
+}
+
+void TestSniffer::sniffVeinValueChanges(VeinStorage::AbstractDatabase *veinStorage, const QList<int> &entities)
+{
+    for (int entityId : entities) {
+        const QStringList componentNames = veinStorage->getComponentList(entityId);
+        for (const QString &componentName : componentNames) {
+            const VeinStorage::AbstractComponentPtr veinComponent = veinStorage->findComponent(entityId, componentName);
+            connect(veinComponent.get(), &VeinStorage::AbstractComponent::sigValueChange, this, [=](const QVariant &setValue) {
+                onVeinValueSet(entityId, componentName, setValue, "VeinChange");
             });
         }
     }
@@ -86,10 +99,10 @@ void TestSniffer::onScpiCmdExecutionDone(const QString &scpi, const QString &res
     }
 }
 
-void TestSniffer::onVeinValueSet(int entityId, const QString &componentName, const QVariant &setValue)
+void TestSniffer::onVeinValueSet(int entityId, const QString &componentName, const QVariant &setValue, const QString &accessLabel)
 {
     QJsonObject jsonVeinSet;
-    jsonVeinSet["is"] = "VeinSet";
+    jsonVeinSet["is"] = accessLabel;
     jsonVeinSet["veinEntityId"] = entityId;
     jsonVeinSet["veinComponentName"] = componentName;
     jsonVeinSet["veinValue"] = VeinStorage::DumpJson::convertToJsonValue(setValue);

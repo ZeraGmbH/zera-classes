@@ -54,7 +54,7 @@ void test_range_scaling_factors::cleanup()
 void test_range_scaling_factors::changeOneVoltageAndOneCurrentRange()
 {
     TestSniffer sniffer;
-    //sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
+    //sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestSniffer::cmdOnly);
     sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
 
     TimeMachineForTest::getInstance()->processTimers(500);
@@ -70,8 +70,8 @@ void test_range_scaling_factors::changeOneVoltageAndOneCurrentRange()
 void test_range_scaling_factors::preScalingUOnOff()
 {
     TestSniffer sniffer;
-    //sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
-    //sniffer.sniffVeinEntities(m_testRunner->getVeinStorageDb(), QList<int>() << rangeEntityId);
+    //sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestSniffer::cmdOnly);
+    sniffer.sniffVeinValueChanges(m_testRunner->getVeinStorageDb(), QList<int>() << rangeEntityId);
     sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
 
     constexpr double unscaledU = 10.0;
