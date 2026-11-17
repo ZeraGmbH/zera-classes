@@ -1,6 +1,7 @@
 #include "testservicesniffer.h"
 #include <testloghelpers.h>
 #include <timemachinefortest.h>
+#include <vs_dumpjson.h>
 #include <QString>
 
 void TestServiceSniffer::sniffDspVarWrites(const QList<TestDspInterfacePtr> &testDspInterfaces, int limitVarSize)
@@ -23,6 +24,19 @@ void TestServiceSniffer::sniffScpiIoServer(ScpiConnection *server, ScpiRecordype
     connect(server, &ScpiConnection::sigNotifyScpiIo, this, [=](const QString &scpi, const QString &response) {
         onScpiCmdExecutionDone(scpi, response, type);
     });
+}
+
+void TestServiceSniffer::sniffVeinEntities(VeinStorage::AbstractDatabase *veinStorage, const QList<int> &entities)
+{
+    for (int entityId : entities) {
+        const QStringList componentNames = veinStorage->getComponentList(entityId);
+        for (const QString &componentName : componentNames) {
+            const VeinStorage::AbstractComponentPtr veinComponent = veinStorage->findComponent(entityId, componentName);
+            connect(veinComponent.get(), &VeinStorage::AbstractComponent::sigValueSet, this, [=](const QVariant &setValue) {
+                onVeinValueSet(entityId, componentName, setValue);
+            });
+        }
+    }
 }
 
 QByteArray TestServiceSniffer::dump() const
@@ -70,4 +84,15 @@ void TestServiceSniffer::onScpiCmdExecutionDone(const QString &scpi, const QStri
         jsonScpiVar["timeMs"] = TimeMachineForTest::getInstance()->getCurrentTimeMs();
         m_signalsCollected.append(jsonScpiVar);
     }
+}
+
+void TestServiceSniffer::onVeinValueSet(int entityId, const QString &componentName, const QVariant &setValue)
+{
+    QJsonObject jsonVeinSet;
+    jsonVeinSet["is"] = "VeinSet";
+    jsonVeinSet["veinEntityId"] = entityId;
+    jsonVeinSet["veinComponentName"] = componentName;
+    jsonVeinSet["veinValue"] = VeinStorage::DumpJson::convertToJsonValue(setValue);
+    jsonVeinSet["timeMs"] = TimeMachineForTest::getInstance()->getCurrentTimeMs();
+    m_signalsCollected.append(jsonVeinSet);
 }

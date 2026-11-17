@@ -23,6 +23,7 @@ target_link_libraries(module-service-interfaces-testlib
     Zera::service-interfaces-testlib
     Zera::zdsp1d-lib
     Zera::testlib-common
+    Zera::VfFrameworkTest
 )
 
 set_target_properties(module-service-interfaces-testlib PROPERTIES VERSION ${PROJECT_VERSION})
