@@ -58,9 +58,9 @@ void TestServiceSniffer::onScpiCmdExecutionDone(const QString &scpi, const QStri
     cSCPICommand cmd = scpi;
     bool isQuery = cmd.isQuery(0) || cmd.isQuery(1);
     bool doLog = false;
-    if (isQuery && (type == queryOnly | type == all))
+    if (isQuery && (type == queryOnly  || type == all))
         doLog = true;
-    else if (!isQuery && (type == cmdOnly | type == all))
+    else if (!isQuery && (type == cmdOnly || type == all))
         doLog = true;
 
     if (doLog) {
