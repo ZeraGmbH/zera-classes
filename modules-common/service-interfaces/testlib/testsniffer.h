@@ -1,12 +1,12 @@
-#ifndef TESTSERVICESNIFFER_H
-#define TESTSERVICESNIFFER_H
+#ifndef TESTSNIFFER_H
+#define TESTSNIFFER_H
 
 #include "testdspinterface.h"
 #include <scpiconnection.h>
 #include <vs_abstractdatabase.h>
 #include <QJsonArray>
 
-class TestServiceSniffer : public QObject
+class TestSniffer : public QObject
 {
     Q_OBJECT
 public:
@@ -36,4 +36,4 @@ private:
     QJsonArray m_signalsCollected;
 };
 
-#endif // TESTSERVICESNIFFER_H
+#endif // TESTSNIFFER_H

@@ -1,10 +1,10 @@
-#include "testservicesniffer.h"
+#include "testsniffer.h"
 #include <testloghelpers.h>
 #include <timemachinefortest.h>
 #include <vs_dumpjson.h>
 #include <QString>
 
-void TestServiceSniffer::sniffDspVarWrites(const QList<TestDspInterfacePtr> &testDspInterfaces, int limitVarSize)
+void TestSniffer::sniffDspVarWrites(const QList<TestDspInterfacePtr> &testDspInterfaces, int limitVarSize)
 {
     for (const TestDspInterfacePtr &interface : testDspInterfaces)
         connect(interface.get(), &TestDspInterface::sigDspVarWrite, this, [=](const TestDspVarWriteData &dspVar) {
@@ -12,21 +12,21 @@ void TestServiceSniffer::sniffDspVarWrites(const QList<TestDspInterfacePtr> &tes
         });
 }
 
-void TestServiceSniffer::sniffDspVarWrites(const TestDspInterfacePtr &testDspInterface, int limitVarSize)
+void TestSniffer::sniffDspVarWrites(const TestDspInterfacePtr &testDspInterface, int limitVarSize)
 {
     connect(testDspInterface.get(), &TestDspInterface::sigDspVarWrite, this, [=](const TestDspVarWriteData &dspVar) {
         onDspVariableWrite(dspVar, limitVarSize);
     });
 }
 
-void TestServiceSniffer::sniffScpiIoServer(ScpiConnection *server, ScpiRecordype type)
+void TestSniffer::sniffScpiIoServer(ScpiConnection *server, ScpiRecordype type)
 {
     connect(server, &ScpiConnection::sigNotifyScpiIo, this, [=](const QString &scpi, const QString &response) {
         onScpiCmdExecutionDone(scpi, response, type);
     });
 }
 
-void TestServiceSniffer::sniffVeinEntities(VeinStorage::AbstractDatabase *veinStorage, const QList<int> &entities)
+void TestSniffer::sniffVeinEntities(VeinStorage::AbstractDatabase *veinStorage, const QList<int> &entities)
 {
     for (int entityId : entities) {
         const QStringList componentNames = veinStorage->getComponentList(entityId);
@@ -39,14 +39,14 @@ void TestServiceSniffer::sniffVeinEntities(VeinStorage::AbstractDatabase *veinSt
     }
 }
 
-QByteArray TestServiceSniffer::dump() const
+QByteArray TestSniffer::dump() const
 {
     QJsonObject json;
     json["signals"] = m_signalsCollected;
     return TestLogHelpers::dump(json);
 }
 
-void TestServiceSniffer::onDspVariableWrite(const TestDspVarWriteData &dspVar, int limitVarSize)
+void TestSniffer::onDspVariableWrite(const TestDspVarWriteData &dspVar, int limitVarSize)
 {
     QJsonObject jsonDspVar;
     jsonDspVar["is"] = "DspVarWrite";
@@ -66,7 +66,7 @@ void TestServiceSniffer::onDspVariableWrite(const TestDspVarWriteData &dspVar, i
     m_signalsCollected.append(jsonDspVar);
 }
 
-void TestServiceSniffer::onScpiCmdExecutionDone(const QString &scpi, const QString &response, ScpiRecordype type)
+void TestSniffer::onScpiCmdExecutionDone(const QString &scpi, const QString &response, ScpiRecordype type)
 {
     QJsonObject jsonScpiVar;
     cSCPICommand cmd = scpi;
@@ -86,7 +86,7 @@ void TestServiceSniffer::onScpiCmdExecutionDone(const QString &scpi, const QStri
     }
 }
 
-void TestServiceSniffer::onVeinValueSet(int entityId, const QString &componentName, const QVariant &setValue)
+void TestSniffer::onVeinValueSet(int entityId, const QString &componentName, const QVariant &setValue)
 {
     QJsonObject jsonVeinSet;
     jsonVeinSet["is"] = "VeinSet";

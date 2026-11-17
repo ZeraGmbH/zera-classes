@@ -1,7 +1,7 @@
 #include "test_range_scaling_factors.h"
 #include "testrangehelpers.h"
 #include "demodspvaluesrange.h"
-#include "testservicesniffer.h"
+#include "testsniffer.h"
 #include <testloghelpers.h>
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
@@ -53,7 +53,7 @@ void test_range_scaling_factors::cleanup()
 
 void test_range_scaling_factors::changeOneVoltageAndOneCurrentRange()
 {
-    TestServiceSniffer sniffer;
+    TestSniffer sniffer;
     //sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
     sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
 
@@ -69,8 +69,9 @@ void test_range_scaling_factors::changeOneVoltageAndOneCurrentRange()
 
 void test_range_scaling_factors::preScalingUOnOff()
 {
-    TestServiceSniffer sniffer;
+    TestSniffer sniffer;
     //sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestServiceSniffer::cmdOnly);
+    //sniffer.sniffVeinEntities(m_testRunner->getVeinStorageDb(), QList<int>() << rangeEntityId);
     sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
 
     constexpr double unscaledU = 10.0;
