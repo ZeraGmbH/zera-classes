@@ -41,6 +41,9 @@ ScpiClientExecutorMeasurePtr ScpiDelegateMeasure::getExecutor(cSCPIClient *clien
                                                                                         m_veinComponents);
 
     m_clientExecutors[clientId] = executor;
+    connect(client, &cSCPIClient::sigAboutToDestroy, this, [=]() {
+        m_clientExecutors.remove(clientId);
+    });
     return executor;
 }
 

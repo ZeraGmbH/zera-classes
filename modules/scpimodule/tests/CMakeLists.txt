@@ -14,6 +14,7 @@ function(SETUP_QTESTS_MODULE)
             Zera::xml-compare-testlib
             Zera::zera-timers-testlib
             Zera::VfConvenientCodeTest
+            Zera::testlib-memallocs
         )
     endforeach()
 endfunction()
@@ -27,4 +28,5 @@ SETUP_QTESTS_MODULE(
     test_scpi_error_and_status
     test_scpi_learn_measure_objects_and_relations
     test_scpi_vein_query_sort
+    test_scpi_mem_leaks
 )

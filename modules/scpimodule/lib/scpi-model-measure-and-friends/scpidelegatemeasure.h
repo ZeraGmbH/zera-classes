@@ -23,7 +23,6 @@ public:
     };
     explicit ScpiDelegateMeasure(const Params &params);
     void addComponentId(const VeinComponentId &componentId);
-    void removeClient(cSCPIClient *client);
 
     void executeSCPI(cSCPIClient *client, const QString &scpi, const ScpiTransactionId &scpiTransactionId) override;
 

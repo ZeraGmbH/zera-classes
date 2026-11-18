@@ -38,6 +38,9 @@ public:
     void handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId &scpiTransactionId);
 
     static int getInstanceCount();
+signals:
+    void sigAboutToDestroy();
+
 public slots:
     void removeVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName);
 

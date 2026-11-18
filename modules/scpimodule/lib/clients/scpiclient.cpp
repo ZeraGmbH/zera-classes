@@ -58,6 +58,7 @@ cSCPIClient::cSCPIClient(cSCPIModule* module) :
 
 cSCPIClient::~cSCPIClient()
 {
+    emit sigAboutToDestroy();
     m_instanceCount--;
     for (int i = 0; i < m_connectDelegateList.count(); i++) {
         cSignalConnectionDelegate* sCD = m_connectDelegateList.at(i);

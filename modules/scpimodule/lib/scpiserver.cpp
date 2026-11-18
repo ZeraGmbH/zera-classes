@@ -73,6 +73,7 @@ void cSCPIServer::generateVeinInterface()
     m_veinQueryResponseSortActive->setValidator(new cBoolValidator());
     connect(m_veinQueryResponseSortActive, &VfModuleParameter::sigValueChanged,
             this, &cSCPIServer::onSortQueryResponseChange);
+
     m_pModule->m_veinModuleParameterMap[key] = m_veinQueryResponseSortActive;
 }
 

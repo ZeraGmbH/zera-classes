@@ -23,9 +23,6 @@ public:
 
     void setupScpi(cSCPIInterface *scpiInterface);
 
-    void addClient(cSCPIClient *client);
-    void removeClient(cSCPIClient *client);
-
 private:
     typedef QHash<QString /* scpiPath */, ScpiDelegateMeasurePtr> VeinComponentByScpiPath;
     void addScpiCmdForVeinComponent(cSCPIInterface *scpiInterface,
