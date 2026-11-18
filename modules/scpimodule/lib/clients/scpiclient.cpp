@@ -12,6 +12,9 @@
 
 namespace SCPIMODULE
 {
+
+int cSCPIClient::m_instanceCount = 0;
+
 cSCPIClient::cSCPIClient(cSCPIModule* module) :
     m_pModule(module),
     m_pSCPIInterface(module->getScpiInterface()),
@@ -19,6 +22,8 @@ cSCPIClient::cSCPIClient(cSCPIModule* module) :
     m_measureSequenceStore(m_pModule->getScpiModuleInterfaceParser().getMeasureInfo()),
     m_clientId(QUuid::createUuid()) // we need an unique id in case we want to send deferred error notifications events
 {
+    m_instanceCount++;
+
     // we instantiate 3 scpi status systems per client
     cSCPIStatus* scpiQuestStatus = new cSCPIStatus(STBques);
     m_SCPIStatusList.append(scpiQuestStatus);
@@ -53,6 +58,7 @@ cSCPIClient::cSCPIClient(cSCPIModule* module) :
 
 cSCPIClient::~cSCPIClient()
 {
+    m_instanceCount--;
     for (int i = 0; i < m_connectDelegateList.count(); i++) {
         cSignalConnectionDelegate* sCD = m_connectDelegateList.at(i);
         m_pModule->getSignalDelegateUpdater()->removeDelegate(sCD);
@@ -204,6 +210,11 @@ void cSCPIClient::handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId
         m_pIEEE4882->addEventErrorWithResponse(CommandError, scpiTransactionId);
         break;
     }
+}
+
+int cSCPIClient::getInstanceCount()
+{
+    return m_instanceCount;
 }
 
 void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus,

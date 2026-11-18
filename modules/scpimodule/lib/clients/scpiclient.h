@@ -36,6 +36,8 @@ public:
 
     virtual void handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) = 0;
     void handleCmdFinishStatusOnly(quint8 stat, const ScpiTransactionId &scpiTransactionId);
+
+    static int getInstanceCount();
 public slots:
     void removeVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName);
 
@@ -73,6 +75,8 @@ private:
     QList<cSignalConnectionDelegate*> m_connectDelegateList;
 
     QString m_activeCmd;
+
+    static int m_instanceCount;
 };
 
 }
