@@ -11,7 +11,7 @@ ScpiClientExecutorMeasure::ScpiClientExecutorMeasure(cSCPIClient *client,
     m_client(client),
     m_modelType(modelType)
 {
-    ScpiStoreScpiSequence* store = client->getMeasureSequenceStore();
+    ScpiMeasSequenceStore* store = client->getMeasureSequenceStore();
     for (const VeinComponentId &componentId : veinComponents) {
         const VeinComponentScpiMeasureSequencePtr &measure = store->getComponentSequence(componentId);
         m_veinComponentScpiSequences.append(measure);

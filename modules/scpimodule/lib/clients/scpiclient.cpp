@@ -89,7 +89,7 @@ cIEEE4882 *cSCPIClient::getIEEE4882()
     return m_pIEEE4882;
 }
 
-ScpiStoreScpiSequence *cSCPIClient::getMeasureSequenceStore()
+ScpiMeasSequenceStore *cSCPIClient::getMeasureSequenceStore()
 {
     return &m_measureSequenceStore;
 }

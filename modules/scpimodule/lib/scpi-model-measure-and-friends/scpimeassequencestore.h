@@ -1,5 +1,5 @@
-#ifndef SCPISTORESCPISEQUENCE_H
-#define SCPISTORESCPISEQUENCE_H
+#ifndef SCPIMEASSEQUENCESTORE_H
+#define SCPIMEASSEQUENCESTORE_H
 
 #include "scpimodeldefinitions.h"
 #include "scpiveincomponentsequencemeasure.h"
@@ -8,15 +8,16 @@
 
 namespace SCPIMODULE {
 
-class ScpiStoreScpiSequence
+class ScpiMeasSequenceStore
 {
 public:
-    explicit ScpiStoreScpiSequence(const ScpiVeinParser::ScpiParseInfo &veinParseInfoMeasure);
+    explicit ScpiMeasSequenceStore(const ScpiVeinParser::ScpiParseInfo &veinParseInfoMeasure);
     VeinComponentScpiMeasureSequencePtr getComponentSequence(const VeinComponentId &componentId);
 
     void updatePendingMeasureSequences(const VeinComponentId &componentId, const QVariant &newValue);
 
 private:
+    VeinComponentScpiMeasureSequencePtr createNewSequence(const cSCPICmdInfoPtr& scpiCmdInfo);
     static QString stringifyComponentId(const VeinComponentId &componentId);
     VeinComponentScpiMeasureSequencePtr bailOutNotFound(const VeinComponentId &componentId);
 
@@ -25,4 +26,4 @@ private:
 };
 
 }
-#endif // SCPISTORESCPISEQUENCE_H
+#endif // SCPIMEASSEQUENCESTORE_H

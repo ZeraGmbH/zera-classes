@@ -2,7 +2,7 @@
 #define SCPICLIENT_H
 
 #include "scpiinterface.h"
-#include "scpistorescpisequence.h"
+#include "scpimeassequencestore.h"
 #include "signalconnectiondelegate.h"
 #include "scpiveintransactioninfo.h"
 #include "ieee488-2.h"
@@ -27,7 +27,7 @@ public:
     cSCPIInterface* getScpiInterface();
     cSCPIStatus* getSCPIStatus(SCPIStatusDefinitions::ScpiStatusSystems statusSystemIdx);
     cIEEE4882* getIEEE4882();
-    ScpiStoreScpiSequence* getMeasureSequenceStore();
+    ScpiMeasSequenceStore* getMeasureSequenceStore();
 
     bool isOperationComplete();
 
@@ -66,7 +66,7 @@ private:
     // what happens on same component names in different entities as e.g THDN module??? => TODO test
     QHash<QString /* veinComponentOrRpcName */, SCPIVeinTransactionInfoPtr> m_veinParamRpcTransactionHash;
     cIEEE4882* m_pIEEE4882 = nullptr;
-    ScpiStoreScpiSequence m_measureSequenceStore;
+    ScpiMeasSequenceStore m_measureSequenceStore;
 
     QList<cSCPIStatus*> m_SCPIStatusList;
 

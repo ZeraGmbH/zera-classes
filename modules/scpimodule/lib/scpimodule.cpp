@@ -62,7 +62,7 @@ void cSCPIModule::updatePendingMeasureSequences(const VeinComponentId &component
 {
     const QList<cSCPIClient*> &clients = m_pSCPIServer->getClients();
     for (cSCPIClient* client : clients) {
-        ScpiStoreScpiSequence* store = client->getMeasureSequenceStore();
+        ScpiMeasSequenceStore* store = client->getMeasureSequenceStore();
         store->updatePendingMeasureSequences(componentId, newValue);
     }
 }
