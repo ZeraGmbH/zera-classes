@@ -9,7 +9,8 @@ ScpiStoreScpiSequence::ScpiStoreScpiSequence(const ScpiVeinParser::ScpiParseInfo
 
 VeinComponentScpiMeasureSequencePtr ScpiStoreScpiSequence::getComponentSequence(const VeinComponentId &componentId)
 {
-    auto iter = m_componentSequences.constFind(stringifyComponentId(componentId));
+    const QString componentKey = stringifyComponentId(componentId);
+    auto iter = m_componentSequences.constFind(componentKey);
     if (iter != m_componentSequences.constEnd())
         return iter.value();
 
@@ -28,13 +29,14 @@ VeinComponentScpiMeasureSequencePtr ScpiStoreScpiSequence::getComponentSequence(
         componentInfo->scpiCommand,
         componentInfo->veinComponentInfo
     });
-    m_componentSequences[stringifyComponentId(componentId)] = newSequence;
+    m_componentSequences[componentKey] = newSequence;
     return newSequence;
 }
 
 void ScpiStoreScpiSequence::updatePendingMeasureSequences(const VeinComponentId &componentId, const QVariant &newValue)
 {
-    auto iter = m_componentSequences.constFind(stringifyComponentId(componentId));
+    const QString componentKey = stringifyComponentId(componentId);
+    auto iter = m_componentSequences.constFind(componentKey);
     if (iter != m_componentSequences.constEnd())
         iter.value()->receiveMeasureValue(newValue);
 }
