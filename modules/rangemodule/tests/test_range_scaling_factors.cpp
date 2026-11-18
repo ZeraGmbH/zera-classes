@@ -37,10 +37,10 @@ void test_range_scaling_factors::init()
 
     TestRangeHelpers::setCorrectionCoefficient("m0", "250V", TestRangeHelpers::GAIN, 1, coeff1); // UL1
     TestRangeHelpers::setCorrectionCoefficient("m0", "250V", TestRangeHelpers::PHASE, 1, coeff1);
-    TestRangeHelpers::setCorrectionCoefficient("m0", "250V", TestRangeHelpers::OFFSET, 1, coeff1);
+    TestRangeHelpers::setCorrectionCoefficient("m0", "250V", TestRangeHelpers::OFFSET, 0, coeff1);
     TestRangeHelpers::setCorrectionCoefficient("m3", "10A", TestRangeHelpers::GAIN, 1, coeff1); // IL1
     TestRangeHelpers::setCorrectionCoefficient("m3", "10A", TestRangeHelpers::PHASE, 1, coeff1);
-    TestRangeHelpers::setCorrectionCoefficient("m3", "10A", TestRangeHelpers::OFFSET, 1, coeff1);
+    TestRangeHelpers::setCorrectionCoefficient("m3", "10A", TestRangeHelpers::OFFSET, 0, coeff1);
     m_testRunner->setVfComponent(rangeEntityId, RangeGroupingComponent, 0);
     m_testRunner->setVfComponent(rangeEntityId, RangeAutomaticComponent, 0);
 }
@@ -57,10 +57,10 @@ void test_range_scaling_factors::changeOneVoltageAndOneCurrentRange()
     //sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestSniffer::cmdOnly);
     sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
 
-    TimeMachineForTest::getInstance()->processTimers(500);
+    TimeMachineForTest::getInstance()->processTimers(501); // enable next correction / adjustment
     fireActualValues(m_sampleDspInterfaceProg, 5, 0.1, 50);
 
-    TimeMachineForTest::getInstance()->processTimers(500);
+    TimeMachineForTest::getInstance()->processTimers(501);
     m_testRunner->setVfComponent(rangeEntityId, UL1RangeComponent, "8V");
     m_testRunner->setVfComponent(rangeEntityId, IL1RangeComponent, "1.0A");
 
@@ -69,15 +69,27 @@ void test_range_scaling_factors::changeOneVoltageAndOneCurrentRange()
 
 void test_range_scaling_factors::preScalingUOnOff()
 {
-    TestSniffer sniffer;
-    //sniffer.sniffScpiIoServer(m_testRunner->getPcbServer(), TestSniffer::cmdOnly);
-    sniffer.sniffVeinValueChanges(m_testRunner->getVeinStorageDb(), QList<int>() << rangeEntityId);
-    sniffer.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
+    // We did not find a perfect for for all analasysis aspects => dump focused
+    TestSniffer snifferDsp;
+    snifferDsp.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
+    TestSniffer snifferVein;
+    snifferVein.sniffVeinValueChanges(m_testRunner->getVeinStorageDb(), QList<int>() << rangeEntityId);
+    TestSniffer snifferAll;
+    snifferAll.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
+    snifferAll.sniffVeinValueChanges(m_testRunner->getVeinStorageDb(), QList<int>() << rangeEntityId);
 
     constexpr double unscaledU = 10.0;
     constexpr double unscaledI = 1.0;
+
+    // initial prescale off
+    TimeMachineForTest::getInstance()->processTimers(501); // enable next correction / adjustment
+    QSignalSpy spyDspVarWriteInitial(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
+    m_testRunner->setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", false); // Just to make sure...
+    fireActualValues(m_sampleDspInterfaceProg, unscaledU, unscaledI, 50);
+    float gainUScaledInitial = TestRangeHelpers::findDspWriteValue(spyDspVarWriteInitial, "GAINCORRECTION", DspChannelUl1);
+
     // prescale on
-    TimeMachineForTest::getInstance()->processTimers(500); // enable correction / adjustment
+    TimeMachineForTest::getInstance()->processTimers(501);
     QSignalSpy spyDspVarWriteOn(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     m_testRunner->setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "2/1*(1)");
     m_testRunner->setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", true);
@@ -85,16 +97,30 @@ void test_range_scaling_factors::preScalingUOnOff()
     float gainUScaledOn = TestRangeHelpers::findDspWriteValue(spyDspVarWriteOn, "GAINCORRECTION", DspChannelUl1);
 
     // prescale off
-    TimeMachineForTest::getInstance()->processTimers(500); // enable next correction / adjustment
+    TimeMachineForTest::getInstance()->processTimers(501);
     QSignalSpy spyDspVarWriteOff(m_sampleDspInterfaceAdj.get(), &TestDspInterface::sigDspVarWrite);
     m_testRunner->setVfComponent(rangeEntityId, "PAR_PreScalingEnabledGroup0", false);
     fireActualValues(m_sampleDspInterfaceProg, unscaledU, unscaledI, 50);
     float gainUScaledOff = TestRangeHelpers::findDspWriteValue(spyDspVarWriteOn, "GAINCORRECTION", DspChannelUl1);
-
     double gainUexpected = TestRangeHelpers::testPolynom(unscaledU, 1, coeff1);
+
+    // prescale off change value (in dump focus on SIG_Ranging)
+    TimeMachineForTest::getInstance()->processTimers(501);
+    m_testRunner->setVfComponent(rangeEntityId, "PAR_PreScalingGroup0", "42/1*(1)");
+    fireActualValues(m_sampleDspInterfaceProg, unscaledU, unscaledI, 50);
+
+    QCOMPARE(gainUScaledInitial, gainUScaledOff);
     QCOMPARE(gainUScaledOff, gainUexpected);
     QCOMPARE(gainUScaledOn, gainUexpected);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/preScalingUOnOff.json", sniffer.dump()));
+
+    bool allOk = true;
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/preScalingUOnOff.json", snifferAll.dump()))
+        allOk = false;
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/preScalingUOnOffDsp.json", snifferDsp.dump()))
+        allOk = false;
+    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/preScalingUOnOffVein.json", snifferVein.dump()))
+        allOk = false;
+    QVERIFY(allOk);
 }
 
 
