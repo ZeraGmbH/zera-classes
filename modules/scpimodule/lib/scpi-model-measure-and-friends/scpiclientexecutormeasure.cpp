@@ -5,12 +5,15 @@
 
 namespace SCPIMODULE {
 
+int ScpiClientExecutorMeasure::m_instanceCount = 0;
+
 ScpiClientExecutorMeasure::ScpiClientExecutorMeasure(cSCPIClient *client,
                                                      const ScpiModelTypes modelType,
                                                      const QList<VeinComponentId> &veinComponents) :
     m_client(client),
     m_modelType(modelType)
 {
+    m_instanceCount++;
     ScpiMeasSequenceStore* store = client->getMeasureSequenceStore();
     for (const VeinComponentId &componentId : veinComponents) {
         const VeinComponentScpiMeasureSequencePtr &measure = store->getComponentSequence(componentId);
@@ -37,6 +40,11 @@ ScpiClientExecutorMeasure::ScpiClientExecutorMeasure(cSCPIClient *client,
     }
 }
 
+ScpiClientExecutorMeasure::~ScpiClientExecutorMeasure()
+{
+    m_instanceCount--;
+}
+
 void ScpiClientExecutorMeasure::executeScpi(const ScpiTransactionId &scpiTransactionId)
 {
     m_pendingTransactions[scpiTransactionId.getChrono()] = { scpiTransactionId, m_veinComponentScpiSequences.count(), "" };
@@ -44,6 +52,11 @@ void ScpiClientExecutorMeasure::executeScpi(const ScpiTransactionId &scpiTransac
         const VeinComponentScpiMeasureSequencePtr &measure = m_veinComponentScpiSequences.at(i);
         measure->execute(m_modelType);
     }
+}
+
+int ScpiClientExecutorMeasure::getInstanceCount()
+{
+    return m_instanceCount;
 }
 
 void ScpiClientExecutorMeasure::onSingleScpiCmdDone()

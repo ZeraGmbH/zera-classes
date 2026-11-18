@@ -15,9 +15,11 @@ public:
     explicit ScpiClientExecutorMeasure(cSCPIClient *client,
                                        const ScpiModelTypes modelType,
                                        const QList<VeinComponentId> &veinComponents);
+    ~ScpiClientExecutorMeasure() override;
 
     void executeScpi(const ScpiTransactionId &scpiTransactionId);
 
+    static int getInstanceCount();
 private slots:
     void onSingleScpiCmdDone();
     void onSingleScpiQueryDone(const QString &scpiResponse);
@@ -35,6 +37,7 @@ private:
         QString accumulatedResponse;
     };
     QHash<quint64 /*TransactionId chrono */, TransactionData> m_pendingTransactions;
+    static int m_instanceCount;
 };
 
 typedef std::shared_ptr<ScpiClientExecutorMeasure> ScpiClientExecutorMeasurePtr;
