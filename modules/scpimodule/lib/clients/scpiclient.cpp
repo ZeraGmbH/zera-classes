@@ -182,7 +182,7 @@ QString cSCPIClient::makeBareScpiInPrintable(const QString &input)
     return ret;
 }
 
-QUuid cSCPIClient::getClientId()
+const QUuid &cSCPIClient::getClientId() const
 {
     return m_clientId;
 }

@@ -31,7 +31,7 @@ public:
 
     bool isOperationComplete();
 
-    QUuid getClientId();
+    const QUuid &getClientId() const;
     void addVeinParamRpcTransactionInfo(const QString &veinComponentOrRpcName, const SCPIMODULE::SCPIVeinTransactionInfoPtr &info);
 
     virtual void handleCmdFinish(const NullableString &scpiResponse, const ScpiTransactionId &scpiTransactionId, FinishLogTypes logType = LOG_FULL) = 0;

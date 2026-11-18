@@ -31,7 +31,7 @@ void ScpiDelegateMeasure::executeSCPI(cSCPIClient *client,
 
 ScpiClientExecutorMeasurePtr ScpiDelegateMeasure::getExecutor(cSCPIClient *client)
 {
-    QUuid clientId = client->getClientId();
+    const QUuid &clientId = client->getClientId();
     auto iter = m_clientExecutors.constFind(clientId);
     if (iter != m_clientExecutors.constEnd())
         return iter.value();
