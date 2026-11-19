@@ -13,6 +13,7 @@
 #include <timerfactoryqt.h>
 #include <QFile>
 #include <intvalidator.h>
+#include <boolvalidator.h>
 #include <QJsonDocument>
 
 namespace STATUSMODULE
@@ -274,6 +275,14 @@ void cStatusModuleInit::generateVeinInterface()
                                              QVariant());
     m_veinDspMsTimer->setScpiInfo("STATUS", "DSP:TIMEMS", SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] =  m_veinDspMsTimer;
+
+    m_veinEnableScpiFullLog = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+                                                    key = QString("PAR_ScpiEnableFullLog"),
+                                                    QString("DSP ms timer"),
+                                                    quint8(1));
+    m_veinEnableScpiFullLog->setScpiInfo("STATUS", "LOGSCPIFULL", SCPI::isQuery | SCPI::isCmdwP);
+    m_veinEnableScpiFullLog->setValidator(new cBoolValidator());
+    m_pModule->m_veinModuleParameterMap[key] =  m_veinEnableScpiFullLog;
 
     m_versionsJson = std::make_shared<QJsonObject>();
     std::shared_ptr<RPCCreateVersionFile> rpcReadLogs = std::make_shared<RPCCreateVersionFile>(m_pModule->getRpcEventSystem(),

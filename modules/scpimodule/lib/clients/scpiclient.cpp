@@ -162,7 +162,7 @@ void cSCPIClient::execCmd()
         if (cmd.length() == 0)
             break;
 
-        // This message is checked as is in autobuilder-dut-testsuite!
+        // This message is checked as is in autobuilder-dut-testsuite => always on!
         qInfo("Executing SCPI command : %s", qPrintable(cmd));
 
         ScpiTransactionId scpiTransactionId = m_responseSorter.createTransaction(cmd);

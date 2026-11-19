@@ -28,6 +28,7 @@ public:
     void generateVeinInterface() override;
 
     bool getSortQueryResponse() const;
+    bool getFullLogEnabled() const;
 
     void addScpiClient(cSCPIClient *client);
     void removeScpiClient(cSCPIClient *client);

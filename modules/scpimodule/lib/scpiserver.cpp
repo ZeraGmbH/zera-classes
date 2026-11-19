@@ -86,6 +86,14 @@ bool cSCPIServer::getSortQueryResponse() const
     return m_ConfigData.m_queryResponseSortActive.m_nActive != 0;
 }
 
+bool cSCPIServer::getFullLogEnabled() const
+{
+    // Adding SCPI in SCPI module is at least a challenge. So be pragmatic:
+    // * create vein component/SCPI in statusmodule
+    // * use value here
+    return m_pModule->getStorageDb()->getStoredValue(1150, "PAR_ScpiEnableFullLog").toBool();
+}
+
 void cSCPIServer::addScpiClient(cSCPIClient* client)
 {
     if (!m_SCPIClientList.contains(client))
@@ -155,7 +163,8 @@ void cSCPIServer::addNetClient()
         QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
         cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule); // each client our interface;
         addScpiClient(client);
-        qInfo("Network SCPI client (%s) connected / Active clients: %i", qPrintable(client->getPeerAddress()), m_SCPIClientList.count());
+        if (getFullLogEnabled())
+            qInfo("Network SCPI client (%s) connected / Active clients: %i", qPrintable(client->getPeerAddress()), m_SCPIClientList.count());
         connect(socket, &QTcpSocket::disconnected, this, [=]() {
             deleteNetClient(client);
         });
@@ -169,7 +178,8 @@ void cSCPIServer::deleteNetClient(cSCPIClient *client)
         m_pModule->getRpcTransactionStore()->removeClientTransactions(client);
         m_SCPIClientList.removeAll(client);
         delete client;
-        qInfo("Network SCPI client deleted / Active clients: %i", m_SCPIClientList.count());
+        if (getFullLogEnabled())
+            qInfo("Network SCPI client deleted / Active clients: %i", m_SCPIClientList.count());
     }
 }
 

@@ -148,6 +148,7 @@ private:
     VfModuleParameter* m_veinDspBusy = nullptr;
     VfModuleParameter* m_veinDspPeriodCount = nullptr;
     VfModuleParameter* m_veinDspMsTimer = nullptr;
+    VfModuleParameter* m_veinEnableScpiFullLog = nullptr;
     TimerTemplateQtPtr m_veinUpdateTimer;
     quint32 m_lastVeinPeriod = 0;
     quint32 m_lastVeinTimeMs = 0;

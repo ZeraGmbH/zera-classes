@@ -32,7 +32,8 @@ void cSCPIEthClient::handleCmdFinish(const NullableString &scpiResponse, const S
 
         QByteArray ba = currentResponse.getStr().toUtf8() + "\n";
         m_pSocket->write(ba);
-        qInfo("Network SCPI command response : %s", logType == LOG_SKIP ? "<skipped>" : qPrintable(currentResponse.getStr()));
+        if (m_pModule->getSCPIServer()->getFullLogEnabled())
+            qInfo("Network SCPI command response : %s", logType == LOG_SKIP ? "<skipped>" : qPrintable(currentResponse.getStr()));
     }
 }
 
@@ -50,7 +51,8 @@ void cSCPIEthClient::cmdInput()
         m_sInputFifo.append(inputLine);
         totalInput.append(inputLine);
     }
-    qInfo("Network SCPI command input: %s", qPrintable(makeBareScpiInPrintable(totalInput)));
+    if (m_pModule->getSCPIServer()->getFullLogEnabled())
+        qInfo("Network SCPI command input: %s", qPrintable(makeBareScpiInPrintable(totalInput)));
     execPendingCmds();
 }
 
