@@ -51,6 +51,10 @@ cSCPIServer::~cSCPIServer()
 
 void cSCPIServer::generateVeinInterface()
 {
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Adding SCPI commands here is not supported. If necessary commands must be added to models
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
     QString key;
     m_pVeinParamSerialOn = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                        key = QString("PAR_SerialScpiActive"),

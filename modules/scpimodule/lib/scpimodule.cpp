@@ -118,9 +118,6 @@ void cSCPIModule::setupModule()
     connect(m_pSCPIServer, &cSCPIServer::activated, this, &cSCPIModule::activationContinue);
     connect(m_pSCPIServer, &cSCPIServer::deactivated, this, &cSCPIModule::deactivationContinue);
 
-    // we already post meta information here because setting up interface looks for valid meta info
-    exportMetaData();
-
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
 }
@@ -151,8 +148,8 @@ void cSCPIModule::activationFinished()
 {
     getValidatorEventSystem()->setParameterMap(m_veinModuleParameterMap);
 
-    // we post meta information once again because it's complete now
-    exportMetaData();
+    exportMetaData(); // for the completeness of docs only
+
     emit addEventSystem(m_pSCPIEventSystem);
     emit activationReady();
 }
