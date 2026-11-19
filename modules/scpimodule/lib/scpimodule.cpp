@@ -21,15 +21,8 @@ cSCPIModule::cSCPIModule(const ModuleFactoryParam &moduleParam) :
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
     m_cmdEventHandlerSystem = VfCmdEventHandlerSystem::create();
-    m_moduleInterfaceParser.parseVeinStorage(moduleParam.m_moduleSharedData->m_storagesystem->getDb());
 
-    m_scpiModelMeasurement.setupScpi(&m_scpiInterface);
-    m_scpiModelParameters.setupScpi(&m_scpiInterface);
-    m_scpiModelCatalogs.setupScpi(&m_scpiInterface);
-    m_scpiModelRpcs.setupScpi(&m_scpiInterface);
-    m_scpiModelDevIface.setupScpi(&m_scpiInterface);
-    m_scpiModelStatus.setupScpi(&m_scpiInterface);
-    m_scpiModelIeee488.setupScpi(&m_scpiInterface);
+    setupScpi();
 }
 
 cSCPIModule::~cSCPIModule()
@@ -130,6 +123,18 @@ void cSCPIModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
+}
+
+void cSCPIModule::setupScpi()
+{
+    m_moduleInterfaceParser.parseVeinStorage(getStorageDb());
+    m_scpiModelMeasurement.setupScpi(&m_scpiInterface);
+    m_scpiModelParameters.setupScpi(&m_scpiInterface);
+    m_scpiModelCatalogs.setupScpi(&m_scpiInterface);
+    m_scpiModelRpcs.setupScpi(&m_scpiInterface);
+    m_scpiModelDevIface.setupScpi(&m_scpiInterface);
+    m_scpiModelStatus.setupScpi(&m_scpiInterface);
+    m_scpiModelIeee488.setupScpi(&m_scpiInterface);
 }
 
 void cSCPIModule::startMeas()
