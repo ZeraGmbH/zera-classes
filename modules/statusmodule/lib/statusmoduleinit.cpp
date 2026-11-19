@@ -278,7 +278,9 @@ void cStatusModuleInit::generateVeinInterface()
 
     m_veinEnableScpiFullLog = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                     key = QString("PAR_ScpiEnableFullLog"),
-                                                    QString("DSP ms timer"),
+                                                    "Enable full SCPI log\n"
+                                                    "* Enabled by default on startup or session change\n"
+                                                    "* Disable not recommended - for internal test purpose only",
                                                     quint8(1));
     m_veinEnableScpiFullLog->setScpiInfo("STATUS", "LOGSCPIFULL", SCPI::isQuery | SCPI::isCmdwP);
     m_veinEnableScpiFullLog->setValidator(new cBoolValidator());
