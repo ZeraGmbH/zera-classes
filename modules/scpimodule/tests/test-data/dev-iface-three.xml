@@ -34,6 +34,7 @@
         </UL3>
       </RNG1>
       <SYST Type="Node">
+        <LOGSCPIFULL DataType="BOOL" Description="Enable full SCPI log&#10;* Enabled by default on startup or after session change&#10;* Disable not recommended - for internal test purpose only" Max="1" Min="0" ScpiPath="CONFIGURATION:SYST:LOGSCPIFULL" Type="Query,Command+Par"/>
         <NAMESESSION DataType="STRING" Description="Session name" ScpiPath="CONFIGURATION:SYST:NAMESESSION" Type="Query,Command+Par" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current"/>
         <SESSION Type="Node">
           <CATALOG ScpiPath="CONFIGURATION:SYST:SESSION:CATALOG" Type="Query"/>

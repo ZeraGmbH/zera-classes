@@ -10,6 +10,7 @@
         <REFCHANNEL DataType="STRING" Description="Reference channel&#10;* **m0**: UL1&#10;* **m1**: UL2&#10;* **m2**: UL3&#10;* **m3**: IL1&#10;* **m4**: IL2&#10;* **m5**: IL3&#10;* **m6**: UAUX&#10;* **m7**: IAUX" ScpiPath="CONFIGURATION:OSC2:REFCHANNEL" Type="Query,Command+Par" ValidPar="m0,m1,m2,m3,m4,m5,m6,m7"/>
       </OSC2>
       <SYST Type="Node">
+        <LOGSCPIFULL DataType="BOOL" Description="Enable full SCPI log&#10;* Enabled by default on startup or after session change&#10;* Disable not recommended - for internal test purpose only" Max="1" Min="0" ScpiPath="CONFIGURATION:SYST:LOGSCPIFULL" Type="Query,Command+Par"/>
         <NAMESESSION DataType="STRING" Description="Session name" ScpiPath="CONFIGURATION:SYST:NAMESESSION" Type="Query,Command+Par" ValidPar="Default,EMOB AC,EMOB DC,DC: 4*Voltage / 1*Current"/>
         <SESSION Type="Node">
           <CATALOG ScpiPath="CONFIGURATION:SYST:SESSION:CATALOG" Type="Query"/>

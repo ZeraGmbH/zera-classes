@@ -40,6 +40,16 @@
                 "INF_ModuleInterface": {
                     "Description": "<skipped>"
                 },
+                "ScpiEnableFullLog": {
+                    "Description": "<skipped>",
+                    "Validation": {
+                        "Data": [
+                            0,
+                            1
+                        ],
+                        "Type": "BOOL"
+                    }
+                },
                 "Session": {
                     "Description": "<skipped>",
                     "Validation": {
@@ -69,6 +79,13 @@
             },
             "SCPIInfo": {
                 "Cmd": [
+                    [
+                        "CONFIGURATION",
+                        "LOGSCPIFULL",
+                        "10",
+                        "ScpiEnableFullLog",
+                        "0"
+                    ],
                     [
                         "CONFIGURATION",
                         "NAMESESSION",
@@ -102,6 +119,7 @@
             }
         },
         "ModulesPaused": false,
+        "ScpiEnableFullLog": 1,
         "Session": "com5003-meas-session.json",
         "SessionsAvailable": [
             "com5003-meas-session.json",
