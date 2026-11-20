@@ -276,16 +276,6 @@ void cStatusModuleInit::generateVeinInterface()
     m_veinDspMsTimer->setScpiInfo("STATUS", "DSP:TIMEMS", SCPI::isQuery);
     m_pModule->m_veinModuleParameterMap[key] =  m_veinDspMsTimer;
 
-    m_veinEnableScpiFullLog = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
-                                                    key = QString("PAR_ScpiEnableFullLog"),
-                                                    "Enable full SCPI log\n"
-                                                    "* Enabled by default on startup or session change\n"
-                                                    "* Disable not recommended - for internal test purpose only",
-                                                    quint8(1));
-    m_veinEnableScpiFullLog->setScpiInfo("STATUS", "LOGSCPIFULL", SCPI::isQuery | SCPI::isCmdwP);
-    m_veinEnableScpiFullLog->setValidator(new cBoolValidator());
-    m_pModule->m_veinModuleParameterMap[key] =  m_veinEnableScpiFullLog;
-
     m_versionsJson = std::make_shared<QJsonObject>();
     std::shared_ptr<RPCCreateVersionFile> rpcReadLogs = std::make_shared<RPCCreateVersionFile>(m_pModule->getRpcEventSystem(),
                                                                                                m_pModule->getEntityId(),

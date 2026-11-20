@@ -293,7 +293,6 @@
         "INF_PCBVersion": "{\"Relay PCB version\":\"Unknown\",\"System PCB version\":\"Unknown\"}",
         "INF_ReleaseNr": "",
         "INF_Schnubbel": 0,
-        "PAR_ScpiEnableFullLog": 1,
         "PAR_SerialNr": "Unknown"
     },
     "1200": {

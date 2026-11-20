@@ -5814,16 +5814,6 @@
                 "INF_Schnubbel": {
                     "Description": "<skipped>"
                 },
-                "PAR_ScpiEnableFullLog": {
-                    "Description": "<skipped>",
-                    "Validation": {
-                        "Data": [
-                            0,
-                            1
-                        ],
-                        "Type": "BOOL"
-                    }
-                },
                 "PAR_SerialNr": {
                     "Description": "<skipped>",
                     "Validation": {
@@ -5962,13 +5952,6 @@
                     ],
                     [
                         "STATUS",
-                        "LOGSCPIFULL",
-                        "10",
-                        "PAR_ScpiEnableFullLog",
-                        "0"
-                    ],
-                    [
-                        "STATUS",
                         "SERIAL",
                         "10",
                         "PAR_SerialNr",
@@ -6000,7 +5983,6 @@
         },
         "INF_ReleaseNr": "",
         "INF_Schnubbel": 0,
-        "PAR_ScpiEnableFullLog": 1,
         "PAR_SerialNr": "Unknown"
     },
     "1300": {
