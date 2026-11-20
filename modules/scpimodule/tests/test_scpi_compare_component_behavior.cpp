@@ -1,15 +1,15 @@
-#include "test_compare_component_behavior.h"
+#include "test_scpi_compare_component_behavior.h"
 #include "scpimodulenetclientblocked.h"
 #include <timerfactoryqtfortest.h>
 #include <testloghelpers.h>
 #include <QTest>
 
-QTEST_MAIN(test_compare_component_behavior)
+QTEST_MAIN(test_scpi_compare_component_behavior)
 
 static int constexpr serverPort = 4712;
 static constexpr int systemEntityId = 0;
 
-void test_compare_component_behavior::initTestCase()
+void test_scpi_compare_component_behavior::initTestCase()
 {
     TimerFactoryQtForTest::enableTest();
 
@@ -17,17 +17,17 @@ void test_compare_component_behavior::initTestCase()
     setupSpy();
 }
 
-void test_compare_component_behavior::cleanupTestCase()
+void test_scpi_compare_component_behavior::cleanupTestCase()
 {
     m_testRunner.reset(); // before extra event systems
 }
 
-void test_compare_component_behavior::cleanup()
+void test_scpi_compare_component_behavior::cleanup()
 {
     m_veinEventDump = QJsonObject();
 }
 
-void test_compare_component_behavior::setupSpy()
+void test_scpi_compare_component_behavior::setupSpy()
 {
     ModuleManagerSetupFacade* modManFacade = m_testRunner->getModManFacade();
     m_serverCmdEventSpyTop = std::make_unique<TestJsonSpyEventSystem>(&m_veinEventDump, "server-enter");
@@ -39,7 +39,7 @@ void test_compare_component_behavior::setupSpy()
     modManFacade->addSubsystem(m_serverCmdEventSpyBottom.get());
 }
 
-void test_compare_component_behavior::queryOtherEntity()
+void test_scpi_compare_component_behavior::queryOtherEntity()
 {
     ScpiModuleNetClientBlocked client;
 
@@ -50,7 +50,7 @@ void test_compare_component_behavior::queryOtherEntity()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpqueryOtherEntity.json", jsonDumped));
 }
 
-void test_compare_component_behavior::querySystemEntity()
+void test_scpi_compare_component_behavior::querySystemEntity()
 {
     ScpiModuleNetClientBlocked client;
 
@@ -61,7 +61,7 @@ void test_compare_component_behavior::querySystemEntity()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpquerySystemEntity.json", jsonDumped));
 }
 
-void test_compare_component_behavior::cmdOtherEntity()
+void test_scpi_compare_component_behavior::cmdOtherEntity()
 {
     ScpiModuleNetClientBlocked client;
 
@@ -71,7 +71,7 @@ void test_compare_component_behavior::cmdOtherEntity()
     QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpcmdOtherEntity.json", jsonDumped));
 }
 
-void test_compare_component_behavior::cmdSystemEntity()
+void test_scpi_compare_component_behavior::cmdSystemEntity()
 {
     ScpiModuleNetClientBlocked client;
 

@@ -1,12 +1,12 @@
-#ifndef TEST_COMPARE_COMPONENT_BEHAVIOR_H
-#define TEST_COMPARE_COMPONENT_BEHAVIOR_H
+#ifndef TEST_SCPI_COMPARE_COMPONENT_BEHAVIOR_H
+#define TEST_SCPI_COMPARE_COMPONENT_BEHAVIOR_H
 
 #include "modulemanagertestrunner.h"
 #include <testjsonspyeventsystem.h>
 #include <vn_networksystem.h>
 #include <vn_tcpsystem.h>
 
-class test_compare_component_behavior : public QObject
+class test_scpi_compare_component_behavior : public QObject
 {
     Q_OBJECT
 private slots:
@@ -31,4 +31,4 @@ private:
     std::unique_ptr<TestJsonSpyEventSystem> m_serverCmdEventSpyBottom;
 };
 
-#endif // TEST_COMPARE_COMPONENT_BEHAVIOR_H
+#endif // TEST_SCPI_COMPARE_COMPONENT_BEHAVIOR_H

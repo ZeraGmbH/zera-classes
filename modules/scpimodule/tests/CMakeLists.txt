@@ -29,5 +29,5 @@ SETUP_QTESTS_MODULE(
     test_scpi_learn_measure_objects_and_relations
     test_scpi_vein_query_sort
     test_scpi_mem_leaks
-    test_compare_component_behavior
+    test_scpi_compare_component_behavior
 )
