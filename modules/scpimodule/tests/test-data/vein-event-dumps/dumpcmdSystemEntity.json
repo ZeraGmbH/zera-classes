@@ -26,7 +26,7 @@
             "EventTarget": "ET_ALL",
             "Valid": true,
             "ValidPeer": true,
-            "ValueNew": "1",
+            "ValueNew": 1,
             "ValueOld": 1
         },
         {
