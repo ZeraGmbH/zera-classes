@@ -1,0 +1,76 @@
+{
+    "VeinEvents": [
+        {
+            "Am command event in": "server-enter",
+            "Attached data": "ComponentData",
+            "ComponentCommand": "CCMD_SET",
+            "ComponentName": "PAR_PllAutomaticOnOff",
+            "Entity": 1030,
+            "EventOrigin": "EO_LOCAL",
+            "EventSubtype": "TRANSACTION",
+            "EventTarget": "ET_ALL",
+            "Valid": true,
+            "ValidPeer": true,
+            "ValueNew": "FOO",
+            "ValueOld": 1
+        },
+        {
+            "Accepted (finalized) by": "VfEventSytemModuleParam",
+            "Am command event in": "server-fallthrough",
+            "Attached data": "ComponentData",
+            "ComponentCommand": "CCMD_SET",
+            "ComponentName": "PAR_PllAutomaticOnOff",
+            "Entity": 1030,
+            "EventOrigin": "EO_LOCAL",
+            "EventSubtype": "TRANSACTION",
+            "EventTarget": "ET_ALL",
+            "Valid": true,
+            "ValidPeer": true,
+            "ValueNew": "FOO",
+            "ValueOld": 1
+        },
+        {
+            "Am command event in": "server-enter",
+            "Attached data": "ErrorData",
+            "Entity": 1030,
+            "EventOrigin": "EO_LOCAL",
+            "EventSubtype": "NOTIFICATION",
+            "EventTarget": "ET_IRRELEVANT",
+            "OriginalEventData": {
+                "Attached data": "ComponentData",
+                "ComponentCommand": "CCMD_SET",
+                "ComponentName": "PAR_PllAutomaticOnOff",
+                "Entity": 1030,
+                "EventOrigin": "EO_LOCAL",
+                "EventTarget": "ET_IRRELEVANT",
+                "Valid": true,
+                "ValueNew": 1,
+                "ValueOld": null
+            },
+            "Valid": true,
+            "ValidPeer": true
+        },
+        {
+            "Accepted (finalized) by": "SCPIMODULE::SCPIEventSystem",
+            "Am command event in": "server-fallthrough",
+            "Attached data": "ErrorData",
+            "Entity": 1030,
+            "EventOrigin": "EO_LOCAL",
+            "EventSubtype": "NOTIFICATION",
+            "EventTarget": "ET_IRRELEVANT",
+            "OriginalEventData": {
+                "Attached data": "ComponentData",
+                "ComponentCommand": "CCMD_SET",
+                "ComponentName": "PAR_PllAutomaticOnOff",
+                "Entity": 1030,
+                "EventOrigin": "EO_LOCAL",
+                "EventTarget": "ET_IRRELEVANT",
+                "Valid": true,
+                "ValueNew": 1,
+                "ValueOld": null
+            },
+            "Valid": true,
+            "ValidPeer": true
+        }
+    ]
+}

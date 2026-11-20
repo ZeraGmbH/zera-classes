@@ -1,0 +1,76 @@
+{
+    "VeinEvents": [
+        {
+            "Am command event in": "server-enter",
+            "Attached data": "ComponentData",
+            "ComponentCommand": "CCMD_SET",
+            "ComponentName": "ScpiEnableFullLog",
+            "Entity": 0,
+            "EventOrigin": "EO_LOCAL",
+            "EventSubtype": "TRANSACTION",
+            "EventTarget": "ET_ALL",
+            "Valid": true,
+            "ValidPeer": true,
+            "ValueNew": "FOO",
+            "ValueOld": 1
+        },
+        {
+            "Accepted (finalized) by": "SystemModuleEventSystem",
+            "Am command event in": "server-fallthrough",
+            "Attached data": "ComponentData",
+            "ComponentCommand": "CCMD_SET",
+            "ComponentName": "ScpiEnableFullLog",
+            "Entity": 0,
+            "EventOrigin": "EO_LOCAL",
+            "EventSubtype": "TRANSACTION",
+            "EventTarget": "ET_ALL",
+            "Valid": true,
+            "ValidPeer": true,
+            "ValueNew": "FOO",
+            "ValueOld": 1
+        },
+        {
+            "Am command event in": "server-enter",
+            "Attached data": "ErrorData",
+            "Entity": 0,
+            "EventOrigin": "EO_LOCAL",
+            "EventSubtype": "NOTIFICATION",
+            "EventTarget": "ET_ALL",
+            "OriginalEventData": {
+                "Attached data": "ComponentData",
+                "ComponentCommand": "CCMD_SET",
+                "ComponentName": "ScpiEnableFullLog",
+                "Entity": 0,
+                "EventOrigin": "EO_LOCAL",
+                "EventTarget": "ET_ALL",
+                "Valid": true,
+                "ValueNew": "FOO",
+                "ValueOld": 1
+            },
+            "Valid": true,
+            "ValidPeer": true
+        },
+        {
+            "Accepted (finalized) by": "SCPIMODULE::SCPIEventSystem",
+            "Am command event in": "server-fallthrough",
+            "Attached data": "ErrorData",
+            "Entity": 0,
+            "EventOrigin": "EO_LOCAL",
+            "EventSubtype": "NOTIFICATION",
+            "EventTarget": "ET_ALL",
+            "OriginalEventData": {
+                "Attached data": "ComponentData",
+                "ComponentCommand": "CCMD_SET",
+                "ComponentName": "ScpiEnableFullLog",
+                "Entity": 0,
+                "EventOrigin": "EO_LOCAL",
+                "EventTarget": "ET_ALL",
+                "Valid": true,
+                "ValueNew": "FOO",
+                "ValueOld": 1
+            },
+            "Valid": true,
+            "ValidPeer": true
+        }
+    ]
+}

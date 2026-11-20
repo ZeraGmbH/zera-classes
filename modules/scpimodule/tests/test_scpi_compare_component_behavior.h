@@ -16,9 +16,12 @@ private slots:
 
     void queryOtherEntity();
     void querySystemEntity();
+
     void cmdOtherEntity();
     void cmdSystemEntity();
 
+    void cmdInvalidOtherEntity();
+    void cmdInvalidSystemEntity();
 
 private:
     void setupSpy();

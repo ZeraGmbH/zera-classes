@@ -6,6 +6,8 @@
         <file>scpi-dumps/dumped-all-queries-in-one-transaction-sorted</file>
         <file>scpi-dumps/dumped-nested-queries</file>
 
+        <file>vein-event-dumps/dumpcmdInvalidOtherEntity.json</file>
+        <file>vein-event-dumps/dumpcmdInvalidSystemEntity.json</file>
         <file>vein-event-dumps/dumpcmdOtherEntity.json</file>
         <file>vein-event-dumps/dumpcmdSystemEntity.json</file>
         <file>vein-event-dumps/dumpqueryOtherEntity.json</file>
