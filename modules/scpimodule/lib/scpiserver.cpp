@@ -89,7 +89,7 @@ bool cSCPIServer::getSortQueryResponse() const
 bool cSCPIServer::getFullLogEnabled() const
 {
     // Adding SCPI in SCPI module is at least a challenge. So be pragmatic:
-    // * create vein component/SCPI in statusmodule
+    // * create vein component/SCPI in system entity
     // * use value here
     return m_pModule->getStorageDb()->getStoredValue(0, "ScpiEnableFullLog").toBool();
 }

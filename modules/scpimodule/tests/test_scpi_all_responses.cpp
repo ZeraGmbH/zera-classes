@@ -263,11 +263,7 @@ void test_scpi_all_responses::checkScpiCmdResponse_data()
 
     const QStringList scpiCommands = getAllScpiCommandsWithParamFromDevIface();
     for (const QString &scpiCommand : scpiCommands) {
-        bool skipHere = ignoreToSpeedup(scpiCommand) ||
-                        // SystemEntity - why?
-                        scpiCommand.startsWith("CONFIGURATION:SYST:NAMESESSION") ||
-                        scpiCommand.startsWith("CONFIGURATION:SYST:XSESSION") ||
-                        scpiCommand.startsWith("CONFIGURATION:SYST:LOGSCPIFULL");
+        bool skipHere = ignoreToSpeedup(scpiCommand);
         if (!skipHere)
             QTest::newRow(scpiCommand.toLatin1()) << scpiCommand;
     }
