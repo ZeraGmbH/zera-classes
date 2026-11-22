@@ -41,7 +41,7 @@ void test_power1_module_regression::veinDumpInitial()
     VeinStorage::AbstractDatabase *storageDb = testRunner.getVeinStorageDb();
 
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitial.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpInitial.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_power1_module_regression::injectActualValues()
@@ -60,7 +60,7 @@ void test_power1_module_regression::injectActualValues()
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << powerEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpActual.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpActual.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_power1_module_regression::testScpiCommandsDisabled()
@@ -71,7 +71,7 @@ void test_power1_module_regression::testScpiCommandsDisabled()
     VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>() << powerEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitial-withoutScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpInitial-withoutScpi.json", jsonDumped, TEST_SRC_DIR));
 
     //When we change into 'INF_ModuleInterface', we take current 'jsonDumped' and copy it to test-data.
     //So, here is an extra check to be sure that no scpi commands are introduced by accident in future.
@@ -86,7 +86,7 @@ void test_power1_module_regression::dumpDspSetup()
     TestDspInterfacePtr power1DspInterface = testRunner.findDspInterfaceByEntityId(powerEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgram.json", measProgramDumped, TEST_SRC_DIR));
 }
 
 const int powerEntityIdP1 = 1070;
@@ -101,22 +101,22 @@ void test_power1_module_regression::dumpDspSetupMt310s2Pow1To4()
 
     TestDspInterfacePtr power1DspInterfaceP1 = testRunner.findDspInterfaceByEntityId(powerEntityIdP1);
     QString measProgramDumpedP1 = TestLogHelpers::dump(power1DspInterfaceP1->dumpAll());
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramMt310s2P1.json", measProgramDumpedP1))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgramMt310s2P1.json", measProgramDumpedP1, TEST_SRC_DIR))
         allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP2 = testRunner.findDspInterfaceByEntityId(powerEntityIdP2);
     QString measProgramDumpedP2 = TestLogHelpers::dump(power1DspInterfaceP2->dumpAll());
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramMt310s2P2.json", measProgramDumpedP2))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgramMt310s2P2.json", measProgramDumpedP2, TEST_SRC_DIR))
         allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP3 = testRunner.findDspInterfaceByEntityId(powerEntityIdP3);
     QString measProgramDumpedP3 = TestLogHelpers::dump(power1DspInterfaceP3->dumpAll());
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramMt310s2P3.json", measProgramDumpedP3))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgramMt310s2P3.json", measProgramDumpedP3, TEST_SRC_DIR))
         allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP4 = testRunner.findDspInterfaceByEntityId(powerEntityIdP4);
     QString measProgramDumpedP4 = TestLogHelpers::dump(power1DspInterfaceP4->dumpAll());
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramMt310s2P4.json", measProgramDumpedP4))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgramMt310s2P4.json", measProgramDumpedP4, TEST_SRC_DIR))
         allOk = false;
 
     QVERIFY(allOk);
@@ -129,22 +129,22 @@ void test_power1_module_regression::dumpDspSetupCom5003Pow1To4()
 
     TestDspInterfacePtr power1DspInterfaceP1 = testRunner.findDspInterfaceByEntityId(powerEntityIdP1);
     QString measProgramDumpedP1 = TestLogHelpers::dump(power1DspInterfaceP1->dumpAll());
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramCom5003P1.json", measProgramDumpedP1))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgramCom5003P1.json", measProgramDumpedP1, TEST_SRC_DIR))
         allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP2 = testRunner.findDspInterfaceByEntityId(powerEntityIdP2);
     QString measProgramDumpedP2 = TestLogHelpers::dump(power1DspInterfaceP2->dumpAll());
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramCom5003P2.json", measProgramDumpedP2))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgramCom5003P2.json", measProgramDumpedP2, TEST_SRC_DIR))
         allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP3 = testRunner.findDspInterfaceByEntityId(powerEntityIdP3);
     QString measProgramDumpedP3 = TestLogHelpers::dump(power1DspInterfaceP3->dumpAll());
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramCom5003P3.json", measProgramDumpedP3))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgramCom5003P3.json", measProgramDumpedP3, TEST_SRC_DIR))
         allOk = false;
 
     TestDspInterfacePtr power1DspInterfaceP4 = testRunner.findDspInterfaceByEntityId(powerEntityIdP4);
     QString measProgramDumpedP4 = TestLogHelpers::dump(power1DspInterfaceP4->dumpAll());
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgramCom5003P4.json", measProgramDumpedP4))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgramCom5003P4.json", measProgramDumpedP4, TEST_SRC_DIR))
         allOk = false;
 
     QVERIFY(allOk);
@@ -160,7 +160,7 @@ void test_power1_module_regression::dumpDspOnMeasModeChange()
     setMeasMode(powerEntityId, testRunner, "4LW");
 
     QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-measmode-change.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dump-measmode-change.json", measProgramDumped, TEST_SRC_DIR));
 }
 
 void test_power1_module_regression::dumpDspOnMeasModeChangeApparentGeom()
@@ -181,7 +181,7 @@ void test_power1_module_regression::dumpDspOnMeasModeChangeApparentGeom()
     setMeasMode(powerEntityIdP4, testRunner, "4LW");
 
     QString measProgramDumped = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-measmode-change-apparent-geometric.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dump-measmode-change-apparent-geometric.json", measProgramDumped, TEST_SRC_DIR));
 }
 
 void test_power1_module_regression::dumpDspOnScaleChange()
@@ -192,24 +192,24 @@ void test_power1_module_regression::dumpDspOnScaleChange()
     bool allOk = true;
 
     QByteArray veinDumpBefore = VeinStorage::DumpJson::dumpToByteArray(storageDb);
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpBeforScale.json", veinDumpBefore))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpBeforScale.json", veinDumpBefore, TEST_SRC_DIR))
         allOk = false;
 
     setScale(testRunner, 5, 1);
     QString dspDump = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpDspOnUScaleChange.json", dspDump))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpDspOnUScaleChange.json", dspDump, TEST_SRC_DIR))
         allOk = false;
     QByteArray veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb);
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpAfterUScaleChange.json", veinDumpAfter)) // check PAR_FOUTConstant0
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpAfterUScaleChange.json", veinDumpAfter, TEST_SRC_DIR)) // check PAR_FOUTConstant0
         allOk = false;
 
     setScale(testRunner, 1, 5);
     dspDump = TestLogHelpers::dump(power1DspInterface->dumpAll(true));
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpDspOnIScaleChange.json", dspDump))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpDspOnIScaleChange.json", dspDump, TEST_SRC_DIR))
         allOk = false;
 
     veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb);
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpAfterIScaleChange.json", veinDumpAfter)) // check PAR_FOUTConstant0
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpAfterIScaleChange.json", veinDumpAfter, TEST_SRC_DIR)) // check PAR_FOUTConstant0
         allOk = false;
 
     QVERIFY(allOk);
@@ -223,7 +223,7 @@ void test_power1_module_regression::scpiDumpMtPower1Module1()
     ScpiModuleNetClientBlocked client;
     QString dumped = client.sendReceive("dev:iface?", false);
 
-    QVERIFY(XmlDocumentCompare::compareXmlFile(":/scpiDumps/session-power1module1-scpi.xml", dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlSrc("scpiDumps/session-power1module1-scpi.xml", dumped, TEST_SRC_DIR));
 }
 
 void test_power1_module_regression::scpiDumpMtPower1Module4()
@@ -234,7 +234,7 @@ void test_power1_module_regression::scpiDumpMtPower1Module4()
     ScpiModuleNetClientBlocked client;
     QString dumped = client.sendReceive("dev:iface?", false);
 
-    QVERIFY(XmlDocumentCompare::compareXmlFile(":/scpiDumps/session-power1module4-scpi.xml", dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlSrc("scpiDumps/session-power1module4-scpi.xml", dumped, TEST_SRC_DIR));
 }
 
 void test_power1_module_regression::setMeasMode(int entityId,

@@ -1,22 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>dspSourceDumps/dumpDspOnIScaleChange.json</file>
-        <file>dspSourceDumps/dumpDspOnUScaleChange.json</file>
-        <file>dspSourceDumps/dump-measmode-change.json</file>
-        <file>dspSourceDumps/dump-measmode-change-apparent-geometric.json</file>
-        <file>dspSourceDumps/dumpMeasProgram.json</file>
-        <file>dspSourceDumps//dumpMeasProgramCom5003P1.json</file>
-        <file>dspSourceDumps//dumpMeasProgramCom5003P2.json</file>
-        <file>dspSourceDumps//dumpMeasProgramCom5003P3.json</file>
-        <file>dspSourceDumps//dumpMeasProgramCom5003P4.json</file>
-        <file>dspSourceDumps//dumpMeasProgramMt310s2P1.json</file>
-        <file>dspSourceDumps//dumpMeasProgramMt310s2P2.json</file>
-        <file>dspSourceDumps//dumpMeasProgramMt310s2P3.json</file>
-        <file>dspSourceDumps//dumpMeasProgramMt310s2P4.json</file>
-
-        <file>scpiDumps/session-power1module1-scpi.xml</file>
-        <file>scpiDumps/session-power1module4-scpi.xml</file>
-
         <file>sessions/session-com5003-p1-p4.json</file>
         <file>sessions/session-minimal.json</file>
         <file>sessions/session-mt310s2-p1-p4.json</file>
@@ -25,13 +8,6 @@
         <file>sessions/session-power1-test.json</file>
         <file>sessions/session-power1-withoutScpi-test.json</file>
         <file>sessions/session-range-power.json</file>
-
-        <file>veinDumps/dumpActual.json</file>
-        <file>veinDumps/dumpAfterIScaleChange.json</file>
-        <file>veinDumps/dumpAfterUScaleChange.json</file>
-        <file>veinDumps/dumpBeforScale.json</file>
-        <file>veinDumps/dumpInitial.json</file>
-        <file>veinDumps/dumpInitial-withoutScpi.json</file>
 
         <file>mt310s2-power1module-test.xml</file>
         <file>mt310s2-power1module-withoutScpi-test.xml</file>
