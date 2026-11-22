@@ -1,10 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>dspSourceDumps/dumpMeasProgram.json</file>
-        <file>dspSourceDumps/dump-ref-IL1.json</file>
-        <file>dspSourceDumps/dump-ref-UL1-to-other.json</file>
-        <file>dumpActual.json</file>
-        <file>dumpInitial.json</file>
         <file>mt310s2-fftmodule-from-resource.xml</file>
         <file>mt310s2-fftmodule-ref-IL1.xml</file>
         <file>sessions/minimal.json</file>
