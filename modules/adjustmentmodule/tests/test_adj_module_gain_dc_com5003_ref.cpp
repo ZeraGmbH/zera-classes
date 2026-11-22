@@ -177,7 +177,7 @@ void test_adj_module_gain_dc_com5003_ref::checkCalculatedAdjValuesPerChannel()
     QCOMPARE(m_scpiClient->sendReceive(send), "+0");
 
     QString dumped = XmlHelperForTest::removeTimeDependentEntriesFromXml(m_scpiClient->sendReceive("CALC:ADJ1:PCB?"));
-    QVERIFY(XmlDocumentCompare::compareXmlFile(QString(":/adj-dump/dump-calc-adj-values-%1.xml").arg(m_refChannel), dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlSrc(QString("adj-dump/dump-calc-adj-values-%1.xml").arg(m_refChannel), dumped, TEST_SRC_DIR));
 }
 
 void test_adj_module_gain_dc_com5003_ref::checkCalculatedAdjValuesAccumulatedSequence()
@@ -204,7 +204,7 @@ void test_adj_module_gain_dc_com5003_ref::checkCalculatedAdjValuesAccumulatedSeq
     QCOMPARE(m_scpiClient->sendReceive(send), "+0");
 
     QString dumped = XmlHelperForTest::removeTimeDependentEntriesFromXml(m_scpiClient->sendReceive("CALC:ADJ1:PCB?"));
-    QVERIFY(XmlDocumentCompare::compareXmlFile(QString(":/adj-dump/dump-calc-adj-values-accumulated-%1.xml").arg(m_refChannel), dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlSrc(QString("adj-dump/dump-calc-adj-values-accumulated-%1.xml").arg(m_refChannel), dumped, TEST_SRC_DIR));
 }
 
 
