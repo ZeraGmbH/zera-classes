@@ -1,26 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>vein-event-dumps/dumpReadLockStateCorrectRpcNameScpi.json</file>
-        <file>vein-event-dumps/dumpReadLockStateNoParamOneEmobScpi.json</file>
-        <file>vein-event-dumps/dumpReadLockStateNoParamMutipleHotplugScpi.json</file>
-        <file>vein-event-dumps/dumpReadLockStateInvalidParamScpi.json</file>
-        <file>vein-event-dumps/dumpReadLockStateValidParamMutipleHotplugScpi.json</file>
-        <file>vein-event-dumps/dumpReadLockStateTwiceScpi.json</file>
-        <file>vein-event-dumps/dumpReadLockStateTwiceVein.json</file>
-        <file>vein-event-dumps/dumpReadLockStateTwiceVeinFullQueue.json</file>
-        <file>vein-event-dumps/dumpinvokeInvalidRpcNameScpi.json</file>
-        <file>scpi-dump.xml</file>
         <file>hotpluscontrols-min-session.json</file>
         <file>hotpluscontrols-status-session.json</file>
-        <file>vein-inf-moduleinterface-dump.json</file>
-        <file>vein-event-dumps/dumpActivateEmobPushButtonVein.json</file>
-        <file>vein-event-dumps/dumpActivateEmobPushButtonWithParamScpi.json</file>
-        <file>vein-event-dumps/dumpActivateEmobPushButtonNoParamScpi.json</file>
-        <file>vein-event-dumps/dumpReadPruefGroessenStateScpi.json</file>
-        <file>vein-event-dumps/dumpReadPruefGroessenStateScpiNoDevice.json</file>
-        <file>vein-event-dumps/dumpReadPruefGroessenStateVein.json</file>
-        <file>vein-event-dumps/dumpReadPruefGroessenStateVeinNoDevice.json</file>
-        <file>vein-event-dumps/dumpSetEmobSwitchToOnWithParamScpi.json</file>
-        <file>vein-event-dumps/dumpSetEmobSwitchToOffWithParamScpi.json</file>
     </qresource>
 </RCC>

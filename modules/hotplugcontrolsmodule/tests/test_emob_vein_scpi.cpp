@@ -67,7 +67,7 @@ void test_emob_vein_scpi::invokeInvalidRpcNameScpi()
     QCOMPARE(status, "+4");
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpinvokeInvalidRpcNameScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpinvokeInvalidRpcNameScpi.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::activateEmobPushButtonNoEmobNoParamScpi()
@@ -78,7 +78,7 @@ void test_emob_vein_scpi::activateEmobPushButtonNoEmobNoParamScpi()
     QCOMPARE(m_scpiClient->sendReceive("*stb?"), "+0"); // just one error
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpActivateEmobPushButtonNoParamScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpActivateEmobPushButtonNoParamScpi.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::activateEmobPushNoParamOneEmob()
@@ -96,7 +96,7 @@ void test_emob_vein_scpi::activateEmobPushButtonWithParamScpi()
     QCOMPARE(status, "+0");
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpActivateEmobPushButtonWithParamScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpActivateEmobPushButtonWithParamScpi.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::activateEmobPushNoParamMutipleHotplug()
@@ -142,7 +142,7 @@ void test_emob_vein_scpi::activateEmobPushButtonVein()
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpActivateEmobPushButtonVein.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpActivateEmobPushButtonVein.json", jsonDumped, TEST_SRC_DIR));
     QCOMPARE(spyRpcFinish.count(), 1);
 }
 
@@ -152,7 +152,7 @@ void test_emob_vein_scpi::readLockStateCorrectRpcNameScpi()
     QCOMPARE(status, QString::number(t_EMOB_Status_Verriegelung::EMOB_Status_Verriegelung_Fehler));
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateCorrectRpcNameScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadLockStateCorrectRpcNameScpi.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::readLockStateScpiNoParamOneEmob()
@@ -162,7 +162,7 @@ void test_emob_vein_scpi::readLockStateScpiNoParamOneEmob()
     QCOMPARE(status, QString::number(t_EMOB_Status_Verriegelung::EMOB_Status_Verriegelung_offen));
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateNoParamOneEmobScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadLockStateNoParamOneEmobScpi.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::readLockStateScpiNoParamMutipleHotplug()
@@ -172,7 +172,7 @@ void test_emob_vein_scpi::readLockStateScpiNoParamMutipleHotplug()
     QCOMPARE(status1, QString::number(t_EMOB_Status_Verriegelung::EMOB_Status_Verriegelung_Fehler));
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateNoParamMutipleHotplugScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadLockStateNoParamMutipleHotplugScpi.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::readLockStateScpiInvalidParam()
@@ -184,7 +184,7 @@ void test_emob_vein_scpi::readLockStateScpiInvalidParam()
     QCOMPARE(status, "+4");
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateInvalidParamScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadLockStateInvalidParamScpi.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::readLockStateScpiIncorrectParam()
@@ -201,7 +201,7 @@ void test_emob_vein_scpi::readLockStateScpiValidParamMutipleHotplug()
     QCOMPARE(status, QString::number(t_EMOB_Status_Verriegelung::EMOB_Status_Verriegelung_offen));
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateValidParamMutipleHotplugScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadLockStateValidParamMutipleHotplugScpi.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::readLockStateTwiceScpi()
@@ -213,7 +213,7 @@ void test_emob_vein_scpi::readLockStateTwiceScpi()
     QCOMPARE(status1, status2);
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateTwiceScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadLockStateTwiceScpi.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::readLockStateTwiceVein()
@@ -225,7 +225,7 @@ void test_emob_vein_scpi::readLockStateTwiceVein()
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateTwiceVein.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadLockStateTwiceVein.json", jsonDumped, TEST_SRC_DIR));
     QCOMPARE(spyRpcFinish.count(), 2);
 }
 
@@ -237,7 +237,7 @@ void test_emob_vein_scpi::readLockStateTwiceVeinFullQueue()
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadLockStateTwiceVeinFullQueue.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadLockStateTwiceVeinFullQueue.json", jsonDumped, TEST_SRC_DIR));
     QCOMPARE(spyRpcFinish.count(), 2);
 }
 
@@ -257,13 +257,13 @@ void test_emob_vein_scpi::dischargeOnOffNoParamOneEmob()
     QCOMPARE(status, "+0");
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpSetEmobSwitchToOnWithParamScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpSetEmobSwitchToOnWithParamScpi.json", jsonDumped, TEST_SRC_DIR));
 
     status = m_scpiClient->sendReceive("EMOB:HOTP1:OFFDISCHARGE;|*stb?");
     QCOMPARE(status, "+0");
 
     jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpSetEmobSwitchToOffWithParamScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpSetEmobSwitchToOffWithParamScpi.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::dischargeOnOffWithParamScpiOneEmob()
@@ -295,7 +295,7 @@ void test_emob_vein_scpi::readPruefGroessenStateVein()
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadPruefGroessenStateVein.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadPruefGroessenStateVein.json", jsonDumped, TEST_SRC_DIR));
     QCOMPARE(spyRpcFinish.count(), 2);
 }
 
@@ -307,7 +307,7 @@ void test_emob_vein_scpi::readPruefGroessenStateVeinNoDevice()
     TimeMachineObject::feedEventLoop();
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadPruefGroessenStateVeinNoDevice.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadPruefGroessenStateVeinNoDevice.json", jsonDumped, TEST_SRC_DIR));
     QCOMPARE(spyRpcFinish.count(), 2);
 }
 
@@ -320,7 +320,7 @@ void test_emob_vein_scpi::readPruefGroessenStateScpi()
     QCOMPARE(status2, QString::number(1<<en_Instrument_Pruefgroessenstatus::bp_Meas_Status_AC_High_Voltage_detected));
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadPruefGroessenStateScpi.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadPruefGroessenStateScpi.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::readPruefGroessenStateScpiNoDevice()
@@ -331,13 +331,13 @@ void test_emob_vein_scpi::readPruefGroessenStateScpiNoDevice()
     QCOMPARE(status2, QString::number(RPCReadPruefgroessenStatus::ErrorValueReturnedOnNak));
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpReadPruefGroessenStateScpiNoDevice.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpReadPruefGroessenStateScpiNoDevice.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::dumpDevIface()
 {
     QString dumped = m_scpiClient->sendReceive("dev:iface?", false);
-    QVERIFY(XmlDocumentCompare::compareXmlFile(":/scpi-dump.xml", dumped));
+    QVERIFY(XmlDocumentCompare::compareXmlSrc("scpi-dump.xml", dumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::dumpVeinInfModuleInterface()
@@ -346,7 +346,7 @@ void test_emob_vein_scpi::dumpVeinInfModuleInterface()
     VeinStorage::AbstractDatabase* storageDb = veinStorageDb;
     QByteArray jsonDumped = storageDb->getStoredValue(hotplugControlsEntityId, "INF_ModuleInterface").toByteArray();
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-inf-moduleinterface-dump.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-inf-moduleinterface-dump.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_emob_vein_scpi::invokeRpc(QString rpcName, QString paramName, QVariant paramValue)
