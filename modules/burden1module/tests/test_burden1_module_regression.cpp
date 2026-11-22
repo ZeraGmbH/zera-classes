@@ -30,7 +30,7 @@ void test_burden1_module_regression::veinDumpInitial()
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
 
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << dftBurdenCurrentId << dftBurdenVoltageId);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpInitial.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("dumpInitial.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_burden1_module_regression::resistanceCalculation()
