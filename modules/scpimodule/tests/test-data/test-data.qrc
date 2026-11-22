@@ -2,16 +2,7 @@
     <qresource prefix="/">
         <file>scpi-dumps/dumped-all-double-queries-in-one-transaction</file>
         <file>scpi-dumps/dumped-all-double-queries-in-one-transaction-sorted</file>
-        <file>scpi-dumps/dumped-all-queries-in-one-transaction</file>
-        <file>scpi-dumps/dumped-all-queries-in-one-transaction-sorted</file>
         <file>scpi-dumps/dumped-nested-queries</file>
-
-        <file>vein-event-dumps/dumpcmdInvalidOtherEntity.json</file>
-        <file>vein-event-dumps/dumpcmdInvalidSystemEntity.json</file>
-        <file>vein-event-dumps/dumpcmdOtherEntity.json</file>
-        <file>vein-event-dumps/dumpcmdSystemEntity.json</file>
-        <file>vein-event-dumps/dumpqueryOtherEntity.json</file>
-        <file>vein-event-dumps/dumpquerySystemEntity.json</file>
 
         <file>dev-iface-basic.xml</file>
         <file>dev-iface-three.xml</file>

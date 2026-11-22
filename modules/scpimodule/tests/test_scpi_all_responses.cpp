@@ -167,7 +167,7 @@ void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
 
     // Not sorted
     bool allOk = true;
-    if(!TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-queries-in-one-transaction", responses.join("\n")))
+    if(!TestLogHelpers::compareAndLogOnDiffSrc("scpi-dumps/dumped-all-queries-in-one-transaction", responses.join("\n"), TEST_SRC_DIR))
         allOk = false;
     QCOMPARE(responses.size(), queryCount);
     QCOMPARE(scpiQueriesUniques.count(), 0); // this is the silver bullet to find out transactions are not messed up!!!
@@ -175,7 +175,7 @@ void test_scpi_all_responses::checkDumpAllQueriesInOneTransaction()
         allOk = false;
 
     // Sorted
-    if(!TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-queries-in-one-transaction-sorted", responsesSorted.join("\n")))
+    if(!TestLogHelpers::compareAndLogOnDiffSrc("scpi-dumps/dumped-all-queries-in-one-transaction-sorted", responsesSorted.join("\n"), TEST_SRC_DIR))
         allOk = false;
     QCOMPARE(responsesSorted.size(), queryCount);
     QCOMPARE(scpiQueriesUniquesSorted.count(), 0);
@@ -241,7 +241,7 @@ void test_scpi_all_responses::checkDumpAllTimes2QueriesInOneTransaction()
 
     // Not sorted
     bool allOk = true;
-    if(!TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-double-queries-in-one-transaction", responses.join("\n")))
+    if(!TestLogHelpers::compareAndLogOnDiffSrc("scpi-dumps/dumped-all-double-queries-in-one-transaction", responses.join("\n"), TEST_SRC_DIR))
         allOk = false;
     QCOMPARE(responses.size(), queryCount);
     QCOMPARE(scpiQueriesUniques.count(), 0); // this is the silver bullet to find out transactions are not messed up!!!
@@ -249,7 +249,7 @@ void test_scpi_all_responses::checkDumpAllTimes2QueriesInOneTransaction()
         allOk = false;
 
     // Sorted
-    if (!TestLogHelpers::compareAndLogOnDiffFile(":/scpi-dumps/dumped-all-double-queries-in-one-transaction-sorted", responsesSorted.join("\n")))
+    if (!TestLogHelpers::compareAndLogOnDiffSrc("scpi-dumps/dumped-all-double-queries-in-one-transaction-sorted", responsesSorted.join("\n"), TEST_SRC_DIR))
         allOk = false;
     QCOMPARE(responsesSorted.size(), queryCount);
     QCOMPARE(scpiQueriesUniquesSorted.count(), 0);

@@ -5,6 +5,15 @@ add_definitions(-DOE_INSTALL_ROOT="${OE_INSTALL_ROOT}")
 add_definitions(-DHTML_DOCS_PATH_TEST="${CMAKE_CURRENT_BINARY_DIR}/")
 add_definitions(-DSNAPSHOT_JSONS_PATH_TEST="${CMAKE_CURRENT_BINARY_DIR}/")
 
+# Dumps dummy target to see them in IDE
+file(GLOB_RECURSE TESTFILES
+    test-data/*
+)
+# Unique target name!
+add_custom_target(modulemanager-test-data ALL
+    SOURCES ${TESTFILES}
+    )
+
 # Inspired by
 # https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
 function(SETUP_QTESTS_MODULEMANAGER)
@@ -28,6 +37,10 @@ function(SETUP_QTESTS_MODULEMANAGER)
             Zera::testlib-memallocs
             scpi-doc-lib
             scpimodule-testlib
+            )
+        target_compile_definitions(${_testname}
+            PRIVATE
+            TEST_SRC_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
             )
     endforeach()
 endfunction()

@@ -85,11 +85,12 @@ void test_modman_regression_all_sessions_scpi::testScpi_data()
 void test_modman_regression_all_sessions_scpi::testScpi()
 {
     QFETCH(QString, scpiCmd);
+    QFETCH(QString, sessionFile);
     if(scpiCmd == noTest)
         return;
+
     SCPIMODULE::cSCPIInterface *scpiInterface = m_scpiModule->getScpiInterface();
-    QVERIFY(scpiInterface != nullptr);
-    QVERIFY(!scpiInterface->hasAmbiguousShortNames());
+    QVERIFY(scpiInterface != nullptr&& !scpiInterface->hasAmbiguousShortNames());
 
     m_scpiclient->sendScpiCmds(scpiCmd);
     TimeMachineForTest::getInstance()->processTimers(valueWaitTime);
@@ -97,10 +98,9 @@ void test_modman_regression_all_sessions_scpi::testScpi()
     QCOMPARE(m_scpiResponses.count(), 1);
     QString dumped = m_scpiResponses[0];
 
-    QFETCH(QString, sessionFile);
     const QString expectedFilePath = genFilePath(sessionFile, scpiCmd);
     qInfo("File with expected: %s", qPrintable(expectedFilePath));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffFile(expectedFilePath, dumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffSrc(expectedFilePath, dumped, TEST_SRC_DIR));
 }
 
 QStringList test_modman_regression_all_sessions_scpi::getAvailableSessions()
@@ -139,5 +139,5 @@ QString test_modman_regression_all_sessions_scpi::genFilePath(QString sessionFil
     QString subPath = "other";
     if (scpiCmd == "MEASURE?")
         subPath = "measure";
-    return QString(":/scpiDumps/%1/%2").arg(subPath, expectedFileName);
+    return QString("scpiDumps/%1/%2").arg(subPath, expectedFileName);
 }

@@ -47,7 +47,7 @@ void test_scpi_compare_component_behavior::queryOtherEntity()
     QCOMPARE(response, "1");
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpqueryOtherEntity.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpqueryOtherEntity.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_scpi_compare_component_behavior::querySystemEntity()
@@ -58,7 +58,7 @@ void test_scpi_compare_component_behavior::querySystemEntity()
     QCOMPARE(response, "1");
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpquerySystemEntity.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpquerySystemEntity.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_scpi_compare_component_behavior::cmdOtherEntity()
@@ -68,7 +68,7 @@ void test_scpi_compare_component_behavior::cmdOtherEntity()
     client.sendReceive("CONFIGURATION:SAM1:PLLAUTO 1;");
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpcmdOtherEntity.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpcmdOtherEntity.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_scpi_compare_component_behavior::cmdSystemEntity()
@@ -78,7 +78,7 @@ void test_scpi_compare_component_behavior::cmdSystemEntity()
     client.sendReceive("CONFIGURATION:SYST:LOGSCPIFULL 1;");
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpcmdSystemEntity.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpcmdSystemEntity.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_scpi_compare_component_behavior::cmdInvalidOtherEntity()
@@ -88,7 +88,7 @@ void test_scpi_compare_component_behavior::cmdInvalidOtherEntity()
     client.sendReceive("CONFIGURATION:SAM1:PLLAUTO FOO;");
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpcmdInvalidOtherEntity.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpcmdInvalidOtherEntity.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_scpi_compare_component_behavior::cmdInvalidSystemEntity()
@@ -98,5 +98,5 @@ void test_scpi_compare_component_behavior::cmdInvalidSystemEntity()
     client.sendReceive("CONFIGURATION:SYST:LOGSCPIFULL FOO;");
 
     QByteArray jsonDumped = TestLogHelpers::dump(m_veinEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/vein-event-dumps/dumpcmdInvalidSystemEntity.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("vein-event-dumps/dumpcmdInvalidSystemEntity.json", jsonDumped, TEST_SRC_DIR));
 }
