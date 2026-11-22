@@ -462,7 +462,7 @@ void test_range_automatic::checkPersitency()
     QCOMPARE(getVfComponent(rangeEntityId, RangeGroupingComponent), 1);
     setVfComponent(rangeEntityId, RangeGroupingComponent, 0); // this causes config save
     QByteArray dumped = TestLogHelpers::loadFile(tmpConf);
-    if (!XmlDocumentCompare::compareXmlFile(":/configDumps/dumpGroupingSet.xml", dumped))
+    if (!XmlDocumentCompare::compareXmlSrc("configDumps/dumpGroupingSet.xml", dumped, TEST_SRC_DIR))
         allOK = false;
 
     fireNewActualValues(4, withIaux); // necessary to get reproducible results on range automatic on
@@ -471,7 +471,7 @@ void test_range_automatic::checkPersitency()
     setVfComponent(rangeEntityId, RangeAutomaticComponent, 1); // this causes config save
     processDecreaseDelay();
     dumped = TestLogHelpers::loadFile(tmpConf);
-    if (!XmlDocumentCompare::compareXmlFile(":/configDumps/dumpAutomaticSet.xml", dumped))
+    if (!XmlDocumentCompare::compareXmlSrc("configDumps/dumpAutomaticSet.xml", dumped, TEST_SRC_DIR))
         allOK = false;
 
     // Following is about range alias "--" / name "0A" insanity:
@@ -484,19 +484,19 @@ void test_range_automatic::checkPersitency()
     // We are interested in vein valid ranges PAR_Channel8Range -> "--"
     VeinStorage::AbstractDatabase *veinStorageDb = m_modmanSetupFacade->getStorageSystem()->getDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
-    if (!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitialClamp.json", jsonDumped))
+    if (!TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpInitialClamp.json", jsonDumped, TEST_SRC_DIR))
         allOK = false;
 
     // set valid / unset valid "--"
     setVfComponent(rangeEntityId, IAUXRangeComponent, "C50A");
     QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "C50A");
     dumped = TestLogHelpers::loadFile(tmpConf);
-    if (!XmlDocumentCompare::compareXmlFile(":/configDumps/dumpIAUXSet.xml", dumped))
+    if (!XmlDocumentCompare::compareXmlSrc("configDumps/dumpIAUXSet.xml", dumped, TEST_SRC_DIR))
         allOK = false;
     setVfComponent(rangeEntityId, IAUXRangeComponent, "--");
     QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "--");
     dumped = TestLogHelpers::loadFile(tmpConf);
-    if (!XmlDocumentCompare::compareXmlFile(":/configDumps/dumpIAUXUnset.xml", dumped))
+    if (!XmlDocumentCompare::compareXmlSrc("configDumps/dumpIAUXUnset.xml", dumped, TEST_SRC_DIR))
         allOK = false;
 
     // set valid / unset invalid "0A"
@@ -505,7 +505,7 @@ void test_range_automatic::checkPersitency()
     setVfComponent(rangeEntityId, IAUXRangeComponent, "0A");
     QCOMPARE(getCurrentRanges(), QStringList() << "8V" << "8V" << "8V" << "5A" << "5A" << "5A" << "8V" << "C50A");
     dumped = TestLogHelpers::loadFile(tmpConf);
-    if (!XmlDocumentCompare::compareXmlFile(":/configDumps/dumpIAUXSet.xml", dumped))
+    if (!XmlDocumentCompare::compareXmlSrc("configDumps/dumpIAUXSet.xml", dumped, TEST_SRC_DIR))
         allOK = false;
 
     QVERIFY(allOK);

@@ -6,24 +6,5 @@
         <file>session-minimal-on-tmp.json</file>
         <file>session-range-scpi.json</file>
         <file>session-range-test.json</file>
-        <file>configDumps/dumpAutomaticSet.xml</file>
-        <file>configDumps/dumpGroupingSet.xml</file>
-        <file>configDumps/dumpIAUXSet.xml</file>
-        <file>configDumps/dumpIAUXUnset.xml</file>
-        <file>dspSourceDumps/dumpAdjustManagement.json</file>
-        <file>dspSourceDumps/dumpMeasProgram.json</file>
-        <file>dspSourceDumps/dumpObsermatic.json</file>
-        <file>serviceDumps/changeOneVoltageAndOneCurrentRange.json</file>
-        <file>serviceDumps/gainCorrectionOrder0.json</file>
-        <file>serviceDumps/gainCorrectionOrder1.json</file>
-        <file>serviceDumps/gainCorrectionOrder2.json</file>
-        <file>serviceDumps/preScalingUOnOff.json</file>
-        <file>serviceDumps/preScalingUOnOffDsp.json</file>
-        <file>serviceDumps/preScalingUOnOffVein.json</file>
-        <file>serviceDumps/testRangeAdjTiming.json</file>
-        <file>veinDumps/dumpActual.json</file>
-        <file>veinDumps/dumpActual-preScaled2.json</file>
-        <file>veinDumps/dumpInitial.json</file>
-        <file>veinDumps/dumpInitialClamp.json</file>
     </qresource>
 </RCC>

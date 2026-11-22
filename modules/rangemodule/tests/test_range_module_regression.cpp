@@ -35,7 +35,7 @@ void test_range_module_regression::veinDumpInitial()
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitial.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpInitial.json", jsonDumped, TEST_SRC_DIR));
 }
 
 static constexpr int rangeChannelCount = 8;
@@ -62,15 +62,15 @@ void test_range_module_regression::checkActualValueCount()
     bool allOk = true;
     // dumping SCALEMEM:GAINCORRECTION2 does not seem reproducable yet
     QString obsermaticDumped = TestLogHelpers::dump(sampleDspInterfaceObser->dumpAll());
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpObsermatic.json", obsermaticDumped))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpObsermatic.json", obsermaticDumped, TEST_SRC_DIR))
         allOk = false;
 
     QString adjustListDumped = TestLogHelpers::dump(sampleDspInterfaceAdj->dumpAll(true));
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpAdjustManagement.json", adjustListDumped))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpAdjustManagement.json", adjustListDumped, TEST_SRC_DIR))
         allOk = false;
 
     QString measProgramDumped = TestLogHelpers::dump(sampleDspInterfaceProg->dumpAll(true));
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgram.json", measProgramDumped, TEST_SRC_DIR))
         allOk = false;
 
 
@@ -86,7 +86,7 @@ void test_range_module_regression::checkActualValueCount()
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
 
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpActual.json", jsonDumped))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpActual.json", jsonDumped, TEST_SRC_DIR))
         allOk = false;
 
 
@@ -108,7 +108,7 @@ void test_range_module_regression::checkActualValueCount()
 
     jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rangeEntityId);
 
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpActual-preScaled2.json", jsonDumped))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpActual-preScaled2.json", jsonDumped, TEST_SRC_DIR))
         allOk = false;
     QVERIFY(allOk);
 }

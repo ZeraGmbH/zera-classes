@@ -64,7 +64,7 @@ void test_range_scaling_factors::changeOneVoltageAndOneCurrentRange()
     m_testRunner->setVfComponent(rangeEntityId, UL1RangeComponent, "8V");
     m_testRunner->setVfComponent(rangeEntityId, IL1RangeComponent, "1.0A");
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/changeOneVoltageAndOneCurrentRange.json", sniffer.dump()));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("serviceDumps/changeOneVoltageAndOneCurrentRange.json", sniffer.dump(), TEST_SRC_DIR));
 }
 
 void test_range_scaling_factors::preScalingUOnOff()
@@ -114,11 +114,11 @@ void test_range_scaling_factors::preScalingUOnOff()
     QCOMPARE(gainUScaledOn, gainUexpected);
 
     bool allOk = true;
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/preScalingUOnOff.json", snifferAll.dump()))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("serviceDumps/preScalingUOnOff.json", snifferAll.dump(), TEST_SRC_DIR))
         allOk = false;
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/preScalingUOnOffDsp.json", snifferDsp.dump()))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("serviceDumps/preScalingUOnOffDsp.json", snifferDsp.dump(), TEST_SRC_DIR))
         allOk = false;
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/preScalingUOnOffVein.json", snifferVein.dump()))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("serviceDumps/preScalingUOnOffVein.json", snifferVein.dump(), TEST_SRC_DIR))
         allOk = false;
     QVERIFY(allOk);
 }

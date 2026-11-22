@@ -57,7 +57,7 @@ void test_range_adjustment_correction::testRangeAdjTiming()
         fireActualValues(m_sampleDspInterfaceProg, 100, 5, 50);
         TimeMachineObject::feedEventLoop();
     }
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/testRangeAdjTiming.json", sniffer.dump())); // -> correction values @ 500ms & 1000ms
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("serviceDumps/testRangeAdjTiming.json", sniffer.dump(), TEST_SRC_DIR)); // -> correction values @ 500ms & 1000ms
 }
 
 void test_range_adjustment_correction::gainCorrectionOrder0()
@@ -84,7 +84,7 @@ void test_range_adjustment_correction::gainCorrectionOrder0()
     // Not adjusted channel keeps the default correction (c0 = 1):
     QCOMPARE(TestRangeHelpers::testPolynom(100.0, 1.0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder0.json", sniffer.dump()));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("serviceDumps/gainCorrectionOrder0.json", sniffer.dump(), TEST_SRC_DIR));
 }
 
 void test_range_adjustment_correction::gainCorrectionOrder1()
@@ -109,7 +109,7 @@ void test_range_adjustment_correction::gainCorrectionOrder1()
     QCOMPARE(TestRangeHelpers::testPolynom(100.0, 1.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl1));
     QCOMPARE(TestRangeHelpers::testPolynom(5.0, 1.0, coeff1), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder1.json", sniffer.dump()));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("serviceDumps/gainCorrectionOrder1.json", sniffer.dump(), TEST_SRC_DIR));
 }
 
 void test_range_adjustment_correction::gainCorrectionOrder2()
@@ -134,7 +134,7 @@ void test_range_adjustment_correction::gainCorrectionOrder2()
     QCOMPARE(TestRangeHelpers::testPolynom(5.0, 1.0, 0.0, coeff2), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelIl2));
     QCOMPARE(TestRangeHelpers::testPolynom(100.0, 1.0), TestRangeHelpers::findDspWriteValue(spyDspVarWrite, "GAINCORRECTION", DspChannelUl2));
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/serviceDumps/gainCorrectionOrder2.json", sniffer.dump()));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("serviceDumps/gainCorrectionOrder2.json", sniffer.dump(), TEST_SRC_DIR));
 }
 
 void test_range_adjustment_correction::phaseCorrectionOrder0()
