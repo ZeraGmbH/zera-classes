@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>dumpInitial.json</file>
         <file>def-session-minimal.json</file>
         <file>def-session-maximal.json</file>
         <file>dc-session.json</file>
