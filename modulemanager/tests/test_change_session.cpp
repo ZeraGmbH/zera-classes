@@ -87,7 +87,7 @@ void test_change_session::changeSessionCom5003SCPICmd()
     VeinStorage::AbstractDatabase *storageDb = modMan.getVeinStorageDb();
     QByteArray veinDumpBefore = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>(), QList<int>(), true);
     bool allOk = true;
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/com5003-meas-session-no-values.json", veinDumpBefore))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/com5003-meas-session-no-values.json", veinDumpBefore, TEST_SRC_DIR))
         allOk = false;
 
     ScpiModuleNetClientBlocked client;
@@ -95,7 +95,7 @@ void test_change_session::changeSessionCom5003SCPICmd()
     modMan.waitUntilModulesAreReady();
 
     QByteArray veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>(), QList<int>(), true);
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/com5003-perphase-session-no-values.json", veinDumpAfter))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/com5003-perphase-session-no-values.json", veinDumpAfter, TEST_SRC_DIR))
         allOk = false;
     QVERIFY(allOk);
     QCOMPARE(modMan.getVeinStorageDb()->getStoredValue(systemEntityId, "Session").toString(), QString("com5003-perphase-session.json"));
@@ -109,7 +109,7 @@ void test_change_session::changeSessionCom5003SCPICmdRefSession()
     VeinStorage::AbstractDatabase *storageDb = modMan.getVeinStorageDb();
     QByteArray veinDumpBefore = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>(), QList<int>(), true);
     bool allOk = true;
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/com5003-meas-session-no-values.json", veinDumpBefore))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/com5003-meas-session-no-values.json", veinDumpBefore, TEST_SRC_DIR))
         allOk = false;
 
     // reference session is special due to change of channel names
@@ -118,7 +118,7 @@ void test_change_session::changeSessionCom5003SCPICmdRefSession()
     modMan.waitUntilModulesAreReady();
 
     QByteArray veinDumpAfter = VeinStorage::DumpJson::dumpToByteArray(storageDb, QList<int>(), QList<int>(), true);
-    if(!TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/com5003-ref-session-no-values.json", veinDumpAfter))
+    if(!TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/com5003-ref-session-no-values.json", veinDumpAfter, TEST_SRC_DIR))
         allOk = false;
     QVERIFY(allOk);
     QCOMPARE(modMan.getVeinStorageDb()->getStoredValue(systemEntityId, "Session").toString(), QString("com5003-ref-session.json"));

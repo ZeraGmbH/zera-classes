@@ -49,7 +49,7 @@ void test_modman_regression_all_sessions::allSessionsVeinDumps()
 {
     QFETCH(QString, sessionFileName);
     QByteArray jsonDumped = m_veinDumps.value(sessionFileName);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(QString(":/veinDumps/%1").arg(sessionFileName), jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc(QString("veinDumps/%1").arg(sessionFileName), jsonDumped, TEST_SRC_DIR));
 }
 
 void test_modman_regression_all_sessions::allSessionsDspMemDumps_data()
@@ -64,7 +64,7 @@ void test_modman_regression_all_sessions::allSessionsDspMemDumps()
 {
     QFETCH(QString, sessionFileName);
     QByteArray jsonDumped = m_dspMemDumps.value(sessionFileName);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(QString(":/dspMemDumps/%1").arg(sessionFileName), jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc(QString("dspMemDumps/%1").arg(sessionFileName), jsonDumped, TEST_SRC_DIR));
 }
 
 void test_modman_regression_all_sessions::allSessionsDspVarDumps_data()
@@ -79,7 +79,7 @@ void test_modman_regression_all_sessions::allSessionsDspVarDumps()
 {
     QFETCH(QString, sessionFileName);
     QByteArray jsonDumped = m_dspVarDumps.value(sessionFileName);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(QString(":/dspSourceDumps/%1").arg(sessionFileName), jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc(QString("dspSourceDumps/%1").arg(sessionFileName), jsonDumped, TEST_SRC_DIR));
 }
 
 void test_modman_regression_all_sessions::allSessionsSecUnitDumps_data()
@@ -94,7 +94,7 @@ void test_modman_regression_all_sessions::allSessionsSecUnitDumps()
 {
     QFETCH(QString, sessionFileName);
     QByteArray jsonDumped = m_secUnitDumps.value(sessionFileName);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(QString(":/secUnitDumps/%1").arg(sessionFileName), jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc(QString("secUnitDumps/%1").arg(sessionFileName), jsonDumped, TEST_SRC_DIR));
 }
 
 void test_modman_regression_all_sessions::uniqueEntityNameEntityIdPairsCom5003()

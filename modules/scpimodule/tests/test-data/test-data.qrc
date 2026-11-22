@@ -1,12 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>scpi-dumps/dumped-all-double-queries-in-one-transaction</file>
-        <file>scpi-dumps/dumped-all-double-queries-in-one-transaction-sorted</file>
-        <file>scpi-dumps/dumped-nested-queries</file>
-
-        <file>dev-iface-basic.xml</file>
-        <file>dev-iface-three.xml</file>
-        <file>dev-iface-two-osci.xml</file>
         <file>mt310s2-meas-session.json</file>
         <file>range-min-session.json</file>
         <file>session-scpi-and-range.json</file>
