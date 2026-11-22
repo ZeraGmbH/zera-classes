@@ -16,7 +16,7 @@ void test_osci_module_regression::dumpDspSetup()
     TestDspInterfacePtr osciDspInterface = testRunner.findDspInterfaceByEntityId(osciEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(osciDspInterface->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgram.json", measProgramDumped, TEST_SRC_DIR));
 }
 
 void test_osci_module_regression::dumpDspSetReference()
@@ -31,7 +31,7 @@ void test_osci_module_regression::dumpDspSetReference()
 
     TestDspInterfacePtr osciDspInterface = testRunner.findDspInterfaceByEntityId(osciEntityId);
     QString measProgramDumped = TestLogHelpers::dump(osciDspInterface->dumpAll(true));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dump-ref-UL1-to-other.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dump-ref-UL1-to-other.json", measProgramDumped, TEST_SRC_DIR));
 }
 
 void test_osci_module_regression::setReferenceChannel(ModuleManagerTestRunner &modman, const QString &channelAlias)

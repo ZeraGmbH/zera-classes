@@ -1,7 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>dspSourceDumps/dumpMeasProgram.json</file>
-        <file>dspSourceDumps/dump-ref-UL1-to-other.json</file>
         <file>session-minimal.json</file>
     </qresource>
 </RCC>
