@@ -19,7 +19,7 @@ void test_sourceswitchjsonangleadjustmentdecorator::initialLoadpoint()
                                                        createVeinDftValuesEmpty(3),
                                                        std::make_shared<VeinStorage::StorageComponent>(QVariant()));
     QByteArray dumped = TestLogHelpers::dump(decorator.getCurrLoadpoint().getParams());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/loadDumps/initialLoad.json", dumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("loadDumps/initialLoad.json", dumped, TEST_SRC_DIR));
 }
 
 void test_sourceswitchjsonangleadjustmentdecorator::switchOn()
@@ -102,7 +102,7 @@ void test_sourceswitchjsonangleadjustmentdecorator::switchOnError()
     QCOMPARE(spy[0][1], switchOnId);
 
     QByteArray dumpedCurrent = TestLogHelpers::dump(decorator.getCurrLoadpoint().getParams());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/loadDumps/initialLoad.json", dumpedCurrent));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("loadDumps/initialLoad.json", dumpedCurrent, TEST_SRC_DIR));
 }
 
 QList<VeinStorage::AbstractComponentPtr> test_sourceswitchjsonangleadjustmentdecorator::createVeinDftValuesEmpty(int phaseCount)

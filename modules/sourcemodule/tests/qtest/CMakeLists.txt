@@ -1,3 +1,12 @@
+# Dumps dummy target to see them in IDE
+file(GLOB_RECURSE TESTFILES
+    test-data/*
+)
+# Unique target name!
+add_custom_target(sourcemodule-test-data ALL
+    SOURCES ${TESTFILES}
+    )
+
 function(SETUP_QTESTS_MODULE)
     SETUP_QTESTS(${ARGN})
     foreach(_testname ${ARGN})
@@ -9,6 +18,10 @@ function(SETUP_QTESTS_MODULE)
             sourcemodule-lib
             sourcemodule-testlib
             zera-modulemanager-testlib
+        )
+        target_compile_definitions(${_testname}
+            PRIVATE
+            TEST_SRC_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
         )
     endforeach()
 endfunction()

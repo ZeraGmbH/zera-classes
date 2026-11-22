@@ -58,7 +58,7 @@ void test_source_full::vein_dump_mt310s2()
     VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
 
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << sourceEntityId);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitialMt310s2.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpInitialMt310s2.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_source_full::vein_dump_mt581s2()
@@ -67,7 +67,7 @@ void test_source_full::vein_dump_mt581s2()
     VeinStorage::AbstractDatabase *veinStorageDb = m_testRunner->getVeinStorageDb();
 
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << sourceEntityId);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitialMt581s2.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpInitialMt581s2.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_source_full::switch_on_mt310s2()
@@ -91,7 +91,7 @@ void test_source_full::switch_on_mt310s2()
     TimeMachineForTest::getInstance()->processTimers(5000);
 
     QByteArray jsonDumped = TestLogHelpers::dump(jsonEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinEventDumps/dumpSwitchOnMt310s2.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("veinEventDumps/dumpSwitchOnMt310s2.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_source_full::switch_on_mt581s2()
@@ -113,7 +113,7 @@ void test_source_full::switch_on_mt581s2()
     TimeMachineForTest::getInstance()->processTimers(5000);
 
     QByteArray jsonDumped = TestLogHelpers::dump(jsonEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinEventDumps/dumpSwitchOnMt581s2.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("veinEventDumps/dumpSwitchOnMt581s2.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_source_full::switch_off_mt581s2()
@@ -135,7 +135,7 @@ void test_source_full::switch_off_mt581s2()
     TimeMachineForTest::getInstance()->processTimers(5000);
 
     QByteArray jsonDumped = TestLogHelpers::dump(jsonEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinEventDumps/dumpSwitchOffMt581s2.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("veinEventDumps/dumpSwitchOffMt581s2.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_source_full::switch_on_off_mt581s2()
@@ -167,7 +167,7 @@ void test_source_full::switch_on_off_mt581s2()
     TimeMachineForTest::getInstance()->processTimers(5000);
 
     QByteArray jsonDumped = TestLogHelpers::dump(jsonEventDump);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinEventDumps/dumpSwitchOffAfterOnMt581s2.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("veinEventDumps/dumpSwitchOffAfterOnMt581s2.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_source_full::setupServerAndClient(const QString &session, const QString &dut)
