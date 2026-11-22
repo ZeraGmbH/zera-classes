@@ -27,7 +27,7 @@ void test_rms_module_regression::veinDumpInitial()
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rmsEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpInitial.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("dumpInitial.json", jsonDumped, TEST_SRC_DIR));
 }
 
 static constexpr int voltagePhaseNeutralCount = 4;
@@ -59,7 +59,7 @@ void test_rms_module_regression::injectActualValues()
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rmsEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpActual.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("dumpActual.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_rms_module_regression::injectActualTwice()
@@ -97,7 +97,7 @@ void test_rms_module_regression::injectSymmetricValues()
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray jsonDumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << rmsEntityId);
 
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dumpSymmetric.json", jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("dumpSymmetric.json", jsonDumped, TEST_SRC_DIR));
 }
 
 void test_rms_module_regression::dumpDspSetup()
@@ -106,5 +106,5 @@ void test_rms_module_regression::dumpDspSetup()
     TestDspInterfacePtr rmsDspInterface = testRunner.findDspInterfaceByEntityId(rmsEntityId);
 
     QString measProgramDumped = TestLogHelpers::dump(rmsDspInterface->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpMeasProgram.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpMeasProgram.json", measProgramDumped, TEST_SRC_DIR));
 }
