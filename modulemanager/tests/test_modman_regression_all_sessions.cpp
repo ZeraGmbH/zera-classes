@@ -143,7 +143,7 @@ void test_modman_regression_all_sessions::testGenerateScpiDocs()
 
 void test_modman_regression_all_sessions::testGenerateSnapshots_data()
 {
-    const QStringList expectedSnapshotsList = QDir(":/snapshots/").entryList(QStringList({"*.json"}));
+    const QStringList expectedSnapshotsList = QDir(TEST_SRC_DIR "/test-data/snapshots/").entryList(QStringList({"*.json"}));
     QTest::addColumn<QString>("snapshotName");
     for (const QString &snapshot: expectedSnapshotsList)
         QTest::newRow(snapshot.toLatin1()) << snapshot;
@@ -151,13 +151,13 @@ void test_modman_regression_all_sessions::testGenerateSnapshots_data()
 
 void test_modman_regression_all_sessions::testGenerateSnapshots()
 {
-    QStringList dumpedSnapshotsList = QDir(m_snapshotJsonsPath).entryList(QStringList({"*.json"}));
-    QStringList expectedSnapshotsList = QDir(":/snapshots/").entryList(QStringList({"*.json"}));
+    const QStringList dumpedSnapshotsList = QDir(m_snapshotJsonsPath).entryList(QStringList({"*.json"}));
+    const QStringList expectedSnapshotsList = QDir(TEST_SRC_DIR "/test-data/snapshots/").entryList(QStringList({"*.json"}));
     QCOMPARE(expectedSnapshotsList.count()+SessionExportGenerator::getBigSessionFileCount(), dumpedSnapshotsList.count());
 
     QFETCH(QString, snapshotName);
     QByteArray jsonDumped = TestLogHelpers::loadFile(QString(m_snapshotJsonsPath + "%1").arg(snapshotName));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(QString(":/snapshots/%1").arg(snapshotName), jsonDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc(QString("snapshots/%1").arg(snapshotName), jsonDumped, TEST_SRC_DIR));
 }
 
 void test_modman_regression_all_sessions::checkObjectsProperlyDeleted()
