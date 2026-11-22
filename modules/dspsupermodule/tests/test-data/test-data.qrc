@@ -2,12 +2,6 @@
     <qresource prefix="/">
         <file>configs/dspsupermodule-10-total.xml</file>
 
-        <file>dspSourceDumps/dumpInitial.json</file>
-
-        <file>zdspDumps/dumpInitial.json</file>
-
-        <file>veinDumps/dumpInitial.json</file>
-
         <file>sessions/minimal.json</file>
         <file>sessions/minimal-10-total.json</file>
         <file>sessions/two-time-integration.json</file>

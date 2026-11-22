@@ -46,7 +46,7 @@ void test_dspsuper_module::dspDumpInitial()
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
     TestDspInterfacePtr dspInterface = testRunner.findDspInterfaceByEntityId(dspSuperEntityId);
     QString measProgramDumped = TestLogHelpers::dump(dspInterface->dumpAll());
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/dspSourceDumps/dumpInitial.json", measProgramDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("dspSourceDumps/dumpInitial.json", measProgramDumped, TEST_SRC_DIR));
 }
 
 void test_dspsuper_module::zdspDumpInitial()
@@ -54,7 +54,7 @@ void test_dspsuper_module::zdspDumpInitial()
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
     ZDspServer* server = testRunner.getDspServer();
     QString dumped = TestLogHelpers::dump(ZDspDumpFunctions::getFullDump(server));
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/zdspDumps/dumpInitial.json", dumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("zdspDumps/dumpInitial.json", dumped, TEST_SRC_DIR));
 }
 
 void test_dspsuper_module::veinDumpInitial()
@@ -62,7 +62,7 @@ void test_dspsuper_module::veinDumpInitial()
     ModuleManagerTestRunner testRunner(":/sessions/minimal.json");
     VeinStorage::AbstractDatabase *veinStorageDb = testRunner.getVeinStorageDb();
     QByteArray dumped = VeinStorage::DumpJson::dumpToByteArray(veinStorageDb, QList<int>() << dspSuperEntityId);
-    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonFile(":/veinDumps/dumpInitial.json", dumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffJsonSrc("veinDumps/dumpInitial.json", dumped, TEST_SRC_DIR));
 }
 
 void test_dspsuper_module::supervisorMapInitial()
