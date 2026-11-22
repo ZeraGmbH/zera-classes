@@ -60,9 +60,7 @@ void test_snapshot_recorder::takeSnapshotNoValuesCsvEmpty()
     QJsonObject recorderObj = jsonObj[QString::number(recorderEntityId)].toObject();
 
     QString csvDumped = recorderObj["ACT_CSV_EXPORT"].toString();
-    QString csvExpected = TestLogHelpers::loadFile(":/fireValuesNone.csv");
-
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(csvExpected, csvDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffSrc("fireValuesNone.csv", csvDumped, TEST_SRC_DIR));
 }
 
 void test_snapshot_recorder::takeSnapshotOneValueCsv()
@@ -95,9 +93,7 @@ void test_snapshot_recorder::takeSnapshotOneValueCsv()
     QJsonObject recorderObj = jsonObj[QString::number(recorderEntityId)].toObject();
 
     QString csvDumped = recorderObj["ACT_CSV_EXPORT"].toString();
-    QString csvExpected = TestLogHelpers::loadFile(":/fireValuesOnce.csv");
-
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(csvExpected, csvDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffSrc("fireValuesOnce.csv", csvDumped, TEST_SRC_DIR));
 }
 
 void test_snapshot_recorder::takeSnapshotMaximumValuesCsvFull()
@@ -135,9 +131,9 @@ void test_snapshot_recorder::takeSnapshotMaximumValuesCsvFull()
     QJsonObject recorderObj = jsonObj[QString::number(recorderEntityId)].toObject();
 
     QString csvDumped = recorderObj["ACT_CSV_EXPORT"].toString();
-    QString csvExpected = TestLogHelpers::loadFile(":/fireMaxValues.csv");
-    QVERIFY(TestLogHelpers::compareAndLogOnDiff(csvExpected, csvDumped));
+    QVERIFY(TestLogHelpers::compareAndLogOnDiffSrc("fireMaxValues.csv", csvDumped, TEST_SRC_DIR));
 
+    QString csvExpected = TestLogHelpers::loadFile(TEST_SRC_DIR "/test-data/fireMaxValues.csv");
     QStringList lines = csvExpected.split('\n', Qt::SkipEmptyParts);
     QCOMPARE(lines.size(), actualValueCount+1);
 }
