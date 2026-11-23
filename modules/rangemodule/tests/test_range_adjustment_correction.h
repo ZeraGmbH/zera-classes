@@ -12,6 +12,7 @@ class test_range_adjustment_correction : public QObject
 private slots:
     void initTestCase();
     void init();
+    void cleanup();
 
     void testRangeAdjTiming();
 
@@ -23,6 +24,8 @@ private slots:
     void phaseCorrectionOrder2();
     void offsetCorrectionOrder0();
     void offsetCorrectionOrder1();
+
+    void changeRanges();
 
 private:
     void fireActualValues(const TestDspInterfacePtr &dspInterfaceProg, double uRms, double iRms, double frequency);

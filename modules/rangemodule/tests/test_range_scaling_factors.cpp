@@ -74,10 +74,10 @@ void test_range_scaling_factors::preScalingUOnOff()
     TestSniffer snifferDsp;
     snifferDsp.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
     TestSniffer snifferVein;
-    snifferVein.sniffVeinValueChanges(m_testRunner->getVeinStorageDb(), QList<int>() << rangeEntityId);
+    snifferVein.sniffVeinChangeValues(m_testRunner->getVeinStorageDb(), QList<int>() << rangeEntityId);
     TestSniffer snifferAll;
     snifferAll.sniffDspVarWrites(m_testRunner->findAllDspInterfaceByEntityId(rangeEntityId), channelCountInpected);
-    snifferAll.sniffVeinValueChanges(m_testRunner->getVeinStorageDb(), QList<int>() << rangeEntityId);
+    snifferAll.sniffVeinChangeValues(m_testRunner->getVeinStorageDb(), QList<int>() << rangeEntityId);
 
     constexpr double unscaledU = 10.0;
     constexpr double unscaledI = 1.0;

@@ -23,8 +23,8 @@ public:
     void sniffScpiIoServer(ScpiConnection* server, ScpiRecordype type);
 
     // Vein
-    void sniffVeinValueSets(VeinStorage::AbstractDatabase* veinStorage, const QList<int> &entities);
-    void sniffVeinValueChanges(VeinStorage::AbstractDatabase* veinStorage, const QList<int> &entities);
+    void sniffVeinSetValues(VeinStorage::AbstractDatabase* veinStorage, const QList<int> &entities);
+    void sniffVeinChangeValues(VeinStorage::AbstractDatabase* veinStorage, const QList<int> &entities);
 
     // Comment
     void addComment(const QString &comment);

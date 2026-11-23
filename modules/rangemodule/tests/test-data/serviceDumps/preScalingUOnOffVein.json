@@ -1,357 +1,357 @@
 {
     "signals": [
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "SIG_Ranging",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "SIG_Ranging",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "SIG_Measuring",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel1Peak",
             "veinEntityId": 1020,
             "veinValue": 14.142135620117188
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel2Peak",
             "veinEntityId": 1020,
             "veinValue": 14.142135620117188
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel3Peak",
             "veinEntityId": 1020,
             "veinValue": 14.142135620117188
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel4Peak",
             "veinEntityId": 1020,
             "veinValue": 1.4142135381698608
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel5Peak",
             "veinEntityId": 1020,
             "veinValue": 1.4142135381698608
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel6Peak",
             "veinEntityId": 1020,
             "veinValue": 1.4142135381698608
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel7Peak",
             "veinEntityId": 1020,
             "veinValue": 14.142135620117188
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel8Peak",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Frequency",
             "veinEntityId": 1020,
             "veinValue": 50
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel1Rms",
             "veinEntityId": 1020,
             "veinValue": 10
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel2Rms",
             "veinEntityId": 1020,
             "veinValue": 10
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel3Rms",
             "veinEntityId": 1020,
             "veinValue": 10
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel4Rms",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel5Rms",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel6Rms",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel7Rms",
             "veinEntityId": 1020,
             "veinValue": 10
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel8Rms",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "SIG_Measuring",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "PAR_PreScalingGroup0",
             "veinEntityId": 1020,
             "veinValue": "2/1*(1)"
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "SIG_Ranging",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "SIG_Ranging",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "PAR_PreScalingEnabledGroup0",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "INF_PreScalingInfoGroup0",
             "veinEntityId": 1020,
             "veinValue": 0.5
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "SIG_Ranging",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "SIG_Ranging",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "SIG_Measuring",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "ACT_Channel1Peak",
             "veinEntityId": 1020,
             "veinValue": 28.284271240234375
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "ACT_Channel2Peak",
             "veinEntityId": 1020,
             "veinValue": 28.284271240234375
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "ACT_Channel3Peak",
             "veinEntityId": 1020,
             "veinValue": 28.284271240234375
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "ACT_Channel7Peak",
             "veinEntityId": 1020,
             "veinValue": 28.284271240234375
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "ACT_Channel7Rms",
             "veinEntityId": 1020,
             "veinValue": 20
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1002,
             "veinComponentName": "SIG_Measuring",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1503,
             "veinComponentName": "PAR_PreScalingEnabledGroup0",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1503,
             "veinComponentName": "INF_PreScalingInfoGroup0",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1503,
             "veinComponentName": "SIG_Ranging",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1503,
             "veinComponentName": "SIG_Ranging",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1503,
             "veinComponentName": "SIG_Measuring",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1503,
             "veinComponentName": "ACT_Channel1Peak",
             "veinEntityId": 1020,
             "veinValue": 14.142135620117188
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1503,
             "veinComponentName": "ACT_Channel2Peak",
             "veinEntityId": 1020,
             "veinValue": 14.142135620117188
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1503,
             "veinComponentName": "ACT_Channel3Peak",
             "veinEntityId": 1020,
             "veinValue": 14.142135620117188
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1503,
             "veinComponentName": "ACT_Channel7Peak",
             "veinEntityId": 1020,
             "veinValue": 14.142135620117188
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1503,
             "veinComponentName": "ACT_Channel7Rms",
             "veinEntityId": 1020,
             "veinValue": 10
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 1503,
             "veinComponentName": "SIG_Measuring",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 2004,
             "veinComponentName": "PAR_PreScalingGroup0",
             "veinEntityId": 1020,
             "veinValue": "42/1*(1)"
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 2004,
             "veinComponentName": "SIG_Ranging",
             "veinEntityId": 1020,
             "veinValue": 1
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 2004,
             "veinComponentName": "SIG_Ranging",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 2004,
             "veinComponentName": "SIG_Measuring",
             "veinEntityId": 1020,
             "veinValue": 0
         },
         {
-            "is": "VeinChange",
+            "Am a": "VeinChange",
             "timeMs": 2004,
             "veinComponentName": "SIG_Measuring",
             "veinEntityId": 1020,

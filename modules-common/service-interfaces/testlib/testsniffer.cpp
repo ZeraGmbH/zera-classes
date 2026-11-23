@@ -26,7 +26,7 @@ void TestSniffer::sniffScpiIoServer(ScpiConnection *server, ScpiRecordype type)
     });
 }
 
-void TestSniffer::sniffVeinValueSets(VeinStorage::AbstractDatabase *veinStorage, const QList<int> &entities)
+void TestSniffer::sniffVeinSetValues(VeinStorage::AbstractDatabase *veinStorage, const QList<int> &entities)
 {
     for (int entityId : entities) {
         const QStringList componentNames = veinStorage->getComponentList(entityId);
@@ -39,7 +39,7 @@ void TestSniffer::sniffVeinValueSets(VeinStorage::AbstractDatabase *veinStorage,
     }
 }
 
-void TestSniffer::sniffVeinValueChanges(VeinStorage::AbstractDatabase *veinStorage, const QList<int> &entities)
+void TestSniffer::sniffVeinChangeValues(VeinStorage::AbstractDatabase *veinStorage, const QList<int> &entities)
 {
     for (int entityId : entities) {
         const QStringList componentNames = veinStorage->getComponentList(entityId);
@@ -55,7 +55,7 @@ void TestSniffer::sniffVeinValueChanges(VeinStorage::AbstractDatabase *veinStora
 void TestSniffer::addComment(const QString &comment)
 {
     QJsonObject jsonComment;
-    jsonComment["is"] = "Comment";
+    jsonComment["Am a"] = "Comment";
     jsonComment["theComment"] = "--- " + comment + " ---";
     jsonComment["timeMs"] = TimeMachineForTest::getInstance()->getCurrentTimeMs();
 
@@ -72,7 +72,7 @@ QByteArray TestSniffer::dump() const
 void TestSniffer::onDspVariableWrite(const TestDspVarWriteData &dspVar, int limitVarSize)
 {
     QJsonObject jsonDspVar;
-    jsonDspVar["is"] = "DspVarWrite";
+    jsonDspVar["Am a"] = "DspVarWrite";
     jsonDspVar["varName"] = dspVar.varName;
     jsonDspVar["timeMs"] = TimeMachineForTest::getInstance()->getCurrentTimeMs();
     jsonDspVar["transActionNo"] = dspVar.transactionCount;
@@ -101,7 +101,7 @@ void TestSniffer::onScpiCmdExecutionDone(const QString &scpi, const QString &res
         doLog = true;
 
     if (doLog) {
-        jsonScpiVar["is"] = "ScpiServiceIo";
+        jsonScpiVar["Am a"] = "ScpiServiceIo";
         jsonScpiVar["scpiCmd"] = scpi;
         jsonScpiVar["scpiResponse"] = response;
         jsonScpiVar["timeMs"] = TimeMachineForTest::getInstance()->getCurrentTimeMs();
@@ -112,7 +112,7 @@ void TestSniffer::onScpiCmdExecutionDone(const QString &scpi, const QString &res
 void TestSniffer::onVeinValueSet(int entityId, const QString &componentName, const QVariant &setValue, const QString &accessLabel)
 {
     QJsonObject jsonVeinSet;
-    jsonVeinSet["is"] = accessLabel;
+    jsonVeinSet["Am a"] = accessLabel;
     jsonVeinSet["veinEntityId"] = entityId;
     jsonVeinSet["veinComponentName"] = componentName;
     jsonVeinSet["veinValue"] = VeinStorage::DumpJson::convertToJsonValue(setValue);

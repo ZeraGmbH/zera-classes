@@ -1,0 +1,197 @@
+{
+    "signals": [
+        {
+            "Am a": "ScpiServiceIo",
+            "scpiCmd": "SENS:m0:250V:CORR:OFFSET:COEFFICIENT:0 0.05;",
+            "scpiResponse": "ack",
+            "timeMs": 0
+        },
+        {
+            "Am a": "ScpiServiceIo",
+            "scpiCmd": "SENS:m4:10A:CORR:OFFSET:COEFFICIENT:0 0.05;",
+            "scpiResponse": "ack",
+            "timeMs": 0
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "SIG_Measuring",
+            "veinEntityId": 1020,
+            "veinValue": 0
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel1Peak",
+            "veinEntityId": 1020,
+            "veinValue": 141.42135620117188
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel2Peak",
+            "veinEntityId": 1020,
+            "veinValue": 141.42135620117188
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel3Peak",
+            "veinEntityId": 1020,
+            "veinValue": 141.42135620117188
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel4Peak",
+            "veinEntityId": 1020,
+            "veinValue": 7.071067810058594
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel5Peak",
+            "veinEntityId": 1020,
+            "veinValue": 7.071067810058594
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel6Peak",
+            "veinEntityId": 1020,
+            "veinValue": 7.071067810058594
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel7Peak",
+            "veinEntityId": 1020,
+            "veinValue": 141.42135620117188
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel8Peak",
+            "veinEntityId": 1020,
+            "veinValue": 0
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Frequency",
+            "veinEntityId": 1020,
+            "veinValue": 50
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel1Rms",
+            "veinEntityId": 1020,
+            "veinValue": 100
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel2Rms",
+            "veinEntityId": 1020,
+            "veinValue": 100
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel3Rms",
+            "veinEntityId": 1020,
+            "veinValue": 100
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel4Rms",
+            "veinEntityId": 1020,
+            "veinValue": 5
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel5Rms",
+            "veinEntityId": 1020,
+            "veinValue": 5
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel6Rms",
+            "veinEntityId": 1020,
+            "veinValue": 5
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel7Rms",
+            "veinEntityId": 1020,
+            "veinValue": 100
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "ACT_Channel8Rms",
+            "veinEntityId": 1020,
+            "veinValue": 0
+        },
+        {
+            "Am a": "VeinChange",
+            "timeMs": 501,
+            "veinComponentName": "SIG_Measuring",
+            "veinEntityId": 1020,
+            "veinValue": 1
+        },
+        {
+            "Am a": "DspVarWrite",
+            "timeMs": 501,
+            "transActionNo": 1,
+            "varName": "GAINCORRECTION",
+            "varValues": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+            ]
+        },
+        {
+            "Am a": "DspVarWrite",
+            "timeMs": 501,
+            "transActionNo": 2,
+            "varName": "PHASECORRECTION",
+            "varValues": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ]
+        },
+        {
+            "Am a": "DspVarWrite",
+            "timeMs": 501,
+            "transActionNo": 3,
+            "varName": "OFFSETCORRECTION",
+            "varValues": [
+                0.05,
+                0,
+                0,
+                0.05,
+                0,
+                0,
+                0,
+                0
+            ]
+        }
+    ]
+}

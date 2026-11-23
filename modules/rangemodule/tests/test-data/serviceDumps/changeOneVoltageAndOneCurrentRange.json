@@ -1,7 +1,7 @@
 {
     "signals": [
         {
-            "is": "DspVarWrite",
+            "Am a": "DspVarWrite",
             "timeMs": 501,
             "transActionNo": 1,
             "varName": "GAINCORRECTION",
@@ -11,7 +11,7 @@
             ]
         },
         {
-            "is": "DspVarWrite",
+            "Am a": "DspVarWrite",
             "timeMs": 501,
             "transActionNo": 2,
             "varName": "PHASECORRECTION",
@@ -21,7 +21,7 @@
             ]
         },
         {
-            "is": "DspVarWrite",
+            "Am a": "DspVarWrite",
             "timeMs": 501,
             "transActionNo": 3,
             "varName": "OFFSETCORRECTION",
@@ -31,7 +31,7 @@
             ]
         },
         {
-            "is": "DspVarWrite",
+            "Am a": "DspVarWrite",
             "timeMs": 1002,
             "transActionNo": 1,
             "varName": "GAINCORRECTION2",
@@ -41,7 +41,7 @@
             ]
         },
         {
-            "is": "DspVarWrite",
+            "Am a": "DspVarWrite",
             "timeMs": 1002,
             "transActionNo": 2,
             "varName": "GAINCORRECTION2",
