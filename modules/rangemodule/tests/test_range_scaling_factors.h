@@ -3,7 +3,6 @@
 
 #include "testdspinterface.h"
 #include "modulemanagertestrunner.h"
-#include <QSignalSpy>
 #include <memory>
 
 class test_range_scaling_factors : public QObject

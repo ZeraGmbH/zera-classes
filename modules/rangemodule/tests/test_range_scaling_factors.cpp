@@ -6,6 +6,7 @@
 #include <timemachineobject.h>
 #include <timemachinefortest.h>
 #include <timerfactoryqtfortest.h>
+#include <QSignalSpy>
 #include <QTest>
 
 QTEST_MAIN(test_range_scaling_factors)
