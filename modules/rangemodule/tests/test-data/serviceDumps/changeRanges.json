@@ -2,7 +2,7 @@
     "signals": [
         {
             "Am a": "Comment",
-            "theComment": "--- Write correction coefficients ---",
+            "comment": "--- Write correction coefficients ---",
             "timeMs": 0
         },
         {
@@ -79,17 +79,17 @@
         },
         {
             "Am a": "Comment",
-            "theComment": "--- Initial ---",
+            "comment": "--- Initial ---",
             "timeMs": 0
         },
         {
             "Am a": "Comment",
-            "theComment": "--- Initial after processTimers ---",
+            "comment": "--- Initial after processTimers ---",
             "timeMs": 501
         },
         {
             "Am a": "Comment",
-            "theComment": "--- Initial after fireActualValues ---",
+            "comment": "--- Initial after fireActualValues ---",
             "timeMs": 501
         },
         {
@@ -104,49 +104,49 @@
             "timeMs": 501,
             "veinComponentName": "ACT_Channel1Peak",
             "veinEntityId": 1020,
-            "veinValue": 7.071067810058594
+            "veinValue": 7.0710678
         },
         {
             "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel2Peak",
             "veinEntityId": 1020,
-            "veinValue": 7.071067810058594
+            "veinValue": 7.0710678
         },
         {
             "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel3Peak",
             "veinEntityId": 1020,
-            "veinValue": 7.071067810058594
+            "veinValue": 7.0710678
         },
         {
             "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel4Peak",
             "veinEntityId": 1020,
-            "veinValue": 1.4142135381698608
+            "veinValue": 1.4142135
         },
         {
             "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel5Peak",
             "veinEntityId": 1020,
-            "veinValue": 1.4142135381698608
+            "veinValue": 1.4142135
         },
         {
             "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel6Peak",
             "veinEntityId": 1020,
-            "veinValue": 1.4142135381698608
+            "veinValue": 1.4142135
         },
         {
             "Am a": "VeinChange",
             "timeMs": 501,
             "veinComponentName": "ACT_Channel7Peak",
             "veinEntityId": 1020,
-            "veinValue": 7.071067810058594
+            "veinValue": 7.0710678
         },
         {
             "Am a": "VeinChange",
@@ -275,12 +275,12 @@
         },
         {
             "Am a": "Comment",
-            "theComment": "--- Initial after feedEventLoop ---",
+            "comment": "--- Initial after feedEventLoop ---",
             "timeMs": 501
         },
         {
             "Am a": "Comment",
-            "theComment": "--- UL1 -> 8V ---",
+            "comment": "--- UL1 -> 8V ---",
             "timeMs": 501
         },
         {
@@ -308,7 +308,7 @@
             "timeMs": 1002,
             "veinComponentName": "INF_Channel1ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 10.000000596046483
+            "veinValue": 10.000001
         },
         {
             "Am a": "ScpiServiceIo",
@@ -328,7 +328,7 @@
             "timeMs": 1002,
             "veinComponentName": "INF_Channel2ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 10.000000596046483
+            "veinValue": 10.000001
         },
         {
             "Am a": "ScpiServiceIo",
@@ -348,7 +348,7 @@
             "timeMs": 1002,
             "veinComponentName": "INF_Channel3ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 10.000000596046483
+            "veinValue": 10.000001
         },
         {
             "Am a": "DspVarWrite",
@@ -458,7 +458,7 @@
         },
         {
             "Am a": "Comment",
-            "theComment": "--- IL1 -> 5A ---",
+            "comment": "--- IL1 -> 5A ---",
             "timeMs": 1002
         },
         {
@@ -486,7 +486,7 @@
             "timeMs": 1503,
             "veinComponentName": "INF_Channel4ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 6.2499996090834005
+            "veinValue": 6.2499996
         },
         {
             "Am a": "ScpiServiceIo",
@@ -506,7 +506,7 @@
             "timeMs": 1503,
             "veinComponentName": "INF_Channel5ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 6.2499996090834005
+            "veinValue": 6.2499996
         },
         {
             "Am a": "ScpiServiceIo",
@@ -526,7 +526,7 @@
             "timeMs": 1503,
             "veinComponentName": "INF_Channel6ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 6.2499996090834005
+            "veinValue": 6.2499996
         },
         {
             "Am a": "DspVarWrite",
@@ -636,7 +636,7 @@
         },
         {
             "Am a": "Comment",
-            "theComment": "--- UL1 -> 250V ---",
+            "comment": "--- UL1 -> 250V ---",
             "timeMs": 1503
         },
         {
@@ -664,7 +664,7 @@
             "timeMs": 2004,
             "veinComponentName": "INF_Channel1ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 312.4999858438974
+            "veinValue": 312.49999
         },
         {
             "Am a": "ScpiServiceIo",
@@ -684,7 +684,7 @@
             "timeMs": 2004,
             "veinComponentName": "INF_Channel2ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 312.4999858438974
+            "veinValue": 312.49999
         },
         {
             "Am a": "ScpiServiceIo",
@@ -704,7 +704,7 @@
             "timeMs": 2004,
             "veinComponentName": "INF_Channel3ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 312.4999858438974
+            "veinValue": 312.49999
         },
         {
             "Am a": "DspVarWrite",
@@ -814,7 +814,7 @@
         },
         {
             "Am a": "Comment",
-            "theComment": "--- IL1 -> 10A ---",
+            "comment": "--- IL1 -> 10A ---",
             "timeMs": 2004
         },
         {
@@ -881,7 +881,7 @@
         },
         {
             "Am a": "Comment",
-            "theComment": "--- UL1 -> 8V ---",
+            "comment": "--- UL1 -> 8V ---",
             "timeMs": 2505
         },
         {
@@ -909,7 +909,7 @@
             "timeMs": 3006,
             "veinComponentName": "INF_Channel1ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 10.000000596046483
+            "veinValue": 10.000001
         },
         {
             "Am a": "ScpiServiceIo",
@@ -929,7 +929,7 @@
             "timeMs": 3006,
             "veinComponentName": "INF_Channel2ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 10.000000596046483
+            "veinValue": 10.000001
         },
         {
             "Am a": "ScpiServiceIo",
@@ -949,7 +949,7 @@
             "timeMs": 3006,
             "veinComponentName": "INF_Channel3ActOVLREJ",
             "veinEntityId": 1020,
-            "veinValue": 10.000000596046483
+            "veinValue": 10.000001
         },
         {
             "Am a": "DspVarWrite",

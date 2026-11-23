@@ -148,55 +148,55 @@
         }
     },
     "1020": {
-        "ACT_Channel1Peak": 325.2691345214844,
+        "ACT_Channel1Peak": 325.26913,
         "ACT_Channel1Rms": 230,
-        "ACT_Channel2Peak": 325.2691345214844,
+        "ACT_Channel2Peak": 325.26913,
         "ACT_Channel2Rms": 230,
-        "ACT_Channel3Peak": 325.2691345214844,
+        "ACT_Channel3Peak": 325.26913,
         "ACT_Channel3Rms": 230,
-        "ACT_Channel4Peak": 14.142135620117188,
+        "ACT_Channel4Peak": 14.142136,
         "ACT_Channel4Rms": 10,
-        "ACT_Channel5Peak": 14.142135620117188,
+        "ACT_Channel5Peak": 14.142136,
         "ACT_Channel5Rms": 10,
-        "ACT_Channel6Peak": 14.142135620117188,
+        "ACT_Channel6Peak": 14.142136,
         "ACT_Channel6Rms": 10,
-        "ACT_Channel7Peak": 325.2691345214844,
+        "ACT_Channel7Peak": 325.26913,
         "ACT_Channel7Rms": 230,
-        "ACT_Channel8Peak": 14.142135620117188,
+        "ACT_Channel8Peak": 14.142136,
         "ACT_Channel8Rms": 10,
         "ACT_Frequency": 0,
         "EntityName": "RangeModule1",
-        "INF_Channel1ActOVLREJ": 312.4999858438974,
+        "INF_Channel1ActOVLREJ": 312.49999,
         "INF_Channel1ActREJ": 250,
-        "INF_Channel1OVLREJ": 312.4999858438974,
+        "INF_Channel1OVLREJ": 312.49999,
         "INF_Channel1UserCanChange": true,
-        "INF_Channel2ActOVLREJ": 312.4999858438974,
+        "INF_Channel2ActOVLREJ": 312.49999,
         "INF_Channel2ActREJ": 250,
-        "INF_Channel2OVLREJ": 312.4999858438974,
+        "INF_Channel2OVLREJ": 312.49999,
         "INF_Channel2UserCanChange": true,
-        "INF_Channel3ActOVLREJ": 312.4999858438974,
+        "INF_Channel3ActOVLREJ": 312.49999,
         "INF_Channel3ActREJ": 250,
-        "INF_Channel3OVLREJ": 312.4999858438974,
+        "INF_Channel3OVLREJ": 312.49999,
         "INF_Channel3UserCanChange": true,
-        "INF_Channel4ActOVLREJ": 12.499999218166801,
+        "INF_Channel4ActOVLREJ": 12.499999,
         "INF_Channel4ActREJ": 10,
-        "INF_Channel4OVLREJ": 12.499999218166801,
+        "INF_Channel4OVLREJ": 12.499999,
         "INF_Channel4UserCanChange": true,
-        "INF_Channel5ActOVLREJ": 12.499999218166801,
+        "INF_Channel5ActOVLREJ": 12.499999,
         "INF_Channel5ActREJ": 10,
-        "INF_Channel5OVLREJ": 12.499999218166801,
+        "INF_Channel5OVLREJ": 12.499999,
         "INF_Channel5UserCanChange": true,
-        "INF_Channel6ActOVLREJ": 12.499999218166801,
+        "INF_Channel6ActOVLREJ": 12.499999,
         "INF_Channel6ActREJ": 10,
-        "INF_Channel6OVLREJ": 12.499999218166801,
+        "INF_Channel6OVLREJ": 12.499999,
         "INF_Channel6UserCanChange": true,
-        "INF_Channel7ActOVLREJ": 312.4999858438974,
+        "INF_Channel7ActOVLREJ": 312.49999,
         "INF_Channel7ActREJ": 250,
-        "INF_Channel7OVLREJ": 312.4999858438974,
+        "INF_Channel7OVLREJ": 312.49999,
         "INF_Channel7UserCanChange": true,
-        "INF_Channel8ActOVLREJ": 1.24999992181668e-12,
+        "INF_Channel8ActOVLREJ": 1.2499999e-12,
         "INF_Channel8ActREJ": 1e-12,
-        "INF_Channel8OVLREJ": 1.24999992181668e-12,
+        "INF_Channel8OVLREJ": 1.2499999e-12,
         "INF_Channel8UserCanChange": false,
         "INF_ModuleInterface": {
             "ComponentInfo": {
@@ -1360,15 +1360,15 @@
             0
         ],
         "ACT_DFTPN4": [
-            1e-08,
+            9.9999999e-09,
             0
         ],
         "ACT_DFTPN5": [
-            1e-08,
+            9.9999999e-09,
             0
         ],
         "ACT_DFTPN6": [
-            1e-08,
+            9.9999999e-09,
             0
         ],
         "ACT_DFTPN7": [
@@ -1376,7 +1376,7 @@
             0
         ],
         "ACT_DFTPN8": [
-            1e-08,
+            9.9999999e-09,
             0
         ],
         "ACT_DFTPP1": [
@@ -1407,17 +1407,17 @@
             0
         ],
         "ACT_POL_DFTPN4": [
-            1e-08,
+            9.9999999e-09,
             0,
             0
         ],
         "ACT_POL_DFTPN5": [
-            1e-08,
+            9.9999999e-09,
             0,
             0
         ],
         "ACT_POL_DFTPN6": [
-            1e-08,
+            9.9999999e-09,
             0,
             0
         ],
@@ -1427,7 +1427,7 @@
             0
         ],
         "ACT_POL_DFTPN8": [
-            1e-08,
+            9.9999999e-09,
             0,
             0
         ],

@@ -12,49 +12,49 @@
             "timeMs": 101,
             "veinComponentName": "ACT_Channel1Peak",
             "veinEntityId": 1020,
-            "veinValue": 141.42135620117188
+            "veinValue": 141.42136
         },
         {
             "Am a": "VeinChange",
             "timeMs": 101,
             "veinComponentName": "ACT_Channel2Peak",
             "veinEntityId": 1020,
-            "veinValue": 141.42135620117188
+            "veinValue": 141.42136
         },
         {
             "Am a": "VeinChange",
             "timeMs": 101,
             "veinComponentName": "ACT_Channel3Peak",
             "veinEntityId": 1020,
-            "veinValue": 141.42135620117188
+            "veinValue": 141.42136
         },
         {
             "Am a": "VeinChange",
             "timeMs": 101,
             "veinComponentName": "ACT_Channel4Peak",
             "veinEntityId": 1020,
-            "veinValue": 7.071067810058594
+            "veinValue": 7.0710678
         },
         {
             "Am a": "VeinChange",
             "timeMs": 101,
             "veinComponentName": "ACT_Channel5Peak",
             "veinEntityId": 1020,
-            "veinValue": 7.071067810058594
+            "veinValue": 7.0710678
         },
         {
             "Am a": "VeinChange",
             "timeMs": 101,
             "veinComponentName": "ACT_Channel6Peak",
             "veinEntityId": 1020,
-            "veinValue": 7.071067810058594
+            "veinValue": 7.0710678
         },
         {
             "Am a": "VeinChange",
             "timeMs": 101,
             "veinComponentName": "ACT_Channel7Peak",
             "veinEntityId": 1020,
-            "veinValue": 141.42135620117188
+            "veinValue": 141.42136
         },
         {
             "Am a": "VeinChange",

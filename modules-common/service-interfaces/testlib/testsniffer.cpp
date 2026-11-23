@@ -56,7 +56,7 @@ void TestSniffer::addComment(const QString &comment)
 {
     QJsonObject jsonComment;
     jsonComment["Am a"] = "Comment";
-    jsonComment["theComment"] = "--- " + comment + " ---";
+    jsonComment["comment"] = "--- " + comment + " ---";
     jsonComment["timeMs"] = TimeMachineForTest::getInstance()->getCurrentTimeMs();
 
     m_signalsCollected.append(jsonComment);

@@ -8,9 +8,9 @@
         "ACT_RMSPN6": 5,
         "ACT_RMSPN7": 230,
         "ACT_RMSPN8": 5,
-        "ACT_RMSPP1": 398.3716735839844,
-        "ACT_RMSPP2": 398.3716735839844,
-        "ACT_RMSPP3": 398.3716735839844,
+        "ACT_RMSPP1": 398.37167,
+        "ACT_RMSPP2": 398.37167,
+        "ACT_RMSPP3": 398.37167,
         "EntityName": "RMSModule1",
         "INF_ModuleInterface": {
             "ComponentInfo": {
