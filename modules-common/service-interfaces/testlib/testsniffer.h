@@ -26,6 +26,9 @@ public:
     void sniffVeinValueSets(VeinStorage::AbstractDatabase* veinStorage, const QList<int> &entities);
     void sniffVeinValueChanges(VeinStorage::AbstractDatabase* veinStorage, const QList<int> &entities);
 
+    // Comment
+    void addComment(const QString &comment);
+
     // Result
     QByteArray dump() const;
 

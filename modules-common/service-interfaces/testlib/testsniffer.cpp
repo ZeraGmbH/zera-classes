@@ -52,6 +52,16 @@ void TestSniffer::sniffVeinValueChanges(VeinStorage::AbstractDatabase *veinStora
     }
 }
 
+void TestSniffer::addComment(const QString &comment)
+{
+    QJsonObject jsonComment;
+    jsonComment["is"] = "Comment";
+    jsonComment["theComment"] = "--- " + comment + " ---";
+    jsonComment["timeMs"] = TimeMachineForTest::getInstance()->getCurrentTimeMs();
+
+    m_signalsCollected.append(jsonComment);
+}
+
 QByteArray TestSniffer::dump() const
 {
     QJsonObject json;
