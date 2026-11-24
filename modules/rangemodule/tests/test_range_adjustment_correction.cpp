@@ -23,26 +23,10 @@ void test_range_adjustment_correction::initTestCase()
     TimerFactoryQtForTest::enableTest();
 }
 
-void test_range_adjustment_correction::init()
-{
-    TimeMachineForTest::reset();
-    m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/session-range-test.json", /*initialAdjPermission=*/true);
-    m_sampleDspInterfaceProg = m_testRunner->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
-    m_sampleDspInterfaceObserv = m_testRunner->findDspInterfaceByType(INJECT_RANGE_OBSERV);
-    m_sampleDspInterfaceAdj = m_testRunner->findDspInterfaceByType(INJECT_RANGE_ADJUST);
-
-    TestRangeHelpers::initCoefficients("m0", "250V");
-    TestRangeHelpers::initCoefficients("m4", "10A");
-}
-
-void test_range_adjustment_correction::cleanup()
-{
-    m_testRunner.reset();
-    TimeMachineObject::feedEventLoop();
-}
-
 // DSP channel numbers as reported by the PCB ('dspchannel' in  mt310s2d.xml)
 static int constexpr rangeEntityId = 1020;
+static const char* RangeAutomaticComponent("PAR_RangeAutomatic");
+static const char* RangeGroupingComponent("PAR_ChannelGrouping");
 
 static constexpr int DspChannelUl1 = 0; // m0
 static constexpr int DspChannelIl1 = 1; // m3
@@ -53,6 +37,27 @@ static const char* UL1RangeComponent("PAR_Channel1Range");
 static const char* IL1RangeComponent("PAR_Channel4Range");
 
 static constexpr int channelCountInpected = 8;
+
+void test_range_adjustment_correction::init()
+{
+    TimeMachineForTest::reset();
+    m_testRunner = std::make_unique<ModuleManagerTestRunner>(":/session-range-test.json", /*initialAdjPermission=*/true);
+    m_sampleDspInterfaceProg = m_testRunner->findDspInterfaceByType(INJECT_RANGE_PROGRAM);
+    m_sampleDspInterfaceObserv = m_testRunner->findDspInterfaceByType(INJECT_RANGE_OBSERV);
+    m_sampleDspInterfaceAdj = m_testRunner->findDspInterfaceByType(INJECT_RANGE_ADJUST);
+
+    m_testRunner->setVfComponent(rangeEntityId, RangeGroupingComponent, 0);
+    m_testRunner->setVfComponent(rangeEntityId, RangeAutomaticComponent, 0);
+    TestRangeHelpers::initCoefficients("m0", "250V");
+    TestRangeHelpers::initCoefficients("m4", "10A");
+}
+
+void test_range_adjustment_correction::cleanup()
+{
+    m_testRunner.reset();
+    TimeMachineObject::feedEventLoop();
+}
+
 
 void test_range_adjustment_correction::testRangeAdjTiming()
 {
