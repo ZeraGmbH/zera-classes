@@ -780,9 +780,9 @@ void cRangeObsermatic::preScalingChanged()
 
 void cRangeObsermatic::handleRangeChangeResponse(int channelIdx)
 {
-    const QString channelName = m_actChannelRangeNameList.at(channelIdx);
-    const QString channelAlias = ChannelRangeObserver::Range::getAliasFromName(channelName);
-    m_veinRangeAliasParameterList.at(channelIdx)->setValue(channelAlias);
+    const QString rangeName = m_actChannelRangeNameList.at(channelIdx);
+    const QString rangeAlias = ChannelRangeObserver::Range::getAliasFromName(rangeName);
+    m_veinRangeAliasParameterList.at(channelIdx)->setValue(rangeAlias);
     if (m_nRangeSetPending > 0) {
         m_nRangeSetPending--;
         if (m_nRangeSetPending == 0) {
