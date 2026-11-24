@@ -90,16 +90,6 @@ void cRangeObsermatic::createSelectedRangeObserver(const cRangeMeasChannel *chan
         channel->getMName(),
         m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    connect(observerCurrentRange.get(), &ChannelRangeObserver::ChannelCurrentRange::sigNewRange, this, [=](const QString &channelMName, const QString &rangeName, bool ok){
-        if (ok) {
-            Q_UNUSED(channelMName)
-            /*if (m_ConfPar.getCurrentRange(channelIdx) != rangeName) {
-                m_ConfPar.setCurrentRange(channelIdx, rangeName);
-                // m_rangeSetManual = true; // ???
-                //setRanges(); // force???
-            }*/
-        }
-    });
     observerCurrentRange->startObserve();
     m_channelCurrentRangeObservers.append(observerCurrentRange);
 }
