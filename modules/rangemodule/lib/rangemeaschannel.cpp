@@ -18,21 +18,22 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
                      QString("%1/RangeMeasChannel/%2").arg(moduleName, channelObserver->getMName()))
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
+    m_pcbInterface->setClientSuperSmart(NetworkConnectionInfo(m_pcbNetworkInfo.m_sIP, m_pcbNetworkInfo.m_nPort),
+                                        m_tcpNetworkFactory);
     m_channelCurrentRangeObserver = std::make_shared<ChannelRangeObserver::ChannelCurrentRange>(
         getMName(),
         m_pcbNetworkInfo,
         m_tcpNetworkFactory);
-
-    // setting up statemachine for "activating" meas channel
-    // m_pcbConnectionState.addTransition is done in pcbConnection
-    m_resetStatusState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_setupCurrentRangeObserver);
-    m_setupCurrentRangeObserver.addTransition(m_channelCurrentRangeObserver.get(), &ChannelRangeObserver::ChannelCurrentRange::sigSetupComplete, &m_activationDoneState);
 
     m_activationMachine.addState(&m_pcbConnectionState);
     m_activationMachine.addState(&m_resetStatusState);
     m_activationMachine.addState(&m_setupCurrentRangeObserver);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_pcbConnectionState);
+
+    m_pcbConnectionState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_resetStatusState);
+    m_resetStatusState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_setupCurrentRangeObserver);
+    m_setupCurrentRangeObserver.addTransition(m_channelCurrentRangeObserver.get(), &ChannelRangeObserver::ChannelCurrentRange::sigSetupComplete, &m_activationDoneState);
 
     connect(&m_pcbConnectionState, &QState::entered, this, &cRangeMeasChannel::pcbConnection);
     connect(&m_resetStatusState, &QState::entered, this, &cRangeMeasChannel::resetStatusSlot);
@@ -42,14 +43,14 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
     // setting up statemachine for "deactivating" meas channel
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    m_deactivationMachine.setInitialState(&m_deactivationInitState);
 
+    m_deactivationMachine.setInitialState(&m_deactivationInitState);
     m_deactivationInitState.addTransition(this, &cRangeMeasChannel::deactivationContinue, &m_deactivationDoneState);
 
     connect(&m_deactivationInitState, &QState::entered, this, &cRangeMeasChannel::deactivationInit);
     connect(&m_deactivationDoneState, &QState::entered, this, &cRangeMeasChannel::deactivationDone);
 
-
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
     connect(channelObserver.get(), &ChannelRangeObserver::Channel::sigNewRanges, this, &cRangeMeasChannel::newRangeList);
 }
 
@@ -393,11 +394,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
 void cRangeMeasChannel::pcbConnection()
 {
-    m_pcbInterface->setClientSuperSmart(NetworkConnectionInfo(m_pcbNetworkInfo.m_sIP, m_pcbNetworkInfo.m_nPort),
-                                                              m_tcpNetworkFactory);
-    m_pcbConnectionState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_resetStatusState);
-
-    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
 }
 
