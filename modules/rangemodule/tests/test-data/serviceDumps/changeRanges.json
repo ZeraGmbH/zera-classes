@@ -6,73 +6,73 @@
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m0:250V:CORR:GAIN:COEFFICIENT:0 0.1;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m0:250V:CORR:PHASE:COEFFICIENT:0 0.2;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m0:250V:CORR:OFFSET:COEFFICIENT:0 0.3;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m3:10A:CORR:GAIN:COEFFICIENT:0 0.4;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m3:10A:CORR:PHASE:COEFFICIENT:0 0.5;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m3:10A:CORR:OFFSET:COEFFICIENT:0 0.6;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m0:8V:CORR:GAIN:COEFFICIENT:0 1.1;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m0:8V:CORR:PHASE:COEFFICIENT:0 1.2;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m0:8V:CORR:OFFSET:COEFFICIENT:0 1.3;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m3:5A:CORR:GAIN:COEFFICIENT:0 1.4;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m3:5A:CORR:PHASE:COEFFICIENT:0 1.5;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m3:5A:CORR:OFFSET:COEFFICIENT:0 1.6;",
             "scpiResponse": "ack",
             "timeMs": 0
@@ -291,7 +291,7 @@
             "veinValue": 1
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m0:RANG 8V;",
             "scpiResponse": "ack",
             "timeMs": 1002
@@ -415,7 +415,7 @@
             "veinValue": 1
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m3:RANG 5A;",
             "scpiResponse": "ack",
             "timeMs": 1503
@@ -539,7 +539,7 @@
             "veinValue": 1
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m0:RANG 250V;",
             "scpiResponse": "ack",
             "timeMs": 2004
@@ -730,7 +730,7 @@
             "veinValue": 1
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m0:RANG 8V;",
             "scpiResponse": "ack",
             "timeMs": 3006

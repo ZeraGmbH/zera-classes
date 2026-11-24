@@ -20,7 +20,7 @@ public:
         all
     };
     // Server SCPI
-    void sniffScpiIoServer(ScpiConnection* server, ScpiRecordype type);
+    void sniffScpiIoServer(ScpiConnection* server, ScpiRecordype type, const QString &serverLabel = "mt310s2d");
 
     // Vein
     void sniffVeinSetValues(VeinStorage::AbstractDatabase* veinStorage, const QList<int> &entities);
@@ -34,7 +34,7 @@ public:
 
 private:
     void onDspVariableWrite(const TestDspVarWriteData &dspVar, int limitVarSize);
-    void onScpiCmdExecutionDone(const QString &scpi, const QString &response, ScpiRecordype type);
+    void onScpiCmdExecutionDone(const QString &scpi, const QString &response, ScpiRecordype type, const QString &serverLabel);
     void onVeinValueSet(int entityId, const QString &componentName, const QVariant &setValue, const QString &accessLabel);
 
     QJsonArray m_signalsCollected;

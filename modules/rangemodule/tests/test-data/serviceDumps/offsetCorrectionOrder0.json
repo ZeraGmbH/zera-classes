@@ -1,13 +1,13 @@
 {
     "signals": [
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m0:250V:CORR:OFFSET:COEFFICIENT:0 0.05;",
             "scpiResponse": "ack",
             "timeMs": 0
         },
         {
-            "Am a": "ScpiServiceIo",
+            "Am a": "mt310s2d",
             "scpiCmd": "SENS:m4:10A:CORR:OFFSET:COEFFICIENT:0 0.05;",
             "scpiResponse": "ack",
             "timeMs": 0

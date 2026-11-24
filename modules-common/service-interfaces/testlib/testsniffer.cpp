@@ -19,10 +19,10 @@ void TestSniffer::sniffDspVarWrites(const TestDspInterfacePtr &testDspInterface,
     });
 }
 
-void TestSniffer::sniffScpiIoServer(ScpiConnection *server, ScpiRecordype type)
+void TestSniffer::sniffScpiIoServer(ScpiConnection *server, ScpiRecordype type, const QString &serverLabel)
 {
     connect(server, &ScpiConnection::sigNotifyScpiIo, this, [=](const QString &scpi, const QString &response) {
-        onScpiCmdExecutionDone(scpi, response, type);
+        onScpiCmdExecutionDone(scpi, response, type, serverLabel);
     });
 }
 
@@ -89,7 +89,7 @@ void TestSniffer::onDspVariableWrite(const TestDspVarWriteData &dspVar, int limi
     m_signalsCollected.append(jsonDspVar);
 }
 
-void TestSniffer::onScpiCmdExecutionDone(const QString &scpi, const QString &response, ScpiRecordype type)
+void TestSniffer::onScpiCmdExecutionDone(const QString &scpi, const QString &response, ScpiRecordype type, const QString &serverLabel)
 {
     QJsonObject jsonScpiVar;
     cSCPICommand cmd = scpi;
@@ -101,7 +101,7 @@ void TestSniffer::onScpiCmdExecutionDone(const QString &scpi, const QString &res
         doLog = true;
 
     if (doLog) {
-        jsonScpiVar["Am a"] = "ScpiServiceIo";
+        jsonScpiVar["Am a"] = serverLabel;
         jsonScpiVar["scpiCmd"] = scpi;
         jsonScpiVar["scpiResponse"] = response;
         jsonScpiVar["timeMs"] = TimeMachineForTest::getInstance()->getCurrentTimeMs();
