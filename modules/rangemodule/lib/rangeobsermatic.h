@@ -84,7 +84,7 @@ private:
     void rangeAutomatic();
     void groupHandling();
     void setRanges(bool force = false); // here we really set ranges
-    void handleRangeChangeResponse(int channelIdx);
+    void handleNewRange(int channelIdx, const QString &rangeName);
 
     QList<int> getChannelGroupAliasIdxListForChannel(int channelIdx);
     double getPreScaling(int channelIdx);
@@ -100,7 +100,7 @@ private:
     QList<bool> m_groupOvlList; // distinct group overloads: one in a group causes reset for all in the group
     QList<bool> m_maxOvlList; // here we enter overloads that occured in maximum range
     quint32 m_nWaitAfterRanging = 0;
-    quint32 m_nRangeSetPending = 0;
+    QSet<QString> m_channelMNamesWithPendingRangeChange;
     quint32 m_nReadStatusPending = 0;
     QStringList m_actChannelRangeNameList;
 

@@ -59,6 +59,7 @@ public:
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
     void newRangeList(); // if the channel has read new range list after async. notification
+    void sigNewRange(const QString &rangeName);
 
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);

@@ -329,8 +329,10 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         switch (cmd)
         {
         case setmeaschannelrange:
-            if (reply == ack)
+            if (reply == ack) {
                 m_actRangeName = m_nextRangeName;
+                emit sigNewRange(m_actRangeName); // TODO -> CRO
+            }
             else {
                 qWarning("Set range %s on %s failed with %i!",
                          qPrintable(m_nextRangeName),

@@ -62,7 +62,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
 void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
 {
     Q_UNUSED(actualValues)
-    if (m_nRangeSetPending == 0) {
+    if (m_channelMNamesWithPendingRangeChange.isEmpty()) {
         if (m_nWaitAfterRanging > 0) {
             m_nWaitAfterRanging--;
         }
@@ -320,9 +320,6 @@ enum rangeObsermaticCmds
     resetstatus,
     readstatus,
 
-    setrange, // we reserve 32 values for setrange
-
-    nextCmd = setrange+32
 };
 
 void cRangeObsermatic::rangeAutomatic()
@@ -445,8 +442,8 @@ void cRangeObsermatic::setRanges(bool force)
             change = true;
 
             // set range
-            m_MsgNrCmdList[rangeMeasChannel->setRange(rangeName)] = setrange + i; // we must know which channel has changed for deferred notification
-            m_nRangeSetPending++;
+            rangeMeasChannel->setRange(rangeName);
+            m_channelMNamesWithPendingRangeChange.insert(rangeMeasChannel->getMName());
             m_actChannelRangeNameList.replace(i, rangeName);
 
             double actUrValue = RangeMeasChannelStaticHelperFunctions::getUrValueRangeAct(rangeMeasChannel);
@@ -562,6 +559,12 @@ void cRangeObsermatic::readGainScale()
 
 void cRangeObsermatic::onActivationDone()
 {
+    for (int channelIdx = 0; channelIdx < m_RangeMeasChannelList.count(); ++channelIdx) {
+        const cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
+        connect(rangeMeasChannel, &cRangeMeasChannel::sigNewRange, this, [=](const QString &rangeName) {
+            handleNewRange(channelIdx, rangeName);
+        });
+    }
     // our initial range set from configuration
     setRanges(true);
 
@@ -768,17 +771,15 @@ void cRangeObsermatic::preScalingChanged()
     setRanges(true);
 }
 
-void cRangeObsermatic::handleRangeChangeResponse(int channelIdx)
+void cRangeObsermatic::handleNewRange(int channelIdx, const QString &rangeName)
 {
-    const QString rangeName = m_actChannelRangeNameList.at(channelIdx);
+    const QString &channelMName = m_RangeMeasChannelList[channelIdx]->getMName();
     const QString rangeAlias = ChannelRangeObserver::Range::getAliasFromName(rangeName);
     m_veinRangeAliasParameterList.at(channelIdx)->setValue(rangeAlias);
-    if (m_nRangeSetPending > 0) {
-        m_nRangeSetPending--;
-        if (m_nRangeSetPending == 0) {
-            m_pRangingSignal->setValue(QVariant(0));
-            m_nWaitAfterRanging = 1;
-        }
+
+    if (m_channelMNamesWithPendingRangeChange.remove(channelMName) && m_channelMNamesWithPendingRangeChange.isEmpty()) {
+        m_pRangingSignal->setValue(QVariant(0));
+        m_nWaitAfterRanging = 1;
     }
 }
 
@@ -823,10 +824,7 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
         break;
 
     default:
-        if ((cmd >= setrange) && (cmd <= setrange +32)) {
-            cmd -= setrange;
-            handleRangeChangeResponse(cmd);
-        }
+        break;
     }
 }
 
