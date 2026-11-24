@@ -106,6 +106,7 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
 
 void RangeChannelAdjustment::ActionHandler(QVector<float> *actualValues)
 {
+    Q_UNUSED(actualValues)
     m_nChannelIt = 0; // we start with first channel
     // in case measurement is faster than adjusting
     if (m_bActive && m_bAdjustTrigger && !m_adjustMachine.isRunning()) {
