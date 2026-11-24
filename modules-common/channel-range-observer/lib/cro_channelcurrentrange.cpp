@@ -49,6 +49,7 @@ void ChannelCurrentRange::startTasks()
         m_pcbInterface, QString("SENS:%1:RANG?").arg(m_channelMName), notifyId,
         TRANSACTION_TIMEOUT, [=]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); }));
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
+        emit sigSetupComplete();
         emit sigNewRange(m_channelMName, *m_currentRangeName, ok);
         m_currentTasks = nullptr;
     });

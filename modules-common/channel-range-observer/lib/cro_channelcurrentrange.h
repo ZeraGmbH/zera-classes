@@ -21,6 +21,7 @@ public:
     const QString getCurrentRange() const;
 signals:
     void sigNewRange(const QString &channelMName, const QString &rangeName, bool ok);
+    void sigSetupComplete();
 
 private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
