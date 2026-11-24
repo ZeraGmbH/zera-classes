@@ -20,7 +20,7 @@ public:
     void startObserve();
     const QString getCurrentRange() const;
 signals:
-    void sigFetchDoneCurrentRange(const QString &channelMName, const QString &rangeName, bool ok);
+    void sigNewRange(const QString &channelMName, const QString &rangeName, bool ok);
 
 private slots:
     void onInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);

@@ -49,7 +49,7 @@ void ChannelCurrentRange::startTasks()
         m_pcbInterface, QString("SENS:%1:RANG?").arg(m_channelMName), notifyId,
         TRANSACTION_TIMEOUT, [=]{ notifyError(QString("Could not register notification for channel %1").arg(m_channelMName)); }));
     connect(m_currentTasks.get(), &TaskTemplate::sigFinish, this, [&](bool ok) {
-        emit sigFetchDoneCurrentRange(m_channelMName, *m_currentRangeName, ok);
+        emit sigNewRange(m_channelMName, *m_currentRangeName, ok);
         m_currentTasks = nullptr;
     });
     m_currentTasks->start();
@@ -62,7 +62,7 @@ void ChannelCurrentRange::onInterfaceAnswer(quint32 msgnr, quint8 reply, const Q
         QStringList entries = answer.toString().split(":");
         if(answer.toString().contains(notificationStr) && entries.count() == 3) {
             *m_currentRangeName = entries[2];
-            emit sigFetchDoneCurrentRange(m_channelMName, *m_currentRangeName, true);
+            emit sigNewRange(m_channelMName, *m_currentRangeName, true);
         }
         else
             notifyError("Unkown notification");
