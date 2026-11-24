@@ -99,7 +99,6 @@ private:
     quint32 m_nWaitAfterRanging = 0;
     QSet<QString> m_channelMNamesWithPendingRangeChange;
     quint32 m_nReadStatusPending = 0;
-    QStringList m_actChannelRangeNameList;
 
     QList<ChannelRangeObserver::ChannelCanChangeRangeObserverPtr> m_channelCanChangeRangeObservers;
 

@@ -111,7 +111,6 @@ void cRangeObsermatic::generateVeinInterface()
         m_veinRangeAliasParameterList.append(pParameter); // for internal use
         m_pModule->m_veinModuleParameterMap[key] = pParameter; // for modules use
 
-        m_actChannelRangeNameList.append(unknownStr); // here we also fill our internal actual channel range list
         m_RangeMeasChannelList.append(channel);
 
         pComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
@@ -247,9 +246,10 @@ void cRangeObsermatic::generateVeinInterface()
 void cRangeObsermatic::handleOverload(const int channelIdx, bool rmsOverload, bool hardOverLoad, bool peakOverLoad)
 {
     cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
+    const QString channelRangeName = m_RangeMeasChannelList.at(channelIdx)->getCurrRangeName();
     qInfo("Overload channel %i / Range %s: RMS %i / PEAK %i / Hard %i",
           channelIdx,
-          qPrintable(m_actChannelRangeNameList.at(channelIdx)),
+          qPrintable(channelRangeName),
           rmsOverload,
           peakOverLoad,
           hardOverLoad);
@@ -258,7 +258,7 @@ void cRangeObsermatic::handleOverload(const int channelIdx, bool rmsOverload, bo
 
     // if an overload is recovered by rangeautomatic during running measurement
     QString maxRangeName = rangeMeasChannel->getMaxRangeName(m_ConfPar.getCurrentRangeName(channelIdx));
-    if (m_actChannelRangeNameList.at(channelIdx) == maxRangeName) { // in case ovrload was in max. range
+    if (channelRangeName == maxRangeName) { // in case ovrload was in max. range
         m_maxOvlList.replace(channelIdx, true);
         m_veinComponentOverloadMax->setValue(1);
     }
@@ -408,16 +408,16 @@ void cRangeObsermatic::groupHandling()
 void cRangeObsermatic::setRanges(bool force)
 {
     bool change = false;
-    for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we set all channels if needed
+    for (int channelIdx = 0; channelIdx < m_RangeMeasChannelList.count(); channelIdx++) { // we set all channels if needed
         // check if channel is in group
-        QString rangeName = m_ConfPar.getCurrentRangeName(i);
-        cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(i);
+        QString rangeName = m_ConfPar.getCurrentRangeName(channelIdx);
+        cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
         if (!rangeMeasChannel->isPossibleRange(rangeName)) { // we test whether this range is possible, otherwise we take the max. range
             rangeName = rangeMeasChannel->getMaxRangeName(rangeName);
-            m_ConfPar.setCurrentRangeName(i, rangeName);
+            m_ConfPar.setCurrentRangeName(channelIdx, rangeName);
         }
 
-        if (rangeName != m_actChannelRangeNameList.at(i) || force) {
+        if (rangeName != m_RangeMeasChannelList.at(channelIdx)->getCurrRangeName() || force) {
             if (!change) // signal is only set once regardingless there is more than 1 range to change
                 m_pRangingSignal->setValue(QVariant(int(1)));
             change = true;
@@ -425,33 +425,32 @@ void cRangeObsermatic::setRanges(bool force)
             // set range
             rangeMeasChannel->setRange(rangeName);
             m_channelMNamesWithPendingRangeChange.insert(rangeMeasChannel->getMName());
-            m_actChannelRangeNameList.replace(i, rangeName);
 
             double actUrValue = RangeMeasChannelStaticHelperFunctions::getUrValueRangeAct(rangeMeasChannel);
             double actRejection = RangeMeasChannelStaticHelperFunctions::getRejectionRangeAct(rangeMeasChannel);
             // The scaling factor is multplied with the inverse presaling value
-            double scaleToDsp = (actUrValue / actRejection) * (1 / getPreScaling(i));
+            double scaleToDsp = (actUrValue / actRejection) * (1 / getPreScaling(channelIdx));
             quint8 dspChannel = rangeMeasChannel->getDSPChannelNr();
             m_gainScaleDspVar->setValue(dspChannel, scaleToDsp);
 
             // we first set information of channels actual urvalue
-            m_veinRangeActRejectionComponentList.at(i)->setValue(actUrValue);
+            m_veinRangeActRejectionComponentList.at(channelIdx)->setValue(actUrValue);
             // we additional set information of channels actual urvalue incl. reserve
             double maxUrValue = RangeMeasChannelStaticHelperFunctions::getUrValueMaxRangeAct(rangeMeasChannel);
-            m_veinRangeActOVLRejectionComponentList.at(i)->setValue(maxUrValue);
+            m_veinRangeActOVLRejectionComponentList.at(channelIdx)->setValue(maxUrValue);
 
             // reset hard overload AFTER change of range.
-            if (requiresOverloadReset(i) || m_groupOvlList.at(i) || force) {
-                qInfo("Reset overload channel %i", i);
+            if (requiresOverloadReset(channelIdx) || m_groupOvlList.at(channelIdx) || force) {
+                qInfo("Reset overload channel %i", channelIdx);
                 m_MsgNrCmdList[rangeMeasChannel->resetStatus()] = resetstatus;
-                m_hardOvlList.replace(i, false);
-                m_maxOvlList.replace(i, false);
-                m_groupOvlList.replace(i, false);
+                m_hardOvlList.replace(channelIdx, false);
+                m_maxOvlList.replace(channelIdx, false);
+                m_groupOvlList.replace(channelIdx, false);
                 m_veinComponentOverloadMax->setValue(0);
             }
         }
         else // for condition (range == m_actChannelRangeList.at(i)) => in-case the 'range' is already being processed by services
-            m_veinRangeAliasParameterList.at(i)->sendDummyNotificationForRangeChange();
+            m_veinRangeAliasParameterList.at(channelIdx)->sendDummyNotificationForRangeChange();
     }
 
     if (change) {
