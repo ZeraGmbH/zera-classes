@@ -75,25 +75,6 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
     }
 }
 
-void cRangeObsermatic::createSelectedRangeObservers()
-{
-    const QStringList channelMNames = m_pModule->getSharedChannelRangeObserver()->getChannelMNames();
-    for (int channelIdx = 0; channelIdx < channelMNames.count(); channelIdx++) {
-        const cRangeMeasChannel *channel = m_pModule->getMeasChannel(channelMNames.at(channelIdx));
-        createSelectedRangeObserver(channel, channelIdx);
-    }
-}
-
-void cRangeObsermatic::createSelectedRangeObserver(const cRangeMeasChannel *channel, int channelIdx)
-{
-    ChannelRangeObserver::ChannelCurrentRangePtr observerCurrentRange = std::make_shared<ChannelRangeObserver::ChannelCurrentRange>(
-        channel->getMName(),
-        m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
-        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    observerCurrentRange->startObserve();
-    m_channelCurrentRangeObservers.append(observerCurrentRange);
-}
-
 void cRangeObsermatic::createCanChangeRangeObserver(cRangeMeasChannel *channel, VfModuleComponent *canChangeComponent)
 {
     VeinStorage::AbstractComponentPtr rangeAutomaticComponent = m_pModule->getStorageDb()->getFutureComponent(
@@ -615,8 +596,6 @@ void cRangeObsermatic::onActivationDone()
         m_veinRangeActRejectionComponentList.at(i)->setChannelName(channelAlias);
         m_veinRangeActOVLRejectionComponentList.at(i)->setChannelName(channelAlias);
     }
-
-    createSelectedRangeObservers();
 
     m_bActive = true;
     emit activated();

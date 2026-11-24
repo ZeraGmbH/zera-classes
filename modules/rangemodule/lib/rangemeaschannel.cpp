@@ -18,23 +18,28 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
                      QString("%1/RangeMeasChannel/%2").arg(moduleName, channelObserver->getMName()))
 {
     m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
+    m_channelCurrentRangeObserver = std::make_shared<ChannelRangeObserver::ChannelCurrentRange>(
+        getMName(),
+        m_pcbNetworkInfo,
+        m_tcpNetworkFactory);
 
     // setting up statemachine for "activating" meas channel
     // m_pcbConnectionState.addTransition is done in pcbConnection
-    m_resetStatusState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_activationDoneState);
+    m_resetStatusState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_setupCurrentRangeObserver);
+    m_setupCurrentRangeObserver.addTransition(m_channelCurrentRangeObserver.get(), &ChannelRangeObserver::ChannelCurrentRange::sigSetupComplete, &m_activationDoneState);
 
     m_activationMachine.addState(&m_pcbConnectionState);
     m_activationMachine.addState(&m_resetStatusState);
+    m_activationMachine.addState(&m_setupCurrentRangeObserver);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_pcbConnectionState);
 
     connect(&m_pcbConnectionState, &QState::entered, this, &cRangeMeasChannel::pcbConnection);
     connect(&m_resetStatusState, &QState::entered, this, &cRangeMeasChannel::resetStatusSlot);
+    connect(&m_setupCurrentRangeObserver, &QState::entered, this, &cRangeMeasChannel::startCurrentRangeObserver);
     connect(&m_activationDoneState, &QState::entered, this, &cRangeMeasChannel::activationDone);
 
     // setting up statemachine for "deactivating" meas channel
-
-
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState(&m_deactivationInitState);
@@ -399,6 +404,12 @@ void cRangeMeasChannel::pcbConnection()
 void cRangeMeasChannel::resetStatusSlot()
 {
     m_MsgNrCmdList[m_pcbInterface->resetStatus(getMName())] = resetchannelstatusbitmask_instatemachine;
+}
+
+
+void cRangeMeasChannel::startCurrentRangeObserver()
+{
+    m_channelCurrentRangeObserver->startObserve();
 }
 
 void cRangeMeasChannel::activationDone()

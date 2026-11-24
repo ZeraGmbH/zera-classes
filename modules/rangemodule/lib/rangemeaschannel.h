@@ -2,6 +2,7 @@
 #define RANGEMEASCHANNEL_H
 
 #include "rangechanneldata.h"
+#include "cro_channelcurrentrange.h"
 #include <pcbinterface.h>
 #include <basemeaschannel.h>
 #include <rangeinfo.h>
@@ -65,6 +66,7 @@ private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void pcbConnection();
     void resetStatusSlot();
+    void startCurrentRangeObserver();
     void activationDone();
 
     void deactivationInit();
@@ -82,10 +84,12 @@ private:
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
     quint32 m_statusBitMask; // currently just COM5003 HW overload bit
+    ChannelRangeObserver::ChannelCurrentRangePtr m_channelCurrentRangeObserver;
 
     // statemachine for activating a rangemeaschannel
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
     QState m_resetStatusState; // we reset our measuring channel when activated
+    QState m_setupCurrentRangeObserver;
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating a rangemeaschannel

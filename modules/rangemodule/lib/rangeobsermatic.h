@@ -11,7 +11,6 @@
 #include <dspinterface.h>
 #include <timertemplateqt.h>
 #include "cro_channelcanchangerangeobserver.h"
-#include "cro_channelcurrentrange.h"
 
 // cRangeObsermatic is responsible for setting, observing, automatic setting
 // and grouping measurement channel ranges. it works on a flexible list of
@@ -78,8 +77,6 @@ private:
     void setOverloadVeinComponent(bool overloadOn);
 
     void createCanChangeRangeObserver(cRangeMeasChannel *channel, VfModuleComponent *canChangeComponent);
-    void createSelectedRangeObservers();
-    void createSelectedRangeObserver(const cRangeMeasChannel *channel, int channelIdx);
 
     void rangeAutomatic();
     void groupHandling();
@@ -105,7 +102,6 @@ private:
     QStringList m_actChannelRangeNameList;
 
     QList<ChannelRangeObserver::ChannelCanChangeRangeObserverPtr> m_channelCanChangeRangeObservers;
-    QList<ChannelRangeObserver::ChannelCurrentRangePtr> m_channelCurrentRangeObservers;
 
     // our interface entities
     QList<VfModuleParameter*> m_veinRangeAliasParameterList;
