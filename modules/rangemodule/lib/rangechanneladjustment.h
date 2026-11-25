@@ -19,6 +19,7 @@ class RangeChannelAdjustment: public cModuleActivist
 public:
     explicit RangeChannelAdjustment(cRangeModule* module, QStringList chnlist, QStringList subdclist, RangeAdjustmentConfigParams *adjustmentConfig);
     void generateVeinInterface() override;
+
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
 signals:
@@ -58,6 +59,10 @@ private slots:
 
     void parInvertedPhaseStateChanged(QVariant newValue);
 private:
+    void setupWriteDspCorrectionStateMachine();
+    void setupActivationStateMachine();
+    void setupAdjToCorrectionValuesStateMachine();
+    void setupDeativationStateMachine();
     double getIgnoreRmsCorrFactor();
 
     cRangeModule* m_pModule = nullptr;
