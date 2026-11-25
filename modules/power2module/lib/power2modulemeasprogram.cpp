@@ -233,9 +233,9 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
     }
 
     m_pPQSCountInfo = new VfModuleMetaData(QString("PQSCount"), QVariant(3*(MeasPhaseCount+SumValueCount)));
-    m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
+    m_pModule->m_veinModuleMetaDataList.append(m_pPQSCountInfo);
     m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(configData->m_nFreqOutputCount));
-    m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
+    m_pModule->m_veinModuleMetaDataList.append(m_pFoutCount);
 
     // our parameters we deal with
     m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),

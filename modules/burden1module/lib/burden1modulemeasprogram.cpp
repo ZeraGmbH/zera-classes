@@ -115,7 +115,7 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pWireCrosssectionParameter; // for modules use
 
     m_pBRSCountInfo = new VfModuleMetaData(QString("BRSCount"), QVariant(configData->m_nBurdenSystemCount));
-    m_pModule->veinModuleMetaDataList.append(m_pBRSCountInfo);
+    m_pModule->m_veinModuleMetaDataList.append(m_pBRSCountInfo);
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),

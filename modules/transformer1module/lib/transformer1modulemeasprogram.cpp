@@ -169,7 +169,7 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pSecDutParameter; // for modules use
 
     m_pTRSCountInfo = new VfModuleMetaData(QString("TRSCount"), QVariant(configData->m_nTransformerSystemCount));
-    m_pModule->veinModuleMetaDataList.append(m_pTRSCountInfo);
+    m_pModule->m_veinModuleMetaDataList.append(m_pTRSCountInfo);
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),

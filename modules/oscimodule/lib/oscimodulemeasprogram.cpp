@@ -76,7 +76,7 @@ void cOsciModuleMeasProgram::generateVeinInterface()
     }
 
     m_pOsciCountInfo = new VfModuleMetaData(QString("OSCICount"), QVariant(n));
-    m_pModule->veinModuleMetaDataList.append(m_pOsciCountInfo);
+    m_pModule->m_veinModuleMetaDataList.append(m_pOsciCountInfo);
 
     QString refChannelMNameConfigured = m_pModule->getConfigData()->m_RefChannel.m_sValue;
     const QString channelMarkdown = m_pModule->getSharedChannelRangeObserver()->getChannelNamesForMardownDoc();

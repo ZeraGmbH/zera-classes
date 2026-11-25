@@ -41,10 +41,10 @@ void cRangeModule::setupModule()
     cBaseMeasModule::setupModule();
 
     m_pChannelCountInfo = new VfModuleMetaData(QString("ChannelCount"), QVariant(getConfigData()->m_nChannelCount));
-    veinModuleMetaDataList.append(m_pChannelCountInfo);
+    m_veinModuleMetaDataList.append(m_pChannelCountInfo);
 
     m_pGroupCountInfo = new VfModuleMetaData(QString("GroupCount"), QVariant(getConfigData()->m_nGroupCount));
-    veinModuleMetaDataList.append(m_pGroupCountInfo);
+    m_veinModuleMetaDataList.append(m_pGroupCountInfo);
 
 
     // first we build a list of our meas channels

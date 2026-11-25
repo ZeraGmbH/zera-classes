@@ -54,7 +54,7 @@ void cLambdaModuleMeasProgram::generateVeinInterface()
     }
 
     m_pLAMBDACountInfo = new VfModuleMetaData(QString("LambdaCount"), QVariant(configData->m_nLambdaSystemCount));
-    m_pModule->veinModuleMetaDataList.append(m_pLAMBDACountInfo);
+    m_pModule->m_veinModuleMetaDataList.append(m_pLAMBDACountInfo);
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),

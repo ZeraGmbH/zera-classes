@@ -202,7 +202,7 @@ void cRangeObsermatic::generateVeinInterface()
         for (int i = 0; i < m_GroupList.count(); i++) {
             QString groupMems = m_GroupList.at(i).join(";");
             VfModuleMetaData *pMetaData = new VfModuleMetaData(QString("ChannelGroup%1").arg(i+1), QVariant(groupMems));
-            m_pModule->veinModuleMetaDataList.append(pMetaData); // only for module use
+            m_pModule->m_veinModuleMetaDataList.append(pMetaData); // only for module use
         }
     }
 

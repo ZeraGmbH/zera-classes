@@ -102,9 +102,9 @@ void cFftModuleMeasProgram::generateVeinInterface()
     }
 
     m_pFFTCountInfo = new VfModuleMetaData(QString("FFTCount"), QVariant(channelCount));
-    m_pModule->veinModuleMetaDataList.append(m_pFFTCountInfo);
+    m_pModule->m_veinModuleMetaDataList.append(m_pFFTCountInfo);
     m_pFFTOrderInfo = new VfModuleMetaData(QString("FFTOrder"), QVariant(m_pModule->getConfigData()->m_nFftOrder));
-    m_pModule->veinModuleMetaDataList.append(m_pFFTOrderInfo);
+    m_pModule->m_veinModuleMetaDataList.append(m_pFFTOrderInfo);
 
     QString key;
     m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),

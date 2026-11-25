@@ -113,9 +113,9 @@ void cRmsModuleMeasProgram::generateVeinInterface()
     }
 
     m_pRMSPNCountInfo = new VfModuleMetaData(QString("RMSPNCount"), QVariant(phaseNeutralValueCount));
-    m_pModule->veinModuleMetaDataList.append(m_pRMSPNCountInfo);
+    m_pModule->m_veinModuleMetaDataList.append(m_pRMSPNCountInfo);
     m_pRMSPPCountInfo = new VfModuleMetaData(QString("RMSPPCount"), QVariant(phasePhaseValueCount));
-    m_pModule->veinModuleMetaDataList.append(m_pRMSPPCountInfo);
+    m_pModule->m_veinModuleMetaDataList.append(m_pRMSPPCountInfo);
 
     QVariant val;
     QString intervalDescription, unit;

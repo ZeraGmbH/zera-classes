@@ -67,7 +67,7 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pActvalue); // and for the modules interface
     }
     m_pHPWCountInfo = new VfModuleMetaData(QString("HPWCount"), QVariant(configData->m_nPowerSystemCount));
-    m_pModule->veinModuleMetaDataList.append(m_pHPWCountInfo);
+    m_pModule->m_veinModuleMetaDataList.append(m_pHPWCountInfo);
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
