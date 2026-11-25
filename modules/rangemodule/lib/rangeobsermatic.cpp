@@ -24,18 +24,32 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     cModuleActivist(QString("RangeObsermatic / %1").arg(qPrintable(module->getVeinModuleName()))),
     m_pModule(module),
     m_GroupList(groupList),
-    m_ConfPar(confpar)
-{
-    m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeObser(
+    m_ConfPar(confpar),
+    m_dspInterface(m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeObser(
         m_pModule->getEntityId(),
         m_pModule->getSharedChannelRangeObserver()->getChannelMNames(),
-        false /* just for demo COM5003 ref-session - postpone better solution now */);
+        false /* just for demo COM5003 ref-session - postpone better solution now */)),
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
+{
+    m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);
 
+    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);
+
+    m_pcbserverConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_dspserverConnectState);
+    m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
     m_readGainCorrState.addTransition(this, &cRangeObsermatic::activationContinue, &m_activationDoneState);
+
+    m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_activationDoneState);
+    m_activationMachine.setInitialState(&m_pcbserverConnectState);
 
+    connect(&m_pcbserverConnectState, &QState::entered, this, &cRangeObsermatic::pcbserverConnect);
     connect(&m_dspserverConnectState, &QState::entered, this, &cRangeObsermatic::dspserverConnect);
     connect(&m_readGainCorrState, &QState::entered, this, &cRangeObsermatic::readGainScale);
     connect(&m_activationDoneState, &QState::entered, this, &cRangeObsermatic::onActivationDone);
@@ -43,7 +57,6 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
     m_deactivationInitState.addTransition(this, &cRangeObsermatic::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    m_activationMachine.setInitialState(&m_dspserverConnectState);
     m_deactivationMachine.setInitialState(&m_deactivationInitState);
 
     connect(&m_deactivationInitState, &QState::entered, this, &cRangeObsermatic::deactivationInit);
@@ -495,30 +508,13 @@ bool cRangeObsermatic::requiresOverloadReset(int channel)
            (m_ConfPar.m_nRangeAutoAct.m_nActive != 1 || !m_maxOvlList.at(channel));
 }
 
-double cRangeObsermatic::getPreScaling(int channelIdx)
+void cRangeObsermatic::pcbserverConnect()
 {
-    double prescaleValue = 1;
-    int groupPresacalingIdxFound = -1;
-    const QStringList channelAliases = m_pModule->getSharedChannelRangeObserver()->getChannelAliases();
-    if(channelIdx < channelAliases.length()){
-        QString alias = channelAliases.at(channelIdx);
-        for(int groupListIdx = 0; groupListIdx<m_GroupList.length(); groupListIdx++) {
-            if(m_GroupList[groupListIdx].contains(alias))
-                groupPresacalingIdxFound = groupListIdx;
-        }
-    }
-
-    if(groupPresacalingIdxFound < m_veinRangeGroupPreScalingList.length() && groupPresacalingIdxFound > -1)
-        prescaleValue = m_veinRangeGroupPreScalingInfo.at(groupPresacalingIdxFound)->getValue().toDouble();
-    return prescaleValue;
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
 }
 
 void cRangeObsermatic::dspserverConnect()
 {
-    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo,
-                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
-    connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 
@@ -804,6 +800,25 @@ void cRangeObsermatic::catchChannelNewRangeList()
     m_ChannelRangeValidatorHash[channel->getMName()]->setValidator(channel->getAvailAliasList());
     m_pModule->exportMetaData();
     setRanges(true); // after a new range list was detected, we force setting ranges because it may be that the actual range disappeared
+}
+
+
+double cRangeObsermatic::getPreScaling(int channelIdx)
+{
+    double prescaleValue = 1;
+    int groupPresacalingIdxFound = -1;
+    const QStringList channelAliases = m_pModule->getSharedChannelRangeObserver()->getChannelAliases();
+    if(channelIdx < channelAliases.length()){
+        QString alias = channelAliases.at(channelIdx);
+        for(int groupListIdx = 0; groupListIdx<m_GroupList.length(); groupListIdx++) {
+            if(m_GroupList[groupListIdx].contains(alias))
+                groupPresacalingIdxFound = groupListIdx;
+        }
+    }
+
+    if(groupPresacalingIdxFound < m_veinRangeGroupPreScalingList.length() && groupPresacalingIdxFound > -1)
+        prescaleValue = m_veinRangeGroupPreScalingInfo.at(groupPresacalingIdxFound)->getValue().toDouble();
+    return prescaleValue;
 }
 
 }

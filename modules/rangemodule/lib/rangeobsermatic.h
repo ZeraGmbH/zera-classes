@@ -52,6 +52,7 @@ public slots:
     void catchChannelNewRangeList();
 
 private slots:
+    void pcbserverConnect();
     void dspserverConnect();
     void readGainScale();
     void onActivationDone();
@@ -87,9 +88,12 @@ private:
     double getPreScaling(int channelIdx);
 
     cRangeModule *m_pModule;
+    Zera::DspInterfacePtr m_dspInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
+
     QList<QStringList> m_GroupList;
     cObsermaticConfPar& m_ConfPar;
-    Zera::DspInterfacePtr m_dspInterface;
+
     QList<cRangeMeasChannel*> m_RangeMeasChannelList;
     QHash<QString,cStringValidator*> m_ChannelRangeValidatorHash;
     QList<bool> m_softOvlList; // here we enter software detected overloads
@@ -122,6 +126,7 @@ private:
     QHash<quint32, int> m_MsgNrCmdList;
 
     // statemachine for activation (reading dsp correction data used for scaling)
+    QState m_pcbserverConnectState;
     QState m_dspserverConnectState;
     QState m_readGainCorrState;
     QFinalState m_activationDoneState;
