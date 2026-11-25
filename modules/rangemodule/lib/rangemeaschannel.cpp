@@ -57,7 +57,6 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
 enum rangemeaschannelCmds
 {
     setmeaschannelrange,
-    readoffsetcorrection,
     readchannelstatusbitmask,
     resetchannelstatusbitmask_emitcmddone,
     resetchannelstatusbitmask_instatemachine,
@@ -79,18 +78,6 @@ quint32 cRangeMeasChannel::setRange(const QString &rangeName)
 QString cRangeMeasChannel::getCurrRangeName() const
 {
     return m_actRangeName;
-}
-
-quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
-{
-    if (m_bActive) {
-        ChannelCommonStorage *channelCommon = getChannelObserver()->getModuleCommonStorage();
-        channelCommon->setLastOffsetAdjAmplitude(amplitude);
-        quint32 msgnr = m_pcbInterface->getOffsetCorrection(getMName(), m_actRangeName, amplitude);
-        m_MsgNrCmdList[msgnr] = readoffsetcorrection;
-        return msgnr;
-    }
-    return 1;
 }
 
 // This caused a bit of confusion so write it down:
@@ -259,11 +246,6 @@ QString cRangeMeasChannel::getAvailAliasList()
     return m_channelObserver->getAvailAliasList();
 }
 
-double cRangeMeasChannel::getOffsetCorrection()
-{
-    return m_fOffsetCorrection;
-}
-
 bool cRangeMeasChannel::isHWOverload()
 {
     return ((m_statusBitMask & 1) > 0);
@@ -312,13 +294,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                          reply);
                 notifyError(setRangeErrMsg);
             } // perhaps some error output
-            emit cmdDone(msgnr);
-            break;
-        case readoffsetcorrection:
-            if (reply == ack)
-                m_fOffsetCorrection = answer.toDouble();
-            else
-                notifyError(readOffsetCorrErrMsg);
             emit cmdDone(msgnr);
             break;
         case readchannelstatusbitmask:

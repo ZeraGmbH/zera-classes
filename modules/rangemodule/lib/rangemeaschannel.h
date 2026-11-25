@@ -32,10 +32,6 @@ public:
     RangeChannelData* getSharedChannelData();
     QString getCurrRangeName() const;
 
-    // for channel adjustment
-    quint32 readOffsetCorrection(double amplitude);
-    double getOffsetCorrection(); // returns last read offset correction
-
     // for range obsermatic
     quint32 readStatus(); // read the channels status
     quint32 resetStatus(); // reset the channels status
@@ -76,7 +72,6 @@ private:
 
     QString m_nextRangeName;
     QString m_actRangeName;
-    double m_fOffsetCorrection;
     quint32 m_statusBitMask; // currently just COM5003 HW overload bit
     ChannelRangeObserver::ChannelCurrentRangePtr m_channelCurrentRangeObserver;
 

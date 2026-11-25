@@ -30,7 +30,8 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
         false /* just for demo COM5003 ref-session - postpone better solution now */
           )),
     m_fGainCorrection(chnlist.size()),
-    m_fPhaseCorrection(chnlist.size())
+    m_fPhaseCorrection(chnlist.size()),
+    m_fOffsetCorrection(chnlist.size())
 {
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -398,7 +399,11 @@ void RangeChannelAdjustment::getOffsetCorrFromPcbServer()
         double actualValue = channelData->getRmsValue();
         double preScalingFact = channelData->getPreScaling();
         double actualValueForOffset = actualValue * preScalingFact;
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValueForOffset)] = pcbcalcoffsetcorr;
+
+        ChannelCommonStorage *channelCommon = measChannel->getChannelObserver()->getModuleCommonStorage();
+        channelCommon->setLastOffsetAdjAmplitude(actualValueForOffset);
+        quint32 msgnr = m_pcbInterface->getOffsetCorrection(measChannel->getMName(), measChannel->getCurrRangeName(), actualValueForOffset);
+        m_MsgNrCmdList[msgnr] = pcbcalcoffsetcorr;
     }
 }
 
@@ -406,7 +411,7 @@ void RangeChannelAdjustment::prepareOffsetCorrForDspServer()
 {
     if (m_bActive) {
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
-        float fCorr = measChannel->getOffsetCorrection();
+        float fCorr = m_fOffsetCorrection.at(m_nChannelIt);
         double preScale=measChannel->getSharedChannelData()->getPreScaling();
         // Offset is an summand. It must be multiplied with the
         // scale factor.
@@ -453,6 +458,14 @@ void RangeChannelAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 else
                     notifyError(readPhaseCorrErrMsg);
+                break;
+            case pcbcalcoffsetcorr:
+                if (reply == ack) {
+                    m_fOffsetCorrection[m_nChannelIt] = answer.toDouble();
+                    emit activationContinue();
+                }
+                else
+                    notifyError(readOffsetCorrErrMsg);
                 break;
 
             case dspreadgaincorr:
@@ -509,9 +522,6 @@ void RangeChannelAdjustment::catchChannelReply(quint32 msgnr)
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
     {
-    case pcbcalcoffsetcorr:
-        emit activationContinue();
-        break;
     }
 }
 

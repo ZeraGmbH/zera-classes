@@ -119,6 +119,7 @@ private:
 
     QVector<double> m_fGainCorrection;
     QVector<double> m_fPhaseCorrection;
+    QVector<double> m_fOffsetCorrection;
 };
 
 }
