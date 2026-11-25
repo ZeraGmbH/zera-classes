@@ -57,7 +57,6 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
 enum rangemeaschannelCmds
 {
     setmeaschannelrange,
-    readgaincorrectioninternalandclamp,
     readoffsetcorrection,
     readphasecorrection,
     readchannelstatusbitmask,
@@ -81,18 +80,6 @@ quint32 cRangeMeasChannel::setRange(const QString &rangeName)
 QString cRangeMeasChannel::getCurrRangeName() const
 {
     return m_actRangeName;
-}
-
-quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
-{
-    if (m_bActive) {
-        ChannelCommonStorage *channelCommon = getChannelObserver()->getModuleCommonStorage();
-        channelCommon->setLastGainAdjAmplitude(amplitude);
-        quint32 msgnr = m_pcbInterface->getGainCorrection(getMName(), m_actRangeName, amplitude);
-        m_MsgNrCmdList[msgnr] = readgaincorrectioninternalandclamp;
-        return msgnr;
-    }
-    return 1;
 }
 
 quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
@@ -283,11 +270,6 @@ QString cRangeMeasChannel::getAvailAliasList()
     return m_channelObserver->getAvailAliasList();
 }
 
-double cRangeMeasChannel::getGainCorrection()
-{
-    return m_fGainCorrection;
-}
-
 double cRangeMeasChannel::getPhaseCorrection()
 {
     return m_fPhaseCorrection;
@@ -346,13 +328,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                          reply);
                 notifyError(setRangeErrMsg);
             } // perhaps some error output
-            emit cmdDone(msgnr);
-            break;
-        case readgaincorrectioninternalandclamp:
-            if (reply == ack)
-                m_fGainCorrection = answer.toDouble();
-            else
-                notifyError(readGainCorrErrMsg);
             emit cmdDone(msgnr);
             break;
         case readoffsetcorrection:

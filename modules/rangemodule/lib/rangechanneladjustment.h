@@ -116,6 +116,8 @@ private:
     QVector<float> m_fGainKeeperForFakingRmsValues;
     float* m_dspPhaseCorrValues = nullptr;
     float* m_dspOffsetCorrValues = nullptr;
+
+    QVector<double> m_fGainCorrection;
 };
 
 }

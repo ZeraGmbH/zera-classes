@@ -33,10 +33,8 @@ public:
     QString getCurrRangeName() const;
 
     // for channel adjustment
-    quint32 readGainCorrection(double amplitude);
     quint32 readPhaseCorrection(double frequency);
     quint32 readOffsetCorrection(double amplitude);
-    double getGainCorrection(); // returns last read gain correction
     double getPhaseCorrection(); // returns last read phase correction
     double getOffsetCorrection(); // returns last read offset correction
 
@@ -80,7 +78,6 @@ private:
 
     QString m_nextRangeName;
     QString m_actRangeName;
-    double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
     quint32 m_statusBitMask; // currently just COM5003 HW overload bit

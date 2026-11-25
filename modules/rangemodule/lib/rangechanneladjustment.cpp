@@ -28,7 +28,8 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
         m_pModule->getEntityId(),
         m_channelNameList,
         false /* just for demo COM5003 ref-session - postpone better solution now */
-          ))
+          )),
+    m_fGainCorrection(chnlist.size())
 {
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -309,22 +310,27 @@ void RangeChannelAdjustment::writeOffsetCorr()
 
 void RangeChannelAdjustment::getGainCorrFromPcbServer()
 {
-    if (m_bActive){
-        const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getSharedChannelData();
+    if (m_bActive) {
+        cRangeMeasChannel *channel = m_ChannelList.at(m_nChannelIt);
+        const RangeChannelData *channelData = channel->getSharedChannelData();
+
         double actualValue = channelData->getRmsValue();
         double preScalingFact = channelData->getPreScaling();
-        cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
-        double unscaledActualValue = actualValue * preScalingFact / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(unscaledActualValue)] = pcbcalcgaincorr;
+        double unscaledActualValue = actualValue * preScalingFact / m_fGainKeeperForFakingRmsValues[channel->getDSPChannelNr()];
+
+        ChannelCommonStorage *channelCommon = channel->getChannelObserver()->getModuleCommonStorage();
+        channelCommon->setLastGainAdjAmplitude(unscaledActualValue);
+        quint32 msgnr = m_pcbInterface->getGainCorrection(channel->getMName(), channel->getCurrRangeName(), unscaledActualValue);
+        m_MsgNrCmdList[msgnr] = pcbcalcgaincorr;
     }
 }
 
 void RangeChannelAdjustment::prepareGainCorrForDspServer()
 {
     if (m_bActive) {
-        cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         // TODO Phase inversion to GAINCORRECTION2
-        float fCorr = measChannel->getGainCorrection();
+        float fCorr = m_fGainCorrection.at(m_nChannelIt);
+        cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         ChannelCommonStorage *channelCommon = measChannel->getChannelObserver()->getModuleCommonStorage();
         if (channelCommon->getInvertedPhaseState())
             fCorr = fCorr * -1;
@@ -430,6 +436,15 @@ void RangeChannelAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
+            case pcbcalcgaincorr:
+                if (reply == ack) {
+                    m_fGainCorrection[m_nChannelIt] = answer.toDouble();
+                    emit activationContinue();
+                }
+                else
+                    notifyError(readGainCorrErrMsg);
+                break;
+
             case dspreadgaincorr:
                 if (reply == ack)
                     emit activationContinue();
@@ -484,7 +499,6 @@ void RangeChannelAdjustment::catchChannelReply(quint32 msgnr)
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
     {
-    case pcbcalcgaincorr:
     case pcbcalcphasecorr:
     case pcbcalcoffsetcorr:
         emit activationContinue();
