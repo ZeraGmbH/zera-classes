@@ -182,19 +182,19 @@ void RangeChannelAdjustment::dspserverConnect()
 
 enum adjustmentCmds
 {
-    readgaincorr,
-    readphasecorr,
-    readoffsetcorr,
+    dspreadgaincorr,
+    dspreadphasecorr,
+    dspreadoffsetcorr,
 
-    writegaincorr,
-    writephasecorr,
-    writeoffsetcorr,
+    dspwritegaincorr,
+    dspwritephasecorr,
+    dspwriteoffsetcorr,
 
-    getgaincorr,
-    getphasecorr,
-    getoffsetcore,
+    pcbcalcgaincorr,
+    pcbcalcphasecorr,
+    pcbcalcoffsetcorr,
 
-    subdcdsp,
+    dspwritesubdcdsp,
 };
 
 void RangeChannelAdjustment::readGainCorr()
@@ -214,17 +214,17 @@ void RangeChannelAdjustment::readGainCorr()
     m_pOffsetCorrectionDSP->addDspVar("OFFSETCORRECTION", 32, dspDataTypeFloat, dspInternalSegment);
     m_dspOffsetCorrValues = m_pOffsetCorrectionDSP->data("OFFSETCORRECTION");
 
-    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pGainCorrectionDSP)] = dspreadgaincorr;
 }
 
 void RangeChannelAdjustment::readPhaseCorr()
 {
-    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pPhaseCorrectionDSP)] = readphasecorr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pPhaseCorrectionDSP)] = dspreadphasecorr;
 }
 
 void RangeChannelAdjustment::readOffsetCorr()
 {
-    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pOffsetCorrectionDSP)] = readoffsetcorr;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryRead(m_pOffsetCorrectionDSP)] = dspreadoffsetcorr;
 }
 
 void RangeChannelAdjustment::setSubDC()
@@ -236,7 +236,7 @@ void RangeChannelAdjustment::setSubDC()
     DspVarGroupClientInterface* pSubDCMaskDSP = m_dspInterface->createVariableGroup("SubDC"); // here we can set if sub dc or not
     pSubDCMaskDSP->addDspVar("SUBDC", 1, dspDataTypeInt, dspInternalSegment);
     pSubDCMaskDSP->setVarData(QString("SUBDC:%1;").arg(subdc));
-    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(pSubDCMaskDSP)] = subdcdsp;
+    m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(pSubDCMaskDSP)] = dspwritesubdcdsp;
 }
 
 void RangeChannelAdjustment::activationDone()
@@ -273,19 +273,19 @@ void RangeChannelAdjustment::deactivationDone()
 void RangeChannelAdjustment::writeGainCorr()
 {
     if (m_bActive)
-        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pGainCorrectionDSP)] = writegaincorr;
+        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pGainCorrectionDSP)] = dspwritegaincorr;
 }
 
 void RangeChannelAdjustment::writePhaseCorr()
 {
     if (m_bActive)
-        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pPhaseCorrectionDSP)] = writephasecorr;
+        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pPhaseCorrectionDSP)] = dspwritephasecorr;
 }
 
 void RangeChannelAdjustment::writeOffsetCorr()
 {
     if (m_bActive)
-        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pOffsetCorrectionDSP)] = writeoffsetcorr;
+        m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_pOffsetCorrectionDSP)] = dspwriteoffsetcorr;
 }
 
 void RangeChannelAdjustment::getGainCorrFromPcbServer()
@@ -296,7 +296,7 @@ void RangeChannelAdjustment::getGainCorrFromPcbServer()
         double preScalingFact = channelData->getPreScaling();
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
         double unscaledActualValue = actualValue * preScalingFact / m_fGainKeeperForFakingRmsValues[measChannel->getDSPChannelNr()];
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(unscaledActualValue)] = getgaincorr;
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(unscaledActualValue)] = pcbcalcgaincorr;
     }
 }
 
@@ -342,7 +342,7 @@ void RangeChannelAdjustment::getPhaseCorrFromPcbServer()
     if (m_bActive) {
         const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getSharedChannelData();
         double frequency = channelData->getSignalFrequency();
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(frequency)] = getphasecorr;
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(frequency)] = pcbcalcphasecorr;
     }
 }
 
@@ -371,7 +371,7 @@ void RangeChannelAdjustment::getOffsetCorrFromPcbServer()
         double actualValue = channelData->getRmsValue();
         double preScalingFact = channelData->getPreScaling();
         double actualValueForOffset = actualValue * preScalingFact;
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValueForOffset)] = getoffsetcore;
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValueForOffset)] = pcbcalcoffsetcorr;
     }
 }
 
@@ -411,45 +411,45 @@ void RangeChannelAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case readgaincorr:
+            case dspreadgaincorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(readdspgaincorrErrMsg);
                 break;
-            case readphasecorr:
+            case dspreadphasecorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(readdspphasecorrErrMsg);
                 break;
-            case readoffsetcorr:
+            case dspreadoffsetcorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(readdspoffsetcorrErrMsg);
                 break;
 
-            case subdcdsp:
+            case dspwritesubdcdsp:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(writesubdcErrMsg);
                 break;
 
-            case writegaincorr:
+            case dspwritegaincorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(writedspgaincorrErrMsg);
                 break;
-            case writephasecorr:
+            case dspwritephasecorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     notifyError(writedspphasecorrErrMsg);
                 break;
-            case writeoffsetcorr:
+            case dspwriteoffsetcorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
@@ -465,9 +465,9 @@ void RangeChannelAdjustment::catchChannelReply(quint32 msgnr)
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
     {
-    case getgaincorr:
-    case getphasecorr:
-    case getoffsetcore:
+    case pcbcalcgaincorr:
+    case pcbcalcphasecorr:
+    case pcbcalcoffsetcorr:
         emit activationContinue();
         break;
     }
