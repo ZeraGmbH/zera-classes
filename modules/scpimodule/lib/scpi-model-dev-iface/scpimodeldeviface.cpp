@@ -24,7 +24,7 @@ void ScpiModelDevIface::setupScpi(cSCPIInterface *scpiInterface)
     connect(delegate.get(), &ScpiDelegateInterface::signalExecuteSCPI, this, &ScpiModelDevIface::executeCmd);
 
     // for module integrity we also have to add this command to the scpi command list (exported at INF_ModuleInterface)
-    m_pModule->scpiCommandList.append(new VfModuleMetaInfoContainer("", QString("DEVICE:IFACE"), SCPI::isQuery, ""));
+    m_pModule->m_scpiCommandWithoutVeinComponentList.append(new VfModuleMetaInfoContainer("", QString("DEVICE:IFACE"), SCPI::isQuery, ""));
 }
 
 void ScpiModelDevIface::executeCmd(cSCPIClient *client,

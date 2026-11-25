@@ -272,7 +272,7 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pMeasuringmodeParameter; // for modules use
 
     if(configData->m_enableScpiCommands)
-        m_pModule->scpiCommandList.append(new VfModuleMetaInfoContainer("CONFIGURATION", QString("MMODE:CATALOG"),
+        m_pModule->m_scpiCommandWithoutVeinComponentList.append(new VfModuleMetaInfoContainer("CONFIGURATION", QString("MMODE:CATALOG"),
                                                                     SCPI::isQuery,
                                                                     m_pMeasuringmodeParameter->getComponentName(),
                                                                     SCPI::isCatalog));

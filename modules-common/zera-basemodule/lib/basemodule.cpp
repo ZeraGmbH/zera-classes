@@ -133,9 +133,9 @@ void BaseModule::unsetModule()
         delete veinComponentsWithMetaAndScpi;
     m_veinComponentsWithMetaAndScpi.clear();
 
-    for (auto scpiCommand : qAsConst(scpiCommandList))
+    for (auto scpiCommand : qAsConst(m_scpiCommandWithoutVeinComponentList))
         delete scpiCommand;
-    scpiCommandList.clear();
+    m_scpiCommandWithoutVeinComponentList.clear();
 
     for (auto veinModuleParameter : qAsConst(m_veinModuleParameterMap))
         delete veinModuleParameter;
@@ -223,8 +223,8 @@ void BaseModule::exportMetaData()
 
     QJsonArray jsonScpiCmdArr;
     // and then all the command information for actual values, parameters and for add. commands without components
-    for (int i = 0; i < scpiCommandList.count(); i++)
-        scpiCommandList.at(i)->appendSCPIInfo(jsonScpiCmdArr);
+    for (int i = 0; i < m_scpiCommandWithoutVeinComponentList.count(); i++)
+        m_scpiCommandWithoutVeinComponentList.at(i)->appendSCPIInfo(jsonScpiCmdArr);
     for (int i = 0; i < m_veinComponentsWithMetaAndScpi.count(); i++)
         m_veinComponentsWithMetaAndScpi.at(i)->exportSCPIInfo(jsonScpiCmdArr);
 

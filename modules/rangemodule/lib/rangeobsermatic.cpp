@@ -589,7 +589,7 @@ void cRangeObsermatic::onActivationDone()
                                                                     SCPI::isQuery,
                                                                     m_veinRangeAliasParameterList.at(i)->getComponentName(),
                                                                     SCPI::isCatalog);
-        m_pModule->scpiCommandList.append(scpiInfo);
+        m_pModule->m_scpiCommandWithoutVeinComponentList.append(scpiInfo);
 
         m_veinRangeOVLRejectionComponentList.at(i)->setChannelName(channelAlias);
         m_veinRangeActRejectionComponentList.at(i)->setChannelName(channelAlias);
