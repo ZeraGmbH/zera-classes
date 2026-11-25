@@ -380,7 +380,7 @@ void RangeChannelAdjustment::preparePhaseCorrForDspServer()
     if (m_bActive) {
         float fCorr = m_fPhaseCorrection.at(m_nChannelIt);
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
-        m_dspPhaseCorrValues[measChannel->getDSPChannelNr()] = fCorr; // at least double housekeeping!!!
+        m_dspPhaseCorrValues[measChannel->getDSPChannelNr()] = fCorr;
         m_nChannelIt++;
         if (m_nChannelIt < m_channelNameList.count())
             emit repeatStateMachine();

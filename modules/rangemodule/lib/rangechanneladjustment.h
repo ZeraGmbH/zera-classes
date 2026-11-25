@@ -112,8 +112,8 @@ private:
     DspVarGroupClientInterface* m_pPhaseCorrectionDSP = nullptr;
     DspVarGroupClientInterface* m_pOffsetCorrectionDSP = nullptr;
 
-    float* m_dspGainCorrValues = nullptr;
     QVector<float> m_fGainKeeperForFakingRmsValues;
+    float* m_dspGainCorrValues = nullptr;
     float* m_dspPhaseCorrValues = nullptr;
     float* m_dspOffsetCorrValues = nullptr;
 
