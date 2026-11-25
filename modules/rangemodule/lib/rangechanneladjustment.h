@@ -50,8 +50,6 @@ private slots:
     void getCorrDone();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-    void catchChannelReply(quint32 msgnr);
-
     void adjustPrepare();
 
     void parIgnoreRmsValuesOnOffChanged(QVariant newValue);

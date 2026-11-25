@@ -43,8 +43,6 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
     for (int channelIdx = 0; channelIdx < m_channelNameList.count(); channelIdx++) {
         // we fetch all our real channels first
         m_ChannelList.append(m_pModule->getMeasChannel(m_channelNameList.at(channelIdx)));
-        // we connect cmddone of our meas channels so we get informed if commands are finished
-        connect(m_ChannelList.at(channelIdx), &cRangeMeasChannel::cmdDone, this, &RangeChannelAdjustment::catchChannelReply);
     }
 
     for (int i = 0; i < m_subdcChannelNameList.count(); i++) // we fetch all our real channels first
@@ -514,14 +512,6 @@ void RangeChannelAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             }
         }
-    }
-}
-
-void RangeChannelAdjustment::catchChannelReply(quint32 msgnr)
-{
-    int cmd = m_MsgNrCmdList.take(msgnr);
-    switch (cmd)
-    {
     }
 }
 
