@@ -40,12 +40,6 @@ void cRangeModule::setupModule()
     emit addEventSystem(getValidatorEventSystem());
     cBaseMeasModule::setupModule();
 
-    m_pChannelCountInfo = new VfModuleMetaData(QString("ChannelCount"), QVariant(getConfigData()->m_nChannelCount));
-    m_veinModuleMetaDataList.append(m_pChannelCountInfo);
-
-    m_pGroupCountInfo = new VfModuleMetaData(QString("GroupCount"), QVariant(getConfigData()->m_nGroupCount));
-    m_veinModuleMetaDataList.append(m_pGroupCountInfo);
-
 
     // first we build a list of our meas channels
     const QStringList channelMNames = getSharedChannelRangeObserver()->getChannelMNames();
