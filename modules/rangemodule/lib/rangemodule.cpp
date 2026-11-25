@@ -12,34 +12,6 @@ cRangeModule::cRangeModule(const ModuleFactoryParam &moduleParam) :
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(moduleParam.m_moduleNum);
     m_sModuleDescription = QString("This module is responsible for range handling,\n range setting, automatic, adjustment and scaling");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(moduleParam.m_moduleNum);
-}
-
-cRangeModuleConfigData *cRangeModule::getConfigData()
-{
-    return m_configuration.getConfigData();
-}
-
-QByteArray cRangeModule::getConfigXml() const
-{
-    return m_configuration.exportConfiguration();
-}
-
-cRangeMeasChannel *cRangeModule::getMeasChannel(const QString &name)
-{
-    cRangeMeasChannel* p_rmc = 0;
-    for (int i = 0; i < m_rangeMeasChannelList.count(); i++) {
-        p_rmc =  m_rangeMeasChannelList.at(i);
-        if ((p_rmc->getMName()) == name)
-            return p_rmc;
-    }
-    return p_rmc;
-}
-
-void cRangeModule::setupModule()
-{
-    emit addEventSystem(getValidatorEventSystem());
-    cBaseMeasModule::setupModule();
-
 
     // first we build a list of our meas channels
     const QStringList channelMNames = getSharedChannelRangeObserver()->getChannelMNames();
@@ -82,6 +54,33 @@ void cRangeModule::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::activated, this, &cRangeModule::activationContinue);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::deactivated, this, &cRangeModule::deactivationContinue);
+}
+
+cRangeModuleConfigData *cRangeModule::getConfigData()
+{
+    return m_configuration.getConfigData();
+}
+
+QByteArray cRangeModule::getConfigXml() const
+{
+    return m_configuration.exportConfiguration();
+}
+
+cRangeMeasChannel *cRangeModule::getMeasChannel(const QString &name)
+{
+    cRangeMeasChannel* p_rmc = 0;
+    for (int i = 0; i < m_rangeMeasChannelList.count(); i++) {
+        p_rmc =  m_rangeMeasChannelList.at(i);
+        if ((p_rmc->getMName()) == name)
+            return p_rmc;
+    }
+    return p_rmc;
+}
+
+void cRangeModule::setupModule()
+{
+    emit addEventSystem(getValidatorEventSystem());
+    cBaseMeasModule::setupModule();
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateVeinInterface();
