@@ -22,8 +22,8 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module) :
         m_pModule->getEntityId(),
         channelMNames,
         m_pModule->getConfigData()->m_session.m_sValue == "ref");
-    m_bRanging = false;
-    m_bIgnore = false;
+    m_rangingIsInProgress = false;
+    m_doNotStartDataAquisition = false;
 
     m_var2DSPState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_activateDSPState);
@@ -72,8 +72,8 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module) :
 
 void cRangeModuleMeasProgram::syncRanging(QVariant sync)
 {
-    m_bRanging = (sync != 0); // we are ranging from the moment sync becomes 1
-    m_bIgnore = (sync == 0); // when ranging has finished we ignore 1 more actual values
+    m_rangingIsInProgress = (sync != 0); // we are ranging from the moment sync becomes 1
+    m_doNotStartDataAquisition = (sync == 0); // when ranging has finished we ignore 1 more actual values
 }
 
 void cRangeModuleMeasProgram::generateVeinInterface()
@@ -209,13 +209,13 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
         restartDspWachdog();
         // we got an interrupt from our cmd chain and have to fetch our actual values
         // but we synchronize on ranging process
-        if (!m_bRanging) {
-            if (!m_bIgnore) {
+        if (!m_rangingIsInProgress) {
+            if (!m_doNotStartDataAquisition) {
                 if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
                     m_dataAcquisitionMachine.start();
             }
             else
-                m_bIgnore = false;
+                m_doNotStartDataAquisition = false;
         }
     }
     else {

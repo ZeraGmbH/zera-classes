@@ -29,8 +29,8 @@ private:
     void setDspCmdList();
 
     cRangeModule* m_pModule = nullptr; // the module we live in
-    bool m_bRanging = false;
-    bool m_bIgnore = false;
+    bool m_rangingIsInProgress = false;
+    bool m_doNotStartDataAquisition = false;
 
     VfModuleComponent *m_pMeasureSignal = nullptr;
     QList<VfModuleComponent*> m_veinActValueList;
