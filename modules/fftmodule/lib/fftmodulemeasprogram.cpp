@@ -127,11 +127,11 @@ void cFftModuleMeasProgram::generateVeinInterface()
     m_pRefChannelParameter->setScpiInfo("CONFIGURATION","REFCHANNEL", SCPI::isQuery|SCPI::isCmdwP);
     m_pModule->m_veinModuleParameterMap[key] = m_pRefChannelParameter; // for modules use
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+    m_veinSigMeasuringComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinSigMeasuringComponent);
 }
 
 
@@ -330,7 +330,7 @@ void cFftModuleMeasProgram::activateDSP()
 void cFftModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
-    m_pMeasureSignal->setValue(QVariant(1));
+    m_veinSigMeasuringComponent->setValue(QVariant(1));
     connect(m_pIntegrationTimeParameter, &VfModuleParameter::sigValueChanged, this, &cFftModuleMeasProgram::newIntegrationtime);
     connect(m_pRefChannelParameter, &VfModuleParameter::sigValueChanged, this, &cFftModuleMeasProgram::newRefChannel);
     emit activated();
@@ -347,7 +347,7 @@ void cFftModuleMeasProgram::deactivateDSPStart()
 void cFftModuleMeasProgram::dataAcquisitionDSP()
 {
     if (m_bActive && m_taskDataAcquisition == nullptr) {
-        m_pMeasureSignal->setValue(QVariant(0));
+        m_veinSigMeasuringComponent->setValue(QVariant(0));
         m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
         connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
             m_taskDataAcquisition.reset();
@@ -397,7 +397,7 @@ void cFftModuleMeasProgram::dataReadDSP()
         }
 
         emit actualValues(&m_FFTModuleActualValues); // and send them
-        m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
+        m_veinSigMeasuringComponent->setValue(QVariant(1)); // signal measuring
     }
 }
 

@@ -289,12 +289,12 @@ void cPower2ModuleMeasProgram::generateVeinInterface()
     }
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationParameter; // for modules use
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+    m_veinSigMeasuringComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinSigMeasuringComponent);
 }
 
 void cPower2ModuleMeasProgram::setDspVarList()
@@ -925,7 +925,7 @@ void cPower2ModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     setSCPIMeasInfo();
     setFoutMetaInfo();
-    m_pMeasureSignal->setValue(QVariant(1));
+    m_veinSigMeasuringComponent->setValue(QVariant(1));
 
     if (m_pModule->getConfigData()->m_sIntegrationMode == "time")
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower2ModuleMeasProgram::newIntegrationtime);
@@ -1000,7 +1000,7 @@ void cPower2ModuleMeasProgram::deactivateDSPdone()
 
 void cPower2ModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->setValue(QVariant(0));
+    m_veinSigMeasuringComponent->setValue(QVariant(0));
     if(m_bActive)
         m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
@@ -1010,7 +1010,7 @@ void cPower2ModuleMeasProgram::dataReadDSP()
     if (m_bActive) {
         m_ModuleActualValues = m_pActualValuesDSP->getData();
         emit actualValues(&m_ModuleActualValues); // and send them
-        m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
+        m_veinSigMeasuringComponent->setValue(QVariant(1)); // signal measuring
     }
 }
 

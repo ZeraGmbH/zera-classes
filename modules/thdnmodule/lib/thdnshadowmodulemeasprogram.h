@@ -27,7 +27,7 @@ private:
     QList<VfModuleComponent*> m_veinActValueList;
 
     VeinStorage::AbstractComponentPtr m_sourceMeasSignal;
-    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleComponent* m_veinSigMeasuringComponent = nullptr;
 
     VeinStorage::AbstractComponentPtr m_sourceIntegrationTimeParameter;
     VfModuleParameter* m_pIntegrationTimeParameter = nullptr;

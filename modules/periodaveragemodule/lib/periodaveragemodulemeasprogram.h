@@ -50,7 +50,7 @@ private:
 
     QList<VfModuleComponent*> m_periodValues;
     QList<VfModuleComponent*> m_averageValues;
-    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleComponent* m_veinSigMeasuringComponent = nullptr;
     VfModuleParameter* m_periodCountParameter= nullptr;
 
     DspVarGroupClientInterface* m_pParameterDSP= nullptr;

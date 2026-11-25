@@ -56,11 +56,11 @@ void cLambdaModuleMeasProgram::generateVeinInterface()
     m_pLAMBDACountInfo = new VfModuleMetaData(QString("LambdaCount"), QVariant(configData->m_nLambdaSystemCount));
     m_pModule->m_veinModuleMetaDataList.append(m_pLAMBDACountInfo);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+    m_veinSigMeasuringComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinSigMeasuringComponent);
 }
 
 void cLambdaModuleMeasProgram::searchActualValues()
@@ -138,7 +138,7 @@ void cLambdaModuleMeasProgram::deactivateMeasDone()
 
 void cLambdaModuleMeasProgram::setMeasureSignal(int signal)
 {
-    m_pMeasureSignal->setValue(signal);
+    m_veinSigMeasuringComponent->setValue(signal);
 }
 
 }

@@ -26,7 +26,7 @@ private:
     cPower3Module* m_pModule = nullptr;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pHPWCountInfo = nullptr; // the number of values we produce
-    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleComponent* m_veinSigMeasuringComponent = nullptr;
     VeinStorage::AbstractComponentPtr m_fftSignal;
 
     QList<cPower3MeasDelegate*> m_Power3MeasDelegateList;

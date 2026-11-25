@@ -49,7 +49,7 @@ private:
     QList<VfModuleComponent*> m_DCValueList;
     VfModuleMetaData* m_pFFTCountInfo = nullptr;
     VfModuleMetaData* m_pFFTOrderInfo = nullptr;
-    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleComponent* m_veinSigMeasuringComponent = nullptr;
     VfModuleParameter* m_pRefChannelParameter = nullptr;
     VfModuleParameter* m_pIntegrationTimeParameter = nullptr;
     quint16 m_nfftLen = 0;

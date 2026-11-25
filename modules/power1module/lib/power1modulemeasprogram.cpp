@@ -348,12 +348,12 @@ void cPower1ModuleMeasProgram::generateVeinInterface()
     }
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationParameter; // for modules use
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+    m_veinSigMeasuringComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinSigMeasuringComponent);
 }
 
 
@@ -841,7 +841,7 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     setSCPIMeasInfo();
     setFoutMetaInfo();
     setModeTypesComponent();
-    m_pMeasureSignal->setValue(QVariant(1));
+    m_veinSigMeasuringComponent->setValue(QVariant(1));
 
     const cPower1ModuleConfigData *configData = m_pModule->getConfigData();
     if (configData->m_sIntegrationMode == "time")
@@ -923,7 +923,7 @@ void cPower1ModuleMeasProgram::deactivateDSPdone()
 
 void cPower1ModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->setValue(QVariant(0));
+    m_veinSigMeasuringComponent->setValue(QVariant(0));
     if(m_bActive)
         m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_dspVars.getActualValues())] = dataaquistion; // we start our data aquisition now
 }
@@ -933,7 +933,7 @@ void cPower1ModuleMeasProgram::dataReadDSP()
     if (m_bActive) {
         m_ModuleActualValues = m_dspVars.getActualValues()->getData();
         emit actualValues(&m_ModuleActualValues); // and send them
-        m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
+        m_veinSigMeasuringComponent->setValue(QVariant(1)); // signal measuring
     }
 }
 

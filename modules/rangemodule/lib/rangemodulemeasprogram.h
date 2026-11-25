@@ -32,7 +32,7 @@ private:
     bool m_rangingIsInProgress = false;
     bool m_doNotStartDataAquisition = false;
 
-    VfModuleComponent *m_pMeasureSignal = nullptr;
+    VfModuleComponent *m_veinSigMeasuringComponent = nullptr;
     QList<VfModuleComponent*> m_veinActValueList;
     QList<VfModuleComponent*> m_veinRmsValueList;
     TimerTemplateQtPtr m_dspWatchdogTimer;

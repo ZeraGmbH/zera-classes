@@ -171,11 +171,11 @@ void cTransformer1ModuleMeasProgram::generateVeinInterface()
     m_pTRSCountInfo = new VfModuleMetaData(QString("TRSCount"), QVariant(configData->m_nTransformerSystemCount));
     m_pModule->m_veinModuleMetaDataList.append(m_pTRSCountInfo);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+    m_veinSigMeasuringComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinSigMeasuringComponent);
 }
 
 
@@ -246,7 +246,7 @@ void cTransformer1ModuleMeasProgram::deactivateMeasDone()
 
 void cTransformer1ModuleMeasProgram::setMeasureSignal(int signal)
 {
-    m_pMeasureSignal->setValue(signal);
+    m_veinSigMeasuringComponent->setValue(signal);
 }
 
 void cTransformer1ModuleMeasProgram::newPrimClampPrim(QVariant pcp)

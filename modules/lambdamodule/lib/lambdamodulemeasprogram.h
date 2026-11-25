@@ -31,7 +31,7 @@ private:
     QList<VfModuleComponent*> m_veinLambdaActValues;
     QList<VfModuleComponent*> m_veinLoadTypeList;
     VfModuleMetaData* m_pLAMBDACountInfo = nullptr; // the number of values we produce
-    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleComponent* m_veinSigMeasuringComponent = nullptr;
 
     LambdaCalcDelegate *m_lambdaCalcDelegate = nullptr;
     // statemachine for activating gets the following states

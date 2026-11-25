@@ -55,7 +55,7 @@ private:
     VfModuleComponent* m_pRFieldActualValue = nullptr;
     QHash<QString, QString> m_ChannelSystemNameHash; // a hash for fast access to the system name with key = alias
 
-    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleComponent* m_veinSigMeasuringComponent = nullptr;
     VfModuleParameter* m_pIntegrationTimeParameter = nullptr;
     VfModuleParameter* m_pRefChannelParameter = nullptr;
 

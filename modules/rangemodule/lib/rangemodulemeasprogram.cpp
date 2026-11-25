@@ -107,11 +107,11 @@ void cRangeModuleMeasProgram::generateVeinInterface()
     }
 
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+    m_veinSigMeasuringComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0) );
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal); // and for the modules interface
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinSigMeasuringComponent); // and for the modules interface
 }
 
 void cRangeModuleMeasProgram::setDspVarList()
@@ -339,7 +339,7 @@ void cRangeModuleMeasProgram::activateDSPdone()
     m_bActive = true;
     setActualValuesNames();
     setSCPIMeasInfo();
-    m_pMeasureSignal->setValue(QVariant(1));
+    m_veinSigMeasuringComponent->setValue(QVariant(1));
     restartDspWachdog();
     emit activated();
 }
@@ -355,7 +355,7 @@ void cRangeModuleMeasProgram::deactivateDSPStart()
 
 void cRangeModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->setValue(QVariant(0));
+    m_veinSigMeasuringComponent->setValue(QVariant(0));
     if (m_bActive)
         m_MsgNrCmdList[m_dspInterface->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
@@ -365,7 +365,7 @@ void cRangeModuleMeasProgram::dataReadDSP()
     if (m_bActive) {
         m_ModuleActualValues = m_pActualValuesDSP->getData();
         emit actualValues(&m_ModuleActualValues); // and send them
-        m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
+        m_veinSigMeasuringComponent->setValue(QVariant(1)); // signal measuring
     }
 }
 

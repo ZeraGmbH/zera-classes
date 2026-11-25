@@ -15,7 +15,7 @@ cThdnShadowModuleMeasProgram::cThdnShadowModuleMeasProgram(cThdnModule *module) 
     m_activationMachine.setInitialState(&m_activationDoneState);
     connect(&m_activationDoneState, &QAbstractState::entered, this, [&]() {
         m_bActive = true;
-        m_pMeasureSignal->setValue(QVariant(1));
+        m_veinSigMeasuringComponent->setValue(QVariant(1));
         connect(m_pIntegrationTimeParameter, &VfModuleComponent::sigValueChanged, this, &cThdnShadowModuleMeasProgram::newIntegrationtime);
         emit activated();
     });
@@ -62,11 +62,11 @@ void cThdnShadowModuleMeasProgram::generateVeinInterface()
     m_pModule->m_veinModuleParameterMap[key] = m_pIntegrationTimeParameter; // for modules use
     m_sourceIntegrationTimeParameter = storageDb->findComponent(sourceEntityId, "PAR_Interval");
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+    m_veinSigMeasuringComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                              QString("SIG_Measuring"),
                                              QString("Signal indicating measurement activity"),
                                              QVariant(0));
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinSigMeasuringComponent);
     m_sourceMeasSignal = storageDb->findComponent(sourceEntityId, "SIG_Measuring");
 }
 
@@ -81,7 +81,7 @@ void cThdnShadowModuleMeasProgram::start()
     connect(m_sourceIntegrationTimeParameter.get(), &VeinStorage::AbstractComponent::sigValueChange,
             m_pIntegrationTimeParameter, &VfModuleComponent::setValue);
     connect(m_sourceMeasSignal.get(), &VeinStorage::AbstractComponent::sigValueChange,
-            m_pMeasureSignal, &VfModuleComponent::setValue);
+            m_veinSigMeasuringComponent, &VfModuleComponent::setValue);
     m_started = true;
 }
 
@@ -96,7 +96,7 @@ void cThdnShadowModuleMeasProgram::stop()
     disconnect(m_sourceIntegrationTimeParameter.get(), &VeinStorage::AbstractComponent::sigValueChange,
                m_pIntegrationTimeParameter, &VfModuleComponent::setValue);
     disconnect(m_sourceMeasSignal.get(), &VeinStorage::AbstractComponent::sigValueChange,
-               m_pMeasureSignal, &VfModuleComponent::setValue);
+               m_veinSigMeasuringComponent, &VfModuleComponent::setValue);
     m_started = false;
 }
 

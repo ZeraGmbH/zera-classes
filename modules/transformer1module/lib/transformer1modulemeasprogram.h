@@ -28,7 +28,7 @@ private:
     cTransformer1Module* m_pModule = nullptr;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pTRSCountInfo = nullptr; // the number of transformer system we are configured for
-    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleComponent* m_veinSigMeasuringComponent = nullptr;
 
     VfModuleParameter* m_pPrimClampPrimParameter = nullptr;
     VfModuleParameter* m_pPrimClampSecParameter = nullptr;

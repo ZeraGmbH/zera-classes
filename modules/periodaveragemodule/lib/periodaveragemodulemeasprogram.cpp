@@ -103,12 +103,12 @@ void PeriodAverageModuleMeasProgram::generateVeinInterface()
     m_periodCountParameter->setValidator(new cIntValidator(5 /* sync xsd!!!*/, configData->m_maxPeriods));
     m_pModule->m_veinModuleParameterMap[key] = m_periodCountParameter; // for modules use
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+    m_veinSigMeasuringComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinSigMeasuringComponent);
 }
 
 
@@ -289,7 +289,7 @@ void PeriodAverageModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
 
-    m_pMeasureSignal->setValue(QVariant(1));
+    m_veinSigMeasuringComponent->setValue(QVariant(1));
     connect(m_periodCountParameter, &VfModuleParameter::sigValueChanged, this, &PeriodAverageModuleMeasProgram::newPeriodCount);
 
     emit activated();
@@ -306,7 +306,7 @@ void PeriodAverageModuleMeasProgram::deactivateDSPStart()
 void PeriodAverageModuleMeasProgram::dataAcquisitionDSP()
 {
     if (m_bActive && m_taskDataAcquisition == nullptr) {
-        m_pMeasureSignal->setValue(QVariant(0));
+        m_veinSigMeasuringComponent->setValue(QVariant(0));
         m_taskDataAcquisition = TaskDspDataAcquisition::create(m_dspInterface, m_pActualValuesDSP);
         connect(m_taskDataAcquisition.get(), &TaskTemplate::sigFinish, [&](bool ok) {
             m_taskDataAcquisition.reset();
@@ -324,7 +324,7 @@ void PeriodAverageModuleMeasProgram::dataReadDSP()
     if (m_bActive) {
         m_ModuleActualValues = m_pActualValuesDSP->getData();
         emit actualValues(&m_ModuleActualValues);
-        m_pMeasureSignal->setValue(QVariant(1));
+        m_veinSigMeasuringComponent->setValue(QVariant(1));
     }
 }
 

@@ -43,7 +43,7 @@ private:
     ActualValueStartStopHandler m_startStopHandler;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pOsciCountInfo = nullptr;
-    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleComponent* m_veinSigMeasuringComponent = nullptr;
     VfModuleParameter* m_pRefChannelParameter = nullptr;
 
     DspVarGroupClientInterface* m_pParameterDSP = nullptr;

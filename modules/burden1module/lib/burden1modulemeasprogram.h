@@ -30,7 +30,7 @@ private:
     cBurden1Module* m_pModule = nullptr;
     QList<VfModuleComponent*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pBRSCountInfo = nullptr;  // the number of Burden system we are configured for
-    VfModuleComponent* m_pMeasureSignal = nullptr;
+    VfModuleComponent* m_veinSigMeasuringComponent = nullptr;
 
     VfModuleParameter* m_pNominalRangeParameter = nullptr;
     VfModuleParameter* m_pNominalRangeFactorParameter = nullptr;

@@ -117,11 +117,11 @@ void cBurden1ModuleMeasProgram::generateVeinInterface()
     m_pBRSCountInfo = new VfModuleMetaData(QString("BRSCount"), QVariant(configData->m_nBurdenSystemCount));
     m_pModule->m_veinModuleMetaDataList.append(m_pBRSCountInfo);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+    m_veinSigMeasuringComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinSigMeasuringComponent);
 }
 
 void cBurden1ModuleMeasProgram::searchActualValues()
@@ -192,10 +192,10 @@ void cBurden1ModuleMeasProgram::deactivateMeasDone()
 void cBurden1ModuleMeasProgram::onDftSigChange(const QVariant &value)
 {
     if (value.toInt() == 1) {
-        m_pMeasureSignal->setValue(0);
+        m_veinSigMeasuringComponent->setValue(0);
         for (int i=0; i<m_Burden1MeasDelegateList.count(); ++i)
             m_Burden1MeasDelegateList[i]->computeOutput();
-        m_pMeasureSignal->setValue(1);
+        m_veinSigMeasuringComponent->setValue(1);
     }
 }
 

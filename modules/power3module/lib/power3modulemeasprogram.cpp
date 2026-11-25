@@ -69,12 +69,12 @@ void cPower3ModuleMeasProgram::generateVeinInterface()
     m_pHPWCountInfo = new VfModuleMetaData(QString("HPWCount"), QVariant(configData->m_nPowerSystemCount));
     m_pModule->m_veinModuleMetaDataList.append(m_pHPWCountInfo);
 
-    m_pMeasureSignal = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
+    m_veinSigMeasuringComponent = new VfModuleComponent(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
-    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_pMeasureSignal);
+    m_pModule->m_veinComponentsWithMetaAndScpi.append(m_veinSigMeasuringComponent);
 }
 
 void cPower3ModuleMeasProgram::searchActualValues()
@@ -117,10 +117,10 @@ void cPower3ModuleMeasProgram::searchActualValues()
 void cPower3ModuleMeasProgram::onFftSigChange(const QVariant &value)
 {
     if (value.toInt() == 1) {
-        m_pMeasureSignal->setValue(0);
+        m_veinSigMeasuringComponent->setValue(0);
         for (int i=0; i<m_Power3MeasDelegateList.count(); ++i)
             m_Power3MeasDelegateList[i]->computeOutput();
-        m_pMeasureSignal->setValue(1);
+        m_veinSigMeasuringComponent->setValue(1);
     }
 }
 
