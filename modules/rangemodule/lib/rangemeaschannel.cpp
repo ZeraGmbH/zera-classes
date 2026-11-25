@@ -58,7 +58,6 @@ enum rangemeaschannelCmds
 {
     setmeaschannelrange,
     readoffsetcorrection,
-    readphasecorrection,
     readchannelstatusbitmask,
     resetchannelstatusbitmask_emitcmddone,
     resetchannelstatusbitmask_instatemachine,
@@ -112,16 +111,6 @@ quint32 cRangeMeasChannel::resetStatus()
     if (m_bActive) {
         quint32 msgnr = m_pcbInterface->resetStatus(getMName());
         m_MsgNrCmdList[msgnr] = resetchannelstatusbitmask_emitcmddone;
-        return msgnr;
-    }
-    return 1;
-}
-
-quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
-{
-    if (m_bActive) {
-        quint32 msgnr = m_pcbInterface->getPhaseCorrection(getMName(), m_actRangeName, frequency);
-        m_MsgNrCmdList[msgnr] = readphasecorrection;
         return msgnr;
     }
     return 1;
@@ -270,11 +259,6 @@ QString cRangeMeasChannel::getAvailAliasList()
     return m_channelObserver->getAvailAliasList();
 }
 
-double cRangeMeasChannel::getPhaseCorrection()
-{
-    return m_fPhaseCorrection;
-}
-
 double cRangeMeasChannel::getOffsetCorrection()
 {
     return m_fOffsetCorrection;
@@ -335,13 +319,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 m_fOffsetCorrection = answer.toDouble();
             else
                 notifyError(readOffsetCorrErrMsg);
-            emit cmdDone(msgnr);
-            break;
-        case readphasecorrection:
-            if (reply == ack)
-                m_fPhaseCorrection = answer.toDouble();
-            else
-                notifyError(readPhaseCorrErrMsg);
             emit cmdDone(msgnr);
             break;
         case readchannelstatusbitmask:

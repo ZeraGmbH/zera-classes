@@ -118,6 +118,7 @@ private:
     float* m_dspOffsetCorrValues = nullptr;
 
     QVector<double> m_fGainCorrection;
+    QVector<double> m_fPhaseCorrection;
 };
 
 }

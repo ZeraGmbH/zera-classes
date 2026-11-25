@@ -33,9 +33,7 @@ public:
     QString getCurrRangeName() const;
 
     // for channel adjustment
-    quint32 readPhaseCorrection(double frequency);
     quint32 readOffsetCorrection(double amplitude);
-    double getPhaseCorrection(); // returns last read phase correction
     double getOffsetCorrection(); // returns last read offset correction
 
     // for range obsermatic
@@ -78,7 +76,6 @@ private:
 
     QString m_nextRangeName;
     QString m_actRangeName;
-    double m_fPhaseCorrection;
     double m_fOffsetCorrection;
     quint32 m_statusBitMask; // currently just COM5003 HW overload bit
     ChannelRangeObserver::ChannelCurrentRangePtr m_channelCurrentRangeObserver;

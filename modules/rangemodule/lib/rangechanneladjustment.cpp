@@ -29,7 +29,8 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
         m_channelNameList,
         false /* just for demo COM5003 ref-session - postpone better solution now */
           )),
-    m_fGainCorrection(chnlist.size())
+    m_fGainCorrection(chnlist.size()),
+    m_fPhaseCorrection(chnlist.size())
 {
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -350,7 +351,7 @@ double RangeChannelAdjustment::getIgnoreRmsCorrFactor()
 {
     double ignoreRmsCorrFactor = 1.0;
     cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
-    if(m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
+    if (m_adjustmentConfig->m_ignoreRmsValuesEnable.m_nActive) {
         double actUrValue = RangeMeasChannelStaticHelperFunctions::getUrValueRangeAct(measChannel);
         double threshold = m_adjustmentConfig->m_ignoreRmsValuesThreshold.m_fValue * actUrValue / 100;
         const RangeChannelData *channelData = measChannel->getSharedChannelData();
@@ -367,17 +368,18 @@ void RangeChannelAdjustment::getPhaseCorrFromPcbServer()
     if (m_bActive) {
         const RangeChannelData *channelData = m_ChannelList.at(m_nChannelIt)->getSharedChannelData();
         double frequency = channelData->getSignalFrequency();
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(frequency)] = pcbcalcphasecorr;
+        cRangeMeasChannel *channel = m_ChannelList.at(m_nChannelIt);
+        quint32 msgnr = m_pcbInterface->getPhaseCorrection(channel->getMName(), channel->getCurrRangeName(), frequency);
+        m_MsgNrCmdList[msgnr] = pcbcalcphasecorr;
     }
 }
-
 
 void RangeChannelAdjustment::preparePhaseCorrForDspServer()
 {
     if (m_bActive) {
+        float fCorr = m_fPhaseCorrection.at(m_nChannelIt);
         cRangeMeasChannel *measChannel = m_ChannelList.at(m_nChannelIt);
-        float fCorr = measChannel->getPhaseCorrection();
-        m_dspPhaseCorrValues[measChannel->getDSPChannelNr()] = fCorr;
+        m_dspPhaseCorrValues[measChannel->getDSPChannelNr()] = fCorr; // at least double housekeeping!!!
         m_nChannelIt++;
         if (m_nChannelIt < m_channelNameList.count())
             emit repeatStateMachine();
@@ -444,6 +446,14 @@ void RangeChannelAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                     notifyError(readGainCorrErrMsg);
                 break;
+            case pcbcalcphasecorr:
+                if (reply == ack) {
+                    m_fPhaseCorrection[m_nChannelIt] = answer.toDouble();
+                    emit activationContinue();
+                }
+                else
+                    notifyError(readPhaseCorrErrMsg);
+                break;
 
             case dspreadgaincorr:
                 if (reply == ack)
@@ -499,7 +509,6 @@ void RangeChannelAdjustment::catchChannelReply(quint32 msgnr)
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
     {
-    case pcbcalcphasecorr:
     case pcbcalcoffsetcorr:
         emit activationContinue();
         break;
