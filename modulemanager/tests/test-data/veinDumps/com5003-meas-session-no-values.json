@@ -658,9 +658,6 @@
                 }
             },
             "ModuleInfo": {
-                "ChannelGroup1": "UL1;UL2;UL3",
-                "ChannelGroup2": "IL1;IL2;IL3",
-                "ChannelGroup3": "REF1;REF2;REF3;REF4;REF5;REF6",
                 "Description": "This module is responsible for range handling,\n range setting, automatic, adjustment and scaling",
                 "Name": "RangeModule1"
             },
