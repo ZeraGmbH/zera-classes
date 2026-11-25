@@ -24,11 +24,18 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
     m_subdcChannelNameList(subdclist),
     m_adjustmentConfig(adjustmentConfig)
 {
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
+    m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
+                                        m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer, this, &RangeChannelAdjustment::catchInterfaceAnswer);
+
     m_dspInterface = m_pModule->getServiceInterfaceFactory()->createDspInterfaceRangeAdj(
         m_pModule->getEntityId(),
         m_channelNameList,
         false /* just for demo COM5003 ref-session - postpone better solution now */
         );
+    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo, m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
+    connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &RangeChannelAdjustment::catchInterfaceAnswer);
 
     for (int channelIdx = 0; channelIdx < m_channelNameList.count(); channelIdx++) {
         // we fetch all our real channels first
@@ -40,18 +47,23 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
     for (int i = 0; i < m_subdcChannelNameList.count(); i++) // we fetch all our real channels first
         m_subDCChannelList.append(m_pModule->getMeasChannel(m_subdcChannelNameList.at(i)));
 
-    // and then set up our state machines
+    // activation state machine
+    m_pcbserverConnectState.addTransition(m_pcbInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_dspserverConnectState);
+    m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
     m_readGainCorrState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_readPhaseCorrState);
     m_readPhaseCorrState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_readOffsetCorrState);
     m_readOffsetCorrState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_setSubDCState);
     m_setSubDCState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_activationDoneState);
+    m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_readPhaseCorrState);
     m_activationMachine.addState(&m_readOffsetCorrState);
     m_activationMachine.addState(&m_setSubDCState);
     m_activationMachine.addState(&m_activationDoneState);
-    m_activationMachine.setInitialState(&m_dspserverConnectState);
+    m_activationMachine.setInitialState(&m_pcbserverConnectState);
+
+    connect(&m_pcbserverConnectState, &QState::entered, this, &RangeChannelAdjustment::pcbserverConnect);
     connect(&m_dspserverConnectState, &QState::entered, this, &RangeChannelAdjustment::dspserverConnect);
     connect(&m_readGainCorrState, &QState::entered, this, &RangeChannelAdjustment::readGainCorr);
     connect(&m_readPhaseCorrState, &QState::entered, this, &RangeChannelAdjustment::readPhaseCorr);
@@ -59,6 +71,7 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
     connect(&m_setSubDCState, &QState::entered, this, &RangeChannelAdjustment::setSubDC);
     connect(&m_activationDoneState, &QState::entered, this, &RangeChannelAdjustment::activationDone);
 
+    // deactivation state machine
     m_deactivationInitState.addTransition(this, &RangeChannelAdjustment::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
@@ -78,6 +91,7 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
     connect(&m_writePhaseCorrState, &QState::entered, this, &RangeChannelAdjustment::writePhaseCorr);
     connect(&m_writeOffsetCorrState, &QState::entered, this, &RangeChannelAdjustment::writeOffsetCorr);
 
+    // adjust state machine
     m_getGainCorrFromPcbServerState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_prepareGainCorrForDspServerState);
     m_prepareGainCorrForDspServerState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_getPhaseCorrFromPcbServerState);
     m_prepareGainCorrForDspServerState.addTransition(this, &RangeChannelAdjustment::repeatStateMachine, &m_getGainCorrFromPcbServerState);
@@ -87,6 +101,7 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
     m_getOffsetCorrFromPcbServerState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_prepareOffsetCorrForDspServerState);
     m_prepareOffsetCorrForDspServerState.addTransition(this, &RangeChannelAdjustment::repeatStateMachine, &m_getOffsetCorrFromPcbServerState);
     m_prepareOffsetCorrForDspServerState.addTransition(this, &RangeChannelAdjustment::activationContinue, &m_adjustDoneState);
+
     m_adjustMachine.addState(&m_getGainCorrFromPcbServerState);
     m_adjustMachine.addState(&m_prepareGainCorrForDspServerState);
     m_adjustMachine.addState(&m_getPhaseCorrFromPcbServerState);
@@ -95,6 +110,7 @@ RangeChannelAdjustment::RangeChannelAdjustment(cRangeModule *module,
     m_adjustMachine.addState(&m_prepareOffsetCorrForDspServerState);
     m_adjustMachine.addState(&m_adjustDoneState);
     m_adjustMachine.setInitialState(&m_getGainCorrFromPcbServerState);
+
     connect(&m_getGainCorrFromPcbServerState, &QState::entered, this, &RangeChannelAdjustment::getGainCorrFromPcbServer);
     connect(&m_prepareGainCorrForDspServerState, &QState::entered, this, &RangeChannelAdjustment::prepareGainCorrForDspServer);
     connect(&m_getPhaseCorrFromPcbServerState, &QState::entered, this, &RangeChannelAdjustment::getPhaseCorrFromPcbServer);
@@ -154,12 +170,13 @@ void RangeChannelAdjustment::generateVeinInterface()
     }
 }
 
+void RangeChannelAdjustment::pcbserverConnect()
+{
+    Zera::Proxy::getInstance()->startConnectionSmart(m_pcbInterface->getClientSmart());
+}
+
 void RangeChannelAdjustment::dspserverConnect()
 {
-    // we set up our dsp server connection
-    m_dspInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_dspServiceConnectionInfo, m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
-    m_dspserverConnectState.addTransition(m_dspInterface->getClientSmart().get(), &Zera::ProxyClient::connected, &m_readGainCorrState);
-    connect(m_dspInterface.get(), &AbstractServerInterface::serverAnswer, this, &RangeChannelAdjustment::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_dspInterface->getClientSmart());
 }
 

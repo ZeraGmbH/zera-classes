@@ -25,6 +25,7 @@ signals:
     void repeatStateMachine();
 
 private slots:
+    void pcbserverConnect();
     void dspserverConnect();
     void readGainCorr();
     void readPhaseCorr();
@@ -63,6 +64,7 @@ private:
     QStringList m_channelNameList;
     QStringList m_subdcChannelNameList; // the list of channels we have to subtract dc
     RangeAdjustmentConfigParams *m_adjustmentConfig = nullptr;
+    Zera::PcbInterfacePtr m_pcbInterface;
     Zera::DspInterfacePtr m_dspInterface;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
     QList<cRangeMeasChannel*> m_subDCChannelList;
@@ -77,6 +79,7 @@ private:
     QList<VfModuleParameter*> m_invertedPhasesParList;
 
     // statemachine for activating gets the following states
+    QState m_pcbserverConnectState;
     QState m_dspserverConnectState;
     QState m_readGainCorrState;
     QState m_readPhaseCorrState;
