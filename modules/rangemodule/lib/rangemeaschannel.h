@@ -32,11 +32,6 @@ public:
     RangeChannelData* getSharedChannelData();
     QString getCurrRangeName() const;
 
-    // for range obsermatic
-    quint32 readStatus(); // read the channels status
-    quint32 resetStatus(); // reset the channels status
-    bool isHWOverload(); // test if we have some hardware overload condition
-
     double getUrValue(const QString &rangeName) const;      // upper range value
     double getRejection(const QString &rangeName) const;    // nominal (100%) rejection
     double getOVRRejection(const QString &rangeName) const; // over (usually 125%) rejection
@@ -72,7 +67,6 @@ private:
 
     QString m_nextRangeName;
     QString m_actRangeName;
-    quint32 m_statusBitMask; // currently just COM5003 HW overload bit
     ChannelRangeObserver::ChannelCurrentRangePtr m_channelCurrentRangeObserver;
 
     // statemachine for activating a rangemeaschannel

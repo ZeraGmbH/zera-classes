@@ -48,7 +48,6 @@ signals:
     void activationRepeat();
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
-    void catchChannelReply(quint32 msgnr);
     void catchChannelNewRangeList();
 
 private slots:
@@ -70,7 +69,7 @@ private slots:
     void onVeinChangeOverload(const QVariant &overload);
     void preScalingChanged();
 
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer);
 private:
     void observeRangeOverload();
     bool requiresOverloadReset(int channel);
@@ -78,6 +77,15 @@ private:
     void setOverloadVeinComponent(bool overloadOn);
 
     void createCanChangeRangeObserver(cRangeMeasChannel *channel, VfModuleComponent *canChangeComponent);
+
+
+
+    // for range obsermatic
+    quint32 resetStatus(); // reset the channels status
+    bool isHWOverload(int channelIdx); // test if we have some hardware overload condition
+
+
+
 
     void rangeAutomatic();
     void groupHandling();
@@ -141,6 +149,7 @@ private:
     QState m_writeGainScaleRepeatState;
     QFinalState m_writeGainScaleDoneState;
 
+    QVector<quint32> m_statusBitMask; // currently just COM5003 HW overload bit
     bool m_rangeSetManual = false; // we set this here after we selected a new range and enable resetting stored overloadcondition
 };
 

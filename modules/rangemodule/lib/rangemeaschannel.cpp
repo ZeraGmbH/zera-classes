@@ -57,8 +57,6 @@ cRangeMeasChannel::cRangeMeasChannel(const ChannelRangeObserver::ChannelPtr &cha
 enum rangemeaschannelCmds
 {
     setmeaschannelrange,
-    readchannelstatusbitmask,
-    resetchannelstatusbitmask_emitcmddone,
     resetchannelstatusbitmask_instatemachine,
 };
 
@@ -78,29 +76,6 @@ quint32 cRangeMeasChannel::setRange(const QString &rangeName)
 QString cRangeMeasChannel::getCurrRangeName() const
 {
     return m_actRangeName;
-}
-
-// This caused a bit of confusion so write it down:
-// com5003d / mt310d read (global) critical status for each channnel and
-// check only that bit belonging to the channnel
-quint32 cRangeMeasChannel::readStatus()
-{
-    if (m_bActive) {
-        quint32 msgnr = m_pcbInterface->getStatus(getMName());
-        m_MsgNrCmdList[msgnr] = readchannelstatusbitmask;
-        return msgnr;
-    }
-    return 1;
-}
-
-quint32 cRangeMeasChannel::resetStatus()
-{
-    if (m_bActive) {
-        quint32 msgnr = m_pcbInterface->resetStatus(getMName());
-        m_MsgNrCmdList[msgnr] = resetchannelstatusbitmask_emitcmddone;
-        return msgnr;
-    }
-    return 1;
 }
 
 bool cRangeMeasChannel::isPossibleRange(const QString &rangeName)
@@ -244,11 +219,6 @@ QString cRangeMeasChannel::getMaxRangeName(const QString &rangeName)
 QString cRangeMeasChannel::getAvailAliasList()
 {
     return m_channelObserver->getAvailAliasList();
-}
-
-bool cRangeMeasChannel::isHWOverload()
-{
-    return ((m_statusBitMask & 1) > 0);
 }
 
 double cRangeMeasChannel::getUrValue(const QString &rangeName) const

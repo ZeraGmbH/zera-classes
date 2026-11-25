@@ -29,7 +29,8 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module,
         m_pModule->getEntityId(),
         m_pModule->getSharedChannelRangeObserver()->getChannelMNames(),
         false /* just for demo COM5003 ref-session - postpone better solution now */)),
-    m_pcbInterface(std::make_shared<Zera::cPCBInterface>())
+    m_pcbInterface(std::make_shared<Zera::cPCBInterface>()),
+    m_statusBitMask(m_pModule->getSharedChannelRangeObserver()->getChannelMNames().size())
 {
     m_pcbInterface->setClientSuperSmart(m_pModule->getNetworkConfig()->m_pcbServiceConnectionInfo,
                                         m_pModule->getNetworkConfig()->m_tcpNetworkFactory);
@@ -607,12 +608,35 @@ void cRangeObsermatic::writeGainScale()
         m_MsgNrCmdList[m_dspInterface->dspMemoryWrite(m_gainScaleDSPVarGroup)] = writegainScale;
 }
 
+quint32 cRangeMeasChannel::resetStatus()
+{
+    if (m_bActive) {
+        quint32 msgnr = m_pcbInterface->resetStatus(getMName());
+        m_MsgNrCmdList[msgnr] = resetchannelstatusbitmask_emitcmddone;
+        return msgnr;
+    }
+    return 1;
+}
+
+
+bool cRangeObsermatic::isHWOverload(int channelIdx)
+{
+    return ((m_statusBitMask.at(channelIdx) & 1) > 0); // NOOOOOOOOOOO
+}
+
+
+
+
+
+// This caused a bit of confusion so write it down:
+// com5003d / mt310d read (global) critical status for each channnel and
+// check only that bit belonging to the channnel
 void cRangeObsermatic::readStatus()
 {
     if(m_bActive) {
         for (int channelIdx = 0; channelIdx < m_RangeMeasChannelList.count(); channelIdx++) { // we read status from all channels
             cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
-            m_MsgNrCmdList[rangeMeasChannel->readStatus()] = readstatus;
+            m_MsgNrCmdList[m_pcbInterface->getStatus(rangeMeasChannel->getMName())] = readstatus;
             m_nReadStatusPending++;
         }
     }
@@ -620,10 +644,8 @@ void cRangeObsermatic::readStatus()
 
 void cRangeObsermatic::analyzeStatus()
 {
-    for (int channelIdx = 0; channelIdx < m_RangeMeasChannelList.count(); channelIdx++) { // we test all channels
-        cRangeMeasChannel *rangeMeasChannel = m_RangeMeasChannelList.at(channelIdx);
-        m_hardOvlList.replace(channelIdx, rangeMeasChannel->isHWOverload());
-    }
+    for (int channelIdx = 0; channelIdx < m_RangeMeasChannelList.count(); channelIdx++)
+        m_hardOvlList.replace(channelIdx, isHWOverload(channelIdx));
 }
 
 void cRangeObsermatic::onNewRange(const QVariant &rangeAliasVariant)
@@ -749,7 +771,7 @@ void cRangeObsermatic::handleNewRange(int channelIdx, const QString &rangeName)
     }
 }
 
-void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply)
+void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, const QVariant &answer)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
     }
@@ -770,27 +792,18 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply)
                 else
                     notifyError(writedspgaincorrErrMsg);
                 break;
+            case resetstatus: // for the moment we do nothing here
+                break;
+            case readstatus:
+                m_statusBitMask[] = answer.toInt();
+                if (m_nReadStatusPending > 0) {
+                    m_nReadStatusPending--;
+                    if (m_nReadStatusPending == 0)
+                        analyzeStatus();
+                }
+                break;
             }
         }
-    }
-}
-
-void cRangeObsermatic::catchChannelReply(quint32 msgnr)
-{
-    int cmd = m_MsgNrCmdList.take(msgnr);
-    switch (cmd) {
-    case resetstatus: // for the moment we do nothing here
-        break;
-    case readstatus:
-        if (m_nReadStatusPending > 0) {
-            m_nReadStatusPending--;
-            if (m_nReadStatusPending == 0)
-                analyzeStatus();
-        }
-        break;
-
-    default:
-        break;
     }
 }
 
