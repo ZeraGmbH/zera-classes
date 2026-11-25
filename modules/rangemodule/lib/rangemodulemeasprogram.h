@@ -1,7 +1,6 @@
 #ifndef RANGEMODULEMEASPROGRAM_H
 #define RANGEMODULEMEASPROGRAM_H
 
-#include "rangemoduleconfigdata.h"
 #include <basemeasmodule.h>
 #include <basedspmeasprogram.h>
 #include <QList>
