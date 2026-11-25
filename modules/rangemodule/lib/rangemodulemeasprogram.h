@@ -12,14 +12,6 @@
 namespace RANGEMODULE
 {
 
-enum rangemoduleCmds
-{
-    varlist2dsp,
-    cmdlist2dsp,
-    activatedsp,
-    dataaquistion,
-};
-
 class cRangeModule;
 
 class cRangeModuleMeasProgram: public cBaseDspMeasProgram
