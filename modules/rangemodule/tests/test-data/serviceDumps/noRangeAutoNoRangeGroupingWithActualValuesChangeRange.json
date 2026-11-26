@@ -1,0 +1,281 @@
+{
+    "signals": [
+        {
+            "Am a": "Comment",
+            "comment": "--- Before overload ---",
+            "timeMs": 0
+        },
+        {
+            "Am a": "Comment",
+            "comment": "--- Overload IL1 ---",
+            "timeMs": 501
+        },
+        {
+            "Am a": "Comment",
+            "comment": "--- Actual values ---",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m0:480V:CORR:GAIN? 7.07107;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m1:480V:CORR:GAIN? 0;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m2:480V:CORR:GAIN? 5;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m3:10A:CORR:GAIN? 5;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m4:10A:CORR:GAIN? 5;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m5:10A:CORR:GAIN? 0.1;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m0:480V:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m1:480V:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m2:480V:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m3:10A:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m4:10A:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m5:10A:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m0:480V:CORR:OFFS? 7.07107;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m1:480V:CORR:OFFS? 0;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m2:480V:CORR:OFFS? 5;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m3:10A:CORR:OFFS? 5;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m4:10A:CORR:OFFS? 5;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m5:10A:CORR:OFFS? 0.1;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 1002
+        },
+        {
+            "Am a": "Comment",
+            "comment": "--- Change range ---",
+            "timeMs": 1503
+        },
+        {
+            "Am a": "Comment",
+            "comment": "--- Actual values ---",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m0:STAT? ",
+            "scpiResponse": "0",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m1:STAT? ",
+            "scpiResponse": "0",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m2:STAT? ",
+            "scpiResponse": "0",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m3:STAT? ",
+            "scpiResponse": "1",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m4:STAT? ",
+            "scpiResponse": "0",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m5:STAT? ",
+            "scpiResponse": "0",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m0:480V:CORR:GAIN? 5.65685;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m1:480V:CORR:GAIN? 0;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m2:480V:CORR:GAIN? 4;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m3:10A:CORR:GAIN? 4;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m4:10A:CORR:GAIN? 4;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m5:10A:CORR:GAIN? 0.1;",
+            "scpiResponse": "1.00000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m0:480V:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m1:480V:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m2:480V:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m3:10A:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m4:10A:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m5:10A:CORR:PHAS? 0.1;",
+            "scpiResponse": "0.0000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m0:480V:CORR:OFFS? 5.65685;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m1:480V:CORR:OFFS? 0;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m2:480V:CORR:OFFS? 4;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m3:10A:CORR:OFFS? 4;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m4:10A:CORR:OFFS? 4;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 2004
+        },
+        {
+            "Am a": "com5003d",
+            "scpiCmd": "SENS:m5:10A:CORR:OFFS? 0.1;",
+            "scpiResponse": "0.00000000",
+            "timeMs": 2004
+        }
+    ]
+}

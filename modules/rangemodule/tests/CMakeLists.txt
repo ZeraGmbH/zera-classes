@@ -19,6 +19,7 @@ function(SETUP_QTESTS_MODULE)
             Zera::zdsp1d-testlib
             Zera::mt310s2d-testlib
             Zera::xml-compare-testlib
+            Zera::zenuxservicecommon
         )
         target_compile_definitions(${_testname}
             PRIVATE
@@ -34,6 +35,7 @@ SETUP_QTESTS_MODULE(
     test_range_scaling_factors
     test_range_automatic
     test_range_scpi
+    test_range_hardware_overload
 )
 
 target_sources(test_range_module_regression
@@ -70,4 +72,9 @@ target_link_libraries(test_range_scpi
   PRIVATE
     scpimodule-lib
     scpimodule-testlib
+)
+
+target_sources(test_range_hardware_overload
+  PRIVATE
+    test-data/test-data.qrc
 )
