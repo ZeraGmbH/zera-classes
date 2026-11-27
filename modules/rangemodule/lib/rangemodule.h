@@ -39,6 +39,8 @@ private:
     RangeChannelAdjustment *m_pAdjustment = nullptr; // our justifying and normation program
     cRangeObsermatic *m_pRangeObsermatic = nullptr; // our range handling
     QList<cRangeMeasChannel*> m_rangeMeasChannelList; // our meas channels
+    VfModuleMetaData* m_pChannelCountInfo = nullptr;
+    VfModuleMetaData* m_pGroupCountInfo = nullptr;
 };
 
 }

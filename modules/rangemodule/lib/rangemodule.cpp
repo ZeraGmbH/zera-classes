@@ -54,6 +54,12 @@ cRangeModule::cRangeModule(const ModuleFactoryParam &moduleParam) :
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::activated, this, &cRangeModule::activationContinue);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::deactivated, this, &cRangeModule::deactivationContinue);
+
+    // Support GUI with meta data
+    m_pChannelCountInfo = new VfModuleMetaData(QString("ChannelCount"), QVariant(getConfigData()->m_nChannelCount));
+    m_veinModuleMetaDataList.append(m_pChannelCountInfo);
+    m_pGroupCountInfo = new VfModuleMetaData(QString("GroupCount"), QVariant(getConfigData()->m_nGroupCount));
+    m_veinModuleMetaDataList.append(m_pGroupCountInfo);
 }
 
 cRangeModuleConfigData *cRangeModule::getConfigData()
