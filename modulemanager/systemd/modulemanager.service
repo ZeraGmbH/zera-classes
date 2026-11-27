@@ -10,4 +10,4 @@ NoNewPrivileges=true
 StandardOutput=journal
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=basic.target
