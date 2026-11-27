@@ -211,6 +211,15 @@ void cRangeObsermatic::generateVeinInterface()
         m_pModule->m_veinComponentsWithMetaAndScpi.append(pComponent);
     }
 
+    // Support GUI
+    if (m_GroupList.count() > 0) {
+        for (int i = 0; i < m_GroupList.count(); i++) {
+            QString groupMems = m_GroupList.at(i).join(";");
+            VfModuleMetaData *pMetaData = new VfModuleMetaData(QString("ChannelGroup%1").arg(i+1), QVariant(groupMems));
+            m_pModule->m_veinModuleMetaDataList.append(pMetaData); // only for module use
+        }
+    }
+
     m_veinParRangeAutomaticOnOff = new VfModuleParameter(m_pModule->getEntityId(), m_pModule->getValidatorEventSystem(),
                                                       QString("PAR_RangeAutomatic"),
                                                       QString("Range automatic on/off"),
